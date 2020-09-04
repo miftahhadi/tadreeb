@@ -1,37 +1,45 @@
 @extends('admin.general.index-items')
 
 @section('pageTitle')
-    Pelajaran
+    Ujian
 @endsection
 
-@section('table')
-<table class="table table-vcenter table-hover card-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Judul</th>
-        <th>Dibuat oleh</th>
-        <th>Role</th>
-        <th class="w-1"></th>
-      </tr>
-    </thead>
-    <tbody>
+@section('tableHeading')
+            <th class="w-1">ID</th>
+            <th>Judul</th>
+            <th>Dibuat oleh</th>
+            <th></th>
+@endsection
 
-      <tr>
-        <td>Paweł Kuna</td>
-        <td class="text-muted">
-          UI Designer, Training
-        </td>
-        <td class="text-muted"><a href="#" class="text-reset">paweluna@howstuffworks.com</a></td>
-        <td class="text-muted">
-          User
-        </td>
-        <td>
-          <a href="#">Edit</a>
-        </td>
-      </tr>
+@section('tableBody')
+
+    @foreach ($exams as $exam)
+        <tr>
+            <td>{{ $exam->id }}</td>
+            <td>{{ $exam->judul }}</td>
+            <td>{{ $exam->user->nama }}</td>
+            <td>
+                <div class="btn-list">
+                    <a href="{{ route('ujian.show', $exam->slug) }}" class="btn btn-sm btn-primary">Buka</a>
+
+                    {{-- <button type="button"
+                            class="btn btn-danger btn-sm"
+                            data-toggle="modal"
+                            data-id="{{ $exam->id }}"
+                            data-target="#hapusData"
+                    >Hapus</button> --}}
     
-    </tbody>
-  </table>
+                    <form action="{{ route('ujian.destroy', $exam->slug) }}" method="post">
+                        @method('DELETE')
+                        @csrf
 
+                        <input type="submit" class="btn btn-danger btn-sm" value="Hapus">
+                        
+                    </form>
+                </div>
+
+            </td>
+        </tr>
+    @endforeach
+    
 @endsection

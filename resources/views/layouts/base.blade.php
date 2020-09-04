@@ -41,9 +41,11 @@
 
   </head>
   
-  <body class="antialiased">
+  <body class="antialiased @yield('body-class')">
 
     @yield('main')
+
+    @yield('js-script')
 
     <script>
         document.body.style.display = "block"

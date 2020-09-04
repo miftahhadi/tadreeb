@@ -30,9 +30,12 @@ Route::group([
     Route::get('/', 'AdminController@index');
 
     // Lessons
-    Route::get('/pelajaran', 'LessonController@index');
+    Route::resource('pelajaran', 'LessonController');
 
     // Exams
-    Route::get('/ujian', 'ExamController@index');
+    Route::resource('ujian', 'ExamController');
+
+    // Questions
+    Route::resource('ujian.soal', 'QuestionController')->except('index');
 
 });

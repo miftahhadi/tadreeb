@@ -4,9 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\Admin\ExamService;
+use App\Http\Requests\Admin\StoreExamRequest;
+use App\Exam;
+
 
 class ExamController extends Controller
 {
+
+    protected $examService;
+
+    public function __construct(ExamService $examService)
+    {
+        $this->examService = $examService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +26,14 @@ class ExamController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.exam.index', [
+            'exams' => Exam::all(),
+            'item' => 'ujian',
+            'judul' => 'Judul Ujian',
+            'slug' => 'exam URL',
+            'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
+            'action' => '/admin/ujian'
+        ]);
     }
 
     /**
@@ -33,29 +52,36 @@ class ExamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreExamRequest $request)
     {
-        //
+        $exam = $this->examService->createExam($request->validated());
+
+        return redirect(route('ujian.show', ['exam' => $exam->exam]));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $ujian
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Exam $ujian)
     {
-        //
+
+        return view('admin.exam.show', [
+            'ujian' => $ujian,
+            'questionTypes' => $this->examService->questionTypes,
+            'answerIcons' => $this->examService->answerIcons
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $ujian
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($ujian)
     {
         //
     }
@@ -64,10 +90,10 @@ class ExamController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string  $ujian
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $ujian)
     {
         //
     }
@@ -75,11 +101,13 @@ class ExamController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $ujian
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Exam $ujian)
     {
-        //
+        $ujian->delete();
+
+        return redirect(route('ujian.index'));
     }
 }

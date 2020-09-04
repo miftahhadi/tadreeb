@@ -6,7 +6,7 @@
 
   <div class="content">
 
-    <div class="container">
+    <div class="container d-flex flex-column">
       <header class="navbar navbar-expand-md pb-2 border-bottom row">
           <div class="container-xl">
             
@@ -41,7 +41,7 @@
       </header>
 
   
-      <div class="row mt-4 mb-5">
+      <div class="row mt-4 flex-grow-1">
 
         <div class="col-md-2">
 
@@ -50,24 +50,42 @@
               <div class="list-group list-group-transparent mb-0">
 
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active">
-                  <span class="icon mr-3 mb-2"><i class="far fa-file"></i></span>
+                  <span class="icon mr-3 mb-2">
+                    <i class="fas fa-laptop"></i>
+                  </span>
                   Dashboard
                 </a>
 
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                  <span class="icon mr-3 mb-2"><i class="far fa-file"></i></span>
+                  <span class="icon mr-3 mb-2">
+                    <i class="far fa-file-alt"></i>
+                  </span>
                   Pelajaran
                 </a>
 
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
-                  <span class="icon mr-3 mb-2"><i class="fab fa-buffer"></i></span>
+                  <span class="icon mr-3 mb-2">
+                    <i class="fas fa-pen-alt"></i>
+                  </span>
                   Ujian
                 </a>
 
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                  <span class="icon mr-3 mb-2">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  User
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                  <span class="icon mr-3 mb-2">
+                    <i class="fas fa-cogs"></i>
+                  </span>
+                  Pengaturan
+                </a>
+
               </div>
-              <div class="mt-4">
-                <a href="#" class="btn btn-white btn-block">Compose new Email</a>
-              </div>
+
           </div>
 
 
@@ -87,7 +105,7 @@
   
     </div>
 
-    <footer class="footer footer-transparent navbar-fixed-bottom">
+    <footer class="footer footer-transparent flex-shrink-0">
       <div class="container">
         <div class="row text-center align-items-center flex-row-reverse">
           <div class="col-lg-auto ml-lg-auto">
@@ -108,15 +126,14 @@
 
   </div>
 
+</div>
 
+@endsection
 
+@section('js-script')
     <!-- Libs JS -->
     <script src="/dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/dist/libs/jquery/dist/jquery.slim.min.js"></script>
 
     <!-- Tabler Core -->
     <script src="./dist/js/tabler.min.js"></script>
-
-</div>
-
 @endsection
