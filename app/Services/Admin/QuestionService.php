@@ -97,15 +97,13 @@ class QuestionService
 
     public function option($soal)
     {
-        $option = '';
 
         if ($soal->tipe == 'Jawaban Ganda') {
-            $option = 'checkbox';
+            return 'checkbox';
         } elseif ($soal->tipe == 'Pilihan Ganda') {
-            $option = 'radio';
+            return 'radio';
         }
 
-        return $option;
     }
 
 }
