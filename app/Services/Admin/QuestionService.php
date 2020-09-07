@@ -2,6 +2,9 @@
 
 namespace App\Services\Admin;
 
+use App\Exam;
+use App\Question;
+
 class QuestionService
 {
     public function createQuestionForm($request)
@@ -42,4 +45,67 @@ class QuestionService
             'option' => $option
         ];
     }
+
+    public function simpanSoal($data, Exam $exam)
+    {
+        $soal = new Question($data->soal);
+
+        // Save the question
+        $exam->questions()->save($soal, ['urutan' => $this->urutan($exam)]);
+
+        
+        // Create an answers array
+        $answers = array();
+        $jawabanBenar = array();
+
+        foreach ($data->jawaban as $answer) {
+            
+            $answer['nilai'] = $answer['nilai'] ?? 0;
+
+            // Masukkan ke array answers
+            $answers[] = $answer;
+
+            if (array_key_exists('benar',$answer) && $answer['benar'] == 1) {
+                $jawabanBenar[] = 1;
+            }
+
+        }
+
+        // Save the answers and assign them to the question
+        $soal->answers()->createMany($answers);
+
+        // Kalau tipe multiple tapi jawaban benar cuma satu, update tipe soal
+        if ($soal->tipe == 2 && count($jawabanBenar) <= 1) {
+            $soal->tipe = 1;
+            $soal->save();
+        }
+    }
+
+    public function urutan(Exam $exam)
+    {
+        // Cek urutan
+        $max = $exam->questions()->max('urutan');
+        
+        return (is_null($max)) ? 1 : $max + 1;
+    }
+
+    public function cekJawaban($answersData)
+    {
+        
+
+    }
+
+    public function option($soal)
+    {
+        $option = '';
+
+        if ($soal->tipe == 'Jawaban Ganda') {
+            $option = 'checkbox';
+        } elseif ($soal->tipe == 'Pilihan Ganda') {
+            $option = 'radio';
+        }
+
+        return $option;
+    }
+
 }

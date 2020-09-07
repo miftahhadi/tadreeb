@@ -27,11 +27,13 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 
-    <!-- CSS files -->
-    <link href="/dist/css/tabler.css" rel="stylesheet"/>
+    @section('head-script')
+      <!-- CSS files -->
+      <link href="/dist/css/tabler.css" rel="stylesheet"/>
 
-    {{-- fontawesome --}}
-    <script src="https://kit.fontawesome.com/c62b0f450b.js" crossorigin="anonymous"></script>
+      <!-- fontawesome -->
+      <script src="https://kit.fontawesome.com/c62b0f450b.js" crossorigin="anonymous"></script>
+    @show
 
     <style>
       body {
@@ -45,7 +47,7 @@
 
     @yield('main')
 
-    @yield('js-script')
+    @yield('js')
 
     <script>
         document.body.style.display = "block"

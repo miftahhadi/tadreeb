@@ -13,7 +13,7 @@
 
 @section('tableBody')
 
-    @foreach ($exams as $exam)
+    @forelse ($exams as $exam)
         <tr>
             <td>{{ $exam->id }}</td>
             <td>{{ $exam->judul }}</td>
@@ -40,6 +40,11 @@
 
             </td>
         </tr>
-    @endforeach
+
+    @empty
+        <tr>
+            <td colspan="4">Belum ada ujian</td>
+        </tr>
+    @endforelse
     
 @endsection

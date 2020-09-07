@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\QuestionService;
+use App\Http\Requests\Admin\StoreQuestionRequest;
 use App\Exam;
+use App\Question;
 
 class QuestionController extends Controller
 {
@@ -49,9 +51,12 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreQuestionRequest $request, Exam $ujian)
     {
-        //
+
+        $this->questionService->simpanSoal($request, $ujian);
+
+        return redirect(route('ujian.show', $ujian->slug));
     }
 
     /**
@@ -71,9 +76,13 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Exam $ujian, Question $soal)
     {
-        //
+        return view('admin.question.edit',[
+            'ujian' => $ujian,
+            'soal' => $soal,
+            'option' => $this->questionService->option($soal)
+        ]);
     }
 
     /**

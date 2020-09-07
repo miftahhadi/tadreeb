@@ -29,8 +29,8 @@ class ExamController extends Controller
         return view('admin.exam.index', [
             'exams' => Exam::all(),
             'item' => 'ujian',
-            'judul' => 'Judul Ujian',
-            'slug' => 'exam URL',
+            'judul' => 'Judul ujian',
+            'slug' => 'Slug URL',
             'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
             'action' => '/admin/ujian'
         ]);
@@ -56,7 +56,7 @@ class ExamController extends Controller
     {
         $exam = $this->examService->createExam($request->validated());
 
-        return redirect(route('ujian.show', ['exam' => $exam->exam]));
+        return redirect(route('ujian.show', ['ujian' => $exam->slug]));
     }
 
     /**

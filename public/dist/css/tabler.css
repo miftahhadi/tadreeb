@@ -11682,3 +11682,7 @@ span.flatpickr-weekday {
 .noUi-connect {
   background: currentColor; }
 /*# sourceMappingURL=tabler.css.map */
+
+p {
+  margin: 0;
+}

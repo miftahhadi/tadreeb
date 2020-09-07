@@ -34,20 +34,33 @@
   
               <thead>
                 <tr>
-                  <th class="w-1">No</th>
-                  <th>Soal</th>
-                  <th>Tipe</th>
-                  <th></th>
+                    <th class="w-1">No</th>
+                    <th width="50%">Soal</th>
+                    <th>Tipe</th>
+                    <th class="w-2"></th>
                 </tr>
               </thead>
   
               <tbody>
   
+                @forelse ($ujian->questions as $key => $question)
+                    <tr>
+                        <td>{{ ++$key }}</td>
+                        <td>{!! $question->konten !!}</td>
+                        <td>{{ $question->tipe }}</td>
+                        <td class="text-right">
+                            <div class="btn-list flex-nowrap">
+                                {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
+                                <a href="{{ route('ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light">Edit</a>
+                                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
                 <tr>
-                    <td>1</td>
-                    <td>Tes</td>
-                    <td>Tes</td>
+                    <td colspan="3">Belum ada soal</td>
                 </tr>
+                @endforelse
   
               </tbody>
   
@@ -66,7 +79,7 @@
         aria-hidden="true"
     >
         <div class="modal-dialog modal-sm" role="document">
-            <form action="#" method="get">
+            <form action="{{ route('ujian.soal.create', ['ujian' => $ujian->slug]) }}" method="get">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Pilih tipe soal</h5>
