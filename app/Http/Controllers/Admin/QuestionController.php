@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\QuestionService;
 use App\Http\Requests\Admin\StoreQuestionRequest;
+use App\Http\Requests\Admin\UpdateQuestionRequest;
 use App\Exam;
 use App\Question;
 
@@ -89,12 +90,14 @@ class QuestionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  App\Question  $soal
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateQuestionRequest $request, Exam $ujian, Question $soal)
     {
-        //
+        $this->questionService->update($request->validated(), $soal);
+
+        return redirect(route('ujian.show', $ujian->slug));
     }
 
     /**
@@ -103,8 +106,18 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Question $soal)
     {
-        //
+        $soal->delete();
+
+        return redirect(route('ujian.index')); // TODO: buat route ke bank soal
+    }
+
+
+    public function unassignFromExam(Exam $ujian, Question $soal)
+    {
+        $ujian->questions()->detach($soal->id);
+
+        return redirect(route('ujian.show', $ujian->slug));
     }
 }

@@ -9,10 +9,18 @@
 @section('content')
     <ol class="breadcrumb" aria-label="breadcrumbs">
         <li class="breadcrumb-item"><a href="{{ route('ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="#">Buat Soal Baru</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            Edit Soal
+        </a></li>
     </ol>
 
-    <form action="{{ route('ujian.soal.update', ['ujian' => $ujian->slug, 'soal' => $soal->id]) }}" method="post">
+    <form 
+        action=
+        @section('form-action')
+            "{{ route('ujian.soal.update', ['ujian' => $ujian->slug, 'soal' => $soal->id]) }}"
+        @show 
+        method="post"
+    >
         @method('PUT')
         @csrf
 
@@ -29,6 +37,10 @@
             </div>
         </div>
 
+        <div class="alert alert-info" role="alert">
+            Tipe soal: <strong>{{ $soal->tipe }}</strong>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 Redaksi Soal
@@ -42,138 +54,74 @@
                 <textarea class="form-control" name="soal[konten]" id="redaksi" placeholder="Tuliskan soal...">{!! $soal->konten !!}</textarea>
             </div>
         </div>
-        
-        @if(request('type') == 'multiple' || request('type') == 'single')
-            
-            <input type="hidden" 
-                    name="soal[tipe]" 
-                    value="{{ request('type') == 'single' ? 1 : 2 }}"
-            >
-        
-            <h4 class="card-title">Pilihan Jawaban</h4>
-        
-            @for($i = 0; $i < $choices; $i++)
-        
-                <div class="card">
-                    <div class="card-header">
-                        Pilihan {{ $i + 1 }}
-                    </div>
-        
-                    <div class="card-body" id="cardSoal">
-                        <textarea name="jawaban[{{ $i }}][redaksi]"></textarea>
-                    </div> 
-                    
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <div class="form-label">Pilihan Benar</div>
-                                    <label class="form-check">
-                                        <input type="{{ $option }}" class="form-check-input" name="jawaban[{{ $i }}][benar]" value="1">
-                                        <span class="form-check-label">Benar</span>
-                                    </label>
-                                </div>
-                            </div>
-        
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="form-label">Nilai</label>
 
-                                    <input type="number" 
-                                            class="form-control" 
-                                            name="jawaban[{{ $i }}][nilai]" 
-                                            placeholder="Nilai" 
-                                            value="0"
-                                    >
+        <h4 class="card-title">Pilihan Jawaban</h4>
+        
+        @if($soal->tipe == 'Jawaban Ganda' || $soal->tipe == 'Pilihan Ganda')
 
-                                </div>
-                            </div>  
-        
-                        </div>
-                    </div>
-        
+            @foreach ($soal->answers as $key => $answer)
+
+            <div class="card">
+                <div class="card-header">
+                    Pilihan {{ ++$key }}
                 </div>
-        
-            @endfor
-        
-        @elseif(request('type') == 'benarsalah' || request('type') == 'benarsalahArabic')
-
-            <input type="hidden" name="soal[tipe]" value="3">
-
-            <h4 class="card-title">Pilihan Jawaban</h4>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class="form-check">
-                                <input type="radio" 
-                                        class="form-check-input" 
-                                        name="jawaban[1][benar]" 
-                                        value="1"
-                                >
-                                
-                                <input type="hidden" 
-                                        name="jawaban[1][redaksi]" 
-                                        value="{{ $value['benar'] }}"
-                                >
-
-                                <div class="form-check-label">{{ $value['benar'] }}</div>
-                            </label>
+                <div class="card-body" id="cardSoal">
+                    <textarea name="jawaban[{{ $answer->id }}][redaksi]">{!! $answer->redaksi !!}</textarea>
+                </div> 
+                
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="form-label">Pilihan Benar</div>
+                                <label class="form-check">
+                                    <input type="{{ $option }}" class="form-check-input" name="benar[]" value="{{ $answer->id }}" @if ($answer->benar == 1) checked @endif>
+                                    <span class="form-check-label">Benar</span>
+                                </label>
+                            </div>
                         </div>
-        
-                        <div class="card-footer">
-        
+
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-label">Nilai</label>
-                                
-                                <input type="number" 
-                                        class="form-control" 
-                                        placeholder="Nilai" 
-                                        value="0" 
-                                        name="jawaban[1][nilai]"
-                                >
+                                <input type="number" class="form-control" name="jawaban[{{ $answer->id }}][nilai]" placeholder="Nilai" value="{{ $answer->nilai }}">
                             </div>
-            
-                        </div>
-        
+                        </div>  
+
                     </div>
                 </div>
-        
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class="form-check">
-                                <input type="radio" 
-                                        class="form-check-input" 
-                                        name="jawaban[2][benar]" 
-                                        value="1"
-                                >
-                                
-                                <input type="hidden" 
-                                        name="jawaban[2][redaksi]" 
-                                        value="{{ $value['salah'] }}"
-                                >
-                                
-                                <div class="form-check-label">{{ $value['salah'] }}</div>
-                            </label>
-                        </div>
-        
-                        <div class="card-footer">
-                            
-                            <div class="form-group">
-                                <label class="form-label">Nilai</label>
-                                <input type="number" class="form-control" placeholder="Nilai" value="0" name="jawaban[2][nilai]">
-                            </div>
-        
-                        </div>
-        
-                    </div>
-                </div>
+
             </div>
-        
-        @elseif(request('type') == 'text')
-            <input type="hidden" name="soal[tipe]" value="4">
+            @endforeach
+
+            @elseif ($soal->tipe == 'Benar/Salah')
+
+            <div class="row">
+                @foreach ($soal->answers as $key => $answer)
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <label class="form-check">
+                                <input type="radio" class="form-check-input" name="benar[]" value="{{ $answer->id }}" @if ($answer->benar == 1) checked @endif>
+                                <input type="hidden" name="jawaban[{{ $answer->id }}][redaksi]" value="{{ $answer->redaksi }}">
+                                <div class="form-check-label">{{ $answer->redaksi }}</div>
+                            </label>
+                        </div>
+
+                        <div class="card-footer">
+
+                            <div class="form-group">
+                                <label class="form-label">Nilai</label>
+                                <input type="number" class="form-control" placeholder="Nilai" value="{{ $answer->nilai ?? 0 }}" name="jawaban[{{ $answer->id }}][nilai]">
+                            </div>
+            
+                        </div>
+
+                    </div>
+                </div>
+                @endforeach
+
+            </div>
         @endif
 
     </form>

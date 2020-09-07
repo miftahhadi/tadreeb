@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Exam;
 use App\Question;
+use App\Answer;
 
 class QuestionService
 {
@@ -104,6 +105,41 @@ class QuestionService
             return 'radio';
         }
 
+    }
+
+    public function update($data, Question $soal)
+    {
+        $this->updateSoal($data, $soal);
+
+        $this->updateJawaban($data, $soal);
+
+        return;
+    }
+
+    public function updateSoal($data, Question $soal)
+    {
+        $soal->konten = $data['soal']['konten'];
+
+        return $soal->save();
+    }
+
+    public function updateJawaban($data, Question $soal)
+    {
+        $answers = [];
+
+        foreach ($data['jawaban'] as $key => $jawaban) {
+            $answer = Answer::findOrFail($key);
+
+            $answer->redaksi = $jawaban['redaksi'];
+
+            $answer->benar = (in_array($answer->id, $data['benar'])) ? 1 : 0;
+
+            $answer->nilai = $jawaban['nilai'];
+            
+            $answers[] = $answer;
+        }
+
+        return $soal->answers()->saveMany($answers);
     }
 
 }

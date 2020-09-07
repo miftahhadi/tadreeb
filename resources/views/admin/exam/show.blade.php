@@ -52,13 +52,22 @@
                             <div class="btn-list flex-nowrap">
                                 {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
                                 <a href="{{ route('ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light">Edit</a>
-                                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a>
+
+                                {{-- <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a> --}}
+
+                                <form action="{{ route('ujian.soal.unassign', ['ujian' => $ujian->slug]) }} " method="post">
+                                    @csrf
+
+                                    <input type="hidden" name="soal" value="{{ $question->id }}">
+                                    <input type="submit" class="btn btn-danger btn-md" value="Hapus">
+                                </form>
+
                             </div>
                         </td>
                     </tr>
                 @empty
                 <tr>
-                    <td colspan="3">Belum ada soal</td>
+                    <td colspan="4">Belum ada soal</td>
                 </tr>
                 @endforelse
   

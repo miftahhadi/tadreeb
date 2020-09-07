@@ -41,15 +41,12 @@
                 <textarea class="form-control" name="soal[konten]" id="redaksi" placeholder="Tuliskan soal..."></textarea>
             </div>
         </div>
+
+        <h4 class="card-title">Pilihan Jawaban</h4>
         
         @if(request('type') == 'multiple' || request('type') == 'single')
             
-            <input type="hidden" 
-                    name="soal[tipe]" 
-                    value="{{ request('type') == 'single' ? 1 : 2 }}"
-            >
-        
-            <h4 class="card-title">Pilihan Jawaban</h4>
+            <input type="hidden" name="soal[tipe]" value="{{ request('type') == 'single' ? 1 : 2 }}">
         
             @for($i = 0; $i < $choices; $i++)
         
@@ -98,9 +95,7 @@
         @elseif(request('type') == 'benarsalah' || request('type') == 'benarsalahArabic')
 
             <input type="hidden" name="soal[tipe]" value="3">
-
-            <h4 class="card-title">Pilihan Jawaban</h4>
-            
+           
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
