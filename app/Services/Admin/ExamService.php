@@ -6,10 +6,6 @@ use App\Exam;
 
 class ExamService
 {
-    public function createExam($data)
-    {
-        return auth()->user()->exams()->create($data);
-    }
 
     public $questionTypes = [
         [
@@ -35,5 +31,19 @@ class ExamService
         'benar' => '<i class="fas fa-check-circle"></i>',
         'salah' => '<i class="fas fa-times-circle"></i>'
     ];
+
+    public function createExam($data)
+    {
+        return auth()->user()->exams()->create($data);
+    }
+
+    public function update($data, Exam $exam)
+    {
+        $exam->judul = $data['judul'];
+        $exam->slug = $data['slug'];
+        $exam->deskripsi = $data['deskripsi'];
+
+        return $exam->save();
+    }
 
 }

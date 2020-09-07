@@ -8,7 +8,7 @@
             <th class="w-1">ID</th>
             <th>Judul</th>
             <th>Dibuat oleh</th>
-            <th></th>
+            <th class="w-2"></th>
 @endsection
 
 @section('tableBody')
@@ -18,8 +18,8 @@
             <td>{{ $exam->id }}</td>
             <td>{{ $exam->judul }}</td>
             <td>{{ $exam->user->nama }}</td>
-            <td>
-                <div class="btn-list">
+            <td class="text-right">
+                <div class="btn-list flex-nowrap">
                     <a href="{{ route('ujian.show', $exam->slug) }}" class="btn btn-sm btn-primary">Buka</a>
 
                     {{-- <button type="button"
@@ -28,6 +28,8 @@
                             data-id="{{ $exam->id }}"
                             data-target="#hapusData"
                     >Hapus</button> --}}
+
+                    <a href="{{ route('ujian.edit', $exam->slug) }}" class="btn btn-sm btn-white">Edit</a>
     
                     <form action="{{ route('ujian.destroy', $exam->slug) }}" method="post">
                         @method('DELETE')

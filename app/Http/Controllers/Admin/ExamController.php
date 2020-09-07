@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\UpdateExamRequest;
 use App\Services\Admin\ExamService;
 use App\Http\Requests\Admin\StoreExamRequest;
 use App\Exam;
@@ -78,12 +79,14 @@ class ExamController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $ujian
+     * @param  App\Exam  $ujian
      * @return \Illuminate\Http\Response
      */
-    public function edit($ujian)
+    public function edit(Exam $ujian)
     {
-        //
+        return view('admin.exam.edit', [
+            'ujian' => $ujian
+        ]);
     }
 
     /**
@@ -93,9 +96,11 @@ class ExamController extends Controller
      * @param  string  $ujian
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $ujian)
+    public function update(UpdateExamRequest $request, Exam $ujian)
     {
-        //
+        $this->examService->update($request->validated(), $ujian);
+
+        return redirect(route('ujian.index'));
     }
 
     /**

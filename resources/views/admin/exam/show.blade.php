@@ -51,7 +51,7 @@
                         <td class="text-right">
                             <div class="btn-list flex-nowrap">
                                 {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
-                                <a href="{{ route('ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light">Edit</a>
+                                <a href="{{ route('ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light btn-sm">Edit</a>
 
                                 {{-- <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a> --}}
 
@@ -59,7 +59,7 @@
                                     @csrf
 
                                     <input type="hidden" name="soal" value="{{ $question->id }}">
-                                    <input type="submit" class="btn btn-danger btn-md" value="Hapus">
+                                    <input type="submit" class="btn btn-danger btn-sm" value="Hapus">
                                 </form>
 
                             </div>
