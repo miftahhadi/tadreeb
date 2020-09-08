@@ -46,4 +46,16 @@ class ExamService
         return $exam->save();
     }
 
+    public function detachQuestions(Exam $exam)
+    {
+        return $exam->questions()->detach();
+    }
+
+    public function delete(Exam $exam)
+    {
+        $this->detachQuestions($exam);
+        
+        return $exam->delete();
+    }
+
 }

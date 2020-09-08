@@ -111,7 +111,7 @@ class ExamController extends Controller
      */
     public function destroy(Exam $ujian)
     {
-        $ujian->delete();
+        $this->examService->delete($ujian);
 
         return redirect(route('ujian.index'));
     }
