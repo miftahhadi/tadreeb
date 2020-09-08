@@ -27,6 +27,9 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @section('head-script')
       <!-- CSS files -->
       <link href="/dist/css/tabler.css" rel="stylesheet"/>
