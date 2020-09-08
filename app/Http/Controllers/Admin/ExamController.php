@@ -33,7 +33,7 @@ class ExamController extends Controller
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',
             'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
-            'action' => '/admin/ujian'
+            'action' => route('ujian.store')
         ]);
     }
 

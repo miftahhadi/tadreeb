@@ -4,9 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Lesson;
+use App\Http\Requests\Admin\StoreLessonRequest;
+use App\Services\Admin\LessonService;
 
 class LessonController extends Controller
 {
+
+    protected $lessonService;
+
+    public function __construct(LessonService $lessonService)
+    {
+        $this->lessonService = $lessonService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,14 @@ class LessonController extends Controller
      */
     public function index()
     {
-        return view('admin.lesson.index');
+        return view('admin.lesson.index', [
+            'lessons' => Lesson::all(),
+            'item' => 'pelajaran',
+            'judul' => 'Judul pelajaran',
+            'slug' => 'Slug URL',
+            'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
+            'action' => route('pelajaran.store')
+        ]);
     }
 
     /**
@@ -33,9 +51,11 @@ class LessonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLessonRequest $request)
     {
-        //
+        $lesson = $this->lessonService->createLesson($request->validated());
+
+        return redirect(route('pelajaran.show', $lesson->id));
     }
 
     /**
