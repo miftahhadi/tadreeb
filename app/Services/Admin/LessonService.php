@@ -13,10 +13,7 @@ class LessonService
 
     public function update($data, Lesson $pelajaran)
     {
-        /* $pelajaran->judul = $data['judul'];
-        $pelajaran->slug = $data['slug'];
-        $pelajaran->deskripsi = $data['deskripsi'];
- */
+
         return $pelajaran->update([
                     'judul' => $data['judul'],
                     'slug' => $data['slug'],
