@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Lesson;
 use App\Http\Requests\Admin\StoreLessonRequest;
+use App\Http\Requests\Admin\UpdateLessonRequest;
 use App\Services\Admin\LessonService;
 
 class LessonController extends Controller
@@ -79,7 +80,9 @@ class LessonController extends Controller
      */
     public function edit(Lesson $pelajaran)
     {
-        //
+        return view('admin.lesson.edit', [
+            'pelajaran' => $pelajaran
+        ]);
     }
 
     /**
@@ -89,9 +92,11 @@ class LessonController extends Controller
      * @param  App\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lesson $pelajaran)
+    public function update(UpdateLessonRequest $request, Lesson $pelajaran)
     {
-        //
+        $this->lessonService->update($request->validated(), $pelajaran);
+
+        return redirect(route('pelajaran.index'));
     }
 
     /**
