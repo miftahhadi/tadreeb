@@ -10,4 +10,12 @@ class LessonService
     {
         return auth()->user()->lessons()->create($data);
     }
+
+    public function destroy(Lesson $pelajaran)
+    {
+        // Hapus section dan isinya
+
+        // Hapus pelajaran
+        return $pelajaran->delete();
+    }
 }

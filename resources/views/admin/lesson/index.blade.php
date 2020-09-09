@@ -19,7 +19,7 @@
           <td>Tes</td>
           <td class="text-right">
             <div class="btn-list flex-nowrap">
-                <a href="{{ route('ujian.show', $lesson->slug) }}" class="btn btn-sm btn-primary">Buka</a>
+                <a href="{{ route('pelajaran.show', $lesson->slug) }}" class="btn btn-sm btn-primary">Buka</a>
 
                 {{-- <button type="button"
                         class="btn btn-danger btn-sm"
@@ -28,9 +28,9 @@
                         data-target="#hapusData"
                 >Hapus</button> --}}
 
-                <a href="{{ route('ujian.edit', $lesson->slug) }}" class="btn btn-sm btn-white">Edit</a>
+                <a href="{{ route('pelajaran.edit', $lesson->slug) }}" class="btn btn-sm btn-white">Edit</a>
 
-                <form action="{{ route('ujian.destroy', $lesson->slug) }}" method="post">
+                <form action="{{ route('pelajaran.destroy', $lesson->slug) }}" method="post">
                     @method('DELETE')
                     @csrf
 

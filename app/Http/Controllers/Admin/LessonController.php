@@ -55,27 +55,29 @@ class LessonController extends Controller
     {
         $lesson = $this->lessonService->createLesson($request->validated());
 
-        return redirect(route('pelajaran.show', $lesson->id));
+        return redirect(route('pelajaran.show', $lesson->slug));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Lesson $pelajaran)
     {
-        //
+        return view('admin.lesson.show', [
+            'pelajaran' => $pelajaran
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  App\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Lesson $pelajaran)
     {
         //
     }
@@ -84,10 +86,10 @@ class LessonController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  App\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Lesson $pelajaran)
     {
         //
     }
@@ -95,11 +97,13 @@ class LessonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  App\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Lesson $pelajaran)
     {
-        //
+        $this->lessonService->destroy($pelajaran);
+
+        return redirect(route('pelajaran.index'));
     }
 }
