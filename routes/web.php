@@ -23,11 +23,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group([
     'prefix' => 'admin',
-    'namespace' => 'Admin'
+    'namespace' => 'Admin',
+    'middleware' => 'auth'
 ], function () {
         
     // Admin dashboard
-    Route::get('/', 'AdminController@index');
+    Route::get('/', 'AdminController@index')->name('admin');
 
     // Lessons
     Route::resource('pelajaran', 'LessonController');
@@ -41,5 +42,10 @@ Route::group([
 
     // Users
     Route::resource('user', 'UserController');
+
+    // Setting
+    Route::get('setting', function () {
+      return 0;  
+    })->name('setting');
 
 });
