@@ -16,7 +16,8 @@
         "laravel/framework": "^7.24",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.2",
-        "ryangjchandler/blade-tabler-icons": "^0.02.0"
+        "ryangjchandler/blade-tabler-icons": "^0.02.0",
+        "spatie/laravel-permission": "^3.16"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
