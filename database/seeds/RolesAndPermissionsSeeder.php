@@ -59,7 +59,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $teacher = Role::create(['name' => 'Teacher'])->givePermissionTo($arrayOfTeacherPermissions);
 
-        $student = Role::create(['name' => 'student']);
+        $student = Role::create(['name' => 'Student']);
         
     }
 }
