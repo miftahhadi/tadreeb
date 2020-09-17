@@ -56,7 +56,6 @@
                                 <td>{{ $user->gender }}</td>
                                 <td>
                                     <div class="btn-list">
-                                        <a href="#" class="btn bg-light" data-toggle="tooltip" title="Lihat">Lihat</a>
                                         <a href="{{ route('user.edit', ['user' => $user->id ]) }}" class="btn bg-light" data-toggle="tooltip" title="Edit">Edit</a>
                                         <!-- Button modal trigger-->
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-id="" data-target="#hapusData">Hapus</button>

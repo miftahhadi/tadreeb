@@ -26,4 +26,23 @@ class UserService
 
         return;
     }
+
+    public function update($data, User $user)
+    {
+        $dataUser = [
+            'nama' => $data['data']['nama'],
+            'email' => $data['data']['email'],
+            'username' => $data['data']['username'],
+            'gender' => $data['data']['gender'],
+            'tanggal_lahir' => $data['data']['tanggal_lahir']
+        ];
+
+        $user->update($dataUser);
+
+        // Change role
+        $user->syncRoles([$data['role']]);
+
+        return;
+
+    }
 }
