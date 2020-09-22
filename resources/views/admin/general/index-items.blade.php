@@ -38,27 +38,30 @@
   </div>
 
   <div class="box">
-      <div class="card">
-        <div class="table-responsive">
+    <div class="card">
+      <div class="table-responsive">
 
-          <table class="table table-vcenter table-hover card-table">
+        <table class="table table-vcenter table-hover card-table">
 
-            <thead>
-              <tr>
-                @yield('tableHeading')
-              </tr>
-            </thead>
+          <thead>
+            <tr>
+              @yield('tableHeading')
+            </tr>
+          </thead>
 
-            <tbody>
+          <tbody>
 
-              @yield('tableBody')
+            @yield('tableBody')
 
-            </tbody>
+          </tbody>
 
-          </table>
+        </table>
 
-        </div>
       </div>
+    </div>
+
+    @yield('pagination')
+
   </div>
 
   <!-- Modal Add New -->

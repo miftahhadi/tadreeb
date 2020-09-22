@@ -50,7 +50,7 @@
 
     @yield('main')
 
-    @yield('js')
+    @stack('js')
 
     <script>
         document.body.style.display = "block"

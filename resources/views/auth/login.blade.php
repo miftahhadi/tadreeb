@@ -22,7 +22,7 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 
-                                <label class="form-label">Usernamme</label>
+                                <label class="form-label">Username</label>
                                 
                                 <input type="text" class="form-control" name="username" id="username" placeholder="Masukkan username Anda" autocomplete="off">
                               

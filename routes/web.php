@@ -31,6 +31,7 @@ Route::group([
     Route::get('/', 'AdminController@index')->name('admin');
 
     // Lessons
+    Route::get('pelajaran/list', 'LessonController@list')->name('pelajaran.list');
     Route::resource('pelajaran', 'LessonController');
 
     // Exams

@@ -8,6 +8,7 @@ use App\Lesson;
 use App\Http\Requests\Admin\StoreLessonRequest;
 use App\Http\Requests\Admin\UpdateLessonRequest;
 use App\Services\Admin\LessonService;
+use Symfony\Component\HttpFoundation\Response;
 
 class LessonController extends Controller
 {
@@ -19,15 +20,11 @@ class LessonController extends Controller
         $this->lessonService = $lessonService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('admin.lesson.index', [
-            'lessons' => Lesson::all(),
+            'lessons' => Lesson::paginate(10),
             'item' => 'pelajaran',
             'judul' => 'Judul pelajaran',
             'slug' => 'Slug URL',
@@ -36,11 +33,13 @@ class LessonController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function list()
+    {
+        return response()->json([
+            'lessons' => Lesson::paginate(10)
+        ], Response::HTTP_OK);
+    }
+
     public function create()
     {
         //

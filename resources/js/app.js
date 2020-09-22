@@ -20,7 +20,11 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('item-baru-form', require('./components/admin/general/ItemBaruForm.vue').default)
+Vue.component('item-baru-form', require('./components/admin/general/ItemBaruForm.vue').default);
+Vue.component('lesson-index', require('./components/admin/LessonIndex.vue').default);
+Vue.component('lesson-list', require('./components/admin/LessonList.vue').default);
+Vue.component('item-action', require('./components/admin/ItemAction.vue').default);
+Vue.component('pagination', require('./components/admin/Pagination.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

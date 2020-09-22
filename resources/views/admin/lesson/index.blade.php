@@ -1,49 +1,47 @@
-@extends('admin.general.index-items')
+@extends('admin.main')
 
-@section('pageTitle')
-    Pelajaran
-@endsection
+@section('content')
+<div class="page-header">
+      
+    <h2 class="page-title">Pelajaran</h2>
 
-@section('tableHeading')
-    <th class="w-1">ID</th>
-    <th>Judul</th>
-    <th>Kategori</th>
-    <th class="w-2"></th>
-@endsection
+</div>
 
-@section('tableBody')
-    @forelse ($lessons as $lesson)
-        <tr>
-          <td>{{ $lesson->id }}</td>
-          <td>{{ $lesson->judul }}</td>
-          <td>Tes</td>
-          <td class="text-right">
-            <div class="btn-list flex-nowrap">
-                <a href="{{ route('pelajaran.show', $lesson->slug) }}" class="btn btn-sm btn-primary">Buka</a>
+<div class="row mb-3">
 
-                {{-- <button type="button"
-                        class="btn btn-danger btn-sm"
-                        data-toggle="modal"
-                        data-id="{{ $lesson->id }}"
-                        data-target="#hapusData"
-                >Hapus</button> --}}
+    <div class="col">
+      <button type="button" 
+              class="btn btn-primary" 
+              data-toggle="modal" 
+              data-target="#tambahBaru"
+      >
 
-                <a href="{{ route('pelajaran.edit', $lesson->slug) }}" class="btn btn-sm btn-white">Edit</a>
+        <i class="fas fa-plus"></i> 
+        <span class="ml-2">Tambah Baru</span>
+      
+      </button>
+    </div>
+    
 
-                <form action="{{ route('pelajaran.destroy', $lesson->slug) }}" method="post">
-                    @method('DELETE')
-                    @csrf
-
-                    <input type="submit" class="btn btn-danger btn-sm" value="Hapus">
-                    
-                </form>
+    <div class="col-auto">
+        <form action="." method="get">
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
+              </span>
+              <input type="text" class="form-control form-control-rounded" placeholder="Search…">
             </div>
+        </form>
+    </div>
+    
+</div>
 
-          </td>
-        </tr>
-    @empty
-        <tr>
-          <td colspan="4">Belum ada pelajaran</td>
-        </tr>
-    @endforelse
+<div class="box" id="app">
+  <lesson-index></lesson-index>
+</div>
+    
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush
