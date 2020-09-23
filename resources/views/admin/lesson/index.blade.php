@@ -37,7 +37,9 @@
 </div>
 
 <div class="box" id="app">
-  <lesson-index></lesson-index>
+  <lesson-index
+    item="pelajaran"
+  ></lesson-index>
 </div>
     
 @endsection

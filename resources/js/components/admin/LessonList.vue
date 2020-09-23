@@ -14,7 +14,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody :class="isLoading">
 
                     <tr v-for="lesson in lessons" :key="lesson.id">
                         <td>{{ lesson.id }}</td>
@@ -40,6 +40,13 @@ export default {
 
     props: {
         lessons: Array,
+        loading: Boolean,
+    },
+
+    computed: {
+        isLoading() {
+            return this.loading ? 'spinner-border' : '';
+        }
     }
 }
 </script>

@@ -35,9 +35,7 @@ class LessonController extends Controller
 
     public function list()
     {
-        return response()->json([
-            'lessons' => Lesson::paginate(10)
-        ], Response::HTTP_OK);
+        return response()->json(Lesson::paginate(10));
     }
 
     public function create()

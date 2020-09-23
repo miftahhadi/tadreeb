@@ -7,8 +7,11 @@
                 </a>
               </li>
 
-              <li class="page-item" v-for="n in range(lastPage)" :key="n" :class="isCurrent(n) ? 'active' : ''">
-                  <a class="page-link" href="#">{{ n }}</a>
+              <li class="page-item" 
+                  v-for="n in lastPage" 
+                  :key="n"
+              >
+                  <a class="page-link" href="#" @click.prevent="loadPage(n)">{{ n }}</a>
               </li>
 
 <!--               
@@ -28,7 +31,7 @@
 
 <script>
 export default {
-    name: 'pagination',
+    name: 'old-pagination',
 
     props: {
         currentPage: Number,
@@ -45,14 +48,16 @@ export default {
         }
     },
 
+    methods: {
+      loadPage(n) {
+        this.$emit('load-page', n)
+      }
+    },
     computed: {
         prevPageButton() {
             return this.prevPageUrl ? '' : 'disabled';
         },
 
-        isCurrent(page) {
-          return this.currentPage === page;
-        }
     }
 }
 </script>

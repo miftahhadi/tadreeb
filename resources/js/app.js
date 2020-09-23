@@ -24,7 +24,8 @@ Vue.component('item-baru-form', require('./components/admin/general/ItemBaruForm
 Vue.component('lesson-index', require('./components/admin/LessonIndex.vue').default);
 Vue.component('lesson-list', require('./components/admin/LessonList.vue').default);
 Vue.component('item-action', require('./components/admin/ItemAction.vue').default);
-Vue.component('pagination', require('./components/admin/Pagination.vue').default);
+// Vue.component('pagination', require('./components/admin/Pagination.vue').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
