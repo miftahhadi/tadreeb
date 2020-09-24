@@ -31,10 +31,11 @@ Route::group([
     Route::get('/', 'AdminController@index')->name('admin');
 
     // Lessons
-    Route::get('pelajaran/list', 'LessonController@list')->name('pelajaran.list');
+    Route::get('pelajaran/list', 'LessonController@list');
     Route::resource('pelajaran', 'LessonController');
 
     // Exams
+    Route::get('ujian/list', 'ExamController@list');
     Route::resource('ujian', 'ExamController');
 
     // Questions
@@ -42,6 +43,7 @@ Route::group([
     Route::resource('ujian.soal', 'QuestionController')->except('index');
 
     // Users
+    Route::get('user/list', 'UserController@list');
     Route::resource('user', 'UserController');
 
     // Setting

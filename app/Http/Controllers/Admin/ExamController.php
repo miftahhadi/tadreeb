@@ -27,21 +27,32 @@ class ExamController extends Controller
      */
     public function index()
     {
-        return view('admin.exam.index', [
-            'exams' => Exam::all(),
+        return view('admin.general.index', [
             'item' => 'ujian',
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',
-            'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
-            'action' => route('ujian.store')
+            'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
+            'action' => route('ujian.store'),
+            'tableHeading' => json_encode([
+                [
+                    'name' => 'Judul',
+                    'width' => '40%'
+                ], 
+                
+                [
+                    'name' => 'Slug',
+                    'width' => null
+                ]
+            ]),
+            'itemProperties' => json_encode(['id', 'judul', 'slug'])
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function list() 
+    {
+        return response()->json(Exam::paginate(10));
+    }
+
     public function create()
     {
         //

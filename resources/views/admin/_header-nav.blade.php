@@ -4,10 +4,10 @@
 
   <div class="nav-item dropdown">
     <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown">
-      <span class="avatar" style="background-image: url(./static/avatars/000m.jpg)"></span>
+      <span class="avatar">AD</span>
       <div class="d-none d-xl-block pl-2">
-        <div>Paweł Kuna</div>
-        <div class="mt-1 small text-muted">UI Designer</div>
+        <div>Miftah Hadi</div>
+        <div class="mt-1 small text-muted">Super Admin</div>
       </div>
     </a>
     <div class="dropdown-menu dropdown-menu-right">

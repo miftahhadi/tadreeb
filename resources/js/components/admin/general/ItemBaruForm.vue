@@ -1,7 +1,7 @@
 <template>
     <div>
         <form 
-            :action="form.action" 
+            :action="action" 
             method="post" 
         >
             <slot>
@@ -10,7 +10,7 @@
                 <div class="col">
 
                     <div class="form-group mb-3">
-                        <label class="form-label required">{{ form.judul }}</label>
+                        <label class="form-label required">{{ judul }}</label>
                         <input 
                             type="text" 
                             class="form-control" 
@@ -27,21 +27,33 @@
 
                     <div class="form-group mb-3">
                         <label class="form-label required">
-                            {{ form.slug }} 
+                            {{ slug }} 
                         </label>
-                        <div class="input-group">
-                            <span class="input-group-prepend">
-                                <span class="input-group-text">{{ form.url }}/</span>
-                            </span>
-                            <input 
-                                type="text" 
-                                name="slug" 
-                                class="form-control" 
-                                v-model="input.slug"
-                                @input="cekSlug"
-                                :class="slugInvalid"
-                            >
+                        <div class="row row-sm">
+                            <div class="col">
+                                <div class="input-group">
+                                    <input 
+                                        type="text" 
+                                        name="slug" 
+                                        class="form-control" 
+                                        v-model="input.slug"
+                                        @input="cekSlug"
+                                        @change="cekSpasi"
+                                        :class="slugInvalid"
+                                    >
+                                </div>                                
+                            </div>
+                            <!-- <div class="col-auto align-self-center">
+                                <span class="form-help" 
+                                        data-toggle="popover" 
+                                        data-placement="top" 
+                                        :data-content="help" 
+                                        data-html="true" 
+                                        data-original-title="" title=""
+                                >?</span>
+                            </div> -->
                         </div>
+
                         <small class="form-hint">Gunakan (-) sebagai pemisah antar kata, bukan spasi.</small>
 
                         <small v-if="errors.hasOwnProperty('slug')" class="text-danger">{{ errors.slug }}</small>
@@ -77,6 +89,7 @@
 <script>
 // TODO:    - input area belum bisa dikasih class is-invalid kalau error
 //          - kalau modal ditutup, input belum kereset
+//          - kalau langsung input slug, spasi gak otomatis jadi '-'
 export default {
     name: 'item-baru-form', 
     props: {
@@ -88,23 +101,24 @@ export default {
     },
     data() {
         return {
-            form: {
-                action: this.action,
-                judul: this.judul,
-                slug: this.slug,
-                url: this.url,
-            },
             input: {
                 judul: '',
                 slug: 'judul-' + this.item + '-anda',
                 deskripsi: '',
             },
+            
             errors: {},
+
+            help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this. slug + '/nahwu-dasar-2</code></p>' 
         }
     },
     methods: {
         slugify() {
             this.input.slug = this.input.judul.toLowerCase().trim().replace(/\s/g, '-');
+        },
+
+        cekSpasi() {
+            this.input.slg = this.input.slug.trim.replace(/\s/g, '-');
         },
 
         cekJudul() {

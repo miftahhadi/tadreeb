@@ -23,13 +23,24 @@ class LessonController extends Controller
 
     public function index()
     {
-        return view('admin.lesson.index', [
-            'lessons' => Lesson::paginate(10),
+        return view('admin.general.index', [
             'item' => 'pelajaran',
             'judul' => 'Judul pelajaran',
             'slug' => 'Slug URL',
             'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
-            'action' => route('pelajaran.store')
+            'action' => route('pelajaran.store'),
+            'tableHeading' => json_encode([
+                    [
+                        'name' => 'Judul',
+                        'width' => '40%'
+                    ], 
+                    
+                    [
+                        'name' => 'Slug',
+                        'width' => null
+                    ]
+                ]),
+            'itemProperties' => json_encode(['id', 'judul', 'slug'])
         ]);
     }
 

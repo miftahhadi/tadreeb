@@ -21,10 +21,9 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('item-baru-form', require('./components/admin/general/ItemBaruForm.vue').default);
-Vue.component('lesson-index', require('./components/admin/LessonIndex.vue').default);
-Vue.component('lesson-list', require('./components/admin/LessonList.vue').default);
-Vue.component('item-action', require('./components/admin/ItemAction.vue').default);
-// Vue.component('pagination', require('./components/admin/Pagination.vue').default);
+Vue.component('item-index', require('./components/admin/item-index/ItemIndex.vue').default);
+Vue.component('item-list', require('./components/admin/item-index/ItemList.vue').default);
+Vue.component('item-action', require('./components/admin/item-index/ItemAction.vue').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**

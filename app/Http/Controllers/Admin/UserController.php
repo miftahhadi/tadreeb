@@ -20,9 +20,35 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('admin.user.index', [
-            'users' => User::all()
+        return view('admin.general.index', [
+            'item' => 'user',
+            'judul' => 'Judul ujian',
+            'slug' => 'Slug URL',
+            'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
+            'action' => route('ujian.store'),
+            'tableHeading' => json_encode([
+                [
+                    'name' => 'Nama',
+                    'width' => '25%'
+                ], 
+                
+                [
+                    'name' => 'Username',
+                    'width' => null
+                ],
+
+                [
+                    'name' => 'Jenis Kelamin',
+                    'width' => null
+                ]
+            ]),
+            'itemProperties' => json_encode(['id', 'nama', 'username', 'gender'])
         ]);
+    }
+
+    public function list()
+    {
+        return response()->json(User::paginate(10));
     }
 
     /**
