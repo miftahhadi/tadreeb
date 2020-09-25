@@ -51,6 +51,15 @@ class UserController extends Controller
         return response()->json(User::paginate(10));
     }
 
+    public function search($search)
+    {
+        return response()->json(User::where('nama', 'like', '%' . $search . '%')
+                                        ->orWhere('username', 'like', '%' .  $search . '%')
+                                        ->orWhere('email', 'like', '%' . $search . '%')
+                                        ->paginate(10)
+                );
+    }
+
     /**
      * Show the form for creating a new resource.
      *

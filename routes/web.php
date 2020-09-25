@@ -32,9 +32,11 @@ Route::group([
 
     // Lessons
     Route::get('pelajaran/list', 'LessonController@list');
+    Route::get('pelajaran/search/{search}', 'LessonController@search');
     Route::resource('pelajaran', 'LessonController');
 
     // Exams
+    Route::get('ujian/search/{search}', 'ExamController@search');
     Route::get('ujian/list', 'ExamController@list');
     Route::resource('ujian', 'ExamController');
 
@@ -43,6 +45,7 @@ Route::group([
     Route::resource('ujian.soal', 'QuestionController')->except('index');
 
     // Users
+    Route::get('user/search/{search}', 'UserController@search');
     Route::get('user/list', 'UserController@list');
     Route::resource('user', 'UserController');
 

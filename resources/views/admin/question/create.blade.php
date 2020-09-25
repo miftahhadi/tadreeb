@@ -173,9 +173,9 @@
     </form>
 @endsection
 
-@section('js')
+@push('js')
     <!-- CKEditor -->
     <script>
         CKEDITOR.replaceAll();
     </script>
-@endsection
+@endpush

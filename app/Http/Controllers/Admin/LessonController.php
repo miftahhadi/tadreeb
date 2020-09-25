@@ -49,6 +49,14 @@ class LessonController extends Controller
         return response()->json(Lesson::paginate(10));
     }
 
+    public function search($search)
+    {
+        return response()->json(Lesson::where('judul', 'like', '%' . $search . '%')
+                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->paginate(10)
+                );
+    }
+
     public function create()
     {
         //

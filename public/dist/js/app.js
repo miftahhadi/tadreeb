@@ -2157,6 +2157,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
@@ -2168,7 +2197,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       laravelData: {},
       loading: false,
-      uri: '/admin/' + this.item + '/list?page='
+      query: ''
     };
   },
   methods: {
@@ -2185,6 +2214,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.getResults();
+  },
+  computed: {
+    uri: function uri() {
+      return this.query == '' ? '/admin/' + this.item + '/list?page=' : '/admin/' + this.item + '/search/' + this.query + '?page=';
+    }
   }
 });
 
@@ -38689,26 +38723,97 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("item-list", {
-        attrs: {
-          "item-name": _vm.item,
-          items: _vm.laravelData.data,
-          loading: _vm.loading,
-          headings: _vm.tableHeading,
-          "item-properties": _vm.itemProperties
-        }
-      }),
+  return _c("div", [
+    _c("div", { staticClass: "row mb-3" }, [
+      _c("div", { staticClass: "col-auto" }, [
+        _c("div", { staticClass: "input-icon" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.query,
+                expression: "query"
+              }
+            ],
+            staticClass: "form-control form-control-rounded",
+            attrs: { type: "text", placeholder: "Cari..." },
+            domProps: { value: _vm.query },
+            on: {
+              keyup: _vm.getResults,
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.query = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "input-icon-addon" }, [
+            _c(
+              "svg",
+              {
+                staticClass: "icon",
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  width: "24",
+                  height: "24",
+                  viewBox: "0 0 24 24",
+                  "stroke-width": "2",
+                  stroke: "currentColor",
+                  fill: "none",
+                  "stroke-linecap": "round",
+                  "stroke-linejoin": "round"
+                }
+              },
+              [
+                _c("path", { attrs: { stroke: "none", d: "M0 0h24v24H0z" } }),
+                _c("circle", { attrs: { cx: "10", cy: "10", r: "7" } }),
+                _c("line", {
+                  attrs: { x1: "21", y1: "21", x2: "15", y2: "15" }
+                })
+              ]
+            )
+          ])
+        ])
+      ]),
       _vm._v(" "),
-      _c("pagination", {
-        attrs: { data: _vm.laravelData },
-        on: { "pagination-change-page": _vm.getResults }
-      })
-    ],
-    1
-  )
+      _c(
+        "div",
+        { staticClass: "col-auto ml-auto" },
+        [
+          _c("pagination", {
+            attrs: { data: _vm.laravelData },
+            on: { "pagination-change-page": _vm.getResults }
+          })
+        ],
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "box" },
+      [
+        _c("item-list", {
+          attrs: {
+            "item-name": _vm.item,
+            items: _vm.laravelData.data,
+            loading: _vm.loading,
+            headings: _vm.tableHeading,
+            "item-properties": _vm.itemProperties
+          },
+          on: {
+            search: function($event) {
+              _vm.searchText = $event
+            }
+          }
+        })
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -51416,8 +51521,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

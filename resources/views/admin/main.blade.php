@@ -20,7 +20,7 @@
 
         <div class="col-md-2">
 
-          <div>
+          <div class="sticky-top">
             
               @include('admin._sidebar-nav')
 

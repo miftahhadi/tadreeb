@@ -53,6 +53,14 @@ class ExamController extends Controller
         return response()->json(Exam::paginate(10));
     }
 
+    public function search($search)
+    {
+        return response()->json(Exam::where('judul', 'like', '%' . $search . '%')
+                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->paginate(10)
+                );
+    }
+
     public function create()
     {
         //
