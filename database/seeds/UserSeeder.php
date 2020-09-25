@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             'nama' => 'Root',
             'email' => 'root@admin.com',
             'username' => 'root',
-            'password' => Hash::make('_kalam*haqiqi_')
+            'password' => Hash::make('12admin12')
         ]);
 
         $root->assignRole('superadmin');
