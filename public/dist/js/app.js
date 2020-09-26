@@ -38740,13 +38740,15 @@ var render = function() {
             attrs: { type: "text", placeholder: "Cari..." },
             domProps: { value: _vm.query },
             on: {
-              keyup: _vm.getResults,
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.query = $event.target.value
-              }
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.query = $event.target.value
+                },
+                _vm.getResults
+              ]
             }
           }),
           _vm._v(" "),
@@ -51521,8 +51523,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
