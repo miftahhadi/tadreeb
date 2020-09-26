@@ -1,42 +1,48 @@
 <template>
-    <div :class="isLoading">
-        <div class="card">
-            <div class="table-responsive">
+    <div class="card">
+        <div class="dimmer" :class="isLoading">
+            
+            <div class="loader"></div>
+            
+            <div class="dimmer-content">
+                <div class="table-responsive">
 
-                <table class="table table-vcenter table-hover card-table">
+                    <table class="table table-vcenter table-hover card-table">
 
-                <thead>
-                    <tr>
-                        <th class="w-1">ID</th>
-                        <th v-for="heading in headings" 
-                            :key="heading.id" 
-                            :width="heading.width"
-                        >{{ heading.name }}</th>
-                        
-                        <th class="w-2"></th>
-                    </tr>
-                </thead>
+                    <thead>
+                        <tr>
+                            <th class="w-1">ID</th>
+                            <th v-for="heading in headings" 
+                                :key="heading.id" 
+                                :width="heading.width"
+                            >{{ heading.name }}</th>
+                            
+                            <th class="w-2"></th>
+                        </tr>
+                    </thead>
 
-                <tbody>
+                    <tbody>
 
-                    <tr v-for="item in items" :key="item.id">
-                        <td v-for="$prop in itemProperties" :key="$prop">{{ item[$prop] }}</td>
-                        <td>
-                            <item-action
-                                :item-type="itemType"
-                                :item-slug="item.slug"
-                                :item-id="item.id"
-                                @delete:item="deleteItem"
-                            ></item-action>
-                        </td>
-                    </tr>
+                        <tr v-for="item in items" :key="item.id">
+                            <td v-for="$prop in itemProperties" :key="$prop">{{ item[$prop] }}</td>
+                            <td>
+                                <item-action
+                                    :item-type="itemType"
+                                    :item-slug="item.slug"
+                                    :item-id="item.id"
+                                    @delete:item="deleteItem"
+                                ></item-action>
+                            </td>
+                        </tr>
 
-                </tbody>
+                    </tbody>
 
-                </table>
+                    </table>
 
+                </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -54,7 +60,7 @@ export default {
 
     computed: {
         isLoading() {
-            return this.loading ? 'spinner-border' : '';
+            return this.loading ? 'active' : '';
         }
     },
 

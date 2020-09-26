@@ -2371,6 +2371,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-list',
   props: {
@@ -2382,7 +2388,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     isLoading: function isLoading() {
-      return this.loading ? 'spinner-border' : '';
+      return this.loading ? 'active' : '';
     }
   },
   methods: {
@@ -39052,68 +39058,72 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { class: _vm.isLoading }, [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "table-responsive" }, [
-        _c(
-          "table",
-          { staticClass: "table table-vcenter table-hover card-table" },
-          [
-            _c("thead", [
-              _c(
-                "tr",
-                [
-                  _c("th", { staticClass: "w-1" }, [_vm._v("ID")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.headings, function(heading) {
-                    return _c(
-                      "th",
-                      { key: heading.id, attrs: { width: heading.width } },
-                      [_vm._v(_vm._s(heading.name))]
-                    )
-                  }),
-                  _vm._v(" "),
-                  _c("th", { staticClass: "w-2" })
-                ],
-                2
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.items, function(item) {
-                return _c(
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "dimmer", class: _vm.isLoading }, [
+      _c("div", { staticClass: "loader" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "dimmer-content" }, [
+        _c("div", { staticClass: "table-responsive" }, [
+          _c(
+            "table",
+            { staticClass: "table table-vcenter table-hover card-table" },
+            [
+              _c("thead", [
+                _c(
                   "tr",
-                  { key: item.id },
                   [
-                    _vm._l(_vm.itemProperties, function($prop) {
-                      return _c("td", { key: $prop }, [
-                        _vm._v(_vm._s(item[$prop]))
-                      ])
+                    _c("th", { staticClass: "w-1" }, [_vm._v("ID")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.headings, function(heading) {
+                      return _c(
+                        "th",
+                        { key: heading.id, attrs: { width: heading.width } },
+                        [_vm._v(_vm._s(heading.name))]
+                      )
                     }),
                     _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _c("item-action", {
-                          attrs: {
-                            "item-type": _vm.itemType,
-                            "item-slug": item.slug,
-                            "item-id": item.id
-                          },
-                          on: { "delete:item": _vm.deleteItem }
-                        })
-                      ],
-                      1
-                    )
+                    _c("th", { staticClass: "w-2" })
                   ],
                   2
                 )
-              }),
-              0
-            )
-          ]
-        )
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.items, function(item) {
+                  return _c(
+                    "tr",
+                    { key: item.id },
+                    [
+                      _vm._l(_vm.itemProperties, function($prop) {
+                        return _c("td", { key: $prop }, [
+                          _vm._v(_vm._s(item[$prop]))
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        [
+                          _c("item-action", {
+                            attrs: {
+                              "item-type": _vm.itemType,
+                              "item-slug": item.slug,
+                              "item-id": item.id
+                            },
+                            on: { "delete:item": _vm.deleteItem }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    2
+                  )
+                }),
+                0
+              )
+            ]
+          )
+        ])
       ])
     ])
   ])
