@@ -14,6 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['namespace' => 'Admin'], function () {
+
+    Route::get('pelajaran', 'LessonController@list');
+    Route::get('pelajaran/search/{search}', 'LessonController@search');
+    Route::delete('pelajaran/{pelajaran}', 'LessonController@destroy');
+
+    Route::get('ujian', 'ExamController@list');
+    Route::get('ujian/search/{search}', 'ExamController@search');
+    Route::delete('ujian/{ujian}', 'ExamController@destroy');
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('user', 'UserController@list');
+        Route::get('user/search/{search}', 'UserController@search');
+        Route::delete('user/{user}', 'UserController@destroy');        
+    });
+
+
 });
+
