@@ -20,10 +20,14 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
 Vue.component('item-baru-form', require('./components/admin/general/ItemBaruForm.vue').default);
+
 Vue.component('item-index', require('./components/admin/item-index/ItemIndex.vue').default);
 Vue.component('item-list', require('./components/admin/item-index/ItemList.vue').default);
 Vue.component('item-action', require('./components/admin/item-index/ItemAction.vue').default);
+Vue.component('item-delete-modal', require('./components/admin/item-index/ItemDeleteModal.vue').default);
+
 Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**

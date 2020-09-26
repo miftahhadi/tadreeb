@@ -125,6 +125,5 @@ class LessonController extends Controller
     {
         $this->lessonService->destroy($pelajaran);
 
-        return redirect(route('pelajaran.index'));
     }
 }

@@ -4,7 +4,11 @@
 
                 <a :href="editUrl" class="btn btn-sm btn-light">Edit</a>
 
-                <button class="btn btn-danger btn-sm">Hapus</button>
+                <button class="btn btn-danger btn-sm" 
+                        data-toggle="modal" 
+                        data-target="#deleteItemModal"
+                        @click="deleteItem"
+                >Hapus</button>
                     
             </div>
 </template>
@@ -14,16 +18,34 @@ export default {
     name: 'item-action',
 
     props: {
-        itemName: String,
+        itemType: String,
         itemSlug: String,
+        itemId: Number,
+    },
+
+    data() {
+        return {
+            url: '/admin/' + this.itemType + '/',
+        }
     },
 
     computed: {
-        itemUrl() {
-            return '/admin/' + this.itemName + '/' + this.itemSlug;
+        selector() {
+            return this.itemSlug ?? this.itemId;
         },
+
+        itemUrl() {
+            return this.url + this.selector;
+        },
+
         editUrl() {
-            return '/admin/' + this.itemName + '/' + this.itemSlug + '/edit';
+            return this.url + this.selector + '/edit';
+        }
+    },
+
+    methods: {
+        deleteItem() {
+            this.$emit('delete:item', this.itemId);
         }
     }
 }

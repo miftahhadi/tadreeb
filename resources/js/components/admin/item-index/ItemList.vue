@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="card" :class="isLoading">
+    <div :class="isLoading">
+        <div class="card">
             <div class="table-responsive">
 
                 <table class="table table-vcenter table-hover card-table">
@@ -8,9 +8,11 @@
                 <thead>
                     <tr>
                         <th class="w-1">ID</th>
-                        <th v-for="heading in headings" :key="heading.id" :width="heading.width">{{ heading.name }}</th>
-                        <!-- <th width="60%">Judul</th>
-                        <th>Kategori</th> -->
+                        <th v-for="heading in headings" 
+                            :key="heading.id" 
+                            :width="heading.width"
+                        >{{ heading.name }}</th>
+                        
                         <th class="w-2"></th>
                     </tr>
                 </thead>
@@ -21,8 +23,10 @@
                         <td v-for="$prop in itemProperties" :key="$prop">{{ item[$prop] }}</td>
                         <td>
                             <item-action
-                                :item-name="itemName"
+                                :item-type="itemType"
                                 :item-slug="item.slug"
+                                :item-id="item.id"
+                                @delete:item="deleteItem"
                             ></item-action>
                         </td>
                     </tr>
@@ -41,22 +45,23 @@ export default {
     name:'item-list',
 
     props: {
-        itemName: String,
+        itemType: String,
         items: Array,
         loading: Boolean,
         headings: Array,
         itemProperties: Array,
     },
 
-    data() {
-        return {
-            $title: 'judul',
-        }
-    },
-
     computed: {
         isLoading() {
             return this.loading ? 'spinner-border' : '';
+        }
+    },
+
+    methods: {
+        deleteItem(id) {
+            let data = this.items.find(item => item.id == id);
+            this.$emit('delete:item', data);
         }
     }
 }
