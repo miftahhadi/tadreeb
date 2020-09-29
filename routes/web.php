@@ -44,8 +44,6 @@ Route::group([
     Route::resource('user', 'UserController');
 
     // Setting
-    Route::get('setting', function () {
-      return 0;  
-    })->name('setting');
+    Route::get('setting', 'SettingController@index')->name('setting');
 
 });
