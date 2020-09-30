@@ -7,8 +7,15 @@ use App\Settings;
 class SettingService
 {
 
-    public function allSettings(Settings $settings)
+    protected $settings;
+
+    public function __construct(Settings $settings)
     {
-        return $settings->all();
+        $this->settings = $settings;
+    }
+
+    public function allSettings()
+    {
+        return $this->settings->all();
     }
 }
