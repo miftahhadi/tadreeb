@@ -15,7 +15,14 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Settings::class, function() {
-            return Settings::make(storage_path('app/setting.json'));
+            $file = storage_path('app/setting.json');
+
+            if ( !file_exists($file) || trim(file_get_contents($file)) == false ) {
+                return Settings::make(storage_path('app/setting.json'), Settings::$default);
+            } else {
+                return Settings::make(storage_path('app/setting.json'));
+            }
+
         });
     }
 

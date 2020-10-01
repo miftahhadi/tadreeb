@@ -18,4 +18,9 @@ class SettingService
     {
         return $this->settings->all();
     }
+
+    public function setAppName($name)
+    {
+        return $this->settings->put('app_name', $name);
+    }
 }

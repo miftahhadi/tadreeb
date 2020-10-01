@@ -46,13 +46,6 @@
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                Menu Sidebar
-            </div>
-            <div class="card-body"></div>
-        </div>
-
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>

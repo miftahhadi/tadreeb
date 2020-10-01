@@ -14,28 +14,45 @@ class Settings extends Valuestore
         'admin_nav_menu' => [
             [
                 'name' => 'Dashboard',
+                'item' => 'admin',
                 'route' => 'admin',
-                'icon' => ''
+                'icon' => '<i class="fas fa-laptop"></i>'
             ],
             [
                 'name' => 'Pelajaran',
+                'item' => 'pelajaran',
                 'route' => 'pelajaran.index',
-                'icon' => ''
+                'icon' => '<i class="far fa-file-alt"></i>'
             ],
             [
                 'name' => 'Ujian',
+                'item' => 'ujian',
                 'route' => 'ujian.index',
-                'icon' => ''
+                'icon' => '<i class="fas fa-pen-alt"></i>'
+            ],
+            [
+                'name' => 'Grup',
+                'item' => 'grup',
+                'route' => 'grup.index',
+                'icon' => '<i class="fas fa-sitemap"></i>'
+            ],
+            [
+                'name' => 'Kelas',
+                'item' => 'kelas',
+                'route' => 'kelas.index',
+                'icon' => '<i class="fas fa-chalkboard-teacher"></i>'
             ],
             [
                 'name' => 'User',
+                'item' => 'user',
                 'route' => 'user.index',
-                'icon' => ''
+                'icon' => '<i class="fas fa-user"></i>'
             ],
             [
                 'name' => 'Pengaturan',
-                'route' => 'setting.index',
-                'icon' => ''
+                'item' => 'setting',
+                'route' => 'setting',
+                'icon' => '<i class="fas fa-cogs"></i>'
             ],
         ]
     ];

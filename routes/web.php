@@ -40,6 +40,12 @@ Route::group([
     Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
     Route::resource('ujian.soal', 'QuestionController')->except('index');
 
+    // Groups
+    Route::resource('grup', 'GroupController');
+
+    // Classrooms
+    Route::resource('kelas', 'ClassroomController');
+
     // Users
     Route::resource('user', 'UserController');
 
