@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Group;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,35 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.general.index', [
+            'item' => 'Grup',
+            'judul' => 'Nama Grup',
+            'slug' => 'Slug URL',
+            'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
+            'action' => route('grup.store'),
+            'tableHeading' => json_encode([
+                [
+                    'name' => 'Judul',
+                    'width' => '40%'
+                ], 
+                
+                [
+                    'name' => 'Slug',
+                    'width' => null
+                ]
+            ]),
+            'itemProperties' => json_encode(['id', 'judul', 'slug'])
+        ]);
+    }
+
+    public function list()
+    {
+        // Temp data
+        $data = [
+            'data' => []
+        ];
+
+        return response()->json($data);
     }
 
     /**
