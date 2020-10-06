@@ -24,9 +24,9 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('ujian/search/{search}', 'ExamController@search');
     Route::delete('ujian/{ujian}', 'ExamController@destroy');
 
-    Route::get('grup', 'LessonController@list');
-    Route::get('grup/search/{search}', 'LessonController@search');
-    Route::delete('grup/{grup}', 'LessonController@destroy');
+    Route::get('grup', 'GroupController@list');
+    Route::get('grup/search/{search}', 'GroupController@search');
+    Route::delete('grup/{grup}', 'GroupController@destroy');
 
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'UserController@list');

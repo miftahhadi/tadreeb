@@ -4,9 +4,8 @@
 
     {{-- Konten --}}
 
-    <h2 class="h1">{{ $ujian->judul }}</h2>
-    <span><strong>Deskripsi:</strong></span>
-    {{ $ujian->deskripsi }}
+    <h2 class="h1 font-weight-bold">{{ $ujian->judul }}</h2>
+    <p>{{ $ujian->deskripsi }}</p>
 
     <ul class="list-inline">
         <li class="list-inline-item"><small><a href="#">Edit</a></small></li>

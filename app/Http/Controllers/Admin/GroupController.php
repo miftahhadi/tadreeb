@@ -4,10 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Group;
 use App\Http\Controllers\Controller;
+use App\Services\Admin\GroupService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
+
+    protected $groupService;
+
+    public function __construct(GroupService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,34 +26,24 @@ class GroupController extends Controller
     public function index()
     {
         return view('admin.general.index', [
-            'item' => 'Grup',
+            'item' => 'grup',
             'judul' => 'Nama Grup',
-            'slug' => 'Slug URL',
-            'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
+            'slug' => '',
+            'url' => '',
             'action' => route('grup.store'),
             'tableHeading' => json_encode([
                 [
-                    'name' => 'Judul',
-                    'width' => '40%'
+                    'name' => 'Nama Grup',
+                    'width' => ''
                 ], 
-                
-                [
-                    'name' => 'Slug',
-                    'width' => null
-                ]
             ]),
-            'itemProperties' => json_encode(['id', 'judul', 'slug'])
+            'itemProperties' => json_encode(['id', 'nama'])
         ]);
     }
 
     public function list()
     {
-        // Temp data
-        $data = [
-            'data' => []
-        ];
-
-        return response()->json($data);
+        return response()->json(Group::paginate(10));
     }
 
     /**
@@ -64,7 +64,12 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $grup = $this->groupService->store($request->validate([
+            'judul' => '',
+            'deskripsi' => ''
+        ]));
+
+        return redirect(route('grup.show', $grup->id));
     }
 
     /**
@@ -73,9 +78,16 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Group $grup)
     {
-        //
+        return view('admin.grup.show', [
+            'grup' => $grup,
+            'item' => 'kelas',
+            'judul' => 'Nama Kelas',
+            'action' => '#',
+            'url' => '',
+            'slug' => ''
+        ]);
     }
 
     /**
