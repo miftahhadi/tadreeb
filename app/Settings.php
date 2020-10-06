@@ -31,16 +31,10 @@ class Settings extends Valuestore
                 'icon' => '<i class="fas fa-pen-alt"></i>'
             ],
             [
-                'name' => 'Grup',
+                'name' => 'Grup & Kelas',
                 'item' => 'grup',
                 'route' => 'grup.index',
                 'icon' => '<i class="fas fa-sitemap"></i>'
-            ],
-            [
-                'name' => 'Kelas',
-                'item' => 'kelas',
-                'route' => 'kelas.index',
-                'icon' => '<i class="fas fa-chalkboard-teacher"></i>'
             ],
             [
                 'name' => 'User',
