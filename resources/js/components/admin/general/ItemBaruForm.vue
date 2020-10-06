@@ -15,7 +15,7 @@
                             type="text" 
                             class="form-control" 
                             name="judul" 
-                            placeholder="Tuliskan judul" 
+                            :placeholder="input.judulPlaceholder" 
                             v-model="input.judul" 
                             @input="[slugify(), cekJudul(), cekSlug()]"
                             :class="judulInvalid"
@@ -25,7 +25,7 @@
                        
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3" v-if="slug">
                         <label class="form-label required">
                             {{ slug }} 
                         </label>
@@ -105,6 +105,7 @@ export default {
                 judul: '',
                 slug: 'judul-' + this.item + '-anda',
                 deskripsi: '',
+                judulPlaceholder: 'Tuliskan nama ' + this.item
             },
             
             errors: {},
