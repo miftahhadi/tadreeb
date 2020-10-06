@@ -2046,7 +2046,8 @@ __webpack_require__.r(__webpack_exports__);
       input: {
         judul: '',
         slug: 'judul-' + this.item + '-anda',
-        deskripsi: ''
+        deskripsi: '',
+        judulPlaceholder: 'Tuliskan nama ' + this.item
       },
       errors: {},
       help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this.slug + '/nahwu-dasar-2</code></p>'
@@ -2302,6 +2303,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.uri + page).then(function (response) {
         _this.loading = false;
         _this.laravelData = response.data;
+      })["catch"](function (reponse) {
+        _this.loading = false;
       });
     },
     deleteItem: function deleteItem(data) {
@@ -38653,7 +38656,7 @@ var render = function() {
                 attrs: {
                   type: "text",
                   name: "judul",
-                  placeholder: "Tuliskan judul"
+                  placeholder: _vm.input.judulPlaceholder
                 },
                 domProps: { value: _vm.input.judul },
                 on: {
@@ -38678,58 +38681,62 @@ var render = function() {
                 : _vm._e()
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "form-group mb-3" }, [
-              _c("label", { staticClass: "form-label required" }, [
-                _vm._v(
-                  "\n                        " +
-                    _vm._s(_vm.slug) +
-                    " \n                    "
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row row-sm" }, [
-                _c("div", { staticClass: "col" }, [
-                  _c("div", { staticClass: "input-group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.input.slug,
-                          expression: "input.slug"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: _vm.slugInvalid,
-                      attrs: { type: "text", name: "slug" },
-                      domProps: { value: _vm.input.slug },
-                      on: {
-                        input: [
-                          function($event) {
-                            if ($event.target.composing) {
-                              return
+            _vm.slug
+              ? _c("div", { staticClass: "form-group mb-3" }, [
+                  _c("label", { staticClass: "form-label required" }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.slug) +
+                        " \n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row row-sm" }, [
+                    _c("div", { staticClass: "col" }, [
+                      _c("div", { staticClass: "input-group" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.slug,
+                              expression: "input.slug"
                             }
-                            _vm.$set(_vm.input, "slug", $event.target.value)
-                          },
-                          _vm.cekSlug
-                        ],
-                        change: _vm.cekSpasi
-                      }
-                    })
-                  ])
+                          ],
+                          staticClass: "form-control",
+                          class: _vm.slugInvalid,
+                          attrs: { type: "text", name: "slug" },
+                          domProps: { value: _vm.input.slug },
+                          on: {
+                            input: [
+                              function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.input, "slug", $event.target.value)
+                              },
+                              _vm.cekSlug
+                            ],
+                            change: _vm.cekSpasi
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("small", { staticClass: "form-hint" }, [
+                    _vm._v(
+                      "Gunakan (-) sebagai pemisah antar kata, bukan spasi."
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm.errors.hasOwnProperty("slug")
+                    ? _c("small", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errors.slug))
+                      ])
+                    : _vm._e()
                 ])
-              ]),
-              _vm._v(" "),
-              _c("small", { staticClass: "form-hint" }, [
-                _vm._v("Gunakan (-) sebagai pemisah antar kata, bukan spasi.")
-              ]),
-              _vm._v(" "),
-              _vm.errors.hasOwnProperty("slug")
-                ? _c("small", { staticClass: "text-danger" }, [
-                    _vm._v(_vm._s(_vm.errors.slug))
-                  ])
-                : _vm._e()
-            ]),
+              : _vm._e(),
             _vm._v(" "),
             _vm._m(0)
           ]),

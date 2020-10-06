@@ -77,6 +77,9 @@
                         .then(response => {
                             this.loading = false;
                             this.laravelData = response.data;
+                        })
+                        .catch(reponse => {
+                            this.loading = false;
                         });
             },
 
