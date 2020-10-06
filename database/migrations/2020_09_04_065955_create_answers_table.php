@@ -15,7 +15,7 @@ class CreateAnswersTable extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('question_id')->constrained();
+            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
             $table->text('redaksi');
             $table->integer('benar')->default(0);
             $table->integer('nilai')->default(0);
