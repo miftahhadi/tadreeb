@@ -9,5 +9,10 @@ class Group extends Model
 {
     use HasFactory;
 
-    protected $guarded;
+    protected $guarded = [];
+
+    public function classroom()
+    {
+        return $this->hasMany(Classroom::class);
+    }
 }
