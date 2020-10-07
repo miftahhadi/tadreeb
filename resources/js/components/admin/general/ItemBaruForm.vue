@@ -96,7 +96,6 @@ export default {
         judul: String,
         item: String,
         action: String,
-        url: String,
         slug: String
     },
     data() {

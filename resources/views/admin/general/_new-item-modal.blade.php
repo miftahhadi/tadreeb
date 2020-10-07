@@ -22,7 +22,6 @@
               judul="{{ $judul }}" 
               item="{{ $item }}" 
               action="{{ $action }}" 
-              url="{{ $url }}" 
               slug="{{ $slug }}"
           >
             @csrf

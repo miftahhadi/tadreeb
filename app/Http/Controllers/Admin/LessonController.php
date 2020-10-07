@@ -27,7 +27,6 @@ class LessonController extends Controller
             'item' => 'pelajaran',
             'judul' => 'Judul pelajaran',
             'slug' => 'Slug URL',
-            'url' => $_SERVER['SERVER_NAME'] . '/k/{kelas}/u',
             'action' => route('pelajaran.store'),
             'tableHeading' => json_encode([
                     [

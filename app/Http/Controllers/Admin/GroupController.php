@@ -29,7 +29,6 @@ class GroupController extends Controller
             'item' => 'grup',
             'judul' => 'Nama Grup',
             'slug' => '',
-            'url' => '',
             'action' => route('grup.store'),
             'tableHeading' => json_encode([
                 [

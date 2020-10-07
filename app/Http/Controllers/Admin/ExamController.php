@@ -31,7 +31,6 @@ class ExamController extends Controller
             'item' => 'ujian',
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',
-            'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
             'action' => route('ujian.store'),
             'tableHeading' => json_encode([
                 [
