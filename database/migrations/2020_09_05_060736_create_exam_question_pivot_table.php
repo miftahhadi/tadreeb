@@ -19,6 +19,8 @@ class CreateExamQuestionPivotTable extends Migration
             $table->foreignId('question_id')->constrained()->cascadeOnDelete();
             $table->integer('urutan');
             $table->timestamps();
+
+            $table->unique(['exam_id', 'question_id']);
         });
     }
 
