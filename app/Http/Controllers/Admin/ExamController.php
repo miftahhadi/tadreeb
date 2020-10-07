@@ -31,7 +31,7 @@ class ExamController extends Controller
             'item' => 'ujian',
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',
-            'action' => route('ujian.store'),
+            'action' => route('admin.ujian.store'),
             'tableHeading' => json_encode([
                 [
                     'name' => 'Judul',
@@ -75,7 +75,7 @@ class ExamController extends Controller
     {
         $exam = $this->examService->createExam($request->validated());
 
-        return redirect(route('ujian.show', ['ujian' => $exam->slug]));
+        return redirect(route('admin.ujian.show', ['ujian' => $exam->slug]));
     }
 
     /**
@@ -118,7 +118,7 @@ class ExamController extends Controller
     {
         $this->examService->update($request->validated(), $ujian);
 
-        return redirect(route('ujian.index'));
+        return redirect(route('admin.ujian.index'));
     }
 
     /**
@@ -131,6 +131,6 @@ class ExamController extends Controller
     {
         $this->examService->delete($ujian);
 
-        return redirect(route('ujian.index'));
+        return redirect(route('admin.ujian.index'));
     }
 }

@@ -25,7 +25,7 @@ class UserController extends Controller
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',
             'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
-            'action' => route('ujian.store'),
+            'action' => route('admin.ujian.store'),
             'tableHeading' => json_encode([
                 [
                     'name' => 'Nama',
@@ -80,7 +80,7 @@ class UserController extends Controller
     {
         $this->userService->store($request->validated());
 
-        return redirect(route('user.index'));
+        return redirect(route('admin.user.index'));
     }
 
     /**
@@ -107,7 +107,7 @@ class UserController extends Controller
 
         $this->userService->update($request->validated(), $user);
 
-        return redirect(route('user.index'));
+        return redirect(route('admin.user.index'));
     }
 
     /**

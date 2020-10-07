@@ -21,35 +21,37 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::group([
-    'prefix' => 'admin',
-    'namespace' => 'Admin',
-    'middleware' => 'auth'
-], function () {
-        
-    // Admin dashboard
-    Route::get('/', 'AdminController@index')->name('admin');
+// Admin dashboard
+Route::get('/', 'Admin\AdminController@index')->name('admin');
 
-    // Lessons
-    Route::resource('pelajaran', 'LessonController');
-
-    // Exams
-    Route::resource('ujian', 'ExamController');
-
-    // Questions
-    Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
-    Route::resource('ujian.soal', 'QuestionController')->except('index');
-
-    // Groups
-    Route::resource('grup', 'GroupController');
-
-    // Classrooms
-    Route::resource('kelas', 'ClassroomController');
-
-    // Users
-    Route::resource('user', 'UserController');
-
-    // Setting
-    Route::get('setting', 'SettingController@index')->name('setting');
-
+Route::name('admin.')->group(function () {
+    Route::group([
+        'prefix' => 'admin',
+        'namespace' => 'Admin',
+        'middleware' => 'auth',
+    ], function () {
+    
+        // Lessons
+        Route::resource('pelajaran', 'LessonController');
+    
+        // Exams
+        Route::resource('ujian', 'ExamController');
+    
+        // Questions
+        Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
+        Route::resource('ujian.soal', 'QuestionController')->except('index');
+    
+        // Groups
+        Route::resource('grup', 'GroupController');
+    
+        // Classrooms
+        Route::resource('grup/{grup}/kelas', 'ClassroomController');
+    
+        // Users
+        Route::resource('user', 'UserController');
+    
+        // Setting
+        Route::get('setting', 'SettingController@index')->name('setting');
+    
+    });
 });

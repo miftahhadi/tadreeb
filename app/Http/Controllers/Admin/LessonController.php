@@ -27,7 +27,7 @@ class LessonController extends Controller
             'item' => 'pelajaran',
             'judul' => 'Judul pelajaran',
             'slug' => 'Slug URL',
-            'action' => route('pelajaran.store'),
+            'action' => route('admin.pelajaran.store'),
             'tableHeading' => json_encode([
                     [
                         'name' => 'Judul',
@@ -71,7 +71,7 @@ class LessonController extends Controller
     {
         $lesson = $this->lessonService->createLesson($request->validated());
 
-        return redirect(route('pelajaran.show', $lesson->slug));
+        return redirect(route('admin.pelajaran.show', $lesson->slug));
     }
 
     /**
@@ -111,7 +111,7 @@ class LessonController extends Controller
     {
         $this->lessonService->update($request->validated(), $pelajaran);
 
-        return redirect(route('pelajaran.index'));
+        return redirect(route('admin.pelajaran.index'));
     }
 
     /**

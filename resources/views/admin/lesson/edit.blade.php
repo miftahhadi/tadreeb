@@ -6,7 +6,7 @@
         <h2 class="page-title">Edit Pelajaran</h2>
     </div>
     <form 
-        action="{{ route('pelajaran.update', $pelajaran->slug)}}" 
+        action="{{ route('admin.pelajaran.update', $pelajaran->slug)}}" 
         method="post" 
     >
         @csrf
@@ -71,7 +71,7 @@
             </div>
             
             <div class="btn-list">
-                <a href="{{ route('ujian.index') }}" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                <a href="{{ route('admin.ujian.index') }}" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
                     Batal
                 </a>
 

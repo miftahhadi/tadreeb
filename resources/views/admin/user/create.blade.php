@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <form action="{{ route('user.store') }}" method="post" class="row">
+    <form action="{{ route('admin.user.store') }}" method="post" class="row">
         @csrf
         
         <div class="col-md-8">
@@ -115,7 +115,7 @@
 
 
             <div class="btn-list mt-4">
-                <a href="{{ route('user.index') }}" class="btn btn-white">Batal</a>
+                <a href="{{ route('admin.user.index') }}" class="btn btn-white">Batal</a>
                 <input type="submit" name="submit" value="Simpan" class="btn btn-success">
             </div>
     

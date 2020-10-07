@@ -50,11 +50,11 @@
                         <td class="text-right">
                             <div class="btn-list flex-nowrap">
                                 {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
-                                <a href="{{ route('ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light btn-sm">Edit</a>
+                                <a href="{{ route('admin.ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light btn-sm">Edit</a>
 
                                 {{-- <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a> --}}
 
-                                <form action="{{ route('ujian.soal.unassign', ['ujian' => $ujian->slug]) }} " method="post">
+                                <form action="{{ route('admin.ujian.soal.unassign', ['ujian' => $ujian->slug]) }} " method="post">
                                     @csrf
 
                                     <input type="hidden" name="soal" value="{{ $question->id }}">
@@ -87,7 +87,7 @@
         aria-hidden="true"
     >
         <div class="modal-dialog modal-sm" role="document">
-            <form action="{{ route('ujian.soal.create', ['ujian' => $ujian->slug]) }}" method="get">
+            <form action="{{ route('admin.ujian.soal.create', ['ujian' => $ujian->slug]) }}" method="get">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Pilih tipe soal</h5>

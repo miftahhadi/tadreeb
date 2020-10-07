@@ -57,7 +57,7 @@ class QuestionController extends Controller
 
         $this->questionService->simpanSoal($request, $ujian);
 
-        return redirect(route('ujian.show', $ujian->slug));
+        return redirect(route('admin.ujian.show', $ujian->slug));
     }
 
     /**
@@ -97,7 +97,7 @@ class QuestionController extends Controller
     {
         $this->questionService->update($request->validated(), $soal);
 
-        return redirect(route('ujian.show', $ujian->slug));
+        return redirect(route('admin.ujian.show', $ujian->slug));
     }
 
     /**
@@ -110,7 +110,7 @@ class QuestionController extends Controller
     {
         $soal->delete();
 
-        return redirect(route('ujian.index')); // TODO: buat route ke bank soal
+        return redirect(route('admin.ujian.index')); // TODO: buat route ke bank soal
     }
 
 
@@ -118,6 +118,6 @@ class QuestionController extends Controller
     {
         $ujian->questions()->detach($soal->id);
 
-        return redirect(route('ujian.show', $ujian->slug));
+        return redirect(route('admin.ujian.show', $ujian->slug));
     }
 }

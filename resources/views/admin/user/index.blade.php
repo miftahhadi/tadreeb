@@ -10,7 +10,7 @@
 
         <div class="col">
             <div class="btn-list">
-                <a href="{{ route('user.create') }}" class="btn btn-primary">
+                <a href="{{ route('admin.user.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> 
                     <span class="ml-2">Tambah Baru</span>
                 </a>
@@ -56,7 +56,7 @@
                                 <td>{{ $user->gender }}</td>
                                 <td>
                                     <div class="btn-list">
-                                        <a href="{{ route('user.edit', ['user' => $user->id ]) }}" class="btn bg-light" data-toggle="tooltip" title="Edit">Edit</a>
+                                        <a href="{{ route('admin.user.edit', ['user' => $user->id ]) }}" class="btn bg-light" data-toggle="tooltip" title="Edit">Edit</a>
                                         <!-- Button modal trigger-->
                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-id="" data-target="#hapusData">Hapus</button>
                                     </div>

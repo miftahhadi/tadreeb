@@ -29,7 +29,7 @@ class GroupController extends Controller
             'item' => 'grup',
             'judul' => 'Nama Grup',
             'slug' => '',
-            'action' => route('grup.store'),
+            'action' => route('admin.grup.store'),
             'tableHeading' => json_encode([
                 [
                     'name' => 'Nama Grup',
@@ -68,7 +68,7 @@ class GroupController extends Controller
             'deskripsi' => ''
         ]));
 
-        return redirect(route('grup.show', $grup->id));
+        return redirect(route('admin.grup.show', $grup->id));
     }
 
     /**
@@ -83,8 +83,7 @@ class GroupController extends Controller
             'grup' => $grup,
             'item' => 'kelas',
             'judul' => 'Nama Kelas',
-            'action' => '#',
-            'url' => '',
+            'action' => route('admin.kelas.store', $grup->id),
             'slug' => ''
         ]);
     }

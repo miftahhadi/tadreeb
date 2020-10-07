@@ -8,11 +8,11 @@
 
 @section('content')
     <ol class="breadcrumb" aria-label="breadcrumbs">
-        <li class="breadcrumb-item"><a href="{{ route('ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a href="#">Buat Soal Baru</a></li>
     </ol>
 
-    <form action="{{ route('ujian.soal.store', ['ujian' => $ujian->slug]) }}" method="post">
+    <form action="{{ route('admin.ujian.soal.store', ['ujian' => $ujian->slug]) }}" method="post">
         @csrf
 
 
@@ -24,7 +24,7 @@
             
             <div class="col-auto ml-auto">
                 <input type="submit" value="Simpan" class="btn btn-success">
-                <a href="{{ route('ujian.show', $ujian->slug) }}" class="btn btn-white">Batal</a>
+                <a href="{{ route('admin.ujian.show', $ujian->slug) }}" class="btn btn-white">Batal</a>
             </div>
         </div>
 

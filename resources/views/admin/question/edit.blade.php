@@ -8,7 +8,7 @@
 
 @section('content')
     <ol class="breadcrumb" aria-label="breadcrumbs">
-        <li class="breadcrumb-item"><a href="{{ route('ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a href="#">
             Edit Soal
         </a></li>
@@ -17,7 +17,7 @@
     <form 
         action=
         @section('form-action')
-            "{{ route('ujian.soal.update', ['ujian' => $ujian->slug, 'soal' => $soal->id]) }}"
+            "{{ route('admin.ujian.soal.update', ['ujian' => $ujian->slug, 'soal' => $soal->id]) }}"
         @show 
         method="post"
     >
@@ -33,7 +33,7 @@
             
             <div class="col-auto ml-auto">
                 <input type="submit" value="Simpan" class="btn btn-success">
-                <a href="{{ route('ujian.show', $ujian->slug) }}" class="btn btn-white">Batal</a>
+                <a href="{{ route('admin.ujian.show', $ujian->slug) }}" class="btn btn-white">Batal</a>
             </div>
         </div>
 

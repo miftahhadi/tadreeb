@@ -21,31 +21,31 @@ class Settings extends Valuestore
             [
                 'name' => 'Pelajaran',
                 'item' => 'pelajaran',
-                'route' => 'pelajaran.index',
+                'route' => 'admin.pelajaran.index',
                 'icon' => '<i class="far fa-file-alt"></i>'
             ],
             [
                 'name' => 'Ujian',
                 'item' => 'ujian',
-                'route' => 'ujian.index',
+                'route' => 'admin.ujian.index',
                 'icon' => '<i class="fas fa-pen-alt"></i>'
             ],
             [
                 'name' => 'Grup & Kelas',
                 'item' => 'grup',
-                'route' => 'grup.index',
+                'route' => 'admin.grup.index',
                 'icon' => '<i class="fas fa-sitemap"></i>'
             ],
             [
                 'name' => 'User',
                 'item' => 'user',
-                'route' => 'user.index',
+                'route' => 'admin.user.index',
                 'icon' => '<i class="fas fa-user"></i>'
             ],
             [
                 'name' => 'Pengaturan',
                 'item' => 'setting',
-                'route' => 'setting',
+                'route' => 'admin.setting',
                 'icon' => '<i class="fas fa-cogs"></i>'
             ],
         ]

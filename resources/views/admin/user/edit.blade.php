@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <form action="{{ route('user.update', $user->id) }}" method="post" class="row">
+    <form action="{{ route('admin.user.update', $user->id) }}" method="post" class="row">
         @method('PUT')
         @csrf
         
@@ -156,7 +156,7 @@
 
 
             <div class="btn-list mt-4">
-                <a href="{{ route('user.index') }}" class="btn btn-white">Batal</a>
+                <a href="{{ route('admin.user.index') }}" class="btn btn-white">Batal</a>
                 <input type="submit" value="Simpan" class="btn btn-success">
             </div>
     

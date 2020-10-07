@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Group;
 use App\Http\Controllers\Controller;
+use App\Services\Admin\ClassroomService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class ClassroomController extends Controller
 {
+    protected $classroomService;
+
+    public function __construct(ClassroomService $classroomService)
+    {
+        $this->classroomService = $classroomService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +24,7 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        //
+        dd(Route::currentRouteName());
     }
 
     /**
@@ -33,9 +43,14 @@ class ClassroomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Group $grup) 
     {
-        //
+        $data = $request->validate([
+            'judul' => '',
+            'deskripsi' => ''
+        ]);
+        
+        dd($grup);
     }
 
     /**
