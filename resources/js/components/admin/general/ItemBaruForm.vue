@@ -123,7 +123,6 @@ export default {
 
         cekJudul() {
             if (this.input.judul == 0 ) {
-                console.log('Judul error');
                 this.errors.judul = 'Judul tidak boleh kosong';
             } else {
                 this.errors.judul = null;
@@ -132,7 +131,6 @@ export default {
 
         cekSlug() {
             if (this.input.slug == 0 ) {
-                console.log('Slug error');
                 this.errors.slug = 'Slug URL tidak boleh kosong';
             } else {
                 this.errors.slug = null;

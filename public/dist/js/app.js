@@ -2061,7 +2061,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     cekJudul: function cekJudul() {
       if (this.input.judul == 0) {
-        console.log('Judul error');
         this.errors.judul = 'Judul tidak boleh kosong';
       } else {
         this.errors.judul = null;
@@ -2069,7 +2068,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     cekSlug: function cekSlug() {
       if (this.input.slug == 0) {
-        console.log('Slug error');
         this.errors.slug = 'Slug URL tidak boleh kosong';
       } else {
         this.errors.slug = null;
