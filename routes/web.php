@@ -22,15 +22,15 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Admin dashboard
-Route::get('/', 'Admin\AdminController@index')->name('admin');
-
 Route::name('admin.')->group(function () {
     Route::group([
         'prefix' => 'admin',
         'namespace' => 'Admin',
         'middleware' => 'auth',
     ], function () {
-    
+        //Dashboard
+        Route::get('/', 'AdminController@index');
+
         // Lessons
         Route::resource('pelajaran', 'LessonController');
     
@@ -45,7 +45,7 @@ Route::name('admin.')->group(function () {
         Route::resource('grup', 'GroupController');
     
         // Classrooms
-        Route::resource('grup/{grup}/kelas', 'ClassroomController');
+        Route::resource('grup.kelas', 'ClassroomController');
     
         // Users
         Route::resource('user', 'UserController');

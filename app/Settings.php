@@ -15,7 +15,7 @@ class Settings extends Valuestore
             [
                 'name' => 'Dashboard',
                 'item' => 'admin',
-                'route' => 'admin',
+                'route' => 'admin.',
                 'icon' => '<i class="fas fa-laptop"></i>'
             ],
             [
