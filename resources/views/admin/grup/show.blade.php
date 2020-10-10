@@ -30,50 +30,12 @@
         </div>
     </div>
 
-    <div class="box">
-        <div class="card">
-          <div class="table-responsive">
-  
-            <table class="table table-vcenter table-hover card-table">
-  
-              <thead>
-                <tr>
-                    <th width="40%">Nama Kelas</th>
-                    <th>Pengampu</th>
-                    <th class="w-2"></th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                    <tr>
-                        <td>Bagian 1: Pendahuluan</td>
-                        <td>Belum ada</td>
-                        <td class="text-right">
-                            <div class="btn-list flex-nowrap">
-                                {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
-                                <a href="" class="btn btn-light btn-sm">Edit</a>
-
-                                {{-- <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a> --}}
-
-                                <form action="" method="post">
-                                    @csrf
-
-                                    <input type="hidden" name="soal" value="">
-                                    <input type="submit" class="btn btn-danger btn-sm" value="Hapus">
-                                </form>
-
-                            </div>
-                        </td>
-                    </tr>
-
-  
-              </tbody>
-  
-            </table>
-  
-          </div>
-        </div>
-    </div>
+    <item-index
+        item="{{ $item }}"
+        fetch-url="{{ $fetchUrl }}"
+        :table-heading="{{ $tableHeading }}"
+        :item-properties="{{ $itemProperties }}"
+      ></item-index>
 
     @include('admin.general._new-item-modal')
 

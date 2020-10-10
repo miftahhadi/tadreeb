@@ -28,8 +28,10 @@
     <div class="mt-5">
       <item-index
         item="{{ $item }}"
+        fetch-url="{{ $fetchUrl }}"
         :table-heading="{{ $tableHeading }}"
         :item-properties="{{ $itemProperties }}"
+        :search="true"
       ></item-index>
     </div>
       
