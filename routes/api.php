@@ -28,6 +28,12 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('grup/search/{search}', 'GroupController@search');
     Route::delete('grup/{grup}', 'GroupController@destroy');
 
+    Route::get('grup/{grup}/kelas', 'ClassroomController@list');
+    Route::get('grup/{grup}/kelas/search/{search}', 'ClassroomController@search');
+    Route::delete('grup/{grup}/kelas/{kelas}', 'ClassroomController@destroy');
+
+    Route::get('kelas/{kelas}/pelajaran', 'ClassroomController@lessonList');
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'UserController@list');
         Route::get('user/search/{search}', 'UserController@search');

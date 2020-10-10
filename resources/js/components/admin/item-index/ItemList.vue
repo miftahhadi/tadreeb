@@ -30,6 +30,8 @@
                                         :item-type="itemType"
                                         :item-slug="item.slug"
                                         :item-id="item.id"
+                                        :parent="parent"
+                                        :parent-id="parentId"
                                         @delete:item="deleteItem"
                                     ></item-action>
                                 </td>
@@ -56,6 +58,8 @@ export default {
         loading: Boolean,
         headings: Array,
         itemProperties: Array,
+        parent: String,
+        parentId: Number,
     },
 
     computed: {

@@ -3,7 +3,7 @@
 
         <div class="row mb-3">
 
-            <div class="col-auto">
+            <div class="col-auto" v-if="search">
 
                 <div class="input-icon">
                     <input type="text" 
@@ -38,6 +38,8 @@
                 :loading="loading"
                 :headings="tableHeading"
                 :item-properties="itemProperties"
+                :parent="parent"
+                :parent-id="parentId"
                 @delete:item="deleteItem"
             ></item-list>
         </div>
@@ -59,6 +61,10 @@
             item: String,
             tableHeading: Array,
             itemProperties: Array,
+            search: Boolean,
+            parent: String,
+            parentId: Number,
+            fetchUrl: String,
         },
         
         data() {
@@ -95,8 +101,8 @@
         computed: {
             uri() {
                 return (this.query == '') ? 
-                            '/api/' + this.item + '?page=' 
-                            : '/api/' + this.item + '/search/' + this.query + '?page=';
+                            this.fetchUrl + '?page=' 
+                            : this.fetchUrl + '/search/' + this.query + '?page=';
             }
         }
     }

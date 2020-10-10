@@ -21,6 +21,7 @@ class UserController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'fetchUrl' => '/api/user',
             'item' => 'user',
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',

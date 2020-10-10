@@ -45,7 +45,12 @@ Route::name('admin.')->group(function () {
         Route::resource('grup', 'GroupController');
     
         // Classrooms
-        Route::resource('grup.kelas', 'ClassroomController');
+        // Kalau pakai resource, entah kenapa parameternya jadi {kela}
+        Route::get('kelas/{kelas}', 'ClassroomController@show')->name('kelas.show');
+        Route::get('kelas/{kelas}/edit', 'ClassroomController@edit')->name('kelas.edit');
+        Route::put('kelas/{kelas}', 'ClassroomController@update')->name('kelas.update');
+        Route::delete('kelas/{kelas}', 'ClassroomController@destroy')->name('kelas.destroy');
+        Route::post('kelas', 'ClassroomController@store')->name('kelas.store');
     
         // Users
         Route::resource('user', 'UserController');

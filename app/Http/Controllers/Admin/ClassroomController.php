@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Classroom;
 use App\Group;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\ClassroomService;
@@ -27,6 +28,19 @@ class ClassroomController extends Controller
         dd(Route::currentRouteName());
     }
 
+    public function list(Group $grup) 
+    {
+        return response()->json($grup->classrooms()->paginate(15));
+    }
+
+    public function search($search)
+    {
+        return response()->json(Classroom::where('judul', 'like', '%' . $search . '%')
+                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->paginate(15)
+                );
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -50,7 +64,7 @@ class ClassroomController extends Controller
             'deskripsi' => ''
         ]);
         
-        dd($grup);
+        
     }
 
     /**
@@ -59,9 +73,13 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Group $grup, Classroom $kelas)
     {
-        //
+
+        return view('admin.classroom.show', [
+            'grup' => $grup,
+            'kelas' => $kelas
+        ]);
     }
 
     /**

@@ -2120,11 +2120,13 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     itemType: String,
     itemSlug: String,
-    itemId: Number
+    itemId: Number,
+    parent: String,
+    parentId: Number
   },
   data: function data() {
     return {
-      url: '/admin/' + this.itemType + '/'
+      url: ''
     };
   },
   computed: {
@@ -2133,7 +2135,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return (_this$itemSlug = this.itemSlug) !== null && _this$itemSlug !== void 0 ? _this$itemSlug : this.itemId;
     },
-    itemUrl: function itemUrl() {
+    showUrl: function showUrl() {
       return this.url + this.selector;
     },
     editUrl: function editUrl() {
@@ -2141,9 +2143,19 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    setUrl: function setUrl() {
+      if (typeof this.parent !== 'undefined') {
+        this.url = '/admin/' + this.parent + '/' + this.parentId + '/' + this.itemType + '/';
+      } else {
+        this.url = '/admin/' + this.itemType + '/';
+      }
+    },
     deleteItem: function deleteItem() {
       this.$emit('delete:item', this.itemId);
     }
+  },
+  mounted: function mounted() {
+    this.setUrl();
   }
 });
 
@@ -2276,12 +2288,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
     item: String,
     tableHeading: Array,
-    itemProperties: Array
+    itemProperties: Array,
+    search: Boolean,
+    parent: String,
+    parentId: Number,
+    fetchUrl: String
   },
   data: function data() {
     return {
@@ -2313,7 +2331,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     uri: function uri() {
-      return this.query == '' ? '/api/' + this.item + '?page=' : '/api/' + this.item + '/search/' + this.query + '?page=';
+      return this.query == '' ? this.fetchUrl + '?page=' : this.fetchUrl + '/search/' + this.query + '?page=';
     }
   }
 });
@@ -2377,6 +2395,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-list',
   props: {
@@ -2384,7 +2404,9 @@ __webpack_require__.r(__webpack_exports__);
     items: Array,
     loading: Boolean,
     headings: Array,
-    itemProperties: Array
+    itemProperties: Array,
+    parent: String,
+    parentId: Number
   },
   computed: {
     isLoading: function isLoading() {
@@ -38801,7 +38823,7 @@ var render = function() {
   return _c("div", { staticClass: "btn-list flex-nowrap" }, [
     _c(
       "a",
-      { staticClass: "btn btn-sm btn-primary", attrs: { href: _vm.itemUrl } },
+      { staticClass: "btn btn-sm btn-primary", attrs: { href: _vm.showUrl } },
       [_vm._v("Buka")]
     ),
     _vm._v(" "),
@@ -38945,61 +38967,65 @@ var render = function() {
     "div",
     [
       _c("div", { staticClass: "row mb-3" }, [
-        _c("div", { staticClass: "col-auto" }, [
-          _c("div", { staticClass: "input-icon" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.query,
-                  expression: "query"
-                }
-              ],
-              staticClass: "form-control form-control-rounded",
-              attrs: { type: "text", placeholder: "Cari..." },
-              domProps: { value: _vm.query },
-              on: {
-                input: [
-                  function($event) {
-                    if ($event.target.composing) {
-                      return
+        _vm.search
+          ? _c("div", { staticClass: "col-auto" }, [
+              _c("div", { staticClass: "input-icon" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.query,
+                      expression: "query"
                     }
-                    _vm.query = $event.target.value
-                  },
-                  _vm.getResults
-                ]
-              }
-            }),
-            _vm._v(" "),
-            _c("span", { staticClass: "input-icon-addon" }, [
-              _c(
-                "svg",
-                {
-                  staticClass: "icon",
-                  attrs: {
-                    xmlns: "http://www.w3.org/2000/svg",
-                    width: "24",
-                    height: "24",
-                    viewBox: "0 0 24 24",
-                    "stroke-width": "2",
-                    stroke: "currentColor",
-                    fill: "none",
-                    "stroke-linecap": "round",
-                    "stroke-linejoin": "round"
+                  ],
+                  staticClass: "form-control form-control-rounded",
+                  attrs: { type: "text", placeholder: "Cari..." },
+                  domProps: { value: _vm.query },
+                  on: {
+                    input: [
+                      function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.query = $event.target.value
+                      },
+                      _vm.getResults
+                    ]
                   }
-                },
-                [
-                  _c("path", { attrs: { stroke: "none", d: "M0 0h24v24H0z" } }),
-                  _c("circle", { attrs: { cx: "10", cy: "10", r: "7" } }),
-                  _c("line", {
-                    attrs: { x1: "21", y1: "21", x2: "15", y2: "15" }
-                  })
-                ]
-              )
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-icon-addon" }, [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "icon",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "2",
+                        stroke: "currentColor",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                      }),
+                      _c("circle", { attrs: { cx: "10", cy: "10", r: "7" } }),
+                      _c("line", {
+                        attrs: { x1: "21", y1: "21", x2: "15", y2: "15" }
+                      })
+                    ]
+                  )
+                ])
+              ])
             ])
-          ])
-        ]),
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "div",
@@ -39024,7 +39050,9 @@ var render = function() {
               items: _vm.laravelData.data,
               loading: _vm.loading,
               headings: _vm.tableHeading,
-              "item-properties": _vm.itemProperties
+              "item-properties": _vm.itemProperties,
+              parent: _vm.parent,
+              "parent-id": _vm.parentId
             },
             on: { "delete:item": _vm.deleteItem }
           })
@@ -39112,7 +39140,9 @@ var render = function() {
                             attrs: {
                               "item-type": _vm.itemType,
                               "item-slug": item.slug,
-                              "item-id": item.id
+                              "item-id": item.id,
+                              parent: _vm.parent,
+                              "parent-id": _vm.parentId
                             },
                             on: { "delete:item": _vm.deleteItem }
                           })

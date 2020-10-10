@@ -28,6 +28,7 @@ class ExamController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'fetchUrl' => '/api/ujian',
             'item' => 'ujian',
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',

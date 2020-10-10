@@ -26,6 +26,7 @@ class GroupController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'fetchUrl' => '/api/grup',
             'item' => 'grup',
             'judul' => 'Nama Grup',
             'slug' => '',
@@ -43,6 +44,14 @@ class GroupController extends Controller
     public function list()
     {
         return response()->json(Group::paginate(10));
+    }
+
+    public function search($search)
+    {
+        return response()->json(Group::where('judul', 'like', '%' . $search . '%')
+                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->paginate(10)
+                );
     }
 
     /**
@@ -80,11 +89,22 @@ class GroupController extends Controller
     public function show(Group $grup)
     {
         return view('admin.grup.show', [
+            'fetchUrl' => '/api/grup/' . $grup->id . '/kelas',
             'grup' => $grup,
             'item' => 'kelas',
             'judul' => 'Nama Kelas',
             'action' => route('admin.kelas.store', $grup->id),
-            'slug' => ''
+            'slug' => '',
+
+            'tableHeading' => json_encode([
+                [
+                    'name' => 'Nama Grup',
+                    'width' => ''
+                ], 
+            ]),
+            'itemProperties' => json_encode(['id', 'nama']),
+
+            'itemParent' => 'grup',
         ]);
     }
 

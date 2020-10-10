@@ -1,6 +1,6 @@
 <template>
     <div class="btn-list flex-nowrap">
-                <a :href="itemUrl" class="btn btn-sm btn-primary">Buka</a>
+                <a :href="showUrl" class="btn btn-sm btn-primary">Buka</a>
 
                 <a :href="editUrl" class="btn btn-sm btn-light">Edit</a>
 
@@ -21,11 +21,13 @@ export default {
         itemType: String,
         itemSlug: String,
         itemId: Number,
+        parent: String,
+        parentId: Number,
     },
 
     data() {
         return {
-            url: '/admin/' + this.itemType + '/',
+            url: ''
         }
     },
 
@@ -34,7 +36,7 @@ export default {
             return this.itemSlug ?? this.itemId;
         },
 
-        itemUrl() {
+        showUrl() {
             return this.url + this.selector;
         },
 
@@ -44,9 +46,22 @@ export default {
     },
 
     methods: {
+        setUrl() {
+            if (typeof this.parent !== 'undefined') {
+                this.url = '/admin/' + this.parent + '/' + this.parentId + '/' + this.itemType + '/'  
+            } else {
+                this.url = '/admin/' + this.itemType + '/'
+            }
+                                      
+        },
+
         deleteItem() {
             this.$emit('delete:item', this.itemId);
         }
+    },
+
+    mounted() {
+        this.setUrl();
     }
 }
 </script>

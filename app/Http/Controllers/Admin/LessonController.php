@@ -24,6 +24,7 @@ class LessonController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'fetchUrl' => '/api/pelajaran',
             'item' => 'pelajaran',
             'judul' => 'Judul pelajaran',
             'slug' => 'Slug URL',
