@@ -22,4 +22,9 @@ class Lesson extends Model
     {
         
     }
+
+    public function classrooms()
+    {
+        return $this->belongsToMany(Classroom::class);
+    }
 }

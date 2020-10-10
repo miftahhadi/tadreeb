@@ -15,4 +15,9 @@ class Classroom extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    public function lessons()
+    {
+        return $this->belongsToMany((Lesson::class));
+    }
 }

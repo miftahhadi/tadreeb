@@ -11,7 +11,7 @@ class Group extends Model
 
     protected $guarded = [];
 
-    public function classroom()
+    public function classrooms()
     {
         return $this->hasMany(Classroom::class);
     }
