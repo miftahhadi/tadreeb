@@ -44,7 +44,7 @@ class ExamController extends Controller
                     'width' => null
                 ]
             ]),
-            'itemProperties' => json_encode(['id', 'judul', 'slug'])
+            'itemProperties' => json_encode(['id', 'nama', 'slug'])
         ]);
     }
 
