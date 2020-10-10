@@ -6,8 +6,8 @@
     <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown">
       <span class="avatar">AD</span>
       <div class="d-none d-xl-block pl-2">
-        <div>Miftah Hadi</div>
-        <div class="mt-1 small text-muted">Super Admin</div>
+        <div>{{ auth()->user()->nama }}</div>
+        <div class="mt-1 small text-muted">{{ auth()->user()->getRoleNames()->first() }}</div>
       </div>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
