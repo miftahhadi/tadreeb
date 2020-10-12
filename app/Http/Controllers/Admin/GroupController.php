@@ -93,7 +93,7 @@ class GroupController extends Controller
             'grup' => $grup,
             'item' => 'kelas',
             'judul' => 'Nama Kelas',
-            'action' => route('admin.kelas.store', $grup->id),
+            'action' => route('admin.grup.kelas.store', $grup->id),
             'slug' => '',
 
             'tableHeading' => json_encode([
@@ -104,7 +104,7 @@ class GroupController extends Controller
             ]),
             'itemProperties' => json_encode(['id', 'nama']),
 
-            'itemParent' => 'grup',
+            'itemUrl' => '/admin/grup/' . $grup->id . '/kelas/',
         ]);
     }
 
