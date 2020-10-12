@@ -2115,18 +2115,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-action',
   props: {
     itemType: String,
     itemSlug: String,
     itemId: Number,
-    parent: String,
-    parentId: Number
+    assignPage: Boolean,
+    assignMode: Boolean,
+    itemUrl: String
   },
   data: function data() {
+    var _this$itemUrl;
+
     return {
-      url: ''
+      url: (_this$itemUrl = this.itemUrl) !== null && _this$itemUrl !== void 0 ? _this$itemUrl : '/admin/' + this.itemType + '/'
     };
   },
   computed: {
@@ -2140,22 +2155,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     editUrl: function editUrl() {
       return this.url + this.selector + '/edit';
+    },
+    assignText: function assignText() {
+      return 'Masukkan';
     }
   },
   methods: {
-    setUrl: function setUrl() {
-      if (typeof this.parent !== 'undefined') {
-        this.url = '/admin/' + this.parent + '/' + this.parentId + '/' + this.itemType + '/';
-      } else {
-        this.url = '/admin/' + this.itemType + '/';
-      }
-    },
     deleteItem: function deleteItem() {
       this.$emit('delete:item', this.itemId);
     }
-  },
-  mounted: function mounted() {
-    this.setUrl();
   }
 });
 
@@ -2290,6 +2298,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
@@ -2297,9 +2306,10 @@ __webpack_require__.r(__webpack_exports__);
     tableHeading: Array,
     itemProperties: Array,
     search: Boolean,
-    parent: String,
-    parentId: Number,
-    fetchUrl: String
+    fetchUrl: String,
+    assignPage: Boolean,
+    assignMode: Boolean,
+    itemUrl: String
   },
   data: function data() {
     return {
@@ -2397,6 +2407,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-list',
   props: {
@@ -2405,8 +2416,9 @@ __webpack_require__.r(__webpack_exports__);
     loading: Boolean,
     headings: Array,
     itemProperties: Array,
-    parent: String,
-    parentId: Number
+    assignPage: Boolean,
+    assignMode: Boolean,
+    itemUrl: String
   },
   computed: {
     isLoading: function isLoading() {
@@ -38820,28 +38832,50 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "btn-list flex-nowrap" }, [
-    _c(
-      "a",
-      { staticClass: "btn btn-sm btn-primary", attrs: { href: _vm.showUrl } },
-      [_vm._v("Buka")]
-    ),
-    _vm._v(" "),
-    _c(
-      "a",
-      { staticClass: "btn btn-sm btn-light", attrs: { href: _vm.editUrl } },
-      [_vm._v("Edit")]
-    ),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        staticClass: "btn btn-danger btn-sm",
-        attrs: { "data-toggle": "modal", "data-target": "#deleteItemModal" },
-        on: { click: _vm.deleteItem }
-      },
-      [_vm._v("Hapus")]
-    )
+  return _c("div", [
+    _vm.assignMode
+      ? _c("div", [
+          _c("button", {
+            staticClass: "btn btn-primary",
+            domProps: { textContent: _vm._s(_vm.assignText) }
+          })
+        ])
+      : _c("div", { staticClass: "btn-list flex-nowrap" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-sm btn-primary",
+              attrs: { href: _vm.showUrl }
+            },
+            [_vm._v("Buka")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-sm btn-light",
+              attrs: { href: _vm.editUrl }
+            },
+            [_vm._v("Edit")]
+          ),
+          _vm._v(" "),
+          _vm.assignPage
+            ? _c("button", { staticClass: "btn btn-danger btn-sm" }, [
+                _vm._v("\n                Keluarkan\n            ")
+              ])
+            : _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger btn-sm",
+                  attrs: {
+                    "data-toggle": "modal",
+                    "data-target": "#deleteItemModal"
+                  },
+                  on: { click: _vm.deleteItem }
+                },
+                [_vm._v("Hapus")]
+              )
+        ])
   ])
 }
 var staticRenderFns = []
@@ -39051,8 +39085,9 @@ var render = function() {
               loading: _vm.loading,
               headings: _vm.tableHeading,
               "item-properties": _vm.itemProperties,
-              parent: _vm.parent,
-              "parent-id": _vm.parentId
+              "assign-page": _vm.assignPage,
+              "assign-mode": _vm.assignMode,
+              "item-url": _vm.itemUrl
             },
             on: { "delete:item": _vm.deleteItem }
           })
@@ -39141,8 +39176,9 @@ var render = function() {
                               "item-type": _vm.itemType,
                               "item-slug": item.slug,
                               "item-id": item.id,
-                              parent: _vm.parent,
-                              "parent-id": _vm.parentId
+                              "assign-page": _vm.assignPage,
+                              "assign-mode": _vm.assignMode,
+                              "item-url": _vm.itemUrl
                             },
                             on: { "delete:item": _vm.deleteItem }
                           })

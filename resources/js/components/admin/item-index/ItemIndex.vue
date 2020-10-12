@@ -38,8 +38,9 @@
                 :loading="loading"
                 :headings="tableHeading"
                 :item-properties="itemProperties"
-                :parent="parent"
-                :parent-id="parentId"
+                :assign-page="assignPage"
+                :assign-mode="assignMode"
+                :item-url="itemUrl"
                 @delete:item="deleteItem"
             ></item-list>
         </div>
@@ -62,9 +63,10 @@
             tableHeading: Array,
             itemProperties: Array,
             search: Boolean,
-            parent: String,
-            parentId: Number,
             fetchUrl: String,
+            assignPage: Boolean,
+            assignMode: Boolean,
+            itemUrl: String,
         },
         
         data() {
