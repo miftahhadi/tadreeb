@@ -22,4 +22,9 @@ class Exam extends Model
     {
         return $this->belongsToMany(Question::class);
     }
+
+    public function classrooms()
+    {
+        return $this->belongsToMany(Classroom::class);
+    }
 }
