@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Exam::class, function (Faker $faker) {
     return [
-        'nama' => $faker->sentence(),
+        'judul' => $faker->sentence(),
         'slug' => $faker->slug(),
         'deskripsi' => $faker->paragraph()
     ];

@@ -18,7 +18,7 @@ class CreateExamsTable extends Migration
             $table->foreignId('user_id')->nullable()
                                         ->constrained()
                                         ->nullOnDelete();
-            $table->string('nama');
+            $table->string('judul');
             $table->string('slug')->unique();
             $table->text('deskripsi')->nullable();
             $table->timestamps();
