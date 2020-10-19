@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\UpdateExamRequest;
@@ -33,18 +34,8 @@ class ExamController extends Controller
             'judul' => 'Judul ujian',
             'slug' => 'Slug URL',
             'action' => route('admin.ujian.store'),
-            'tableHeading' => json_encode([
-                [
-                    'name' => 'Judul',
-                    'width' => '40%'
-                ], 
-                
-                [
-                    'name' => 'Slug',
-                    'width' => null
-                ]
-            ]),
-            'itemProperties' => json_encode(['id', 'nama', 'slug'])
+            'tableHeading' => json_encode(DataTable::heading()),
+            'itemProperties' => json_encode(DataTable::props())
         ]);
     }
 

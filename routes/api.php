@@ -37,9 +37,19 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'UserController@list');
         Route::get('user/search/{search}', 'UserController@search');
-        Route::delete('user/{user}', 'UserController@destroy');        
+        Route::delete('user/{user}', 'UserController@destroy');    
     });
 
+});
 
+Route::group(['namespace' => 'API', 'middleware' => 'auth:api'], function () {
+    Route::get('kelas/{kelas}/pelajaran', 'ClassroomController@lesson');
+    Route::post('kelas/{kelas}/pelajaran/assign', 'ClassroomController@assignLesson');
+
+    Route::get('kelas/{kelas}/ujian', 'ClassroomController@exam');
+    Route::post('kelas/{kelas}/ujian/assign', 'ClassroomController@assignExam');
+
+    Route::get('kelas/{kelas}/user', 'ClassroomController@user');
+    Route::post('kelas/{kelas}/user/assign', 'ClassroomController@assignUser');
 });
 

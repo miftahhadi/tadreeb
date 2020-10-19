@@ -41,16 +41,35 @@ Route::name('admin.')->group(function () {
         Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
         Route::resource('ujian.soal', 'QuestionController')->except('index');
     
-        // Groups
-        Route::resource('grup', 'GroupController');
-    
         // Classrooms
         // Kalau pakai resource, entah kenapa parameternya jadi {kela}
-        Route::get('kelas/{kelas}', 'ClassroomController@show')->name('kelas.show');
-        Route::get('kelas/{kelas}/edit', 'ClassroomController@edit')->name('kelas.edit');
-        Route::put('kelas/{kelas}', 'ClassroomController@update')->name('kelas.update');
-        Route::delete('kelas/{kelas}', 'ClassroomController@destroy')->name('kelas.destroy');
-        Route::post('kelas', 'ClassroomController@store')->name('kelas.store');
+        Route::name('grup.kelas.')->group(function() {
+            Route::group(['prefix' => 'grup/{grup}/'], function () { 
+                Route::get('kelas/{kelas}', 'ClassroomController@show')->name('show');
+                Route::post('kelas', 'ClassroomController@store')->name('store');
+                Route::put('kelas/{kelas}', 'ClassroomController@update')->name('update');
+                Route::delete('kelas/{kelas}', 'ClassroomController@destroy')->name('destroy');
+                Route::get('kelas/{kelas}/edit', 'ClassroomController@edit')->name('edit');
+
+                Route::get('kelas/{kelas}/pelajaran', 'ClassroomController@pelajaran');
+                Route::get('kelas/{kelas}/pelajaran/assign', 'ClassroomController@assignPelajaran');
+
+                Route::get('kelas/{kelas}/ujian', 'ClassroomController@ujian');
+                Route::get('kelas/{kelas}/ujian/assign', 'ClassroomController@ujian');
+
+
+                Route::get('kelas/{kelas}/anggota', 'ClassroomController@anggota');
+                Route::get('kelas/{kelas}/anggota/assign', 'ClassroomController@anggota');
+
+                Route::get('kelas/{kelas}/pengaturan', 'ClassroomController@pengaturan');
+                Route::post('kelas/{kelas}/pengaturan', 'ClassroomController@pengaturan');
+
+
+            });
+        });
+
+        // Groups
+        Route::resource('grup', 'GroupController');
     
         // Users
         Route::resource('user', 'UserController');

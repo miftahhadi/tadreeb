@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Lesson;
@@ -29,18 +30,8 @@ class LessonController extends Controller
             'judul' => 'Judul pelajaran',
             'slug' => 'Slug URL',
             'action' => route('admin.pelajaran.store'),
-            'tableHeading' => json_encode([
-                    [
-                        'name' => 'Judul',
-                        'width' => '40%'
-                    ], 
-                    
-                    [
-                        'name' => 'Slug',
-                        'width' => null
-                    ]
-                ]),
-            'itemProperties' => json_encode(['id', 'judul', 'slug'])
+            'tableHeading' => json_encode(DataTable::heading()),
+            'itemProperties' => json_encode(DataTable::props())
         ]);
     }
 

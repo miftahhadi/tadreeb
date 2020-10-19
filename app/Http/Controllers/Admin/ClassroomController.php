@@ -18,16 +18,6 @@ class ClassroomController extends Controller
         $this->classroomService = $classroomService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        dd(Route::currentRouteName());
-    }
-
     public function list(Group $grup) 
     {
         return response()->json($grup->classrooms()->paginate(15));
@@ -35,21 +25,12 @@ class ClassroomController extends Controller
 
     public function search($search)
     {
-        return response()->json(Classroom::where('judul', 'like', '%' . $search . '%')
+        return response()->json(Classroom::where('nama', 'like', '%' . $search . '%')
                                         ->orWhere('deskripsi', 'like', '%' .  $search . '%')
                                         ->paginate(15)
                 );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -63,7 +44,10 @@ class ClassroomController extends Controller
             'judul' => '',
             'deskripsi' => ''
         ]);
-        
+
+        $kelas = $this->classroomService->store($data, $grup);
+
+        return redirect(route('admin.grup.kelas.show', [$grup->id, $kelas->id]));
         
     }
 
@@ -75,11 +59,11 @@ class ClassroomController extends Controller
      */
     public function show(Group $grup, Classroom $kelas)
     {
+        $service = $this->classroomService->show($kelas);
 
-        return view('admin.classroom.show', [
-            'grup' => $grup,
-            'kelas' => $kelas
-        ]);
+        return view('admin.classroom.show', compact(
+            'grup', 'kelas', 'service'
+        ));
     }
 
     /**
