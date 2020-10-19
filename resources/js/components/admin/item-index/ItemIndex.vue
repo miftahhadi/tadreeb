@@ -39,9 +39,9 @@
                 :headings="tableHeading"
                 :item-properties="itemProperties"
                 :assign-page="assignPage"
-                :assign-mode="assignMode"
                 :item-url="itemUrl"
                 @delete:item="deleteItem"
+                @refresh="$emit('refresh', data)"
             ></item-list>
         </div>
         
@@ -65,8 +65,8 @@
             search: Boolean,
             fetchUrl: String,
             assignPage: Boolean,
-            assignMode: Boolean,
             itemUrl: String,
+            refresh: Boolean,
         },
         
         data() {
@@ -105,7 +105,7 @@
                 return (this.query == '') ? 
                             this.fetchUrl + '?page=' 
                             : this.fetchUrl + '/search/' + this.query + '?page=';
-            }
+            },
         }
     }
 </script>

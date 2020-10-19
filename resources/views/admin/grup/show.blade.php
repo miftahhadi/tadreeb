@@ -35,6 +35,7 @@
         fetch-url="{{ $fetchUrl }}"
         :table-heading="{{ $tableHeading }}"
         :item-properties="{{ $itemProperties }}"
+        item-url="{{ $itemUrl }}"
       ></item-index>
 
     @include('admin.general._new-item-modal')

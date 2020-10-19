@@ -1,17 +1,13 @@
 <template>
     <div>
-        <div v-if="assignMode">
-            <button class="btn btn-primary" v-text="assignText"></button>
-        </div>
-
-        <div class="btn-list flex-nowrap" v-else>
+        <div class="btn-list flex-nowrap">
                 <a :href="showUrl" class="btn btn-sm btn-primary">Buka</a>
 
                 <a :href="editUrl" class="btn btn-sm btn-light">Edit</a>
 
-                <button class="btn btn-danger btn-sm" v-if="assignPage">
-                    Keluarkan
-                </button>
+                <button v-if="assignPage" 
+                        class="btn btn-danger btn-sm"
+                >Keluarkan</button>
 
                 <button v-else
                         class="btn btn-danger btn-sm" 
@@ -34,7 +30,6 @@ export default {
         itemSlug: String,
         itemId: Number,
         assignPage: Boolean,
-        assignMode: Boolean,
         itemUrl: String,
     },
 

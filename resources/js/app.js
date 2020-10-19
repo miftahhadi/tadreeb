@@ -27,8 +27,13 @@ Vue.component('item-index', require('./components/admin/item-index/ItemIndex.vue
 Vue.component('item-list', require('./components/admin/item-index/ItemList.vue').default);
 Vue.component('item-action', require('./components/admin/item-index/ItemAction.vue').default);
 Vue.component('item-delete-modal', require('./components/admin/item-index/ItemDeleteModal.vue').default);
+Vue.component('item-assign', require('./components/admin/item-index/ItemAssign.vue').default);
 
 Vue.component('pagination', require('laravel-vue-pagination'));
+
+Vue.component('kelas-index', require('./components/admin/kelas/KelasIndex.vue').default);
+Vue.component('kelas-item-tab', require('./components/admin/kelas/KelasItemTab.vue').default);
+Vue.component('kelas-assign-modal', require('./components/admin/kelas/KelasAssignModal.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

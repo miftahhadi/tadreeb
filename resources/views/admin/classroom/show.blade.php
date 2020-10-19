@@ -13,23 +13,37 @@
             <li class="list-inline-item"><small><a href="#" class="text-danger">Hapus</a></small></li>
         </ul>
 
-        <div>
+        <div> <!-- Satu div ini ubah jadi komponen vue--> 
+            
             <ul class="nav nav-tabs">
-                <li class="nav-item"><a href="#pelajaran" class="nav-link active" data-toggle="tab">Pelajaran</a></li>
-                <li class="nav-item"><a href="#ujian" class="nav-link" data-toggle="tab">Ujian</a></li>
-                <li class="nav-item"><a href="#anggota" class="nav-link" data-toggle="tab">Anggota</a></li>
-                <li class="nav-item"><a href="#pengaturan" class="nav-link" data-toggle="tab">Pengaturan Kelas</a></li>
-            </ul>
-            <div class="tab-content">
-                @include('kelas._pelajaran')
-        
-                @include('kelas._ujian')
-        
-                @include('kelas._anggota')
+                @foreach ($service->getNavMenu() as $key => $menu)
+                    <li class="nav-item">
+                        <a href="#{{ strtolower($menu) }}" 
+                            class="nav-link @if ($key == 0) active @endif" 
+                            data-toggle="tab"
+                        >{{ $menu }}</a>
+                    </li>
+                @endforeach
 
-                @include('kelas._setting')
+            </ul>
+
+            <div class="tab-content">
+                @include('admin.classroom._ikhtisar')
+
+                @include('admin.classroom._pelajaran')
+        
+                @include('admin.classroom._ujian')
+        
+                @include('admin.classroom._anggota')
+
+                @include('admin.classroom._setting')
             </div>
+
         </div>
 
     </div>
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush

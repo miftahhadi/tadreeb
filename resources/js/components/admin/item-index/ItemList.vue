@@ -11,10 +11,10 @@
 
                         <thead>
                             <tr>
-                                <th class="w-1">ID</th>
                                 <th v-for="heading in headings" 
                                     :key="heading.id" 
                                     :width="heading.width"
+                                    :class="isId(heading.name)"
                                 >{{ heading.name }}</th>
                                 
                                 <th class="w-2"></th>
@@ -31,7 +31,6 @@
                                         :item-slug="item.slug"
                                         :item-id="item.id"
                                         :assign-page="assignPage"
-                                        :assign-mode="assignMode"
                                         :item-url="itemUrl"
                                         @delete:item="deleteItem"
                                     ></item-action>
@@ -60,7 +59,6 @@ export default {
         headings: Array,
         itemProperties: Array,
         assignPage: Boolean,
-        assignMode: Boolean,
         itemUrl: String,
     },
 
@@ -74,6 +72,10 @@ export default {
         deleteItem(id) {
             let data = this.items.find(item => item.id == id);
             this.$emit('delete:item', data);
+        },
+
+        isId(name) {
+            return (name == 'ID') ? 'w-1' : '';
         }
     }
 }
