@@ -10,16 +10,26 @@
         </div>
         
         <div class="col-auto ml-auto d-print-none">
-          <button type="button" 
-          class="btn btn-primary" 
-          data-toggle="modal" 
-          data-target="#tambahBaru"
-          >
+          @if ($item == 'user')
+            <div class="btn-list">
+              <a href="{{ route('admin.user.create') }}" class="btn btn-primary">User Baru</a>
+              <a href="{{ route('admin.user.getCsv') }}" class="btn btn-success">Tambah dari file CSV</a>
+            </div>            
+          @else
 
-            <i class="fas fa-plus"></i> 
-            <span class="ml-2">Tambah Baru</span>
+            <button type="button" 
+                    class="btn btn-primary" 
+                    data-toggle="modal" 
+                    data-target="#tambahBaru"
+            >
+
+              <i class="fas fa-plus"></i> 
+              <span class="ml-2">Tambah Baru</span>
+            
+            </button>
+
+          @endif
           
-          </button>
         </div>
       </div>   
 
@@ -34,8 +44,6 @@
         :search="true"
       ></item-index>
     </div>
-      
-
 
     @include('admin.general._new-item-modal')
 

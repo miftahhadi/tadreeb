@@ -19,6 +19,10 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    protected $userField = [
+        'nama', 'email', 'username', 'password', 'role_id', 'gender', 'tanggal_lahir', 'kelas_id'
+    ];
+
     public function index()
     {
         return view('admin.general.index', [
@@ -55,6 +59,13 @@ class UserController extends Controller
     public function create()
     {
         return view('admin.user.create');
+    }
+
+    public function getCsv()
+    {
+        return view('admin.user.import-csv', [
+            'userField' => $this->userField
+        ]);
     }
 
     /**

@@ -72,6 +72,7 @@ Route::name('admin.')->group(function () {
         Route::resource('grup', 'GroupController');
     
         // Users
+        Route::get('user/import-csv', 'UserController@getCsv')->name('user.getCsv');
         Route::resource('user', 'UserController');
     
         // Setting
