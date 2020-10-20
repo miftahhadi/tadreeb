@@ -42,14 +42,18 @@ Route::group(['namespace' => 'Admin'], function () {
 
 });
 
-Route::group(['namespace' => 'API', 'middleware' => 'auth:api'], function () {
-    Route::get('kelas/{kelas}/pelajaran', 'ClassroomController@lesson');
-    Route::post('kelas/{kelas}/pelajaran/assign', 'ClassroomController@assignLesson');
+Route::group([
+        'namespace' => 'API', 
+        'middleware' => 'auth:api',
+        'prefix' => 'kelas/{kelas}'
+], function () {
+    Route::get('pelajaran', 'ClassroomController@lesson');
+    Route::post('pelajaran/assign', 'ClassroomController@assignLesson');
 
-    Route::get('kelas/{kelas}/ujian', 'ClassroomController@exam');
-    Route::post('kelas/{kelas}/ujian/assign', 'ClassroomController@assignExam');
+    Route::get('ujian', 'ClassroomController@exam');
+    Route::post('ujian/assign', 'ClassroomController@assignExam');
 
-    Route::get('kelas/{kelas}/user', 'ClassroomController@user');
-    Route::post('kelas/{kelas}/user/assign', 'ClassroomController@assignUser');
+    Route::get('user', 'ClassroomController@user');
+    Route::post('user/assign', 'ClassroomController@assignUser');
 });
 
