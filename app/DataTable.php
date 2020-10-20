@@ -43,22 +43,27 @@ class DataTable
 
     protected static $userProps = ['id', 'nama', 'username', 'jenis_kelamin'];
 
-    public static function heading($parameter = null)
+    public static function heading(string $parameter = 'default', string $title = 'judul')
     {
-        if ($parameter == 'user') {
-            return self::$userHeading;
-        } else {
-            return self::$defaultHeading;
+        $heading = ($parameter == 'user') ? self::$userHeading : self::$defaultHeading;
+
+        if ($title != strtolower('judul')) {
+            $heading[1]['name'] =  ucfirst($title);
         }
+
+        return $heading;
     }
 
-    public static function props($parameter = null)
+    public static function props(string $parameter = 'default', string $title = 'judul')
     {
-        if ($parameter == 'user') {
-            return self::$userProps;
-        } else {
-            return self::$defaultProps;
+        $props = ($parameter == 'user') ? self::$userProps : self::$defaultProps;
+
+        if ($title != 'judul') {
+            $props[1] = $title;
         }
+
+        return $props;
+
     }
 
 }

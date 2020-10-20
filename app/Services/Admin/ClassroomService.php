@@ -48,7 +48,7 @@ class ClassroomService
 
     public function itemData($item)
     {
-        $param = ($item == 'user') ? $item : null; 
+        $param = ($item == 'user') ? $item : 'default'; 
 
         $data =  [
             'heading' => DataTable::heading($param),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
@@ -27,23 +28,8 @@ class UserController extends Controller
             'slug' => 'Slug URL',
             'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
             'action' => route('admin.ujian.store'),
-            'tableHeading' => json_encode([
-                [
-                    'name' => 'Nama',
-                    'width' => '25%'
-                ], 
-                
-                [
-                    'name' => 'Username',
-                    'width' => null
-                ],
-
-                [
-                    'name' => 'Jenis Kelamin',
-                    'width' => null
-                ]
-            ]),
-            'itemProperties' => json_encode(['id', 'nama', 'username', 'gender'])
+            'tableHeading' => json_encode(DataTable::heading('user')),
+            'itemProperties' => json_encode(DataTable::props('user'))
         ]);
     }
 

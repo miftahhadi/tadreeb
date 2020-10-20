@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTable;
 use App\Group;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\GroupService;
@@ -31,13 +32,8 @@ class GroupController extends Controller
             'judul' => 'Nama Grup',
             'slug' => '',
             'action' => route('admin.grup.store'),
-            'tableHeading' => json_encode([
-                [
-                    'name' => 'Nama Grup',
-                    'width' => ''
-                ], 
-            ]),
-            'itemProperties' => json_encode(['id', 'nama'])
+            'tableHeading' => json_encode(DataTable::heading('default', 'nama')),
+            'itemProperties' => json_encode(DataTable::props('default', 'nama'))
         ]);
     }
 
@@ -96,13 +92,8 @@ class GroupController extends Controller
             'action' => route('admin.grup.kelas.store', $grup->id),
             'slug' => '',
 
-            'tableHeading' => json_encode([
-                [
-                    'name' => 'Nama Grup',
-                    'width' => ''
-                ], 
-            ]),
-            'itemProperties' => json_encode(['id', 'nama']),
+            'tableHeading' => json_encode(DataTable::heading('default','nama')),
+            'itemProperties' => json_encode(DataTable::props('default', 'nama')),
 
             'itemUrl' => '/admin/grup/' . $grup->id . '/kelas/',
         ]);
