@@ -18,6 +18,7 @@ class CreateClassroomsTable extends Migration
             $table->foreignId('group_id')->constrained()
                                         ->cascadeOnDelete();
             $table->string('nama');
+            $table->string('kode');
             $table->text('deskripsi');
             $table->timestamps();
 
