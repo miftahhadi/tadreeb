@@ -4,7 +4,7 @@ namespace App;
 
 class DataTable
 {
-    protected static $defaultHeading = [
+    protected static $headingOne = [
         [
             'name' => 'ID',
             'widht' => null
@@ -20,7 +20,34 @@ class DataTable
         ]
     ];
 
-    protected static $userHeading = [
+    protected static $headingTwo = [
+        [
+            'name' => 'ID',
+            'widht' => null
+        ],
+        [
+            'name' => 'Nama',
+            'width' => null
+        ]
+    ];
+
+    protected static $headingThree = [
+        [
+            'name' => 'ID',
+            'widht' => null
+        ],
+        [
+            'name' => 'Nama',
+            'width' => '40%'
+        ], 
+        
+        [
+            'name' => 'Kode',
+            'width' => null
+        ]
+    ];
+
+    protected static $headingUser = [
         [
             'name' => 'ID',
             'width' => null
@@ -39,27 +66,59 @@ class DataTable
         ]
     ];
 
-    protected static $defaultProps = ['id', 'judul', 'slug'];
+    protected static $propsOne = ['id', 'judul', 'slug'];
 
-    protected static $userProps = ['id', 'nama', 'username', 'jenis_kelamin'];
+    protected static $propsTwo = ['id', 'nama'];
+    
+    protected static $propsThree = ['id', 'nama', 'kode'];
+    
+    protected static $propsUser = ['id', 'nama', 'username', 'jenis_kelamin'];
 
-    public static function heading(string $parameter = 'default', string $title = 'judul')
+    public static function heading($parameter = null)
     {
-        $heading = ($parameter == 'user') ? self::$userHeading : self::$defaultHeading;
+        $heading = [];
 
-        if ($title != strtolower('judul')) {
-            $heading[1]['name'] =  ucfirst($title);
+        switch ($parameter) {
+            case 2:
+                $heading = self::$headingTwo;
+                break;
+
+            case 3:
+                $heading = self::$headingThree;
+                break;
+            
+            case 'user':
+                $heading = self::$headingUser;
+                break;
+
+            default:
+                $heading = self::$headingOne;
+                break;
         }
 
         return $heading;
     }
 
-    public static function props(string $parameter = 'default', string $title = 'judul')
+    public static function props($parameter = null)
     {
-        $props = ($parameter == 'user') ? self::$userProps : self::$defaultProps;
+        $props = [];
 
-        if ($title != 'judul') {
-            $props[1] = $title;
+        switch ($parameter) {
+            case 2:
+                $props = self::$propsTwo;
+                break;
+
+            case 3:
+                $props = self::$propsThree;
+                break;                
+
+            case 'user':
+                $props = self::$propsUser;
+                break;                
+
+            default:
+                $props = self::$propsOne;
+                break;
         }
 
         return $props;

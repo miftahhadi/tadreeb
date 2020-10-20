@@ -5,6 +5,7 @@ namespace App\Services\Admin;
 use App\Classroom;
 use App\Group;
 use App\DataTable;
+use Illuminate\Support\Str;
 
 class ClassroomService
 {
@@ -15,6 +16,7 @@ class ClassroomService
     {
         return $grup->classrooms()->create([
             'nama' => $data['judul'],
+            'kode' => Str::random(10),
             'deskripsi' => $data['deskripsi']
         ]);
     }

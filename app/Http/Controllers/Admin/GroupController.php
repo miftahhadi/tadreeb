@@ -32,8 +32,8 @@ class GroupController extends Controller
             'judul' => 'Nama Grup',
             'slug' => '',
             'action' => route('admin.grup.store'),
-            'tableHeading' => json_encode(DataTable::heading('default', 'nama')),
-            'itemProperties' => json_encode(DataTable::props('default', 'nama'))
+            'tableHeading' => json_encode(DataTable::heading(2)),
+            'itemProperties' => json_encode(DataTable::props(2))
         ]);
     }
 
@@ -92,8 +92,8 @@ class GroupController extends Controller
             'action' => route('admin.grup.kelas.store', $grup->id),
             'slug' => '',
 
-            'tableHeading' => json_encode(DataTable::heading('default','nama')),
-            'itemProperties' => json_encode(DataTable::props('default', 'nama')),
+            'tableHeading' => json_encode(DataTable::heading(3)),
+            'itemProperties' => json_encode(DataTable::props(3)),
 
             'itemUrl' => '/admin/grup/' . $grup->id . '/kelas/',
         ]);
