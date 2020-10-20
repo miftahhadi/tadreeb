@@ -56,7 +56,7 @@ export default {
 
     data() {
         return {
-            assignUrl: this.fetchData + '/assign/',
+            assignUrl: this.fetchData + '/assign',
             fetchItemUrl: '/api/' + this.item,
             indexKey: 0,
         }
