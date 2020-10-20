@@ -7,7 +7,7 @@
 @section('main')
 <div class="container">
     <div class="row justify-content-center py-6">
-        <div class="col-12 col-md-8 col-lg-4">
+        <div class="col-12 col-md-8 col-lg-4 align-middle">
 
             <div class="text-center mb-4">
                 <img src="/static/logo.svg" height="50" alt="">
@@ -15,7 +15,13 @@
 
             <h2 class="mt-4 text-center">Masuk</h2>
 
-                <div class="card-body">
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    Username atau password salah
+                </div>
+            @endif
+
+                <div class="">
                     <form method="POST" action="{{ route('login') }}" class="card card-md">
                         @csrf
 
@@ -53,14 +59,13 @@
                         </div>
 
                     </form>
-                    @if (Route::has('password.request'))
+                    {{-- @if (Route::has('password.request'))
                         <div class="text-center text-muted">
                             <a href="{{ route('password.request') }}" tabindex="-1">
                                 {{ __('Forgot Your Password?') }}
                             </a>
                         </div>
-
-                    @endif
+                    @endif --}}
 
                 </div>
             </div>
