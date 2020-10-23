@@ -72,7 +72,7 @@ class DataTable
     
     protected static $propsThree = ['id', 'nama', 'kode'];
     
-    protected static $propsUser = ['id', 'nama', 'username', 'jenis_kelamin'];
+    protected static $propsUser = ['id', 'nama', 'username', 'gender'];
 
     public static function heading($parameter = null)
     {

@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div class="row mb-3">
+        <div class="row my-3">
 
             <div class="col-auto" v-if="search">
 

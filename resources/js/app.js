@@ -35,6 +35,8 @@ Vue.component('kelas-index', require('./components/admin/kelas/KelasIndex.vue').
 Vue.component('kelas-item-tab', require('./components/admin/kelas/KelasItemTab.vue').default);
 Vue.component('kelas-assign-modal', require('./components/admin/kelas/KelasAssignModal.vue').default);
 
+Vue.component('import-user', require('./components/admin/user/ImportUser.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

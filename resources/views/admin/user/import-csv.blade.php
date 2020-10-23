@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <form action="#" method="post" class="row" enctype="multipart/form-data">
+    <form action="{{ route('admin.user.parseCsv') }}" method="post" class="row" enctype="multipart/form-data">
         @csrf
         <div class="col-md-10">
     
@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <p>Di sini, Anda bisa mengimpor user secara massal. Data user yang akan diimpor harus Anda simpan dalam file berekstensi .CSV dan harus sesuai urutan berikut</p>
     
-                    <div class="table-responsive">
+                    <div class="table-responsive mt-2">
                         <table class="table table-vcenter">
                             <thead>
                                 @foreach ($userField as $field)

@@ -46,6 +46,7 @@ Route::name('admin.')->group(function () {
         Route::name('grup.kelas.')->group(function() {
             Route::group(['prefix' => 'grup/{grup}/'], function () { 
                 Route::get('kelas/{kelas}', 'ClassroomController@show')->name('show');
+                
                 Route::post('kelas', 'ClassroomController@store')->name('store');
                 Route::put('kelas/{kelas}', 'ClassroomController@update')->name('update');
                 Route::delete('kelas/{kelas}', 'ClassroomController@destroy')->name('destroy');
@@ -72,7 +73,11 @@ Route::name('admin.')->group(function () {
         Route::resource('grup', 'GroupController');
     
         // Users
+        Route::post('user/process-csv', 'UserController@processCsv')->name('user.processCsv');
+        
         Route::get('user/import-csv', 'UserController@getCsv')->name('user.getCsv');
+        Route::post('user/parse-csv', 'UserController@parseCsv')->name('user.parseCsv');
+
         Route::resource('user', 'UserController');
     
         // Setting

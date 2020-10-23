@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CsvUserData;
 use App\DataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\CsvImportRequest;
 use App\User;
 use App\Services\Admin\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected $userService;
+    protected $service;
 
     public function __construct(UserService $userService)
     {
-        $this->userService = $userService;
+        $this->service = $userService;
     }
-
-    protected $userField = [
-        'nama', 'email', 'username', 'password', 'role_id', 'gender', 'tanggal_lahir', 'kelas_id'
-    ];
 
     public function index()
     {
@@ -51,11 +49,6 @@ class UserController extends Controller
                 );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('admin.user.create');
@@ -64,29 +57,39 @@ class UserController extends Controller
     public function getCsv()
     {
         return view('admin.user.import-csv', [
-            'userField' => $this->userField
+            'userField' => $this->service->userField
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function parseCsv(CsvImportRequest $request)
+    {
+        $validated = $request->validated()['csv_file'];
+
+        $data = $this->service->parseCsv($validated);
+
+        $dataToShow = array_slice(json_decode($data->csv_data), 1, 3);
+
+        return view('admin.user.preview-csv', [
+            'dataToShow' => json_encode($dataToShow),
+            'csvDataFile' => $data,
+            'fields' => json_encode($this->service->userField)
+        ]);
+    }
+
+    public function processCsv(Request $request)
+    {
+        // dd($request);
+        
+        return json_encode($this->service->processCsv($request->id));
+    }
+
     public function store(StoreUserRequest $request)
     {
-        $this->userService->store($request->validated());
+        $this->service->store($request->validated());
 
         return redirect(route('admin.user.index'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
@@ -103,17 +106,11 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
 
-        $this->userService->update($request->validated(), $user);
+        $this->service->update($request->validated(), $user);
 
         return redirect(route('admin.user.index'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
