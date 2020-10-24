@@ -7488,7 +7488,8 @@ Navbar brand
 
 .navbar-brand-image {
   display: block;
-  height: 2rem; }
+  height: 85px;
+}
 
 /**
 Navbar toggler

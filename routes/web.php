@@ -81,7 +81,7 @@ Route::name('admin.')->group(function () {
         Route::resource('user', 'UserController');
     
         // Setting
-        Route::get('setting', 'SettingController@index')->name('setting');
+        Route::resource('setting', 'SettingController')->only(['index', 'store']);
     
     });
 });

@@ -45,7 +45,7 @@ class Settings extends Valuestore
             [
                 'name' => 'Pengaturan',
                 'item' => 'setting',
-                'route' => 'admin.setting',
+                'route' => 'admin.setting.index',
                 'icon' => '<i class="fas fa-cogs"></i>'
             ],
         ]
