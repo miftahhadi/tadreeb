@@ -24,6 +24,7 @@ class UserController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'title' => 'Daftar User',
             'fetchUrl' => '/api/user',
             'item' => 'user',
             'judul' => 'Judul ujian',
@@ -57,6 +58,7 @@ class UserController extends Controller
     public function getCsv()
     {
         return view('admin.user.import-csv', [
+            'title' => 'Impor User dari CSV',
             'userField' => $this->service->userField
         ]);
     }
@@ -70,6 +72,7 @@ class UserController extends Controller
         $dataToShow = array_slice(json_decode($data->csv_data), 1, 3);
 
         return view('admin.user.preview-csv', [
+            'title' => 'Pratinjau Data CSV',
             'dataToShow' => json_encode($dataToShow),
             'csvDataFile' => $data,
             'fields' => json_encode($this->service->userField)
@@ -98,6 +101,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return view('admin.user.edit', [
+            'title' => 'Edit User',
             'user' => $user
         ]);
     }

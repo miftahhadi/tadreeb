@@ -13,7 +13,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
-    <title>{{ settings('app_name') }}</title>
+    <title>
+        {{ $title }} 
+
+        @hasSection ('area')
+            - @yield('area')
+        @endif
+        
+        | {{ settings('app_name') }}
+    </title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <meta name="msapplication-TileColor" content="#206bc4"/>

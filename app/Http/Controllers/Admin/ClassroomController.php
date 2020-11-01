@@ -59,10 +59,12 @@ class ClassroomController extends Controller
      */
     public function show(Group $grup, Classroom $kelas)
     {
+        $title = $kelas->nama . ' - ' . $grup->nama;
+
         $service = $this->classroomService->show($kelas);
 
         return view('admin.classroom.show', compact(
-            'grup', 'kelas', 'service'
+            'title', 'grup', 'kelas', 'service'
         ));
     }
 

@@ -4,15 +4,26 @@
 
 <div id="app">
 
-    <h2 class="h1 font-weight-bold">{{ $grup->nama }}</h2>
-    <p>
-        {{ $grup->deskripsi }}
-    </p>
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.grup.index') }}">Grup</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            {{ $grup->nama }}
+        </a></li>
+    </ol>
 
-    <ul class="list-inline">
-        <li class="list-inline-item"><small><a href="#">Edit</a></small></li>
-        <li class="list-inline-item"><small><a href="#" class="text-danger">Hapus</a></small></li>
-    </ul>
+    <div>
+        <h2 class="h1 font-weight-bold">{{ $grup->nama }}</h2>
+        <p>
+            {{ $grup->deskripsi }}
+        </p>
+    
+        <ul class="list-inline">
+            <li class="list-inline-item"><small><a href="#">Edit</a></small></li>
+            <li class="list-inline-item"><small><a href="#" class="text-danger">Hapus</a></small></li>
+        </ul>
+    </div>
+
 
     <div class="row mb-2">
         <div class="col-auto">

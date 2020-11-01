@@ -2,7 +2,13 @@
 
 @section('content')
 
-    {{-- Konten --}}
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.pelajaran.index') }}">Pelajaran</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            {{ $pelajaran->judul }}
+        </a></li>
+    </ol>
 
     <h2 class="h1 font-weight-bold">{{ $pelajaran->judul }}</h2>
     <p>

@@ -7,15 +7,9 @@
   <div class="content">
 
     <div class="container d-flex flex-column">
-      <header class="navbar navbar-expand-md pb-2 border-bottom row">
-          <div class="container-xl">
-            
-            @include('admin._header-nav')
+      
+      @include('admin._header-nav')
 
-          </div>
-      </header>
-
-  
       <div class="row mt-4 flex-grow-1">
 
         <div class="col-md-2">
@@ -43,9 +37,7 @@
   
     </div>
 
-    <footer class="footer footer-transparent flex-shrink-0">
-      @include('admin._footer')
-    </footer>
+    @include('admin._footer')
 
   </div>
 
@@ -60,3 +52,7 @@
     <!-- Tabler Core -->
     <script src="/dist/js/tabler.min.js"></script>
 @endprepend
+
+@section('area')
+    Area Admin
+@endsection

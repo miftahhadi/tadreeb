@@ -1,10 +1,19 @@
 @extends('admin.main')
 
 @section('content')
+
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            Edit User
+        </a></li>
+    </ol>
+
     <div class="page-header">
         <div class="row">
             <div class="col-auto">
-                <h3 class="h1 mt-0 mb-3">User Baru</h3>
+                <h3 class="h1 mt-0 mb-3">Edit User</h3>
             </div>
         </div>
     </div>

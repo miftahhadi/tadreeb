@@ -21,7 +21,24 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Admin dashboard
+// Front area
+Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
+
+    // Dashboard
+    Route::get('/dashboard', 'FrontController@index')->name('dashboard');
+
+    Route::group(['prefix' => 'k'], function () {
+
+        Route::get('/{classroom:kode}/depan', 'ClassroomController@showHome')->name('kelas.home');
+        Route::get('/{classroom:kode}/pelajaran', 'ClassroomController@showLessons')->name('kelas.lessons');
+        Route::get('/{classroom:kode}/works', 'ClassroomController@showWorks')->name('kelas.works');
+        Route::get('/{classroom:kode}/anggota', 'ClassroomController@showPeople')->name('kelas.people');
+
+    });
+
+});
+
+// Admin area
 Route::name('admin.')->group(function () {
     Route::group([
         'prefix' => 'admin',
@@ -29,7 +46,7 @@ Route::name('admin.')->group(function () {
         'middleware' => 'auth',
     ], function () {
         //Dashboard
-        Route::get('/', 'AdminController@index');
+        Route::get('/', 'AdminController@index')->name('dashboard');
 
         // Lessons
         Route::resource('pelajaran', 'LessonController');

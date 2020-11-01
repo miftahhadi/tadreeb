@@ -3,6 +3,13 @@
 @section('content')
 <div id="app">
 
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+      <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><a href="#">
+          {{ ucfirst($item) }}
+      </a></li>
+    </ol>
+
     <div class="page-header">
       <div class="row align-items-center">
         <div class="col-auto">

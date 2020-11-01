@@ -2,6 +2,15 @@
 
 @section('content')
 <div>
+
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.ujian.index') }}">Ujian</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            {{ $ujian->judul }}
+        </a></li>
+    </ol>    
+
     <div class="page-header">
         <h2 class="page-title">Edit Ujian</h2>
     </div>

@@ -20,6 +20,7 @@ class SettingController extends Controller
     public function index()
     {
         return view('admin.setting.index', [
+            'title' => 'Pengaturan',
             'settings' => $this->service->allSettings()
         ]);
     }
@@ -31,3 +32,4 @@ class SettingController extends Controller
         return redirect(route('admin.setting.index'))->with('status', 'Pengaturan berhasil disimpan');
     }
 }
+ 

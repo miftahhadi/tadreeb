@@ -2,6 +2,14 @@
 
 @section('content')
 <div>
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.pelajaran.index') }}">Pelajaran</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            {{ $pelajaran->judul }}
+        </a></li>
+    </ol>
+    
     <div class="page-header">
         <h2 class="page-title">Edit Pelajaran</h2>
     </div>
@@ -75,7 +83,7 @@
                     Batal
                 </a>
 
-                <input type="submit" value="Simpan" class="btn btn-success" :class="disableSubmit">                     
+                <input type="submit" value="Simpan" class="btn btn-success">                     
             </div>
 
         </div>

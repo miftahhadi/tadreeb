@@ -27,6 +27,7 @@ class GroupController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'title' => 'Grup User',
             'fetchUrl' => '/api/grup',
             'item' => 'grup',
             'judul' => 'Nama Grup',
@@ -85,6 +86,7 @@ class GroupController extends Controller
     public function show(Group $grup)
     {
         return view('admin.grup.show', [
+            'title' => $grup->nama . ' - Grup User ',  
             'fetchUrl' => '/api/grup/' . $grup->id . '/kelas',
             'grup' => $grup,
             'item' => 'kelas',

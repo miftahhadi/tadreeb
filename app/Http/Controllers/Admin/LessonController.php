@@ -25,6 +25,7 @@ class LessonController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'title' => 'Daftar Pelajaran',
             'fetchUrl' => '/api/pelajaran',
             'item' => 'pelajaran',
             'judul' => 'Judul pelajaran',
@@ -75,6 +76,7 @@ class LessonController extends Controller
     public function show(Lesson $pelajaran)
     {
         return view('admin.lesson.show', [
+            'title' => $pelajaran->judul . ' - Pelajaran ',
             'pelajaran' => $pelajaran
         ]);
     }
@@ -88,6 +90,7 @@ class LessonController extends Controller
     public function edit(Lesson $pelajaran)
     {
         return view('admin.lesson.edit', [
+            'title' => 'Edit ' . $pelajaran->judul . ' - Pelajaran ',
             'pelajaran' => $pelajaran
         ]);
     }

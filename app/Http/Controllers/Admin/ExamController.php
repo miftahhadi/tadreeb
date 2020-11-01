@@ -29,6 +29,7 @@ class ExamController extends Controller
     public function index()
     {
         return view('admin.general.index', [
+            'title' => 'Daftar Ujian',
             'fetchUrl' => '/api/ujian',
             'item' => 'ujian',
             'judul' => 'Judul ujian',
@@ -80,6 +81,7 @@ class ExamController extends Controller
     {
 
         return view('admin.exam.show', [
+            'title' => $ujian->judul . ' - Ujian ',
             'ujian' => $ujian,
             'questionTypes' => $this->examService->questionTypes,
             'answerIcons' => $this->examService->answerIcons
@@ -95,6 +97,7 @@ class ExamController extends Controller
     public function edit(Exam $ujian)
     {
         return view('admin.exam.edit', [
+            'title' => 'Edit ' . $ujian->judul . ' - Ujian ', 
             'ujian' => $ujian
         ]);
     }

@@ -39,6 +39,7 @@ class QuestionController extends Controller
         $questionForm = $this->questionService->createQuestionForm($request);
 
         return view('admin.question.create', [
+            'title' => 'Soal Baru ' . ' - ' . $ujian->judul,
             'ujian' => $ujian,
             'choices' => $questionForm['choices'],
             'value' => $questionForm['value'] ?? '',
@@ -80,6 +81,7 @@ class QuestionController extends Controller
     public function edit(Exam $ujian, Question $soal)
     {
         return view('admin.question.edit',[
+            'title' => 'Edit Soal ' . ' - ' .  $ujian->judul,
             'ujian' => $ujian,
             'soal' => $soal,
             'option' => $this->questionService->option($soal)
