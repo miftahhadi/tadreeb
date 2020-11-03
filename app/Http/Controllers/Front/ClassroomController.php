@@ -53,4 +53,16 @@ class ClassroomController extends Controller
             'service' => $this->service
         ]);
     }
+
+    public function showWorks(Classroom $classroom)
+    {
+        $exams = $classroom->exams()->get();
+
+        return view('front.kelas.exams', [
+            'title' => 'Tugas dan Ujian - ' . $classroom->nama,
+            'kelas' => $classroom,
+            'exams' => $exams,
+            'service' => $this->service
+        ]);
+    }
 }

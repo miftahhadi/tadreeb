@@ -16,7 +16,7 @@ class ClassroomService
         ],
 
         [
-            'judul' => 'Kuis dan Ujian',
+            'judul' => 'Tugas dan Ujian',
             'route' => 'kelas.works'
         ],
 

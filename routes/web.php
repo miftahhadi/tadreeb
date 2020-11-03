@@ -29,10 +29,15 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
 
     Route::group(['prefix' => 'k'], function () {
 
+        Route::redirect('/{classroom:kode}', '/k/{classroom:kode}/depan');
+
         Route::get('/{classroom:kode}/depan', 'ClassroomController@showHome')->name('kelas.home');
         Route::get('/{classroom:kode}/pelajaran', 'ClassroomController@showLessons')->name('kelas.lessons');
         Route::get('/{classroom:kode}/works', 'ClassroomController@showWorks')->name('kelas.works');
         Route::get('/{classroom:kode}/anggota', 'ClassroomController@showPeople')->name('kelas.people');
+
+        Route::get('/{classroom:kode}/u/{exam}', 'ClassroomExamController@showInfo')->name('kelas.exam.info');
+        Route::get('/{classroom:kode}/u/{exam}/kerjakan', 'ClassroomExamController@showExam')->name('kelas.exam.kerjakan');
 
     });
 
@@ -65,24 +70,29 @@ Route::name('admin.')->group(function () {
                 Route::get('kelas/{kelas}', 'ClassroomController@show')->name('show');
                 
                 Route::post('kelas', 'ClassroomController@store')->name('store');
+
                 Route::put('kelas/{kelas}', 'ClassroomController@update')->name('update');
                 Route::delete('kelas/{kelas}', 'ClassroomController@destroy')->name('destroy');
-                Route::get('kelas/{kelas}/edit', 'ClassroomController@edit')->name('edit');
 
-                Route::get('kelas/{kelas}/pelajaran', 'ClassroomController@pelajaran');
-                Route::get('kelas/{kelas}/pelajaran/assign', 'ClassroomController@assignPelajaran');
+                Route::group(['prefix' => 'kelas/{kelas}'], function () {
 
-                Route::get('kelas/{kelas}/ujian', 'ClassroomController@ujian');
-                Route::get('kelas/{kelas}/ujian/assign', 'ClassroomController@ujian');
+                    Route::get('/edit', 'ClassroomController@edit')->name('edit');
 
+                    Route::get('/pelajaran', 'ClassroomController@pelajaran');
+                    Route::get('/pelajaran/assign', 'ClassroomController@assignPelajaran');
+    
+                    Route::get('/ujian', 'ClassroomController@ujian');
+                    Route::get('/ujian/assign', 'ClassroomController@ujian');
+    
+    
+                    Route::get('/anggota', 'ClassroomController@anggota');
+                    Route::get('/anggota/assign', 'ClassroomController@anggota');
+    
+                    Route::get('/pengaturan', 'ClassroomController@pengaturan');
+                    Route::post('/pengaturan', 'ClassroomController@pengaturan');
 
-                Route::get('kelas/{kelas}/anggota', 'ClassroomController@anggota');
-                Route::get('kelas/{kelas}/anggota/assign', 'ClassroomController@anggota');
-
-                Route::get('kelas/{kelas}/pengaturan', 'ClassroomController@pengaturan');
-                Route::post('kelas/{kelas}/pengaturan', 'ClassroomController@pengaturan');
-
-
+                });
+                
             });
         });
 

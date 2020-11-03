@@ -9,7 +9,6 @@ use App\Lesson;
 use App\Http\Requests\Admin\StoreLessonRequest;
 use App\Http\Requests\Admin\UpdateLessonRequest;
 use App\Services\Admin\LessonService;
-use Symfony\Component\HttpFoundation\Response;
 
 class LessonController extends Controller
 {
