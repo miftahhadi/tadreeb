@@ -41,6 +41,7 @@
     @section('head-script')
       <!-- CSS files -->
       <link href="/dist/css/tabler.css" rel="stylesheet"/>
+      <link href="/dist/css/custom.css" rel="stylesheet"/>
 
       <!-- fontawesome -->
       <script src="https://kit.fontawesome.com/c62b0f450b.js" crossorigin="anonymous"></script>
