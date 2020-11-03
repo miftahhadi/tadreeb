@@ -19,7 +19,7 @@ class CreateClassroomsTable extends Migration
                                         ->cascadeOnDelete();
             $table->string('nama');
             $table->string('kode');
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
 
             $table->index('group_id');
