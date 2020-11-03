@@ -57,3 +57,8 @@ Route::group([
     Route::post('user/assign', 'ClassroomController@assignUser');
 });
 
+Route::group(['namespace' => 'auth:api', 'namespace' => 'API'], function() {
+    Route::get('ujian/{exam:id}', 'ExamController@getExam');
+    Route::get('soal/{soal}', 'ExamController@getQuestion');
+});
+

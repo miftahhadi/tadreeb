@@ -3037,10 +3037,90 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
     examId: Number
+  },
+  data: function data() {
+    return {
+      exam: {},
+      questionIds: [],
+      questionId: 0,
+      question: {},
+      answers: [],
+      soalKey: 0
+    };
+  },
+  methods: {
+    getExamInfo: function getExamInfo() {
+      var _this = this;
+
+      axios.get('/api/ujian/' + this.examId).then(function (response) {
+        _this.exam = response.data.exam;
+        _this.questionIds = response.data.questionIds;
+        _this.questionId = response.data.questionIds[0];
+
+        _this.getQuestion();
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getQuestion: function getQuestion() {
+      var _this2 = this;
+
+      axios.get('/api/soal/' + this.questionId).then(function (response) {
+        _this2.question = response.data.soal;
+        _this2.answers = response.data.answers;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    question: function question(id) {
+      this.questionId = id;
+      this.getQuestion;
+      this.reloadSoal();
+    },
+    isCurrent: function isCurrent(id) {},
+    reloadSoal: function reloadSoal() {
+      return this.soalKey++;
+    }
+  },
+  created: function created() {
+    this.getExamInfo();
+  },
+  computed: {
+    questionNumber: function questionNumber() {
+      return this.questionIds.indexOf(this.questionId) + 1;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'exam-number-button',
+  props: {
+    btnNumber: Number,
+    id: Number
   }
 });
 
@@ -40523,7 +40603,28 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "col-md-7" }, [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("h3", { staticClass: "card-title" }, [
+            _vm._v(
+              "Soal ke-" +
+                _vm._s(_vm.questionNumber) +
+                " dari " +
+                _vm._s(_vm.exam.questions_count)
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", {
+          key: _vm.soalKey,
+          staticClass: "card-body",
+          domProps: { innerHTML: _vm._s(_vm.question.konten) }
+        }),
+        _vm._v(" "),
+        _vm._m(0)
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-5" }, [
       _c("div", { staticClass: "card" }, [
@@ -40533,18 +40634,22 @@ var render = function() {
           _c(
             "div",
             { staticClass: "btn-list justify-content-center" },
-            _vm._l(50, function(i) {
-              return _c(
-                "a",
-                {
-                  key: i,
-                  staticClass: "btn btn-light btn-sm",
-                  attrs: { href: "" }
+            _vm._l(_vm.questionIds, function(id, index) {
+              return _c("exam-number-button", {
+                key: index,
+                attrs: {
+                  "btn-number": ++index,
+                  id: id,
+                  current: _vm.isCurrent(id)
                 },
-                [_vm._v(_vm._s(i))]
-              )
+                on: {
+                  showQuestion: function($event) {
+                    return _vm.question($event)
+                  }
+                }
+              })
             }),
-            0
+            1
           )
         ])
       ])
@@ -40556,34 +40661,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-7" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h3", { staticClass: "card-title" }, [_vm._v("Soal ke-1 dari 50")])
+    return _c("div", { staticClass: "card-footer" }, [
+      _c("div", { staticClass: "btn-list" }, [
+        _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
+          _c("i", { staticClass: "fas fa-chevron-circle-left" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _vm._v("\n                ....\n            ")
+        _c("a", { staticClass: "btn btn-success", attrs: { href: "#" } }, [
+          _vm._v("Jawab")
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-footer" }, [
-          _c("div", { staticClass: "btn-list" }, [
-            _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
-              _c("i", { staticClass: "fas fa-chevron-circle-left" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "btn btn-success", attrs: { href: "#" } }, [
-              _vm._v("Jawab")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
-              _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
-              _vm._v(" "),
-              _c("i", { staticClass: "fas fa-chevron-circle-right" })
-            ])
-          ])
+        _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
+          _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
+          _vm._v(" "),
+          _c("i", { staticClass: "fas fa-chevron-circle-right" })
         ])
       ])
     ])
@@ -40597,6 +40690,41 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=template&id=9e73c84e&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=template&id=9e73c84e& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "button",
+    {
+      staticClass: "btn btn-light btn-sm",
+      on: {
+        click: function($event) {
+          return _vm.$emit("show-question", _vm.id)
+        }
+      }
+    },
+    [_vm._v(_vm._s(_vm.btnNumber))]
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -52803,6 +52931,7 @@ Vue.component('kelas-item-tab', __webpack_require__(/*! ./components/admin/kelas
 Vue.component('kelas-assign-modal', __webpack_require__(/*! ./components/admin/kelas/KelasAssignModal.vue */ "./resources/js/components/admin/kelas/KelasAssignModal.vue")["default"]);
 Vue.component('import-user', __webpack_require__(/*! ./components/admin/user/ImportUser.vue */ "./resources/js/components/admin/user/ImportUser.vue")["default"]);
 Vue.component('exam-doing-page', __webpack_require__(/*! ./components/front/ujian/ExamDoingPage.vue */ "./resources/js/components/front/ujian/ExamDoingPage.vue")["default"]);
+Vue.component('exam-number-button', __webpack_require__(/*! ./components/front/ujian/ExamNumberButton.vue */ "./resources/js/components/front/ujian/ExamNumberButton.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -53683,6 +53812,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamDoingPage_vue_vue_type_template_id_fa90e5d0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamDoingPage_vue_vue_type_template_id_fa90e5d0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/front/ujian/ExamNumberButton.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/front/ujian/ExamNumberButton.vue ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExamNumberButton.vue?vue&type=template&id=9e73c84e& */ "./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=template&id=9e73c84e&");
+/* harmony import */ var _ExamNumberButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExamNumberButton.vue?vue&type=script&lang=js& */ "./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ExamNumberButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/front/ujian/ExamNumberButton.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamNumberButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=template&id=9e73c84e&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=template&id=9e73c84e& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamNumberButton.vue?vue&type=template&id=9e73c84e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamNumberButton.vue?vue&type=template&id=9e73c84e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

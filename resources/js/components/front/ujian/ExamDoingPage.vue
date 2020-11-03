@@ -3,11 +3,10 @@
         <div class="col-md-7">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Soal ke-1 dari 50</h3>
+                    <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ exam.questions_count}}</h3>
                 </div>
 
-                <div class="card-body">
-                    ....
+                <div class="card-body" v-html="question.konten" :key="soalKey">
                 </div>
 
                 <div class="card-footer">
@@ -39,7 +38,13 @@
                 <div class="card-body">
                     <div class="btn-list justify-content-center">
 
-                        <a href="" class="btn btn-light btn-sm" v-for="i in 50" :key="i">{{ i }}</a>
+                        <exam-number-button
+                            v-for="(id, index) in questionIds" :key="index"
+                            :btn-number="++index"
+                            :id="id"
+                            :current="isCurrent(id)"
+                            @showQuestion="question($event)"
+                        ></exam-number-button>
 
                     </div>
                 </div>
@@ -56,6 +61,70 @@ export default {
 
     props: {
         examId: Number
+    },
+
+    data() {
+        return {
+            exam: {},
+            questionIds: [],
+            questionId: 0,
+            question: {},
+            answers: [],
+            soalKey: 0,
+        }
+    },
+
+    methods: {
+        getExamInfo() {
+            axios.get('/api/ujian/' + this.examId)
+                    .then(response => {
+                        this.exam = response.data.exam
+                        this.questionIds = response.data.questionIds
+                        this.questionId = response.data.questionIds[0]
+
+                        this.getQuestion()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
+        },
+
+        getQuestion() {
+            axios.get('/api/soal/' + this.questionId)
+                    .then(response => {
+                        this.question = response.data.soal
+                        this.answers = response.data.answers
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+        },
+
+        question(id) {
+            this.questionId = id;
+            this.getQuestion
+
+            this.reloadSoal()
+        },
+
+        isCurrent(id) {
+
+        },
+
+        reloadSoal() {
+            return this.soalKey++
+        }
+    },
+
+    created() {
+        this.getExamInfo();
+    },
+
+    computed: {
+        questionNumber() {
+            return this.questionIds.indexOf(this.questionId) + 1
+        }
     }
+
 }
 </script>
