@@ -1,35 +1,21 @@
 <template>
     <div class="row">
-        <div class="col-md-7">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ exam.questions_count}}</h3>
-                </div>
-
-                <div class="card-body" v-html="question.konten" :key="soalKey">
-                </div>
-
-                <div class="card-footer">
-                    <div class="btn-list">
-                        <a href="#" class="btn btn-white">
-                            <i class="fas fa-chevron-circle-left"></i>
-                            <span class="ml-1">Sebelumnya</span>
-                        </a>
-
-                        <a href="#" class="btn btn-success">Jawab</a>
-                        
-                        <a href="#" class="btn btn-white">
-                            <span class="mr-1">Lewati</span>
-                            <i class="fas fa-chevron-circle-right"></i>
-                        </a>
-                    </div>
-                    
-                </div>
-
-            </div>
+        <div class="col-md-8">
+            <exam-question-container
+                :question-number="questionNumber"
+                :questions-count="exam.questions_count"
+                :question="question"
+                :answers="answers"
+                :type="type"
+                :loading="loading"
+                :next-question="nextQuestion"
+                :prev-question="prevQuestion"
+                @get:next="newQuestion(nextQuestion)"
+                @get:prev="newQuestion(prevQuestion)"
+            ></exam-question-container>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Direktori Soal</h3>
@@ -43,13 +29,15 @@
                             :btn-number="++index"
                             :id="id"
                             :current="isCurrent(id)"
-                            @showQuestion="question($event)"
+                            @show:question="newQuestion"
                         ></exam-number-button>
 
                     </div>
                 </div>
 
             </div>
+
+            <a href="#" class="btn btn-success btn-block"><span class="font-weight-bolder">Selesai</span></a>
 
         </div>
     </div>
@@ -68,14 +56,18 @@ export default {
             exam: {},
             questionIds: [],
             questionId: 0,
+            nextQuestion: 0,
+            prevQuestion: 0,
             question: {},
             answers: [],
-            soalKey: 0,
+            loading: false,
         }
     },
 
     methods: {
         getExamInfo() {
+            this.loading = true;
+
             axios.get('/api/ujian/' + this.examId)
                     .then(response => {
                         this.exam = response.data.exam
@@ -83,6 +75,8 @@ export default {
                         this.questionId = response.data.questionIds[0]
 
                         this.getQuestion()
+
+                        this.loading = false;
                     })
                     .catch(error => {
                         console.log(error)
@@ -90,41 +84,87 @@ export default {
         },
 
         getQuestion() {
+            this.loading = true;
+
             axios.get('/api/soal/' + this.questionId)
                     .then(response => {
                         this.question = response.data.soal
                         this.answers = response.data.answers
+
+                        this.getNextQuestionId()
+                        this.getPrevQuestionId()
+
+                        this.loading = false
                     })
                     .catch(error => {
                         console.log(error);
                     });
         },
 
-        question(id) {
+        newQuestion(id) {
             this.questionId = id;
-            this.getQuestion
-
-            this.reloadSoal()
+            this.getQuestion()
         },
 
         isCurrent(id) {
+            return (this.questionId == id);
+        },
+
+        getNextQuestionId() {
+            let lastIndex = this.questionIds.length - 1
+
+            if (this.questionIds.indexOf(this.questionId) != lastIndex) {
+                let index = this.questionIds.indexOf(this.questionId) + 1;
+                this.nextQuestion = this.questionIds[index]                
+            } else {
+                this.nextQuestion = 0
+            }
 
         },
 
-        reloadSoal() {
-            return this.soalKey++
-        }
+        getPrevQuestionId() {
+            if (this.questionIds.indexOf(this.questionId) != 0) {
+                let index = this.questionIds.indexOf(this.questionId) - 1
+                this.prevQuestion = this.questionIds[index]
+            }
+        },
+
     },
 
-    created() {
+    mounted() {
         this.getExamInfo();
     },
 
     computed: {
         questionNumber() {
             return this.questionIds.indexOf(this.questionId) + 1
+        },
+
+        type() {
+            let input;
+
+            switch (this.question.tipe) {
+                case 'Pilihan Ganda':
+                    input = 'radio'         
+                    break;
+                
+                case 'Jawaban Ganda':
+                    input = 'checkbox'
+                    break;
+                
+                case 'Benar/Salah':
+                    input = 'radio'
+                    break;
+
+                default:
+                    input = 'radio'
+                    break;
+            }
+
+            return input;
         }
-    }
+    },
+
 
 }
 </script>

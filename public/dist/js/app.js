@@ -3030,18 +3030,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
@@ -3052,21 +3040,26 @@ __webpack_require__.r(__webpack_exports__);
       exam: {},
       questionIds: [],
       questionId: 0,
+      nextQuestion: 0,
+      prevQuestion: 0,
       question: {},
       answers: [],
-      soalKey: 0
+      loading: false
     };
   },
   methods: {
     getExamInfo: function getExamInfo() {
       var _this = this;
 
+      this.loading = true;
       axios.get('/api/ujian/' + this.examId).then(function (response) {
         _this.exam = response.data.exam;
         _this.questionIds = response.data.questionIds;
         _this.questionId = response.data.questionIds[0];
 
         _this.getQuestion();
+
+        _this.loading = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -3074,29 +3067,73 @@ __webpack_require__.r(__webpack_exports__);
     getQuestion: function getQuestion() {
       var _this2 = this;
 
+      this.loading = true;
       axios.get('/api/soal/' + this.questionId).then(function (response) {
         _this2.question = response.data.soal;
         _this2.answers = response.data.answers;
+
+        _this2.getNextQuestionId();
+
+        _this2.getPrevQuestionId();
+
+        _this2.loading = false;
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    question: function question(id) {
+    newQuestion: function newQuestion(id) {
       this.questionId = id;
-      this.getQuestion;
-      this.reloadSoal();
+      this.getQuestion();
     },
-    isCurrent: function isCurrent(id) {},
-    reloadSoal: function reloadSoal() {
-      return this.soalKey++;
+    isCurrent: function isCurrent(id) {
+      return this.questionId == id;
+    },
+    getNextQuestionId: function getNextQuestionId() {
+      var lastIndex = this.questionIds.length - 1;
+
+      if (this.questionIds.indexOf(this.questionId) != lastIndex) {
+        var index = this.questionIds.indexOf(this.questionId) + 1;
+        this.nextQuestion = this.questionIds[index];
+      } else {
+        this.nextQuestion = 0;
+      }
+    },
+    getPrevQuestionId: function getPrevQuestionId() {
+      if (this.questionIds.indexOf(this.questionId) != 0) {
+        var index = this.questionIds.indexOf(this.questionId) - 1;
+        this.prevQuestion = this.questionIds[index];
+      }
     }
   },
-  created: function created() {
+  mounted: function mounted() {
     this.getExamInfo();
   },
   computed: {
     questionNumber: function questionNumber() {
       return this.questionIds.indexOf(this.questionId) + 1;
+    },
+    type: function type() {
+      var input;
+
+      switch (this.question.tipe) {
+        case 'Pilihan Ganda':
+          input = 'radio';
+          break;
+
+        case 'Jawaban Ganda':
+          input = 'checkbox';
+          break;
+
+        case 'Benar/Salah':
+          input = 'radio';
+          break;
+
+        default:
+          input = 'radio';
+          break;
+      }
+
+      return input;
     }
   }
 });
@@ -3120,7 +3157,125 @@ __webpack_require__.r(__webpack_exports__);
   name: 'exam-number-button',
   props: {
     btnNumber: Number,
-    id: Number
+    id: Number,
+    current: Boolean
+  },
+  methods: {
+    showQuestion: function showQuestion() {
+      this.$emit('show:question', this.id);
+    }
+  },
+  computed: {
+    isActive: function isActive() {
+      return this.current ? 'active' : '';
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'exam-question-container',
+  props: {
+    questionNumber: Number,
+    questionsCount: Number,
+    question: Object,
+    answers: Array,
+    type: String,
+    loading: Boolean,
+    nextQuestion: Number,
+    prevQuestion: Number
+  },
+  computed: {
+    isLoading: function isLoading() {
+      return this.loading ? 'active' : '';
+    }
+  },
+  methods: {
+    getNextQuestion: function getNextQuestion() {
+      this.$emit('get:next');
+    },
+    getPrevQuestion: function getPrevQuestion() {
+      this.$emit('get:prev');
+    }
   }
 });
 
@@ -40603,32 +40758,37 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col-md-7" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h3", { staticClass: "card-title" }, [
-            _vm._v(
-              "Soal ke-" +
-                _vm._s(_vm.questionNumber) +
-                " dari " +
-                _vm._s(_vm.exam.questions_count)
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", {
-          key: _vm.soalKey,
-          staticClass: "card-body",
-          domProps: { innerHTML: _vm._s(_vm.question.konten) }
-        }),
-        _vm._v(" "),
-        _vm._m(0)
-      ])
-    ]),
+    _c(
+      "div",
+      { staticClass: "col-md-8" },
+      [
+        _c("exam-question-container", {
+          attrs: {
+            "question-number": _vm.questionNumber,
+            "questions-count": _vm.exam.questions_count,
+            question: _vm.question,
+            answers: _vm.answers,
+            type: _vm.type,
+            loading: _vm.loading,
+            "next-question": _vm.nextQuestion,
+            "prev-question": _vm.prevQuestion
+          },
+          on: {
+            "get:next": function($event) {
+              return _vm.newQuestion(_vm.nextQuestion)
+            },
+            "get:prev": function($event) {
+              return _vm.newQuestion(_vm.prevQuestion)
+            }
+          }
+        })
+      ],
+      1
+    ),
     _vm._v(" "),
-    _c("div", { staticClass: "col-md-5" }, [
+    _c("div", { staticClass: "col-md-4" }, [
       _c("div", { staticClass: "card" }, [
-        _vm._m(1),
+        _vm._m(0),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
           _c(
@@ -40642,17 +40802,15 @@ var render = function() {
                   id: id,
                   current: _vm.isCurrent(id)
                 },
-                on: {
-                  showQuestion: function($event) {
-                    return _vm.question($event)
-                  }
-                }
+                on: { "show:question": _vm.newQuestion }
               })
             }),
             1
           )
         ])
-      ])
+      ]),
+      _vm._v(" "),
+      _vm._m(1)
     ])
   ])
 }
@@ -40661,33 +40819,19 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-footer" }, [
-      _c("div", { staticClass: "btn-list" }, [
-        _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
-          _c("i", { staticClass: "fas fa-chevron-circle-left" }),
-          _vm._v(" "),
-          _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
-        ]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-success", attrs: { href: "#" } }, [
-          _vm._v("Jawab")
-        ]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
-          _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
-          _vm._v(" "),
-          _c("i", { staticClass: "fas fa-chevron-circle-right" })
-        ])
-      ])
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", { staticClass: "card-title" }, [_vm._v("Direktori Soal")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Direktori Soal")])
-    ])
+    return _c(
+      "a",
+      { staticClass: "btn btn-success btn-block", attrs: { href: "#" } },
+      [_c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Selesai")])]
+    )
   }
 ]
 render._withStripped = true
@@ -40715,16 +40859,147 @@ var render = function() {
     "button",
     {
       staticClass: "btn btn-light btn-sm",
-      on: {
-        click: function($event) {
-          return _vm.$emit("show-question", _vm.id)
-        }
-      }
+      class: _vm.isActive,
+      on: { click: _vm.showQuestion }
     },
     [_vm._v(_vm._s(_vm.btnNumber))]
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=template&id=81b315a6&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=template&id=81b315a6& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "dimmer", class: _vm.isLoading }, [
+      _c("div", { staticClass: "loader" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "dimmer-content" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("h3", { staticClass: "card-title" }, [
+            _vm._v(
+              "Soal ke-" +
+                _vm._s(_vm.questionNumber) +
+                " dari " +
+                _vm._s(_vm.questionsCount)
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", {
+          staticClass: "card-body",
+          domProps: { innerHTML: _vm._s(_vm.question.konten) }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "div",
+            {
+              staticClass:
+                "form-selectgroup form-selectgroup-boxes d-flex flex-column"
+            },
+            _vm._l(_vm.answers, function(answer) {
+              return _c(
+                "label",
+                {
+                  key: answer.id,
+                  staticClass: "form-selectgroup-item flex-fill"
+                },
+                [
+                  _c("input", {
+                    staticClass: "form-selectgroup-input",
+                    attrs: { type: _vm.type, name: "jawaban[]", value: "" }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "form-selectgroup-label d-flex align-items-center p-3"
+                    },
+                    [
+                      _vm._m(0, true),
+                      _vm._v(" "),
+                      _c("div", {
+                        domProps: { innerHTML: _vm._s(answer.redaksi) }
+                      })
+                    ]
+                  )
+                ]
+              )
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-footer" }, [
+          _c("div", { staticClass: "btn-list" }, [
+            _vm.prevQuestion != 0
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-white",
+                    on: { click: _vm.getPrevQuestion }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-chevron-circle-left" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("a", { staticClass: "btn btn-success", attrs: { href: "#" } }, [
+              _vm._v("Jawab")
+            ]),
+            _vm._v(" "),
+            _vm.nextQuestion != 0
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-white",
+                    on: { click: _vm.getNextQuestion }
+                  },
+                  [
+                    _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
+                    _vm._v(" "),
+                    _c("i", { staticClass: "fas fa-chevron-circle-right" })
+                  ]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mr-3" }, [
+      _c("span", { staticClass: "form-selectgroup-check" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -52932,6 +53207,7 @@ Vue.component('kelas-assign-modal', __webpack_require__(/*! ./components/admin/k
 Vue.component('import-user', __webpack_require__(/*! ./components/admin/user/ImportUser.vue */ "./resources/js/components/admin/user/ImportUser.vue")["default"]);
 Vue.component('exam-doing-page', __webpack_require__(/*! ./components/front/ujian/ExamDoingPage.vue */ "./resources/js/components/front/ujian/ExamDoingPage.vue")["default"]);
 Vue.component('exam-number-button', __webpack_require__(/*! ./components/front/ujian/ExamNumberButton.vue */ "./resources/js/components/front/ujian/ExamNumberButton.vue")["default"]);
+Vue.component('exam-question-container', __webpack_require__(/*! ./components/front/ujian/ExamQuestionContainer.vue */ "./resources/js/components/front/ujian/ExamQuestionContainer.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -53881,6 +54157,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamNumberButton_vue_vue_type_template_id_9e73c84e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/front/ujian/ExamQuestionContainer.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/front/ujian/ExamQuestionContainer.vue ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ExamQuestionContainer_vue_vue_type_template_id_81b315a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExamQuestionContainer.vue?vue&type=template&id=81b315a6& */ "./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=template&id=81b315a6&");
+/* harmony import */ var _ExamQuestionContainer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExamQuestionContainer.vue?vue&type=script&lang=js& */ "./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ExamQuestionContainer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ExamQuestionContainer_vue_vue_type_template_id_81b315a6___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ExamQuestionContainer_vue_vue_type_template_id_81b315a6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/front/ujian/ExamQuestionContainer.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestionContainer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamQuestionContainer.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestionContainer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=template&id=81b315a6&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=template&id=81b315a6& ***!
+  \******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestionContainer_vue_vue_type_template_id_81b315a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamQuestionContainer.vue?vue&type=template&id=81b315a6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/front/ujian/ExamQuestionContainer.vue?vue&type=template&id=81b315a6&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestionContainer_vue_vue_type_template_id_81b315a6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestionContainer_vue_vue_type_template_id_81b315a6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

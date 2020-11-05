@@ -39,6 +39,7 @@ Vue.component('import-user', require('./components/admin/user/ImportUser.vue').d
 
 Vue.component('exam-doing-page', require('./components/front/ujian/ExamDoingPage.vue').default);
 Vue.component('exam-number-button', require('./components/front/ujian/ExamNumberButton.vue').default);
+Vue.component('exam-question-container', require('./components/front/ujian/ExamQuestionContainer.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

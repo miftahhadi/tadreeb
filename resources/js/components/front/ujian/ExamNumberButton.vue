@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-light btn-sm" @click="$emit('show-question', id)">{{ btnNumber }}</button>
+    <button class="btn btn-light btn-sm" :class="isActive" @click="showQuestion">{{ btnNumber }}</button>
 </template>
 
 <script>
@@ -8,7 +8,20 @@ export default {
 
     props: {
         btnNumber: Number,
-        id: Number
+        id: Number,
+        current: Boolean,
+    },
+
+    methods: {
+        showQuestion() {
+            this.$emit('show:question', this.id);
+        }
+    },
+
+    computed: {
+        isActive() {
+            return (this.current) ? 'active' : '';
+        }
     }
 }
 </script>
