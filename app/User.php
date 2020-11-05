@@ -55,4 +55,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class);
     }
 
+    public function classroomexam()
+    {
+        return $this->belongsToMany(ClassroomExam::class);
+    }
+
 }

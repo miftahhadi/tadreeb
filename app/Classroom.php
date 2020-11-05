@@ -23,7 +23,17 @@ class Classroom extends Model
 
     public function exams()
     {
-        return $this->belongsToMany(Exam::class);
+        return $this->belongsToMany(Exam::class)->using(ClassroomExam::class)
+                                                ->withPivot([
+                                                    'id', 
+                                                    'tampil', 
+                                                    'buka', 
+                                                    'buka_hasil', 
+                                                    'tampil_otomatis', 
+                                                    'batas_buka', 
+                                                    'durasi', 
+                                                    'attempt'
+                                                ]);
     }
 
     public function users()

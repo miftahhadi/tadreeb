@@ -25,6 +25,17 @@ class Exam extends Model
 
     public function classrooms()
     {
-        return $this->belongsToMany(Classroom::class);
+        return $this->belongsToMany(Classroom::class)->using(ClassroomExam::class)
+                                                    ->withPivot([
+                                                        'id',
+                                                        'tampil',
+                                                        'buka',
+                                                        'buka_hasil',
+                                                        'tampil_otomatis',
+                                                        'buka_otomatis',
+                                                        'batas_buka',
+                                                        'durasi',
+                                                        'attempt'
+                                                    ]);
     }
 }
