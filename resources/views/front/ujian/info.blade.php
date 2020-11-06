@@ -7,18 +7,14 @@
 
             <ol class="breadcrumb breadcrumb-arrows mb-2" aria-label="breadcrumbs">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('kelas.home', $kelas->kode) }}">Kelas {{ $kelas->nama }}</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('kelas.home', $service->classroom->kode) }}">Kelas {{ $service->classroom->nama }}</a>
+                </li>
             </ol>
-
-            {{-- <div class="mb-2">
-                <span class="text-muted">
-                    <a href="{{ route('dashboard') }}" class="link-secondary">Kembali ke Dashboard</a> 
-                </span>
-            </div> --}}
 
             <div class="card card-sm bg-blue text-white rounded-lg">
                 <div class="card-body pt-6">
-                    <h2 class="h1 font-weight-bold">{{ $exam->judul }}</h2>
+                    <h2 class="h1 font-weight-bold">{{ $service->exam->judul }}</h2>
                 </div>
             </div>
 
@@ -31,11 +27,11 @@
 
                     <dl class="row">
                         <dt class="col-5">Jumlah soal:</dt>
-                        <dd class="col-7">{{ $exam->questions_count }}</dd>
+                        <dd class="col-7">{{ $service->questionsCount() }}</dd>
                         <dt class="col-5">Durasi:</dt>
-                        <dd class="col-7">{{ $exam->pivot->durasi ?? 'Tidak dibatasi' }}</dd>
+                        <dd class="col-7">{{ $service->durasi() }}</dd>
                         <dt class="col-5">Batas akses:</dt>
-                        <dd class="col-7">{{ $exam->pivot->batas_buka ?? 'Tidak ada' }}</dd>
+                        <dd class="col-7">{{ $service->batasBuka() . ' ' . settings('tzName') }}</dd>
                       </dl>
 
                 </div>
@@ -57,7 +53,7 @@
                     Lihat Hasil
                 </a>
 
-                <a href="{{ route('kelas.exam.kerjakan', [ 'classroom' => $kelas->kode, 'exam' => $exam->slug ]) }}" 
+                <a href="{{ route('kelas.exam.kerjakan', [ 'classroom' => $service->classroom->kode, 'exam' => $service->exam->slug ]) }}" 
                     class="btn btn-success">
                     Mulai Kerjakan
                 </a>
