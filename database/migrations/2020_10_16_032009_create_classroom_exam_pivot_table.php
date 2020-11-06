@@ -24,9 +24,9 @@ class CreateClassroomExamPivotTable extends Migration
             $table->tinyInteger('tampil')->default(0);
             $table->tinyInteger('buka')->default(0);
             $table->tinyInteger('buka_hasil')->default(0);
-            $table->dateTime('tampil_otomatis')->nullable();
-            $table->dateTime('buka_otomatis')->nullable();
-            $table->dateTime('batas_buka')->nullable();
+            $table->timestamp('tampil_otomatis')->nullable();
+            $table->timestamp('buka_otomatis')->nullable();
+            $table->timestamp('batas_buka')->nullable();
             $table->integer('durasi')->default(0);
             $table->integer('attempt')->default(0);
             $table->timestamps();
