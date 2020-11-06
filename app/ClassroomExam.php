@@ -9,8 +9,10 @@ class ClassroomExam extends Pivot
     public function users()
     {
         return $this->belongsToMany(User::class, 'classroomexam_user', 'classroom_exam_id', 'user_id')
+                    ->using(ClassExamUser::class)
                     ->withPivot([
-                        'attemp', 
+                        'attempt', 
+                        'answers',
                         'waktu_mulai', 
                         'waktu_selesai'
                     ]);

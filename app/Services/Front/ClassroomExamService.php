@@ -2,6 +2,7 @@
 
 namespace App\Services\Front;
 
+use App\ClassExamUser;
 use App\Classroom;
 use App\ClassroomExam;
 use App\Exam;
@@ -12,6 +13,7 @@ class ClassroomExamService
     public $exam;
     public $classroom;
     public $classexam;
+    protected $classexamuser;
 
     protected $tz;
     protected $durasi;
@@ -37,7 +39,6 @@ class ClassroomExamService
 
         $this->setDurasi();
         $this->setBatasBuka();
-        
 
         return $this;
     }
@@ -62,7 +63,7 @@ class ClassroomExamService
     public function setBatasBuka()
     {
         if ($this->classexam->batas_buka) {
-            $this->batasBuka = Carbon::createFromFormat('Y-m-d H:i:s',$this->classexam->batas_buka);
+            $this->batasBuka = Carbon::createFromFormat('Y-m-d H:i:s', $this->classexam->batas_buka, 'UTC');
         }
     }
 
@@ -74,26 +75,35 @@ class ClassroomExamService
             $this->batasBuka->tz($this->tz);
 
             // Berikan output berupa string datetime
-            return $this->batasBuka->format('d M Y H:i');
+            return $this->batasBuka->format('d M Y H:i') . ' ' . settings('tzName');
+        } else {
+            return 'Tidak ada';
         }
     }
 
-    public function isAllowed()
+    public function hasDone()
     {
-        // sementara true
-        return true;
+        // Pernah ngerjain belum?
+        $attempts = $this->userHistory()->get()->count();
+
+        if ($attempts > 1) {
+            return true;
+        } elseif ($attempts == 1) {
+            $data = $this->userHistory()->first();
+
+            return !is_null($data->waktu_selesai);
+        }
+
     }
 
-    public function inExam(Exam $exam, Classroom $classroom)
+    public function canDoExam()
     {
-
-        $this->info($exam, $classroom);
 
         // Cek data ujian dari table classroom_exam
         // 1) Jumlah Soal -- done
         // 2) Durasi -- done
-        // 3) Attempt
-        // 4) Izin akses
+        // 3) Attempt -- done
+        // 4) Izin akses -- done
         // 
         // Ambil batas waktu akses dari database, ubah ke UTC +07:00
         // Terus cocokkan sama waktu sekarang
@@ -112,28 +122,133 @@ class ClassroomExamService
         // Ambil id/urutan soal pertama -- done
         // Load soal serahkan ke elemen vue: lempar exam id ke vue -- done
 
-        $now = Carbon::now('UTC');
-        // $now->tz('+07:00');
-
-        dd($now->tz);
+        if ($this->isExamOpen()) {
+            return $this->isUserAllowed();
+        } else {
+            return false;
+        }
 
     }
 
-    public function initUser($attempt = 1, ClassroomExam $classexam)
+    public function isExamOpen()
+    {
+        if ($this->classexam->buka == 0) {
+            return false;
+        }
+
+        if ($this->batasBuka) {
+            
+            // Ambil waktu sekarang, set ke UTC
+            $now = now('UTC');
+
+            return $now->lessThan($this->batasBuka);
+
+        }
+
+        return true;
+
+    }
+
+    public function isUserAllowed()
+    {
+        // Dia anggota kelas bukan?
+        // Udah pernah ngerjain belum?
+        // Kalau udah, masih bisa ngerjain gak?
+
+        $memberIds = $this->classroom->users()->get()->pluck('id')->toArray();
+
+        if (!in_array(auth()->user()->id, $memberIds)) {
+            return false;
+        }
+
+        // Udah pernah mulai ngerjian?
+        if ($this->userHistory()->get()->isEmpty()) {
+            return true;
+        }
+
+        // Ambil data terakhir
+        $lastData = $this->userHistory()->first();
+
+        // Sudah submit belum?
+        // Kalau udah, masih punya kesempatan ujian?
+        if ($lastData->waktu_selesai) {
+            return $this->hasAttempt();
+        }
+
+        // Kalau belum, ujian ada durasinya gak?
+        // - Gak ada, lanjut aja
+        // - Ada, durasinya udah habis belum?
+        if ($this->classexam->durasi != 0) {
+            $waktuHabis = Carbon::createFromFormat('Y-m-d H:i:s',$lastData->waktu_mulai, 'UTC')
+                                                ->addMinutes($this->classexam->durasi);
+
+            $now = now('UTC');
+
+            return $now->lessThan($waktuHabis);
+        }
+
+        // Default true
+        return true;
+
+    }
+
+    public function hasAttempt()
+    {
+        return ($this->lastAttempt() < $this->classexam->attempt);
+    }
+
+    public function userHistory()
+    {
+        return ClassExamUser::where([
+                                ['classroom_exam_id', $this->classexam->id],
+                                ['user_id', auth()->user()->id]
+                            ])->orderBy('attempt', 'desc');
+    }
+
+    public function lastAttempt()
+    {
+
+        return $this->userHistory()->max('attempt') ?? 0;
+
+    }
+
+    public function thisAttempt()
+    {
+        return $this->lastAttempt() + 1;
+    }
+
+    public function initUser($attempt = 1)
     {
         // Rekam waktu_mulai user pakai UTC
-
         // Waktu mulai user dalam UTC
         $waktuMulai = Carbon::now('UTC');
 
         // Rekam data pengerjaan user
-        $classexam->users()->attach(auth()->user()->id, [
+        $answers = [];
+
+        foreach ($this->questionsId() as $question) {
+            $answers[$question] = [
+                'answers' => [],
+                'score' => 0
+            ];
+        }
+
+        $this->classexam->users()->attach(auth()->user()->id, [
             'attempt' => $attempt,
-            'waktu_mulai' => $waktuMulai
+            'answers' => json_encode($answers),
+            'waktu_mulai' => $waktuMulai,
         ]);
 
         return $this;
 
+    }
+
+    protected function questionsId()
+    {
+        return $this->exam->questions()
+                            ->get()
+                            ->pluck('id')
+                            ->toArray();
     }
 
 }

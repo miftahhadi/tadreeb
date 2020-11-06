@@ -58,8 +58,10 @@ class User extends Authenticatable
     public function classroomexam()
     {
         return $this->belongsToMany(ClassroomExam::class, 'classroomexam_user', 'user_id', 'classroom_exam_id')
+                    ->using(ClassExamUser::class)
                     ->withPivot([
                         'attempt',
+                        'answers',
                         'waktu_mulai',
                         'waktu_selesai'
                     ]);

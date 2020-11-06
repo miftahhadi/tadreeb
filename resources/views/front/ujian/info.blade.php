@@ -31,7 +31,7 @@
                         <dt class="col-5">Durasi:</dt>
                         <dd class="col-7">{{ $service->durasi() }}</dd>
                         <dt class="col-5">Batas akses:</dt>
-                        <dd class="col-7">{{ $service->batasBuka() . ' ' . settings('tzName') }}</dd>
+                        <dd class="col-7">{{ $service->batasBuka()  }}</dd>
                       </dl>
 
                 </div>
@@ -48,12 +48,17 @@
             <div class="text-center">
                 <a href="#" class="btn btn-white">Kembali</a>
 
-                <a href="#" 
-                    class="btn btn-primary">
-                    Lihat Hasil
-                </a>
+                @if ($service->hasDone())
+                    <a href="#" 
+                        class="btn btn-primary">
+                        Lihat Hasil
+                    </a>                    
+                @endif
 
-                <a href="{{ route('kelas.exam.kerjakan', [ 'classroom' => $service->classroom->kode, 'exam' => $service->exam->slug ]) }}" 
+                <a href="{{ route('kelas.exam.kerjakan', [ 
+                                    'classroom' => $service->classroom->kode, 
+                                    'exam' => $service->exam->slug 
+                                ]) }}" 
                     class="btn btn-success">
                     Mulai Kerjakan
                 </a>

@@ -33,14 +33,12 @@ class ClassroomExamController extends Controller
 
     public function showExam(Classroom $classroom, Exam $exam)
     {
-        $classexam = ClassroomExam::where([
-                                            ['classroom_id', $classroom->id],
-                                            ['exam_id', $exam->id]
-                                        ])
-                                        ->first();
 
+        $this->service->info($exam, $classroom);
 
-        // $this->service->inExam();
+        if (!$this->service->canDoExam()) {
+            return redirect(route('dashboard'));
+        }
         
         return view('front.ujian.kerjakan', [
             'title' => $exam->judul . ' - ' . $classroom->nama,
