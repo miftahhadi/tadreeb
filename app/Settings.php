@@ -48,6 +48,11 @@ class Settings extends Valuestore
                 'route' => 'admin.setting.index',
                 'icon' => '<i class="fas fa-cogs"></i>'
             ],
-        ]
+        ],
+
+        'timezone' => '+07:00',
+
+        'tzName' => 'WIB'
+
     ];
 }
