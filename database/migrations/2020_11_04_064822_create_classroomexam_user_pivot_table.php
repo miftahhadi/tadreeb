@@ -22,6 +22,7 @@ class CreateClassroomexamUserPivotTable extends Migration
                     ->constrained()
                     ->onDelete('cascade');
             $table->integer('attempt')->default(1);
+            $table->longText('answers')->nullable();
             $table->timestamp('waktu_mulai')->nullable();
             $table->timestamp('waktu_selesai')->nullable();
             $table->timestamps();
