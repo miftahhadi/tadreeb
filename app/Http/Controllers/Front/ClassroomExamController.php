@@ -39,6 +39,8 @@ class ClassroomExamController extends Controller
         if (!$this->service->canDoExam()) {
             return redirect(route('dashboard'));
         }
+
+        $this->service->initUser();
         
         return view('front.ujian.kerjakan', [
             'title' => $exam->judul . ' - ' . $classroom->nama,
