@@ -17,7 +17,13 @@ class ExamController extends Controller
 
         $questionIds = $exam->questions()->get()->pluck('id');
 
-        return json_encode(['exam' => $exam, 'questionIds' => $questionIds]);
+        $questions = $exam->questions()->with('answers')->get();
+
+        return json_encode([
+                        'exam' => $exam, 
+                        'questionIds' => $questionIds, 
+                        'questions' => collect($questions)->keyBy('id')
+                    ]);
     }
 
     public function getQuestion(Question $soal)

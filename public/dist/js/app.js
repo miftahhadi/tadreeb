@@ -3033,6 +3033,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
@@ -3050,7 +3052,9 @@ __webpack_require__.r(__webpack_exports__);
       answers: [],
       loading: false,
       userAnswers: {},
-      answering: false
+      answering: false,
+      data: {},
+      questions: {}
     };
   },
   methods: {
@@ -3062,6 +3066,8 @@ __webpack_require__.r(__webpack_exports__);
         _this.exam = response.data.exam;
         _this.questionIds = response.data.questionIds;
         _this.questionId = response.data.questionIds[0];
+        _this.data = response.data;
+        _this.questions = response.data.questions;
 
         _this.getQuestion();
 
@@ -3072,31 +3078,24 @@ __webpack_require__.r(__webpack_exports__);
       this.getUserAnswers();
     },
     getQuestion: function getQuestion() {
-      var _this2 = this;
-
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.questionId;
-      this.loading = true;
-      axios.get('/api/soal/' + id).then(function (response) {
-        _this2.question = response.data.soal;
-        _this2.answers = response.data.answers;
-
-        _this2.getNextQuestionId();
-
-        _this2.getPrevQuestionId();
-
-        _this2.loading = false;
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      this.questionId = id;
+      this.question = this.data.questions[id];
+      this.getAnswers();
+      this.getNextQuestionId();
+      this.getPrevQuestionId();
+    },
+    getAnswers: function getAnswers() {
+      this.answers = this.questions[this.questionId].answers;
     },
     getUserAnswers: function getUserAnswers() {
-      var _this3 = this;
+      var _this2 = this;
 
       axios.get('/api/jawaban-user/' + this.classexamuserId).then(function (response) {
         var userAnswers = response.data;
         var questions = Object.keys(userAnswers);
         questions.forEach(function (question) {
-          _this3.userAnswers[question] = userAnswers[question].answers;
+          _this2.userAnswers[question] = userAnswers[question].answers;
         });
       });
     },
@@ -3104,9 +3103,9 @@ __webpack_require__.r(__webpack_exports__);
       return this.questionId == id;
     },
     getNextQuestionId: function getNextQuestionId() {
-      var lastIndex = this.questionIds.length - 1;
+      var lastIndex = this.exam.questions_count;
 
-      if (this.questionIds.indexOf(this.questionId) != lastIndex) {
+      if (this.questionId != lastIndex) {
         var index = this.questionIds.indexOf(this.questionId) + 1;
         this.nextQuestion = this.questionIds[index];
       } else {
@@ -3122,7 +3121,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     updateAnswer: function updateAnswer(data) {
-      var _this4 = this;
+      var _this3 = this;
 
       this.answering = true;
       var answer;
@@ -3140,10 +3139,10 @@ __webpack_require__.r(__webpack_exports__);
         questionId: this.questionId
       }).then(function (response) {
         // Update jawaban peserta
-        _this4.userAnswers[questionId] = [answerIds];
-        _this4.answering = false;
+        _this3.userAnswers[questionId] = [answer];
+        _this3.answering = false;
 
-        _this4.getQuestion(_this4.nextQuestion);
+        _this3.getQuestion(_this3.nextQuestion);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -3170,9 +3169,12 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return input;
+    },
+    isAnswered: function isAnswered(id) {
+      return this.userAnswers[id].length != 0;
     }
   },
-  created: function created() {
+  mounted: function mounted() {
     this.getExamInfo();
   },
   computed: {
@@ -3202,7 +3204,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     btnNumber: Number,
     id: Number,
-    current: Boolean
+    current: Boolean,
+    answered: Boolean
   },
   methods: {
     showQuestion: function showQuestion() {
@@ -3212,6 +3215,9 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     isActive: function isActive() {
       return this.current ? 'active' : '';
+    },
+    isAnswered: function isAnswered() {
+      return this.answered ? 'btn-success' : 'btn-light';
     }
   }
 });
@@ -3309,7 +3315,7 @@ __webpack_require__.r(__webpack_exports__);
     question: Object,
     questionId: Number,
     answers: Array,
-    userAnswers: Object,
+    userAnswers: Array,
     type: String,
     loading: Boolean,
     nextQuestion: Number,
@@ -3318,7 +3324,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      thisAnswer: null
+      thisAnswer: ''
     };
   },
   computed: {
@@ -40829,13 +40835,14 @@ var render = function() {
           attrs: {
             "question-number": _vm.questionNumber,
             "questions-count": _vm.exam.questions_count,
+            "question-id": _vm.questionId,
             question: _vm.question,
             answers: _vm.answers,
             type: _vm.getType(),
             loading: _vm.loading,
             "next-question": _vm.nextQuestion,
             "prev-question": _vm.prevQuestion,
-            "user-answers": _vm.userAnswers,
+            "user-answers": _vm.userAnswers[_vm.questionId],
             answering: _vm.answering
           },
           on: {
@@ -40866,7 +40873,8 @@ var render = function() {
                 attrs: {
                   "btn-number": ++index,
                   id: id,
-                  current: _vm.isCurrent(id)
+                  current: _vm.isCurrent(id),
+                  answered: _vm.isAnswered(id)
                 },
                 on: { "show:question": _vm.getQuestion }
               })
@@ -40924,8 +40932,8 @@ var render = function() {
   return _c(
     "button",
     {
-      staticClass: "btn btn-light btn-sm",
-      class: _vm.isActive,
+      staticClass: "btn btn-sm",
+      class: [_vm.isActive, _vm.isAnswered],
       on: { click: _vm.showQuestion }
     },
     [_vm._v(_vm._s(_vm.btnNumber))]
@@ -54400,8 +54408,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -82,7 +82,7 @@ export default {
         question: Object,
         questionId: Number,
         answers: Array,
-        userAnswers: Object,
+        userAnswers: Array,
         type: String,
         loading: Boolean,
         nextQuestion: Number,
@@ -92,7 +92,7 @@ export default {
 
     data() {
         return {
-            thisAnswer: null,
+            thisAnswer: '' ,
         }
     },
 
@@ -119,6 +119,7 @@ export default {
             this.$emit('update:answer', this.thisAnswer)
         },
 
-    }
+    },
+
 }
 </script>
