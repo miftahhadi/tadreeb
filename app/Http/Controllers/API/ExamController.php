@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Answer;
+use App\ClassExamUser;
 use App\Exam;
 use App\Http\Controllers\Controller;
 use App\Question;
@@ -23,5 +25,51 @@ class ExamController extends Controller
         $answers = $soal->answers()->get();
 
         return json_encode(['soal' => $soal, 'answers' => $answers]);
+    }
+
+    public function getUserAnswers($id)
+    {
+        $classExamUser = ClassExamUser::find($id);
+        
+        return json_decode($classExamUser->answers, true);
+    }
+
+    public function updateUserAnswers(Request $request)
+    {
+
+        $classExamUser = ClassExamUser::find($request['classexamuserId']);
+        $userAnswers = $request['answerIds'];
+        $questionId = $request['questionId'];
+
+         // Ambil daftar jawaban
+        $answers = json_decode($classExamUser->answers, true);
+
+        // Cek nilai jawaban
+        $scores = 0;
+
+        if (is_array($userAnswers)) {
+            
+            foreach ($userAnswers as $id) {
+                $scores += $this->assignScore($id);
+            }
+            
+        } else {
+            $scores += $this->assignScore($userAnswers);
+        }
+
+        // Update jawaban untuk questionId
+        $answers[$questionId]['answers'] =  $userAnswers;
+        $answers[$questionId]['score'] =  $scores;
+
+        $classExamUser->answers = json_encode($answers);
+
+        return $classExamUser->save();
+    }
+
+    protected function assignScore($id)
+    {
+        $answer = Answer::find($id);
+
+        return $answer->nilai;
     }
 }

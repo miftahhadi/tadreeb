@@ -6,12 +6,15 @@
                 :questions-count="exam.questions_count"
                 :question="question"
                 :answers="answers"
-                :type="type"
+                :type="getType()"
                 :loading="loading"
                 :next-question="nextQuestion"
                 :prev-question="prevQuestion"
-                @get:next="newQuestion(nextQuestion)"
-                @get:prev="newQuestion(prevQuestion)"
+                :user-answers="userAnswers"
+                :answering="answering"
+                @get:next="getQuestion(nextQuestion)"
+                @get:prev="getQuestion(prevQuestion)"
+                @update:answer="updateAnswer"
             ></exam-question-container>
         </div>
 
@@ -29,7 +32,7 @@
                             :btn-number="++index"
                             :id="id"
                             :current="isCurrent(id)"
-                            @show:question="newQuestion"
+                            @show:question="getQuestion"
                         ></exam-number-button>
 
                     </div>
@@ -48,7 +51,8 @@ export default {
     name: 'exam-doing-page',
 
     props: {
-        examId: Number
+        examId: Number,
+        classexamuserId: Number,
     },
 
     data() {
@@ -61,6 +65,8 @@ export default {
             question: {},
             answers: [],
             loading: false,
+            userAnswers: {},
+            answering: false,
         }
     },
 
@@ -81,12 +87,14 @@ export default {
                     .catch(error => {
                         console.log(error)
                     });
+
+            this.getUserAnswers()
         },
 
-        getQuestion() {
+        getQuestion(id = this.questionId) {
             this.loading = true;
 
-            axios.get('/api/soal/' + this.questionId)
+            axios.get('/api/soal/' + id)
                     .then(response => {
                         this.question = response.data.soal
                         this.answers = response.data.answers
@@ -101,9 +109,19 @@ export default {
                     });
         },
 
-        newQuestion(id) {
-            this.questionId = id;
-            this.getQuestion()
+        getUserAnswers() {
+            axios.get('/api/jawaban-user/' + this.classexamuserId)
+                    .then(response => {
+                        const userAnswers = response.data
+
+                        const questions = Object.keys(userAnswers)
+
+                        questions.forEach(question => {
+                            this.userAnswers[question] = userAnswers[question].answers
+                        })
+
+                    })
+            
         },
 
         isCurrent(id) {
@@ -126,21 +144,40 @@ export default {
             if (this.questionIds.indexOf(this.questionId) != 0) {
                 let index = this.questionIds.indexOf(this.questionId) - 1
                 this.prevQuestion = this.questionIds[index]
+            } else {
+                this.prevQuestion = 0
             }
         },
 
-    },
+        updateAnswer(data) {
+            this.answering = true; 
 
-    mounted() {
-        this.getExamInfo();
-    },
+            let answer;
 
-    computed: {
-        questionNumber() {
-            return this.questionIds.indexOf(this.questionId) + 1
+            if (Array.isArray(data)) {
+                answer = data
+            } else {
+                answer = [data]
+            }
+            
+            // Update ke database
+            axios.post('/api/update-jawaban', {
+                classexamuserId: this.classexamuserId,
+                answerIds: answer,
+                questionId: this.questionId
+            }).then(response => {
+                // Update jawaban peserta
+                this.userAnswers[questionId] = [answerIds]
+                
+                this.answering = false
+                this.getQuestion(this.nextQuestion)
+            }).catch(error => {
+                console.log(error)
+            })
+
         },
 
-        type() {
+        getType() {
             let input;
 
             switch (this.question.tipe) {
@@ -162,7 +199,18 @@ export default {
             }
 
             return input;
-        }
+        },
+
+    },
+
+    created() {
+        this.getExamInfo();
+    },
+
+    computed: {
+        questionNumber() {
+            return this.questionIds.indexOf(this.questionId) + 1
+        },
     },
 
 

@@ -13,7 +13,7 @@ class ClassroomExamService
     public $exam;
     public $classroom;
     public $classexam;
-    protected $classexamuser;
+    public $classexamuser;
 
     protected $tz;
     protected $durasi;
@@ -112,12 +112,12 @@ class ClassroomExamService
         // - Peserta diizinkan akses ujian?
         // - Peserta udah pernah ngerjain?
         //      (a) Belum pernah ngerjain?
-        //          1) Catat waktu mulai ngerjakan: NOW
-        //          2) Langsung masukkan ke database jawaban peserta dari nomor awal sampai akhir
-        //          3) Catat attempt peserta
+        //          1) Catat waktu mulai ngerjakan: NOW --done
+        //          2) Langsung masukkan ke database jawaban peserta dari nomor awal sampai akhir --done
+        //          3) Catat attempt peserta --done
         //      (b) Udah pernah ngerjain?
-        //          1) Cek attempt soal
-        //          2) Kalau masih diizinkan, sama seperti (a)
+        //          1) Cek attempt soal --done
+        //          2) Kalau masih diizinkan, sama seperti (a) --done
         // 
         // Ambil id/urutan soal pertama -- done
         // Load soal serahkan ke elemen vue: lempar exam id ke vue -- done
@@ -163,28 +163,48 @@ class ClassroomExamService
 
         // Udah pernah mulai ngerjian?
         if ($this->userHistory()->get()->isEmpty()) {
+            // Belum pernah, init data user
+            $this->initUser();
+
             return true;
         }
 
         // Ambil data terakhir
-        $lastData = $this->userHistory()->first();
+        $this->classexamuser = $this->userHistory()->first();
 
         // Sudah submit belum?
         // Kalau udah, masih punya kesempatan ujian?
-        if ($lastData->waktu_selesai) {
-            return $this->hasAttempt();
+        if ($this->classexamuser->waktu_selesai) {
+            if ($this->hasAttempt()) {
+                $this->initUser();
+
+                return true;
+            } else {
+                return false;
+            }
         }
 
         // Kalau belum, ujian ada durasinya gak?
         // - Gak ada, lanjut aja
-        // - Ada, durasinya udah habis belum?
-        if ($this->classexam->durasi != 0) {
-            $waktuHabis = Carbon::createFromFormat('Y-m-d H:i:s',$lastData->waktu_mulai, 'UTC')
+        
+        if ($this->classexam->durasi != 0) { // - Ada
+            $waktuHabis = Carbon::createFromFormat('Y-m-d H:i:s',$this->classexamuser->waktu_mulai, 'UTC')
                                                 ->addMinutes($this->classexam->durasi);
 
             $now = now('UTC');
 
-            return $now->lessThan($waktuHabis);
+            if ($now->greaterThanOrEqualTo($waktuHabis) && $this->hasAttempt()) { 
+                // Waktu habis dan masih punya kesempatan
+                $this->initUser();
+
+                return true;
+            } elseif ($now->lessThan($waktuHabis)) {
+                // Waktu belum habis
+                return true;
+            } else {
+                // Waktu habis dan kesempatan udah habis
+                return false;
+            }
         }
 
         // Default true
@@ -212,12 +232,12 @@ class ClassroomExamService
 
     }
 
-    public function thisAttempt()
+    public function newAttempt()
     {
         return $this->lastAttempt() + 1;
     }
 
-    public function initUser($attempt = 1)
+    public function initUser()
     {
         // Rekam waktu_mulai user pakai UTC
         // Waktu mulai user dalam UTC
@@ -233,10 +253,12 @@ class ClassroomExamService
             ];
         }
 
-        $this->classexam->users()->attach(auth()->user()->id, [
-            'attempt' => $attempt,
+        $this->classexamuser = ClassExamUser::create([
+            'classroom_exam_id' => $this->classexam->id,
+            'user_id' => auth()->user()->id,
+            'attempt' => $this->newAttempt(),
             'answers' => json_encode($answers),
-            'waktu_mulai' => $waktuMulai,
+            'waktu_mulai' => $waktuMulai
         ]);
 
         return $this;
@@ -249,6 +271,11 @@ class ClassroomExamService
                             ->get()
                             ->pluck('id')
                             ->toArray();
+    }
+
+    public function getClassExamUserId()
+    {
+        return $this->classexamuser->id;    
     }
 
 }

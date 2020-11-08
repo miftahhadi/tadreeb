@@ -3030,10 +3030,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
-    examId: Number
+    examId: Number,
+    classexamuserId: Number
   },
   data: function data() {
     return {
@@ -3044,7 +3048,9 @@ __webpack_require__.r(__webpack_exports__);
       prevQuestion: 0,
       question: {},
       answers: [],
-      loading: false
+      loading: false,
+      userAnswers: {},
+      answering: false
     };
   },
   methods: {
@@ -3063,12 +3069,14 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+      this.getUserAnswers();
     },
     getQuestion: function getQuestion() {
       var _this2 = this;
 
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.questionId;
       this.loading = true;
-      axios.get('/api/soal/' + this.questionId).then(function (response) {
+      axios.get('/api/soal/' + id).then(function (response) {
         _this2.question = response.data.soal;
         _this2.answers = response.data.answers;
 
@@ -3081,9 +3089,16 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    newQuestion: function newQuestion(id) {
-      this.questionId = id;
-      this.getQuestion();
+    getUserAnswers: function getUserAnswers() {
+      var _this3 = this;
+
+      axios.get('/api/jawaban-user/' + this.classexamuserId).then(function (response) {
+        var userAnswers = response.data;
+        var questions = Object.keys(userAnswers);
+        questions.forEach(function (question) {
+          _this3.userAnswers[question] = userAnswers[question].answers;
+        });
+      });
     },
     isCurrent: function isCurrent(id) {
       return this.questionId == id;
@@ -3102,17 +3117,38 @@ __webpack_require__.r(__webpack_exports__);
       if (this.questionIds.indexOf(this.questionId) != 0) {
         var index = this.questionIds.indexOf(this.questionId) - 1;
         this.prevQuestion = this.questionIds[index];
+      } else {
+        this.prevQuestion = 0;
       }
-    }
-  },
-  mounted: function mounted() {
-    this.getExamInfo();
-  },
-  computed: {
-    questionNumber: function questionNumber() {
-      return this.questionIds.indexOf(this.questionId) + 1;
     },
-    type: function type() {
+    updateAnswer: function updateAnswer(data) {
+      var _this4 = this;
+
+      this.answering = true;
+      var answer;
+
+      if (Array.isArray(data)) {
+        answer = data;
+      } else {
+        answer = [data];
+      } // Update ke database
+
+
+      axios.post('/api/update-jawaban', {
+        classexamuserId: this.classexamuserId,
+        answerIds: answer,
+        questionId: this.questionId
+      }).then(function (response) {
+        // Update jawaban peserta
+        _this4.userAnswers[questionId] = [answerIds];
+        _this4.answering = false;
+
+        _this4.getQuestion(_this4.nextQuestion);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getType: function getType() {
       var input;
 
       switch (this.question.tipe) {
@@ -3134,6 +3170,14 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return input;
+    }
+  },
+  created: function created() {
+    this.getExamInfo();
+  },
+  computed: {
+    questionNumber: function questionNumber() {
+      return this.questionIds.indexOf(this.questionId) + 1;
     }
   }
 });
@@ -3252,21 +3296,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-question-container',
   props: {
     questionNumber: Number,
     questionsCount: Number,
     question: Object,
+    questionId: Number,
     answers: Array,
+    userAnswers: Object,
     type: String,
     loading: Boolean,
     nextQuestion: Number,
-    prevQuestion: Number
+    prevQuestion: Number,
+    answering: Boolean
+  },
+  data: function data() {
+    return {
+      thisAnswer: null
+    };
   },
   computed: {
     isLoading: function isLoading() {
       return this.loading ? 'active' : '';
+    },
+    isAnswering: function isAnswering() {
+      return this.answering ? 'btn-loading' : '';
     }
   },
   methods: {
@@ -3275,6 +3335,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     getPrevQuestion: function getPrevQuestion() {
       this.$emit('get:prev');
+    },
+    updateAnswer: function updateAnswer() {
+      this.$emit('update:answer', this.thisAnswer);
     }
   }
 });
@@ -40768,18 +40831,21 @@ var render = function() {
             "questions-count": _vm.exam.questions_count,
             question: _vm.question,
             answers: _vm.answers,
-            type: _vm.type,
+            type: _vm.getType(),
             loading: _vm.loading,
             "next-question": _vm.nextQuestion,
-            "prev-question": _vm.prevQuestion
+            "prev-question": _vm.prevQuestion,
+            "user-answers": _vm.userAnswers,
+            answering: _vm.answering
           },
           on: {
             "get:next": function($event) {
-              return _vm.newQuestion(_vm.nextQuestion)
+              return _vm.getQuestion(_vm.nextQuestion)
             },
             "get:prev": function($event) {
-              return _vm.newQuestion(_vm.prevQuestion)
-            }
+              return _vm.getQuestion(_vm.prevQuestion)
+            },
+            "update:answer": _vm.updateAnswer
           }
         })
       ],
@@ -40802,7 +40868,7 @@ var render = function() {
                   id: id,
                   current: _vm.isCurrent(id)
                 },
-                on: { "show:question": _vm.newQuestion }
+                on: { "show:question": _vm.getQuestion }
               })
             }),
             1
@@ -40923,10 +40989,89 @@ var render = function() {
                   staticClass: "form-selectgroup-item flex-fill"
                 },
                 [
-                  _c("input", {
-                    staticClass: "form-selectgroup-input",
-                    attrs: { type: _vm.type, name: "jawaban[]", value: "" }
-                  }),
+                  _vm.type === "checkbox"
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.thisAnswer,
+                            expression: "thisAnswer"
+                          }
+                        ],
+                        staticClass: "form-selectgroup-input",
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          value: answer.id,
+                          checked: Array.isArray(_vm.thisAnswer)
+                            ? _vm._i(_vm.thisAnswer, answer.id) > -1
+                            : _vm.thisAnswer
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.thisAnswer,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = answer.id,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.thisAnswer = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.thisAnswer = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.thisAnswer = $$c
+                            }
+                          }
+                        }
+                      })
+                    : _vm.type === "radio"
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.thisAnswer,
+                            expression: "thisAnswer"
+                          }
+                        ],
+                        staticClass: "form-selectgroup-input",
+                        attrs: { type: "radio" },
+                        domProps: {
+                          value: answer.id,
+                          checked: _vm._q(_vm.thisAnswer, answer.id)
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.thisAnswer = answer.id
+                          }
+                        }
+                      })
+                    : _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.thisAnswer,
+                            expression: "thisAnswer"
+                          }
+                        ],
+                        staticClass: "form-selectgroup-input",
+                        attrs: { type: _vm.type },
+                        domProps: { value: answer.id, value: _vm.thisAnswer },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.thisAnswer = $event.target.value
+                          }
+                        }
+                      }),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -40966,9 +41111,15 @@ var render = function() {
                 )
               : _vm._e(),
             _vm._v(" "),
-            _c("a", { staticClass: "btn btn-success", attrs: { href: "#" } }, [
-              _vm._v("Jawab")
-            ]),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                class: _vm.isAnswering,
+                on: { click: _vm.updateAnswer }
+              },
+              [_vm._v("Jawab")]
+            ),
             _vm._v(" "),
             _vm.nextQuestion != 0
               ? _c(

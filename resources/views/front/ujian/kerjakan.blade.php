@@ -24,6 +24,7 @@
     <div id="app">
         <exam-doing-page
             :exam-id="{{ $exam->id }}"
+            :classexamuser-id="{{ $classexamuserId }}"
         ></exam-doing-page>
     </div>
 

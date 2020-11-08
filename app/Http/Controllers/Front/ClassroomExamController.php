@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Front;
 
 use App\Classroom;
-use App\ClassroomExam;
 use App\Exam;
 use App\Http\Controllers\Controller;
 use App\Services\Front\ClassroomExamService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ClassroomExamController extends Controller
@@ -39,13 +37,12 @@ class ClassroomExamController extends Controller
         if (!$this->service->canDoExam()) {
             return redirect(route('dashboard'));
         }
-
-        $this->service->initUser();
         
         return view('front.ujian.kerjakan', [
             'title' => $exam->judul . ' - ' . $classroom->nama,
             'kelas' => $classroom,
-            'exam' => $exam
+            'exam' => $exam,
+            'classexamuserId' => $this->service->getClassExamUserId(),
         ]);
     }
 }
