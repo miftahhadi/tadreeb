@@ -1,15 +1,15 @@
 <template>
     <div class="modal fade" 
-        :id="'assign' + item + 'Modal'" 
+        id="assignExamModal" 
         tabindex="-1" 
-        aria-labelledby="assignModalLabel" 
+        aria-labelledby="assignExamModalLabel" 
         aria-hidden="true">
 
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form @submit.prevent="massAssign">
                     <div class="modal-header">
-                    Tambah {{ title }} ke Kelas {{ kelas }}
+                    Tambah Ujian ke {{ section }}
                     </div>
                     <div class="modal-body">
 
@@ -60,10 +60,8 @@
                                                                     disabled
                                                             >
                                                         </th>
-                                                        <th v-for="heading in headings.slice(0,2)" 
-                                                            :key="heading.id" 
-                                                            :width="heading.width"
-                                                        >{{ heading.name }}</th>
+                                                        <th>ID</th>
+                                                        <th>Judul</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
@@ -78,7 +76,8 @@
                                                             >
                                                         </td>
                                                         
-                                                        <td v-for="$prop in itemProperties.slice(0,2)" :key="$prop">{{ item[$prop] }}</td>
+                                                        <td>{{ item.id }}</td>
+                                                        <td>{{ item.judul }}</td>
                                                         <td class="text-right">
                                                            <item-assign
                                                                 :item-id="item.id"
@@ -111,7 +110,7 @@
 
 <script>
 export default {
-    name: 'kelas-assign-modal',
+    name: 'section-assign-exam',
 
     props: {
         item: String,
@@ -121,6 +120,8 @@ export default {
         itemProperties: Array,
         assignUrl: String,
         assigned: Array,
+
+        section: String
     },
 
     data() {

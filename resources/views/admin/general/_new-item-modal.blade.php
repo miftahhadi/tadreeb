@@ -16,7 +16,7 @@
 
       </div>
       
-      <div class="modal-body" id="app">
+      <div class="modal-body">
             
           <item-baru-form 
               judul="{{ $judul }}" 

@@ -20,14 +20,14 @@ class ClassroomController extends Controller
 
     public function list(Group $grup) 
     {
-        return response()->json($grup->classrooms()->paginate(15));
+        return response()->json($grup->classrooms()->paginate(25));
     }
 
     public function search($search)
     {
         return response()->json(Classroom::where('nama', 'like', '%' . $search . '%')
                                         ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(15)
+                                        ->paginate(25)
                 );
     }
 

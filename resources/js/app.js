@@ -37,9 +37,13 @@ Vue.component('kelas-assign-modal', require('./components/admin/kelas/KelasAssig
 
 Vue.component('import-user', require('./components/admin/user/ImportUser.vue').default);
 
+Vue.component('section-page', require('./components/admin/section/SectionPage.vue').default);
+Vue.component('section-assign-exam', require('./components/admin/section/SectionAssignExam.vue').default);
+
 Vue.component('exam-doing-page', require('./components/front/ujian/ExamDoingPage.vue').default);
 Vue.component('exam-number-button', require('./components/front/ujian/ExamNumberButton.vue').default);
 Vue.component('exam-question-container', require('./components/front/ujian/ExamQuestionContainer.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -20,7 +20,7 @@ class Lesson extends Model
 
     public function sections()
     {
-        
+        return $this->hasMany(Section::class);
     }
 
     public function classrooms()

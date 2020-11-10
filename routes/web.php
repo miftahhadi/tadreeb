@@ -54,6 +54,9 @@ Route::name('admin.')->group(function () {
         Route::get('/', 'AdminController@index')->name('dashboard');
 
         // Lessons
+        Route::get('pelajaran/{pelajaran}/section/{section}/ujian/assign', 'SectionController@listUnassignedExam');
+
+        Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); // Sections
         Route::resource('pelajaran', 'LessonController');
     
         // Exams

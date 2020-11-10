@@ -20,6 +20,10 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('pelajaran/search/{search}', 'LessonController@search');
     Route::delete('pelajaran/{pelajaran}', 'LessonController@destroy');
 
+    Route::group(['prefix' => 'pelajaran/{pelajaran}'], function () {
+        Route::get('section', 'SectionController@list');
+    });
+
     Route::get('ujian', 'ExamController@list');
     Route::get('ujian/search/{search}', 'ExamController@search');
     Route::delete('ujian/{ujian}', 'ExamController@destroy');
@@ -62,5 +66,7 @@ Route::group(['namespace' => 'auth:api', 'namespace' => 'API'], function() {
     Route::get('soal/{soal}', 'ExamController@getQuestion');
     Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
     Route::post('update-jawaban', 'ExamController@updateUserAnswers');
+
+    Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
 });
 

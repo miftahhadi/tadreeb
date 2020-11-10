@@ -38,7 +38,7 @@ class UserController extends Controller
 
     public function list()
     {
-        return response()->json(User::paginate(10));
+        return response()->json(User::paginate(25));
     }
 
     public function search($search)
@@ -46,7 +46,7 @@ class UserController extends Controller
         return response()->json(User::where('nama', 'like', '%' . $search . '%')
                                         ->orWhere('username', 'like', '%' .  $search . '%')
                                         ->orWhere('email', 'like', '%' . $search . '%')
-                                        ->paginate(10)
+                                        ->paginate(25)
                 );
     }
 
