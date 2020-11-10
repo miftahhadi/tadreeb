@@ -1,6 +1,7 @@
 @extends('admin.main')
 
 @section('content')
+<div id="app">
 
     <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -26,9 +27,16 @@
         </div>    
         <div class="col-auto ml-auto">
     
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahSoal">
-                <i class="fe fe-plus-circle"></i> Buat Soal Baru
-            </button>  
+            <button type="button" 
+                    class="btn btn-primary" 
+                    data-toggle="modal" 
+                    data-target="#tambahBaru"
+            >
+
+              <i class="fas fa-plus"></i> 
+              <span class="ml-2">Tambah Section Baru</span>
+            
+            </button>
     
         </div>
     </div>
@@ -48,15 +56,13 @@
   
               <tbody>
   
-                {{-- @forelse ($ujian->questions as $key => $question) --}}
+                @forelse ($sections as $key => $section)
                     <tr>
-                        <td>Bagian 1: Pendahuluan</td>
+                        <td>{{ $section->judul }}</td>
                         <td class="text-right">
                             <div class="btn-list flex-nowrap">
-                                {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
-                                <a href="" class="btn btn-light btn-sm">Edit</a>
-
-                                {{-- <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a> --}}
+                                <a href="{{ route('admin.section.show', ['pelajaran' => $pelajaran->slug, 'section' => $section->id]) }}" class="btn btn-light btn-sm">Buka</a>
+                                <a href="#" class="btn btn-light btn-sm">Edit</a>
 
                                 <form action="" method="post">
                                     @csrf
@@ -68,11 +74,11 @@
                             </div>
                         </td>
                     </tr>
-                {{-- @empty
-                <tr>
-                    <td colspan="4">Belum ada soal</td>
-                </tr>
-                @endforelse --}}
+                @empty
+                    <tr>
+                        <td colspan="4">Belum ada konten pelajaran</td>
+                    </tr>
+                @endforelse
   
               </tbody>
   
@@ -81,5 +87,45 @@
           </div>
         </div>
     </div>
+
+    <div class="modal fade" 
+        id="tambahBaru" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="tambahBaruLabel" 
+        aria-hidden="true"
+    >
+
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ ucfirst($item)}} Baru</h5>
+                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+
+            </div>
+            
+            <div class="modal-body">
+                    
+                <item-baru-form 
+                    judul="{{ $judul }}" 
+                    item="{{ $item }}" 
+                    action="{{ $action }}" 
+                >
+                    @csrf
+                
+                </item-baru-form>
+                    
+            </div>
+            </div>
+        </div>
+    </div>
    
+</div>
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush
+

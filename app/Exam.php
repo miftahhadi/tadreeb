@@ -38,4 +38,9 @@ class Exam extends Model
                                                         'attempt'
                                                     ]);
     }
+
+    public function sections()
+    {
+        return $this->morphToMany(Section::class, 'sectionable');
+    }
 }

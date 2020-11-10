@@ -74,9 +74,15 @@ class LessonController extends Controller
      */
     public function show(Lesson $pelajaran)
     {
+        $sections = $pelajaran->sections;
+
         return view('admin.lesson.show', [
             'title' => $pelajaran->judul . ' - Pelajaran ',
-            'pelajaran' => $pelajaran
+            'pelajaran' => $pelajaran,
+            'sections' => $sections, 
+            'item' => 'section',
+            'judul' => 'Judul section',
+            'action' => route('admin.section.store', [ 'pelajaran' => $pelajaran->slug ])
         ]);
     }
 
