@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-light btn-sm" :class="isActive" @click="showQuestion">{{ btnNumber }}</button>
+    <button class="btn btn-sm" :class="[isActive, isAnswered]" @click="showQuestion">{{ btnNumber }}</button>
 </template>
 
 <script>
@@ -10,6 +10,7 @@ export default {
         btnNumber: Number,
         id: Number,
         current: Boolean,
+        answered: Boolean,
     },
 
     methods: {
@@ -21,6 +22,10 @@ export default {
     computed: {
         isActive() {
             return (this.current) ? 'active' : '';
+        },
+
+        isAnswered() {
+            return (this.answered) ? 'btn-success' : 'btn-light'
         }
     }
 }

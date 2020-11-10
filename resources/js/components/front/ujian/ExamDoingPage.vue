@@ -3,14 +3,15 @@
         <div class="col-md-8">
             <exam-question-container
                 :question-number="questionNumber"
-                :questions-count="exam.questions_count"
+                :questions-count="  exam.questions_count"
+                :question-id="questionId"
                 :question="question"
                 :answers="answers"
                 :type="getType()"
                 :loading="loading"
                 :next-question="nextQuestion"
                 :prev-question="prevQuestion"
-                :user-answers="userAnswers"
+                :user-answers="userAnswers[questionId]"
                 :answering="answering"
                 @get:next="getQuestion(nextQuestion)"
                 @get:prev="getQuestion(prevQuestion)"
@@ -32,6 +33,7 @@
                             :btn-number="++index"
                             :id="id"
                             :current="isCurrent(id)"
+                            :answered="isAnswered(id)"
                             @show:question="getQuestion"
                         ></exam-number-button>
 
@@ -67,6 +69,9 @@ export default {
             loading: false,
             userAnswers: {},
             answering: false,
+
+            data: {},
+            questions: {}
         }
     },
 
@@ -80,6 +85,9 @@ export default {
                         this.questionIds = response.data.questionIds
                         this.questionId = response.data.questionIds[0]
 
+                        this.data = response.data
+                        this.questions = response.data.questions
+                        
                         this.getQuestion()
 
                         this.loading = false;
@@ -92,21 +100,16 @@ export default {
         },
 
         getQuestion(id = this.questionId) {
-            this.loading = true;
+            this.questionId = id 
+            this.question = this.data.questions[id]
 
-            axios.get('/api/soal/' + id)
-                    .then(response => {
-                        this.question = response.data.soal
-                        this.answers = response.data.answers
+            this.getAnswers()
+            this.getNextQuestionId()
+            this.getPrevQuestionId()
+        },
 
-                        this.getNextQuestionId()
-                        this.getPrevQuestionId()
-
-                        this.loading = false
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+        getAnswers() {
+            this.answers = this.questions[this.questionId].answers
         },
 
         getUserAnswers() {
@@ -129,11 +132,11 @@ export default {
         },
 
         getNextQuestionId() {
-            let lastIndex = this.questionIds.length - 1
+            let lastIndex = this.exam.questions_count
 
-            if (this.questionIds.indexOf(this.questionId) != lastIndex) {
-                let index = this.questionIds.indexOf(this.questionId) + 1;
-                this.nextQuestion = this.questionIds[index]                
+            if (this.questionId != lastIndex) {
+                let index = this.questionIds.indexOf(this.questionId) + 1
+               this.nextQuestion = this.questionIds[index];                
             } else {
                 this.nextQuestion = 0
             }
@@ -167,7 +170,7 @@ export default {
                 questionId: this.questionId
             }).then(response => {
                 // Update jawaban peserta
-                this.userAnswers[questionId] = [answerIds]
+                this.userAnswers[questionId] = [answer]
                 
                 this.answering = false
                 this.getQuestion(this.nextQuestion)
@@ -201,9 +204,13 @@ export default {
             return input;
         },
 
+        isAnswered(id) {
+            return this.userAnswers[id].length != 0
+        }
+
     },
 
-    created() {
+    mounted() {
         this.getExamInfo();
     },
 
