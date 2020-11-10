@@ -6,7 +6,7 @@
     <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.pelajaran.index') }}">Pelajaran</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="#">
+        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('admin.pelajaran.show', $pelajaran->slug) }}">
             {{ $pelajaran->judul }}
         </a></li>
         <li class="breadcrumb-item active" aria-current="page"><a href="#">
