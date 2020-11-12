@@ -1,8 +1,9 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+// Font setting
+body {
+    font-family: 'Source Sans Pro';
+    color: #495057;
+}
 
 // Variables
-@import 'variables';
+$font-size-base: .9375rem !default;
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';

@@ -3300,6 +3300,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
@@ -3316,10 +3355,11 @@ __webpack_require__.r(__webpack_exports__);
       question: {},
       answers: [],
       loading: false,
-      userAnswers: {},
       answering: false,
       data: {},
-      questions: {}
+      questions: {},
+      userAnswers: {},
+      soalKey: 0
     };
   },
   methods: {
@@ -3349,6 +3389,7 @@ __webpack_require__.r(__webpack_exports__);
       this.getAnswers();
       this.getNextQuestionId();
       this.getPrevQuestionId();
+      this.soalKey += 1;
     },
     getAnswers: function getAnswers() {
       this.answers = this.questions[this.questionId].answers;
@@ -3412,7 +3453,18 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    getType: function getType() {
+    isAnswered: function isAnswered(id) {
+      return this.userAnswers[id].length != 0;
+    }
+  },
+  mounted: function mounted() {
+    this.getExamInfo();
+  },
+  computed: {
+    questionNumber: function questionNumber() {
+      return this.questionIds.indexOf(this.questionId) + 1;
+    },
+    type: function type() {
       var input;
 
       switch (this.question.tipe) {
@@ -3434,17 +3486,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return input;
-    },
-    isAnswered: function isAnswered(id) {
-      return this.userAnswers[id].length != 0;
-    }
-  },
-  mounted: function mounted() {
-    this.getExamInfo();
-  },
-  computed: {
-    questionNumber: function questionNumber() {
-      return this.questionIds.indexOf(this.questionId) + 1;
     }
   }
 });
@@ -3505,111 +3546,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-question-container',
   props: {
-    questionNumber: Number,
-    questionsCount: Number,
-    question: Object,
-    questionId: Number,
-    answers: Array,
-    userAnswers: Array,
-    type: String,
-    loading: Boolean,
-    nextQuestion: Number,
-    prevQuestion: Number,
-    answering: Boolean
-  },
-  data: function data() {
-    return {
-      thisAnswer: ''
-    };
-  },
-  computed: {
-    isLoading: function isLoading() {
-      return this.loading ? 'active' : '';
-    },
-    isAnswering: function isAnswering() {
-      return this.answering ? 'btn-loading' : '';
-    }
-  },
-  methods: {
-    getNextQuestion: function getNextQuestion() {
-      this.$emit('get:next');
-    },
-    getPrevQuestion: function getPrevQuestion() {
-      this.$emit('get:prev');
-    },
-    updateAnswer: function updateAnswer() {
-      this.$emit('update:answer', this.thisAnswer);
-    }
+    soal: String
   }
 });
 
@@ -39700,17 +39640,6 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ "./node_modules/tabler/src/scss/tabler.scss":
-/*!**************************************************!*\
-  !*** ./node_modules/tabler/src/scss/tabler.scss ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "./node_modules/timers-browserify/main.js":
 /*!************************************************!*\
   !*** ./node_modules/timers-browserify/main.js ***!
@@ -41523,41 +41452,199 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c(
-      "div",
-      { staticClass: "col-md-8" },
-      [
-        _c("exam-question-container", {
-          attrs: {
-            "question-number": _vm.questionNumber,
-            "questions-count": _vm.exam.questions_count,
-            "question-id": _vm.questionId,
-            question: _vm.question,
-            answers: _vm.answers,
-            type: _vm.getType(),
-            loading: _vm.loading,
-            "next-question": _vm.nextQuestion,
-            "prev-question": _vm.prevQuestion,
-            "user-answers": _vm.userAnswers[_vm.questionId],
-            answering: _vm.answering
-          },
-          on: {
-            "get:next": function($event) {
-              return _vm.getQuestion(_vm.nextQuestion)
-            },
-            "get:prev": function($event) {
-              return _vm.getQuestion(_vm.prevQuestion)
-            },
-            "update:answer": _vm.updateAnswer
-          }
-        })
-      ],
-      1
-    ),
+    _c("div", { staticClass: "col-md-8" }, [
+      _c(
+        "div",
+        { staticClass: "card" },
+        [
+          _c("div", { staticClass: "card-header" }, [
+            _c("h3", { staticClass: "card-title" }, [
+              _vm._v(
+                "Soal ke-" +
+                  _vm._s(_vm.questionNumber) +
+                  " dari " +
+                  _vm._s(_vm.exam.questions_count)
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("exam-question-container", {
+            key: _vm.soalKey,
+            attrs: { soal: _vm.question.konten }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "form-selectgroup form-selectgroup-boxes d-flex flex-column"
+              },
+              _vm._l(_vm.answers, function(answer) {
+                return _c(
+                  "label",
+                  {
+                    key: answer.id,
+                    staticClass: "form-selectgroup-item flex-fill"
+                  },
+                  [
+                    _vm.type === "checkbox"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.userAnswers[_vm.questionId],
+                              expression: "userAnswers[questionId]"
+                            }
+                          ],
+                          staticClass: "form-selectgroup-input",
+                          attrs: { type: "checkbox" },
+                          domProps: {
+                            checked: Array.isArray(
+                              _vm.userAnswers[_vm.questionId]
+                            )
+                              ? _vm._i(_vm.userAnswers[_vm.questionId], null) >
+                                -1
+                              : _vm.userAnswers[_vm.questionId]
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.userAnswers[_vm.questionId],
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.userAnswers,
+                                      _vm.questionId,
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.userAnswers,
+                                      _vm.questionId,
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
+                              } else {
+                                _vm.$set(_vm.userAnswers, _vm.questionId, $$c)
+                              }
+                            }
+                          }
+                        })
+                      : _vm.type === "radio"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.userAnswers[_vm.questionId],
+                              expression: "userAnswers[questionId]"
+                            }
+                          ],
+                          staticClass: "form-selectgroup-input",
+                          attrs: { type: "radio" },
+                          domProps: {
+                            checked: _vm._q(
+                              _vm.userAnswers[_vm.questionId],
+                              null
+                            )
+                          },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(
+                                _vm.userAnswers,
+                                _vm.questionId,
+                                null
+                              )
+                            }
+                          }
+                        })
+                      : _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.userAnswers[_vm.questionId],
+                              expression: "userAnswers[questionId]"
+                            }
+                          ],
+                          staticClass: "form-selectgroup-input",
+                          attrs: { type: _vm.type },
+                          domProps: { value: _vm.userAnswers[_vm.questionId] },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.userAnswers,
+                                _vm.questionId,
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "form-selectgroup-label d-flex align-items-center p-3"
+                      },
+                      [
+                        _vm._m(0, true),
+                        _vm._v(" "),
+                        _c("div", {
+                          domProps: { innerHTML: _vm._s(answer.redaksi) }
+                        })
+                      ]
+                    )
+                  ]
+                )
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "btn-list" }, [
+              _vm.prevQuestion != 0
+                ? _c("button", { staticClass: "btn btn-white" }, [
+                    _c("i", { staticClass: "fas fa-chevron-circle-left" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("button", { staticClass: "btn btn-success" }, [
+                _vm._v("Jawab")
+              ]),
+              _vm._v(" "),
+              _vm.nextQuestion != 0
+                ? _c("button", { staticClass: "btn btn-white" }, [
+                    _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
+                    _vm._v(" "),
+                    _c("i", { staticClass: "fas fa-chevron-circle-right" })
+                  ])
+                : _vm._e()
+            ])
+          ])
+        ],
+        1
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-4" }, [
       _c("div", { staticClass: "card" }, [
-        _vm._m(0),
+        _vm._m(1),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
           _c(
@@ -41580,11 +41667,19 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(1)
+      _vm._m(2)
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mr-3" }, [
+      _c("span", { staticClass: "form-selectgroup-check" })
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -41657,204 +41752,12 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "dimmer", class: _vm.isLoading }, [
-      _c("div", { staticClass: "loader" }),
-      _vm._v(" "),
-      _c("div", { staticClass: "dimmer-content" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("h3", { staticClass: "card-title" }, [
-            _vm._v(
-              "Soal ke-" +
-                _vm._s(_vm.questionNumber) +
-                " dari " +
-                _vm._s(_vm.questionsCount)
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", {
-          staticClass: "card-body",
-          domProps: { innerHTML: _vm._s(_vm.question.konten) }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c(
-            "div",
-            {
-              staticClass:
-                "form-selectgroup form-selectgroup-boxes d-flex flex-column"
-            },
-            _vm._l(_vm.answers, function(answer) {
-              return _c(
-                "label",
-                {
-                  key: answer.id,
-                  staticClass: "form-selectgroup-item flex-fill"
-                },
-                [
-                  _vm.type === "checkbox"
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.thisAnswer,
-                            expression: "thisAnswer"
-                          }
-                        ],
-                        staticClass: "form-selectgroup-input",
-                        attrs: { type: "checkbox" },
-                        domProps: {
-                          value: answer.id,
-                          checked: Array.isArray(_vm.thisAnswer)
-                            ? _vm._i(_vm.thisAnswer, answer.id) > -1
-                            : _vm.thisAnswer
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.thisAnswer,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = answer.id,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 && (_vm.thisAnswer = $$a.concat([$$v]))
-                              } else {
-                                $$i > -1 &&
-                                  (_vm.thisAnswer = $$a
-                                    .slice(0, $$i)
-                                    .concat($$a.slice($$i + 1)))
-                              }
-                            } else {
-                              _vm.thisAnswer = $$c
-                            }
-                          }
-                        }
-                      })
-                    : _vm.type === "radio"
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.thisAnswer,
-                            expression: "thisAnswer"
-                          }
-                        ],
-                        staticClass: "form-selectgroup-input",
-                        attrs: { type: "radio" },
-                        domProps: {
-                          value: answer.id,
-                          checked: _vm._q(_vm.thisAnswer, answer.id)
-                        },
-                        on: {
-                          change: function($event) {
-                            _vm.thisAnswer = answer.id
-                          }
-                        }
-                      })
-                    : _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.thisAnswer,
-                            expression: "thisAnswer"
-                          }
-                        ],
-                        staticClass: "form-selectgroup-input",
-                        attrs: { type: _vm.type },
-                        domProps: { value: answer.id, value: _vm.thisAnswer },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.thisAnswer = $event.target.value
-                          }
-                        }
-                      }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "form-selectgroup-label d-flex align-items-center p-3"
-                    },
-                    [
-                      _vm._m(0, true),
-                      _vm._v(" "),
-                      _c("div", {
-                        domProps: { innerHTML: _vm._s(answer.redaksi) }
-                      })
-                    ]
-                  )
-                ]
-              )
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-footer" }, [
-          _c("div", { staticClass: "btn-list" }, [
-            _vm.prevQuestion != 0
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-white",
-                    on: { click: _vm.getPrevQuestion }
-                  },
-                  [
-                    _c("i", { staticClass: "fas fa-chevron-circle-left" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
-                  ]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-success",
-                class: _vm.isAnswering,
-                on: { click: _vm.updateAnswer }
-              },
-              [_vm._v("Jawab")]
-            ),
-            _vm._v(" "),
-            _vm.nextQuestion != 0
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-white",
-                    on: { click: _vm.getNextQuestion }
-                  },
-                  [
-                    _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
-                    _vm._v(" "),
-                    _c("i", { staticClass: "fas fa-chevron-circle-right" })
-                  ]
-                )
-              : _vm._e()
-          ])
-        ])
-      ])
-    ])
-  ])
+  return _c("div", {
+    staticClass: "card-body",
+    domProps: { innerHTML: _vm._s(_vm.soal) }
+  })
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mr-3" }, [
-      _c("span", { staticClass: "form-selectgroup-check" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -55226,15 +55129,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./resources/sass/app.scss ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./resources/sass/tabler/tabler.scss":
+/*!*******************************************!*\
+  !*** ./resources/sass/tabler/tabler.scss ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 0:
-/*!******************************************************************************!*\
-  !*** multi ./resources/js/app.js ./node_modules/tabler/src/scss/tabler.scss ***!
-  \******************************************************************************/
+/*!*************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/tabler/tabler.scss ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/node_modules/tabler/src/scss/tabler.scss */"./node_modules/tabler/src/scss/tabler.scss");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\tabler\tabler.scss */"./resources/sass/tabler/tabler.scss");
 
 
 /***/ })
