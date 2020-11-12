@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Classroom;
 use App\Group;
 use App\Http\Controllers\Controller;
+use App\Lesson;
+use App\Section;
 use App\Services\Admin\ClassroomService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -100,5 +102,19 @@ class ClassroomController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function lessonExamSetting(Group $group, Classroom $kelas, Lesson $pelajaran, Section $section, $exam)
+    {
+        $exam = $section->exams()->where('id', $exam);
+
+        return view('admin.classroom.item-setting', [
+            'title' => 'Pengaturan ' . $exam->judul,
+            'group' => $group,
+            'kelas' => $kelas,
+            'pelajaran' => $pelajaran,
+            'section' => $section,
+            'exam' => $exam     
+        ]);
     }
 }

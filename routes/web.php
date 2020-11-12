@@ -81,6 +81,8 @@ Route::name('admin.')->group(function () {
 
                     Route::get('/edit', 'ClassroomController@edit')->name('edit');
 
+                    Route::get('/pelajaran/{pelajaran}/section/{section}/ujian/{ujian}/pengaturan', 'ClassroomController@lessonExamSetting');
+
                     Route::get('/pelajaran', 'ClassroomController@pelajaran');
                     Route::get('/pelajaran/assign', 'ClassroomController@assignPelajaran');
     
