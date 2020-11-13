@@ -25,7 +25,7 @@
   --bs-danger: #cd201f;
   --bs-light: #f5f7fb;
   --bs-dark: #354052;
-  --bs-font-sans-serif: "Source Sans Pro";
+  --bs-font-sans-serif: "Source Sans Pro", Roboto, sans-serif;
   --bs-font-monospace: Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
 }

@@ -13,7 +13,7 @@ $assets-base: ".." !default;
 $google-font: 'Source Sans Pro' !default;
 
 // $font-family-sans-serif: $google-font, -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif !default;
-$font-family-sans-serif: "Source Sans Pro" !default;
+$font-family-sans-serif: $google-font, Roboto, sans-serif !default;
 $font-family-monospace: Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
 $font-family-serif: "Georgia", "Times New Roman", times, serif !default;
 
