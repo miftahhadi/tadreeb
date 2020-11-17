@@ -70,7 +70,7 @@ class UserService
     
     public function processCsv($id)
     {
-        $data = CsvUserData::findOrFail($id);
+        $data = CsvUserData::find($id); 
 
         $csvData = json_decode($data->csv_data, true);
 
