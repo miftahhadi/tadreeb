@@ -1,22 +1,64 @@
 <template>
     <div class="row">
         <div class="col-md-8">
-            <exam-question-container
-                :question-number="questionNumber"
-                :questions-count="  exam.questions_count"
-                :question-id="questionId"
-                :question="question"
-                :answers="answers"
-                :type="getType()"
-                :loading="loading"
-                :next-question="nextQuestion"
-                :prev-question="prevQuestion"
-                :user-answers="userAnswers[questionId]"
-                :answering="answering"
-                @get:next="getQuestion(nextQuestion)"
-                @get:prev="getQuestion(prevQuestion)"
-                @update:answer="updateAnswer"
-            ></exam-question-container>
+            <div class="card">
+
+                <div class="card-header">
+                    <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ exam.questions_count}}</h3>
+                </div>
+
+                <div v-for="question in questions" :key="question.id">
+
+                    <div class="card-body" v-html="question.konten" v-show="question.id == questionId"></div>
+
+                    <div class="card-body" v-show="question.id == questionId">
+                        <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+
+
+                            <label class="form-selectgroup-item flex-fill" v-for="answer in question.answers" :key="answer.id">
+                                
+                                <input :type="getType(question.id)" 
+                                    class="form-selectgroup-input"
+                                    v-model="userAnswers[questionId]"
+                                >
+
+                                <div class="form-selectgroup-label d-flex align-items-center p-3">
+                                    <div class="mr-3">
+                                        <span class="form-selectgroup-check"></span>
+                                    </div>
+                                    <div v-html="answer.redaksi"></div>
+                                </div>
+                            </label>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <div class="btn-list">
+                        <button class="btn btn-white" 
+                                v-if="prevQuestion != 0"
+                        >
+                            <i class="fas fa-chevron-circle-left"></i>
+                            <span class="ml-1">Sebelumnya</span>
+                        </button>
+
+                        <button class="btn btn-success"
+                        >Jawab</button>
+                        
+                        <button class="btn btn-white" 
+                                v-if="nextQuestion != 0"
+                        >
+                            <span class="mr-1">Lewati</span>
+                            <i class="fas fa-chevron-circle-right"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+
+            </div>
         </div>
 
         <div class="col-md-4">
@@ -67,11 +109,12 @@ export default {
             question: {},
             answers: [],
             loading: false,
-            userAnswers: {},
             answering: false,
 
             data: {},
-            questions: {}
+            questions: {},
+            userAnswers: {},
+            soalKey: 0,
         }
     },
 
@@ -103,9 +146,10 @@ export default {
             this.questionId = id 
             this.question = this.data.questions[id]
 
-            this.getAnswers()
             this.getNextQuestionId()
             this.getPrevQuestionId()
+
+            this.soalKey += 1
         },
 
         getAnswers() {
@@ -180,10 +224,14 @@ export default {
 
         },
 
-        getType() {
+        isAnswered(id) {
+            return this.userAnswers[id].length != 0
+        },
+
+        getType(questionId) {
             let input;
 
-            switch (this.question.tipe) {
+            switch (this.questions[questionId]) {
                 case 'Pilihan Ganda':
                     input = 'radio'         
                     break;
@@ -202,10 +250,6 @@ export default {
             }
 
             return input;
-        },
-
-        isAnswered(id) {
-            return this.userAnswers[id].length != 0
         }
 
     },
@@ -217,6 +261,10 @@ export default {
     computed: {
         questionNumber() {
             return this.questionIds.indexOf(this.questionId) + 1
+        },
+
+        type() {
+            
         },
     },
 

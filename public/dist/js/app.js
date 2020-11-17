@@ -3339,6 +3339,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
@@ -3386,7 +3389,6 @@ __webpack_require__.r(__webpack_exports__);
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.questionId;
       this.questionId = id;
       this.question = this.data.questions[id];
-      this.getAnswers();
       this.getNextQuestionId();
       this.getPrevQuestionId();
       this.soalKey += 1;
@@ -3455,19 +3457,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     isAnswered: function isAnswered(id) {
       return this.userAnswers[id].length != 0;
-    }
-  },
-  mounted: function mounted() {
-    this.getExamInfo();
-  },
-  computed: {
-    questionNumber: function questionNumber() {
-      return this.questionIds.indexOf(this.questionId) + 1;
     },
-    type: function type() {
+    getType: function getType(questionId) {
       var input;
 
-      switch (this.question.tipe) {
+      switch (this.questions[questionId]) {
         case 'Pilihan Ganda':
           input = 'radio';
           break;
@@ -3487,6 +3481,15 @@ __webpack_require__.r(__webpack_exports__);
 
       return input;
     }
+  },
+  mounted: function mounted() {
+    this.getExamInfo();
+  },
+  computed: {
+    questionNumber: function questionNumber() {
+      return this.questionIds.indexOf(this.questionId) + 1;
+    },
+    type: function type() {}
   }
 });
 
@@ -41468,151 +41471,185 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("exam-question-container", {
-            key: _vm.soalKey,
-            attrs: { soal: _vm.question.konten }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "form-selectgroup form-selectgroup-boxes d-flex flex-column"
-              },
-              _vm._l(_vm.answers, function(answer) {
-                return _c(
-                  "label",
+          _vm._l(_vm.questions, function(question) {
+            return _c("div", { key: question.id }, [
+              _c("div", {
+                directives: [
                   {
-                    key: answer.id,
-                    staticClass: "form-selectgroup-item flex-fill"
-                  },
-                  [
-                    _vm.type === "checkbox"
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.userAnswers[_vm.questionId],
-                              expression: "userAnswers[questionId]"
-                            }
-                          ],
-                          staticClass: "form-selectgroup-input",
-                          attrs: { type: "checkbox" },
-                          domProps: {
-                            checked: Array.isArray(
-                              _vm.userAnswers[_vm.questionId]
-                            )
-                              ? _vm._i(_vm.userAnswers[_vm.questionId], null) >
-                                -1
-                              : _vm.userAnswers[_vm.questionId]
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.userAnswers[_vm.questionId],
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.userAnswers,
-                                      _vm.questionId,
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.userAnswers,
-                                      _vm.questionId,
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(_vm.userAnswers, _vm.questionId, $$c)
-                              }
-                            }
-                          }
-                        })
-                      : _vm.type === "radio"
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.userAnswers[_vm.questionId],
-                              expression: "userAnswers[questionId]"
-                            }
-                          ],
-                          staticClass: "form-selectgroup-input",
-                          attrs: { type: "radio" },
-                          domProps: {
-                            checked: _vm._q(
-                              _vm.userAnswers[_vm.questionId],
-                              null
-                            )
-                          },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(
-                                _vm.userAnswers,
-                                _vm.questionId,
-                                null
-                              )
-                            }
-                          }
-                        })
-                      : _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.userAnswers[_vm.questionId],
-                              expression: "userAnswers[questionId]"
-                            }
-                          ],
-                          staticClass: "form-selectgroup-input",
-                          attrs: { type: _vm.type },
-                          domProps: { value: _vm.userAnswers[_vm.questionId] },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.userAnswers,
-                                _vm.questionId,
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "form-selectgroup-label d-flex align-items-center p-3"
-                      },
-                      [
-                        _vm._m(0, true),
-                        _vm._v(" "),
-                        _c("div", {
-                          domProps: { innerHTML: _vm._s(answer.redaksi) }
-                        })
-                      ]
-                    )
-                  ]
-                )
+                    name: "show",
+                    rawName: "v-show",
+                    value: question.id == _vm.questionId,
+                    expression: "question.id == questionId"
+                  }
+                ],
+                staticClass: "card-body",
+                domProps: { innerHTML: _vm._s(question.konten) }
               }),
-              0
-            )
-          ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: question.id == _vm.questionId,
+                      expression: "question.id == questionId"
+                    }
+                  ],
+                  staticClass: "card-body"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "form-selectgroup form-selectgroup-boxes d-flex flex-column"
+                    },
+                    _vm._l(question.answers, function(answer) {
+                      return _c(
+                        "label",
+                        {
+                          key: answer.id,
+                          staticClass: "form-selectgroup-item flex-fill"
+                        },
+                        [
+                          _vm.getType(question.id) === "checkbox"
+                            ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.userAnswers[_vm.questionId],
+                                    expression: "userAnswers[questionId]"
+                                  }
+                                ],
+                                staticClass: "form-selectgroup-input",
+                                attrs: { type: "checkbox" },
+                                domProps: {
+                                  checked: Array.isArray(
+                                    _vm.userAnswers[_vm.questionId]
+                                  )
+                                    ? _vm._i(
+                                        _vm.userAnswers[_vm.questionId],
+                                        null
+                                      ) > -1
+                                    : _vm.userAnswers[_vm.questionId]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$a = _vm.userAnswers[_vm.questionId],
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = null,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          _vm.$set(
+                                            _vm.userAnswers,
+                                            _vm.questionId,
+                                            $$a.concat([$$v])
+                                          )
+                                      } else {
+                                        $$i > -1 &&
+                                          _vm.$set(
+                                            _vm.userAnswers,
+                                            _vm.questionId,
+                                            $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1))
+                                          )
+                                      }
+                                    } else {
+                                      _vm.$set(
+                                        _vm.userAnswers,
+                                        _vm.questionId,
+                                        $$c
+                                      )
+                                    }
+                                  }
+                                }
+                              })
+                            : _vm.getType(question.id) === "radio"
+                            ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.userAnswers[_vm.questionId],
+                                    expression: "userAnswers[questionId]"
+                                  }
+                                ],
+                                staticClass: "form-selectgroup-input",
+                                attrs: { type: "radio" },
+                                domProps: {
+                                  checked: _vm._q(
+                                    _vm.userAnswers[_vm.questionId],
+                                    null
+                                  )
+                                },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.$set(
+                                      _vm.userAnswers,
+                                      _vm.questionId,
+                                      null
+                                    )
+                                  }
+                                }
+                              })
+                            : _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.userAnswers[_vm.questionId],
+                                    expression: "userAnswers[questionId]"
+                                  }
+                                ],
+                                staticClass: "form-selectgroup-input",
+                                attrs: { type: _vm.getType(question.id) },
+                                domProps: {
+                                  value: _vm.userAnswers[_vm.questionId]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.userAnswers,
+                                      _vm.questionId,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "form-selectgroup-label d-flex align-items-center p-3"
+                            },
+                            [
+                              _vm._m(0, true),
+                              _vm._v(" "),
+                              _c("div", {
+                                domProps: { innerHTML: _vm._s(answer.redaksi) }
+                              })
+                            ]
+                          )
+                        ]
+                      )
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          }),
           _vm._v(" "),
           _c("div", { staticClass: "card-footer" }, [
             _c("div", { staticClass: "btn-list" }, [
@@ -41638,7 +41675,7 @@ var render = function() {
             ])
           ])
         ],
-        1
+        2
       )
     ]),
     _vm._v(" "),
