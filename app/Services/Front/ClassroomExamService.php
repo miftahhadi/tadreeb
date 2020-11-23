@@ -246,11 +246,20 @@ class ClassroomExamService
         // Rekam data pengerjaan user
         $answers = [];
 
-        foreach ($this->questionsId() as $question) {
-            $answers[$question] = [
-                'answers' => [],
-                'score' => 0
-            ];
+        foreach ($this->exam->questions()->get() as $question) {
+            
+            if ($question->tipe == 'Jawaban Ganda') {
+                $answers[$question->id] = [
+                    'answers' => [],
+                    'score' => 0
+                ];
+            } else {
+                $answers[$question->id] = [
+                    'answers' => '',
+                    'score' => 0
+                ];
+            }
+
         }
 
         $this->classexamuser = ClassExamUser::create([

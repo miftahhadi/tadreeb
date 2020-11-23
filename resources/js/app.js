@@ -42,7 +42,6 @@ Vue.component('section-assign-exam', require('./components/admin/section/Section
 
 Vue.component('exam-doing-page', require('./components/front/ujian/ExamDoingPage.vue').default);
 Vue.component('exam-number-button', require('./components/front/ujian/ExamNumberButton.vue').default);
-Vue.component('exam-question-container', require('./components/front/ujian/ExamQuestionContainer.vue').default);
 
 
 /**

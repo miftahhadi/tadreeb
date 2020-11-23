@@ -62,10 +62,12 @@ Route::group([
 });
 
 Route::group(['namespace' => 'auth:api', 'namespace' => 'API'], function() {
+    // Exam page
     Route::get('ujian/{exam:id}', 'ExamController@getExam');
     Route::get('soal/{soal}', 'ExamController@getQuestion');
     Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
     Route::post('update-jawaban', 'ExamController@updateUserAnswers');
+    Route::post('submit-ujian', 'ExamController@submitExam');
 
     Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
 });

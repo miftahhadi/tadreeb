@@ -25,6 +25,8 @@
         <exam-doing-page
             :exam-id="{{ $exam->id }}"
             :classexamuser-id="{{ $classexamuserId }}"
+            :attempt="{{ $service->classexamuser->attempt }}"
+            kelas={{ $kelas->kode }}
         ></exam-doing-page>
     </div>
 

@@ -31,7 +31,6 @@ class ClassroomExamController extends Controller
 
     public function showExam(Classroom $classroom, Exam $exam)
     {
-
         $this->service->info($exam, $classroom);
 
         if (!$this->service->canDoExam()) {
@@ -43,6 +42,17 @@ class ClassroomExamController extends Controller
             'kelas' => $classroom,
             'exam' => $exam,
             'classexamuserId' => $this->service->getClassExamUserId(),
+            'service' => $this->service
+        ]);
+    }
+
+    public function submitted(Classroom $classroom, Exam $exam) 
+    {
+        $this->service->info($exam, $classroom);
+
+        return view('front.ujian.selesai', [
+            'title' => 'Selesai',
+            'service' => $this->service
         ]);
     }
 }

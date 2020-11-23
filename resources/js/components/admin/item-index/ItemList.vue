@@ -5,9 +5,9 @@
             <div class="loader"></div>
             
             <div class="dimmer-content">
+                
                 <div class="table-responsive">
-
-                    <table class="table table-vcenter table-hover card-table">
+                    <table class="table table-vcenter card-table">
 
                         <thead>
                             <tr>
@@ -40,8 +40,8 @@
                         </tbody>
 
                     </table>
-
                 </div>
+                
             </div>
         </div>
 

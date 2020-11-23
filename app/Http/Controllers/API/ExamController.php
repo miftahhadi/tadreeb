@@ -19,6 +19,10 @@ class ExamController extends Controller
 
         $questions = $exam->questions()->with('answers')->get();
 
+        foreach ($questions as $question) {
+            $question['input'] = ($question['tipe'] == 'Jawaban Ganda') ? 'checkbox' : 'radio';
+        }
+
         return json_encode([
                         'exam' => $exam, 
                         'questionIds' => $questionIds, 
@@ -42,7 +46,6 @@ class ExamController extends Controller
 
     public function updateUserAnswers(Request $request)
     {
-
         $classExamUser = ClassExamUser::find($request['classexamuserId']);
         $userAnswers = $request['answerIds'];
         $questionId = $request['questionId'];
@@ -77,5 +80,14 @@ class ExamController extends Controller
         $answer = Answer::find($id);
 
         return $answer->nilai;
+    }
+
+    public function submitExam(Request $request)
+    {
+        $classExamUser = ClassExamUser::find($request['classexamuserId']);
+
+        $classExamUser->waktu_selesai = now('UTC');
+
+        return $classExamUser->save();
     }
 }

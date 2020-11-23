@@ -12,14 +12,16 @@
                     <div class="card-body" v-html="question.konten" v-show="question.id == questionId"></div>
 
                     <div class="card-body" v-show="question.id == questionId">
-                        <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
 
+                        <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
 
                             <label class="form-selectgroup-item flex-fill" v-for="answer in question.answers" :key="answer.id">
                                 
-                                <input :type="getType(question.id)" 
+                                <input :type="question.input" 
                                     class="form-selectgroup-input"
-                                    v-model="userAnswers[questionId]"
+                                    :name="'answer[' + question.id + ']'"
+                                    :value="answer.id"
+                                    v-model="userAnswers[question.id]"
                                 >
 
                                 <div class="form-selectgroup-label d-flex align-items-center p-3">
@@ -30,8 +32,8 @@
                                 </div>
                             </label>
 
-
                         </div>
+
                     </div>
 
                 </div>
@@ -39,17 +41,21 @@
                 <div class="card-footer">
                     <div class="btn-list">
                         <button class="btn btn-white" 
-                                v-if="prevQuestion != 0"
+                                :class="isPrevDisabled"
+                                @click="getQuestion(prevQuestion)"
                         >
                             <i class="fas fa-chevron-circle-left"></i>
                             <span class="ml-1">Sebelumnya</span>
                         </button>
 
                         <button class="btn btn-success"
+                                :class="[chosen, savingAnswer]"
+                                @click="updateAnswer(questionId)"
                         >Jawab</button>
                         
                         <button class="btn btn-white" 
-                                v-if="nextQuestion != 0"
+                                :class="isNextDisabled"
+                                @click="getQuestion(nextQuestion)"
                         >
                             <span class="mr-1">Lewati</span>
                             <i class="fas fa-chevron-circle-right"></i>
@@ -84,9 +90,62 @@
 
             </div>
 
-            <a href="#" class="btn btn-success btn-block"><span class="font-weight-bolder">Selesai</span></a>
+            <button type="button" 
+                    class="btn btn-success btn-block" 
+                    data-toggle="modal" 
+                    data-target="#submitModal"  
+            >
+                Selesai
+            </button>
 
         </div>
+
+        <div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="dimmer" :class="isSubmitting">
+                
+                        <div class="loader"></div>
+                        
+                        <div class="dimmer-content">
+                            
+                            <template v-if="submitted">
+                                <div class="modal-body text-center">
+                                    <span class="avatar avatar-xl bg-success text-white"><i class="fas fa-check"></i></span>
+
+                                    <h2 class="mt-4">Selamat! Anda selesai mengerjakan ujian</h2>
+
+                                    <div>Jawaban Anda sudah tersimpan di database</div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <a :href="kelasUrl" class="btn btn-success mr-auto">Kembali ke Beranda Kelas</a>
+                                    <a :href="hasilUrl" class="btn btn-white">Lihat Jawaban</a>
+                                </div>
+                            </template>
+
+                            <template v-else>
+                                <div class="modal-body">
+
+                                    <div class="modal-title">Apakah Anda yakin?</div>
+                                    <div>Setelah mengirim jawaban, Anda tidak bisa kembali lagi untuk mengubah jawaban Anda.</div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-link link-secondary mr-auto" data-dismiss="modal">Batal</button>
+                                    <button type="button" 
+                                            class="btn btn-success" 
+                                            @click="submit"
+                                    >Ya, saya sudah selesai</button>
+                                </div>
+                            </template>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -97,6 +156,8 @@ export default {
     props: {
         examId: Number,
         classexamuserId: Number,
+        attempt: Number,
+        kelas: String
     },
 
     data() {
@@ -107,14 +168,13 @@ export default {
             nextQuestion: 0,
             prevQuestion: 0,
             question: {},
-            answers: [],
             loading: false,
             answering: false,
-
-            data: {},
             questions: {},
             userAnswers: {},
-            soalKey: 0,
+            submitting: false,
+            submitted: false,
+            kelasUrl: '/k/' + this.kelas + '/depan',
         }
     },
 
@@ -127,8 +187,6 @@ export default {
                         this.exam = response.data.exam
                         this.questionIds = response.data.questionIds
                         this.questionId = response.data.questionIds[0]
-
-                        this.data = response.data
                         this.questions = response.data.questions
                         
                         this.getQuestion()
@@ -144,27 +202,22 @@ export default {
 
         getQuestion(id = this.questionId) {
             this.questionId = id 
-            this.question = this.data.questions[id]
 
             this.getNextQuestionId()
             this.getPrevQuestionId()
 
-            this.soalKey += 1
-        },
-
-        getAnswers() {
-            this.answers = this.questions[this.questionId].answers
         },
 
         getUserAnswers() {
             axios.get('/api/jawaban-user/' + this.classexamuserId)
                     .then(response => {
-                        const userAnswers = response.data
+                        const answers = response.data
 
-                        const questions = Object.keys(userAnswers)
+                        const questions = Object.keys(answers)
 
                         questions.forEach(question => {
-                            this.userAnswers[question] = userAnswers[question].answers
+                            this.$set(this.userAnswers, question, answers[question].answers)
+                            // this.userAnswers[question] = userAnswers[question].answers
                         })
 
                     })
@@ -176,9 +229,9 @@ export default {
         },
 
         getNextQuestionId() {
-            let lastIndex = this.exam.questions_count
+            let lastIndex = this.exam.questions_count - 1
 
-            if (this.questionId != lastIndex) {
+            if (this.questionIds.indexOf(this.questionId) != lastIndex) {
                 let index = this.questionIds.indexOf(this.questionId) + 1
                this.nextQuestion = this.questionIds[index];                
             } else {
@@ -196,65 +249,60 @@ export default {
             }
         },
 
-        updateAnswer(data) {
+        updateAnswer(id) {
             this.answering = true; 
 
-            let answer;
+            let answer = this.userAnswers[id];
 
-            if (Array.isArray(data)) {
-                answer = data
-            } else {
-                answer = [data]
-            }
-            
             // Update ke database
+            this.saveAnswer(id, answer);
+
+            if (this.nextQuestion != 0) {
+                this.getQuestion(this.nextQuestion)                    
+            }
+
+        },
+
+        saveAnswer(questionId, answer) {
             axios.post('/api/update-jawaban', {
                 classexamuserId: this.classexamuserId,
                 answerIds: answer,
-                questionId: this.questionId
+                questionId: questionId
             }).then(response => {
-                // Update jawaban peserta
-                this.userAnswers[questionId] = [answer]
-                
                 this.answering = false
-                this.getQuestion(this.nextQuestion)
             }).catch(error => {
                 console.log(error)
             })
-
         },
 
         isAnswered(id) {
             return this.userAnswers[id].length != 0
         },
 
-        getType(questionId) {
-            let input;
+        submit() {
+            this.submitting = true;
 
-            switch (this.questions[questionId]) {
-                case 'Pilihan Ganda':
-                    input = 'radio'         
-                    break;
-                
-                case 'Jawaban Ganda':
-                    input = 'checkbox'
-                    break;
-                
-                case 'Benar/Salah':
-                    input = 'radio'
-                    break;
+            // Simpan semua jawaban
+            this.questionIds.forEach(id => {
+                let answer = this.userAnswers[id];
 
-                default:
-                    input = 'radio'
-                    break;
-            }
+                this.saveAnswer(id, answer);
+            })
 
-            return input;
+            // Rekam data selesai
+            axios.post('/api/submit-ujian', {
+                classexamuserId: this.classexamuserId
+            }).then(response => {
+                this.submitting = false;
+                this.submitted = true;
+            }).catch(error => {
+                console.log(error)
+            })
         }
 
     },
 
-    mounted() {
+    created() {
         this.getExamInfo();
     },
 
@@ -263,11 +311,33 @@ export default {
             return this.questionIds.indexOf(this.questionId) + 1
         },
 
-        type() {
-            
+        isPrevDisabled() {
+            return (this.prevQuestion == 0) ? 'disabled' : '';
         },
-    },
 
+        isNextDisabled() {
+            return (this.nextQuestion == 0) ? 'disabled' : '';
+        },
+
+        chosen() {
+            return (this.userAnswers[this.questionId] == '') ? 'disabled' : '';
+        },
+
+        savingAnswer() {
+            return (this.answering) ? 'btn-loading' : '';
+        },
+
+        isSubmitting() {
+            return (this.submitting) ? 'active' : '';
+        },
+
+        hasilUrl() {
+            const currentUrl = window.location.pathname;
+
+            return currentUrl.replace('/kerjakan', '/hasil/' + this.attempt);
+        }
+
+    },
 
 }
 </script>
