@@ -31,6 +31,7 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
 
         Route::redirect('/{classroom:kode}', '/k/{classroom:kode}/depan');
 
+        // Classroom's subpage
         Route::group(['prefix' => '/{classroom:kode}'], function () {
             Route::get('/depan', 'ClassroomController@showHome')->name('kelas.home');
             Route::get('/pelajaran', 'ClassroomController@showLessons')->name('kelas.lessons');
@@ -38,10 +39,11 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
             Route::get('/anggota', 'ClassroomController@showPeople')->name('kelas.people');            
         });
 
-
-        Route::get('/{classroom:kode}/u/{exam}', 'ClassroomExamController@showInfo')->name('kelas.exam.info');
-        Route::get('/{classroom:kode}/u/{exam}/kerjakan', 'ClassroomExamController@showExam')->name('kelas.exam.kerjakan');
-        Route::get('/{classroom:kode}/u/{exam}/selesai', 'ClassroomExamController@submitted')->name('kelas.exam.selesai');
+        // Exam's subpage
+        Route::group(['prefix' => '/{classroom:kode}/u/'], function () {
+            Route::get('{exam}', 'ClassroomExamController@showInfo')->name('kelas.exam.info');
+            Route::get('{exam}/kerjakan', 'ClassroomExamController@showExam')->name('kelas.exam.kerjakan');
+        });
 
     });
 
