@@ -26,6 +26,8 @@ class ClassroomExamController extends Controller
 
         return view('front.ujian.info', [
             'title' => $exam->judul . ' - ' . $classroom->nama,
+            'kelas' => $classroom,
+            'exam' => $exam,
             'service' => $this->service
         ]);
     }
@@ -47,13 +49,4 @@ class ClassroomExamController extends Controller
         ]);
     }
 
-    public function submitted(Classroom $classroom, Exam $exam) 
-    {
-        $this->service->info($exam, $classroom);
-
-        return view('front.ujian.selesai', [
-            'title' => 'Selesai',
-            'service' => $this->service
-        ]);
-    }
 }

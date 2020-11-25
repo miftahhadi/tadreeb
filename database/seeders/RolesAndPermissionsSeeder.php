@@ -23,7 +23,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'create exam', 'edit exam', 'update exam', 'delete exam', 'view exam',
             'create question', 'edit question', 'update question', 'delete question',
             'create classroom','delete classroom',
-            'create exam result','edit exam result','update exam result','delete exam result'
+            'show exam result'
         ];
 
         $arrayOfAdminPermissions = ['create group','edit group','update group','delete group',

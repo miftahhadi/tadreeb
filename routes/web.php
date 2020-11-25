@@ -43,6 +43,9 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
         Route::group(['prefix' => '/{classroom:kode}/u/'], function () {
             Route::get('{exam}', 'ClassroomExamController@showInfo')->name('kelas.exam.info');
             Route::get('{exam}/kerjakan', 'ClassroomExamController@showExam')->name('kelas.exam.kerjakan');
+            Route::get('{exam}/riwayat', 'ExamHistoryController@showHistory')->name('kelas.exam.riwayat-user');
+            Route::get('{exam}/hasil', 'ExamHistoryController@showResult')->name('kelas.exam.hasil-user');
+
         });
 
     });

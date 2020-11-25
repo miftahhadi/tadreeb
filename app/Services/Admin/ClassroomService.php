@@ -12,6 +12,12 @@ class ClassroomService
 
     protected $kelas;
 
+    protected $navMenu = ['Ikhtisar', 'Pelajaran', 'Ujian', 'Anggota', 'Pengaturan'];
+
+    public $lessons = [];
+    public $exams = [];
+    public $users = [];
+
     public function store($data, Group $grup)
     {
         return $grup->classrooms()->create([
@@ -20,12 +26,6 @@ class ClassroomService
             'deskripsi' => $data['deskripsi']
         ]);
     }
-
-    protected $navMenu = ['Ikhtisar', 'Pelajaran', 'Ujian', 'Anggota', 'Pengaturan'];
-
-    public $lessons = [];
-    public $exams = [];
-    public $users = [];
 
     public function show(Classroom $kelas)
     {
