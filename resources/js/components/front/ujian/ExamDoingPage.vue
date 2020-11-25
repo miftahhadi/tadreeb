@@ -4,8 +4,23 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ exam.questions_count}}</h3>
-                </div>
+
+                    <ul class="nav nav-pills card-header-pills px-2">
+                        <li class="nav-item">
+                          <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ exam.questions_count}}</h3>
+                        </li>
+
+                        <li class="nav-item ml-auto">
+                            <span class="bg-primary text-white rounded-lg py-2 px-2">
+                                <timer
+                                    :time-expires="timeExpires"
+                                    @near:end="setNearEnd"
+                                    @finished="timesUp"
+                                ></timer>
+                            </span>
+                        </li>
+                    </ul>
+                </div>  
 
                 <div v-for="question in questions" :key="question.id">
 
@@ -157,7 +172,8 @@ export default {
         examId: Number,
         classexamuserId: Number,
         attempt: Number,
-        kelas: String
+        kelas: String,
+        timeExpires: Number,
     },
 
     data() {
@@ -175,6 +191,7 @@ export default {
             submitting: false,
             submitted: false,
             kelasUrl: '/k/' + this.kelas + '/depan',
+            nearEnd: false,
         }
     },
 
@@ -298,12 +315,25 @@ export default {
             }).catch(error => {
                 console.log(error)
             })
+        },
+
+        isTimed() {
+            return (this.timeExpires != 0);
+        },
+
+        setNearEnd() {
+            this.nearEnd = true;
+        },
+
+        timesUp() {
+            
         }
 
     },
 
     created() {
         this.getExamInfo();
+        console.log(this.now());
     },
 
     computed: {

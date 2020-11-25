@@ -56,7 +56,7 @@ class ClassroomController extends Controller
 
     public function showWorks(Classroom $classroom)
     {
-        $exams = $classroom->exams()->get();
+        $exams = $classroom->exams()->wherePivot('tampil',1)->get();
 
         return view('front.kelas.exams', [
             'title' => 'Tugas dan Ujian - ' . $classroom->nama,

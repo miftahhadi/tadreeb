@@ -27,6 +27,7 @@
             :classexamuser-id="{{ $classexamuserId }}"
             :attempt="{{ $service->classexamuser->attempt }}"
             kelas={{ $kelas->kode }}
+            :time-expires="{{ ($service->isTimed()) ? $service->userExamExpires()->valueOf() : 0 }}"
         ></exam-doing-page>
     </div>
 

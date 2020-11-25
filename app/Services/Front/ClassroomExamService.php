@@ -186,10 +186,10 @@ class ClassroomExamService
 
         // Kalau belum, ujian ada durasinya gak?
         // - Gak ada, lanjut aja
-        
-        if ($this->classexam->durasi != 0) { // - Ada
-            $waktuHabis = Carbon::createFromFormat('Y-m-d H:i:s',$this->classexamuser->waktu_mulai, 'UTC')
-                                                ->addMinutes($this->classexam->durasi);
+
+        // - Ada
+        if ($this->isTimed()) { 
+            $waktuHabis = $this->userExamExpires();
 
             $now = now('UTC');
 
@@ -214,7 +214,7 @@ class ClassroomExamService
 
     public function hasAttempt()
     {
-        return ($this->lastAttempt() < $this->classexam->attempt);
+        return ($this->classexam->attempt == 0 || $this->lastAttempt() < $this->classexam->attempt);
     }
 
     public function userHistory()
@@ -285,6 +285,26 @@ class ClassroomExamService
     public function getClassExamUserId()
     {
         return $this->classexamuser->id;    
+    }
+    
+    public function getUserAnswers()
+    {
+        return $this->classexamuser->answers;
+    }
+
+    public function isTimed()
+    {
+        return ($this->classexam->durasi != 0);
+    }
+
+    public function examStart()
+    {
+        return $this->classexamuser->waktu_mulai;
+    }
+
+    public function userExamExpires()
+    {
+        return $this->examStart()->addMinutes($this->classexam->durasi);
     }
 
 }
