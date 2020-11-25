@@ -8,4 +8,9 @@ class ClassExamUser extends Pivot
 {
     protected $table = 'classroomexam_user';
     public $incrementing = true;
+
+    protected $dates = [
+        'waktu_mulai',
+        'waktu_selesai',
+    ];
 }
