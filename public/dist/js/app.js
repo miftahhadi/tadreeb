@@ -3416,6 +3416,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
@@ -3440,7 +3458,7 @@ __webpack_require__.r(__webpack_exports__);
       submitting: false,
       submitted: false,
       kelasUrl: '/k/' + this.kelas + '/depan',
-      nearEnd: false
+      expired: false
     };
   },
   methods: {
@@ -3535,7 +3553,9 @@ __webpack_require__.r(__webpack_exports__);
       this.questionIds.forEach(function (id) {
         var answer = _this4.userAnswers[id];
 
-        _this4.saveAnswer(id, answer);
+        if (answer != '') {
+          _this4.saveAnswer(id, answer);
+        }
       }); // Rekam data selesai
 
       axios.post('/api/submit-ujian', {
@@ -3550,14 +3570,13 @@ __webpack_require__.r(__webpack_exports__);
     isTimed: function isTimed() {
       return this.timeExpires != 0;
     },
-    setNearEnd: function setNearEnd() {
-      this.nearEnd = true;
-    },
-    timesUp: function timesUp() {}
+    timesUp: function timesUp() {
+      this.expired = true;
+      $('#submitModal').modal('show');
+    }
   },
   created: function created() {
     this.getExamInfo();
-    console.log(this.now());
   },
   computed: {
     questionNumber: function questionNumber() {
@@ -3646,12 +3665,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'timer',
   props: {
-    timeExpires: Number
+    end: Number
   },
   data: function data() {
     return {
-      start: luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].utc(),
-      end: null,
+      start: luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].utc().valueOf(),
       seconds: 0,
       minutes: 0,
       hours: 0,
@@ -3662,17 +3680,13 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.setEnd(); // Update the count down every 1 second
-
+    // Update the count down every 1 second
     this.timerCount(this.start, this.end);
     this.interval = setInterval(function () {
-      _this.timerCount(_this.starttime, _this.endtime);
+      _this.timerCount(_this.start, _this.end);
     }, 1000);
   },
   methods: {
-    setEnd: function setEnd() {
-      this.end = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromMillis(this.timeExpires);
-    },
     timerCount: function timerCount(start, end) {
       // Get todays date and time
       var now = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].utc(); // Find the distance between now an the count down date
@@ -3685,7 +3699,6 @@ __webpack_require__.r(__webpack_exports__);
         this.$emit('finished');
         return;
       } else if (distance < 0 && passTime <= 300000) {
-        this.$emit('near:end');
         this.calcTime(passTime);
       } else if (distance < 0 && passTime > 0) {
         this.calcTime(passTime);
@@ -3699,6 +3712,11 @@ __webpack_require__.r(__webpack_exports__);
       this.hours = Math.floor(dist % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
       this.minutes = Math.floor(dist % (1000 * 60 * 60) / (1000 * 60));
       this.seconds = Math.floor(dist % (1000 * 60) / 1000);
+    }
+  },
+  computed: {
+    isNearEnd: function isNearEnd() {
+      return this.minutes < 5 ? 'bg-danger' : 'bg-primary';
     }
   }
 });
@@ -49921,19 +49939,19 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("li", { staticClass: "nav-item ml-auto" }, [
-                _c(
-                  "span",
-                  { staticClass: "bg-primary text-white rounded-lg py-2 px-2" },
-                  [
-                    _c("timer", {
-                      attrs: { "time-expires": _vm.timeExpires },
-                      on: { "near:end": _vm.setNearEnd, finished: _vm.timesUp }
-                    })
-                  ],
-                  1
-                )
-              ])
+              _c(
+                "li",
+                { staticClass: "nav-item ml-auto" },
+                [
+                  _vm.isTimed()
+                    ? _c("timer", {
+                        attrs: { end: _vm.timeExpires },
+                        on: { finished: _vm.timesUp }
+                      })
+                    : _vm._e()
+                ],
+                1
+              )
             ])
           ]),
           _vm._v(" "),
@@ -50278,8 +50296,40 @@ var render = function() {
                             )
                           ])
                         ]
-                      : [
+                      : _vm.expired
+                      ? [
                           _vm._m(3),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "modal-footer btn-list justify-content-center"
+                            },
+                            [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "btn btn-light",
+                                  attrs: { href: _vm.kelasUrl }
+                                },
+                                [_vm._v("Ke Halaman Kelas")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-success",
+                                  attrs: { type: "button" },
+                                  on: { click: _vm.submit }
+                                },
+                                [_vm._v("Kirim jawaban saya")]
+                              )
+                            ]
+                          )
+                        ]
+                      : [
+                          _vm._m(4),
                           _vm._v(" "),
                           _c("div", { staticClass: "modal-footer" }, [
                             _c(
@@ -50354,6 +50404,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body text-center" }, [
+      _c("span", { staticClass: "avatar avatar-xl bg-danger text-white" }, [
+        _c("i", { staticClass: "fas fa-hourglass-end" })
+      ]),
+      _vm._v(" "),
+      _c("h2", { staticClass: "mt-4" }, [_vm._v("Waktu Habis!")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("Anda tidak diizinkan melanjutkan ujian")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-body" }, [
       _c("div", { staticClass: "modal-title" }, [_vm._v("Apakah Anda yakin?")]),
       _vm._v(" "),
@@ -50418,17 +50482,21 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm._v(
-      "\n    " +
-        _vm._s(_vm.hours) +
-        " jam : " +
-        _vm._s(_vm.minutes) +
-        " menit : " +
-        _vm._s(_vm.seconds) +
-        " detik\n"
-    )
-  ])
+  return _c(
+    "span",
+    { staticClass: "text-white rounded-lg py-2 px-2", class: _vm.isNearEnd },
+    [
+      _vm._v(
+        "\n    " +
+          _vm._s(_vm.hours) +
+          " jam : " +
+          _vm._s(_vm.minutes) +
+          " menit : " +
+          _vm._s(_vm.seconds) +
+          " detik\n"
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -63802,6 +63870,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/sass/custom.scss":
+/*!************************************!*\
+  !*** ./resources/sass/custom.scss ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/sass/tabler/tabler.scss":
 /*!*******************************************!*\
   !*** ./resources/sass/tabler/tabler.scss ***!
@@ -63814,14 +63893,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ 0:
-/*!***********************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/tabler/tabler.scss ***!
-  \***********************************************************************/
+/*!****************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/tabler/tabler.scss ./resources/sass/custom.scss ***!
+  \****************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/tabler/tabler.scss */"./resources/sass/tabler/tabler.scss");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\tabler\tabler.scss */"./resources/sass/tabler/tabler.scss");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\custom.scss */"./resources/sass/custom.scss");
 
 
 /***/ })

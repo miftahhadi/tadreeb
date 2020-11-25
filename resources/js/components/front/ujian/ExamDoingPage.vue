@@ -11,13 +11,11 @@
                         </li>
 
                         <li class="nav-item ml-auto">
-                            <span class="bg-primary text-white rounded-lg py-2 px-2">
-                                <timer
-                                    :time-expires="timeExpires"
-                                    @near:end="setNearEnd"
-                                    @finished="timesUp"
-                                ></timer>
-                            </span>
+                            <timer
+                                v-if="isTimed()"
+                                :end="timeExpires"
+                                @finished="timesUp"
+                            ></timer>
                         </li>
                     </ul>
                 </div>  
@@ -139,6 +137,26 @@
                                 </div>
                             </template>
 
+                            <template v-else-if="expired">
+                                <div class="modal-body text-center">
+                                    <span class="avatar avatar-xl bg-danger text-white">
+                                        <i class="fas fa-hourglass-end"></i>
+                                    </span>
+
+                                    <h2 class="mt-4">Waktu Habis!</h2>
+
+                                    <div>Anda tidak diizinkan melanjutkan ujian</div>
+                                </div>
+                                <div class="modal-footer btn-list justify-content-center">
+                                    <a :href="kelasUrl" class="btn btn-light">Ke Halaman Kelas</a>
+
+                                    <button type="button" 
+                                            class="btn btn-success" 
+                                            @click="submit"
+                                    >Kirim jawaban saya</button>
+                                </div>
+                            </template>
+
                             <template v-else>
                                 <div class="modal-body">
 
@@ -191,7 +209,7 @@ export default {
             submitting: false,
             submitted: false,
             kelasUrl: '/k/' + this.kelas + '/depan',
-            nearEnd: false,
+            expired: false,
         }
     },
 
@@ -303,7 +321,9 @@ export default {
             this.questionIds.forEach(id => {
                 let answer = this.userAnswers[id];
 
-                this.saveAnswer(id, answer);
+                if (answer != '') {
+                    this.saveAnswer(id, answer);                
+                }
             })
 
             // Rekam data selesai
@@ -321,19 +341,16 @@ export default {
             return (this.timeExpires != 0);
         },
 
-        setNearEnd() {
-            this.nearEnd = true;
-        },
-
         timesUp() {
-            
+            this.expired = true;
+
+            $('#submitModal').modal('show');
         }
 
     },
 
     created() {
         this.getExamInfo();
-        console.log(this.now());
     },
 
     computed: {

@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <span class="text-white rounded-lg py-2 px-2" :class="isNearEnd">
         {{ hours }} jam : {{ minutes }} menit : {{ seconds }} detik
-    </div>
+    </span>
 </template>
 
 <script>
@@ -11,13 +11,12 @@
         name: 'timer',
 
         props: {
-            timeExpires: Number
+            end: Number
         },
 
         data: function() {
                 return {
-                    start: DateTime.utc(),
-                    end: null,
+                    start: DateTime.utc().valueOf(),
                     seconds: 0,
                     minutes: 0,
                     hours:0,
@@ -27,20 +26,14 @@
             },
         
         mounted() {
-            this.setEnd();
-
             // Update the count down every 1 second
             this.timerCount(this.start,this.end);
             this.interval = setInterval(() => {
-                this.timerCount(this.starttime,this.endtime);
+                this.timerCount(this.start,this.end);
             }, 1000);
         },
 
         methods: {
-            setEnd() {
-                this.end = DateTime.fromMillis(this.timeExpires);
-            },
-
             timerCount: function(start,end){
                 // Get todays date and time
                 const now = DateTime.utc();
@@ -54,7 +47,6 @@
                     this.$emit('finished')
                     return;
                 } else if (distance < 0 && passTime <= 300000) {
-                    this.$emit('near:end')
                     this.calcTime(passTime);
                 } else if(distance < 0 && passTime > 0){
                     this.calcTime(passTime);
@@ -72,6 +64,12 @@
                 this.seconds = Math.floor((dist % (1000 * 60)) / 1000);
             }
             
+        },
+
+        computed: {
+            isNearEnd() {
+                return (this.minutes < 5) ? 'bg-danger' : 'bg-primary';
+            }
         }
     }
 </script>
