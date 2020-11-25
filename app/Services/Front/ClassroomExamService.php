@@ -188,7 +188,8 @@ class ClassroomExamService
         // - Gak ada, lanjut aja
 
         // - Ada
-        if ($this->isTimed()) { 
+        // Serahkan ke JS
+        /* if ($this->isTimed()) { 
             $waktuHabis = $this->userExamExpires();
 
             $now = now('UTC');
@@ -205,7 +206,7 @@ class ClassroomExamService
                 // Waktu habis dan kesempatan udah habis
                 return false;
             }
-        }
+        } */
 
         // Default true
         return true;
