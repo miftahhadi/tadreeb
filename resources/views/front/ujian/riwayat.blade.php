@@ -7,8 +7,8 @@
 
             <div class="row mt-4">
                 <div class="col-auto">
-                    <h2 class="page-title">Riwayat Pengerjaan</h2>
-                    <h3>Nama: </h3>
+                    <h2 class="page-title mb-2">Riwayat Pengerjaan</h2>
+                    <span>Nama: {{ $nama }}</span>
                 </div>
                 <div class="col-12">
                     <div class="card">
@@ -20,6 +20,7 @@
                                     <th>Mulai Mengerjakan</th>
                                     <th>Selesai Mengerjakan</th>
                                     <th>Kali Mengerjakan</th>
+                                    <th>Nilai</th>
                                     <th class="w-1"></th>
                                 </tr>
                                 </thead>
@@ -33,6 +34,7 @@
                                             {{ $history->waktu_selesai }}
                                             </td>
                                             <td>{{ $history->attempt }}</td>
+                                            <td></td>
                                             <td>
                                             <a href="#">Lihat</a>
                                             </td>

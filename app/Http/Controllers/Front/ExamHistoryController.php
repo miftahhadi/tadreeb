@@ -24,12 +24,13 @@ class ExamHistoryController extends Controller
         $classexamId = $classroom->exams()->find($exam->id)->pivot->id;
     
         $histories = $this->service->getHistory($request->input('user'), $classexamId);
-dd($histories);        
+
         return view('front.ujian.riwayat', [
             'title' => 'Riwayat - ' . $exam->judul . ' - ' . $classroom->nama,
             'kelas' => $classroom,
             'exam' => $exam,
-            'histories' => $histories
+            'histories' => $histories,
+            'nama' => $this->service->getUserName()
         ]);
     }
 
