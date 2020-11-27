@@ -3,10 +3,11 @@
     th {
       color: $table-head-color;
       background: $table-head-bg;
-      // @include subheader;
+      @include subheader;
       padding-top: $table-head-padding-y;
       padding-bottom: $table-head-padding-y;
-      font-size: $h5-font-size; // modif
+      // font-size: $h5-font-size; // modif
+      // font-weight: 500;
 
       @media print {
         background: transparent;

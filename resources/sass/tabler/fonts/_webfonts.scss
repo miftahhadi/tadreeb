@@ -1,5 +1,5 @@
 @if $google-font {
-  $google-font-url: "https://fonts.googleapis.com/css2?family=" + str-replace($google-font, " ", "+") + ":wght@300;400;500;600;700&display=swap" !default;
+  $google-font-url: "https://fonts.googleapis.com/css2?family=" + str-replace($google-font, " ", "+") + ":wght@300%3b400%3b500%3b600%3b700&ampdisplay=swap" !default;
   @import url($google-font-url);
 }
 
