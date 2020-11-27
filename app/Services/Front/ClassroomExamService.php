@@ -218,11 +218,11 @@ class ClassroomExamService
         return ($this->classexam->attempt == 0 || $this->lastAttempt() < $this->classexam->attempt);
     }
 
-    public function userHistory()
+    public function userHistory($userId = auth()->user()->id)
     {
         return ClassExamUser::where([
                                 ['classroom_exam_id', $this->classexam->id],
-                                ['user_id', auth()->user()->id]
+                                ['user_id', $userId]
                             ])->orderBy('attempt', 'desc');
     }
 

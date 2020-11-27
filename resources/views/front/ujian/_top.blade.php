@@ -6,7 +6,7 @@
 </ol>
 
 <div class="card card-sm bg-blue text-white rounded-lg">
-    <div class="card-body pt-6">
+    <div class="card-body pt-4">
         <h2 class="h1 font-weight-bold">{{ $exam->judul }}</h2>
     </div>
 </div>

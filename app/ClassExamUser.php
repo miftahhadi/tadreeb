@@ -13,4 +13,9 @@ class ClassExamUser extends Pivot
         'waktu_mulai',
         'waktu_selesai',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
