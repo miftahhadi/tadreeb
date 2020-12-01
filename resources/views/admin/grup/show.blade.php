@@ -12,7 +12,7 @@
         </a></li>
     </ol>
 
-    <div>
+    <div class="mt-2">
         <h2 class="h1 font-weight-bold">{{ $grup->nama }}</h2>
         <p>
             {{ $grup->deskripsi }}
@@ -24,8 +24,7 @@
         </ul>
     </div>
 
-
-    <div class="row mb-2">
+    <div class="row">
         <div class="col-auto">
             <h2>Daftar Kelas</h2>
         </div>    
@@ -35,7 +34,12 @@
                     class="btn btn-primary" 
                     data-toggle="modal" 
                     data-target="#tambahBaru">
-                <i class="fe fe-plus-circle"></i> Buat Kelas Baru
+                
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                </span> 
+                
+                Buat Kelas Baru
             </button>  
     
         </div>

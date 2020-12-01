@@ -8,6 +8,8 @@
 
 @section('content')
     <ol class="breadcrumb" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.ujian.index') }}">Ujian</a></li>
         <li class="breadcrumb-item"><a href="{{ route('admin.ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a href="#">
             Edit Soal
@@ -25,10 +27,13 @@
         @csrf
 
 
-        <div class="row mt-3 mb-4">
+        <div class="mt-2 mb-4">
             <h2 class="h1 font-weight-bold">{{ $ujian->judul }}</h2>
+        </div>
+
+        <div class="row my-2">
             <div class="col-auto">
-                <h2 class="h2">Edit Soal</h2>
+                <h2>Edit Soal</h2>
             </div>
             
             <div class="col-auto ml-auto">
@@ -55,13 +60,15 @@
             </div>
         </div>
 
+        <hr>
+
         <h4 class="card-title">Pilihan Jawaban</h4>
         
         @if($soal->tipe == 'Jawaban Ganda' || $soal->tipe == 'Pilihan Ganda')
 
             @foreach ($soal->answers as $key => $answer)
 
-            <div class="card">
+            <div class="card mb-4">
                 <div class="card-header">
                     Pilihan {{ ++$key }}
                 </div>

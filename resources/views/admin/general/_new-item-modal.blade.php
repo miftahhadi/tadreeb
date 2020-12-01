@@ -11,8 +11,7 @@
       <div class="modal-header">
         <h5 class="modal-title">{{ ucfirst($item)}} Baru</h5>
         
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          </button>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
 
       </div>
       

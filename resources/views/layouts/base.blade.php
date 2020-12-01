@@ -40,12 +40,8 @@
 
     @section('head-script')
       <!-- CSS files -->
-      <link href="/dist/css/tabler.css" rel="stylesheet"/>
-      <!-- Arabic Fonts -->
-      <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@200;300;400;600;700;900&family=Lateef&family=Markazi+Text:wght@400;500;600;700&family=Scheherazade:wght@400;700&display=swap" rel="stylesheet"> 
-
-      <!-- fontawesome -->
-      <script src="https://kit.fontawesome.com/c62b0f450b.js" crossorigin="anonymous"></script>
+      <link href="{{ asset('dist/css/tabler.css') }}" rel="stylesheet"/>
+      <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet"/>
     @show
 
     <style>
@@ -58,13 +54,24 @@
   
   <body class="antialiased @yield('body-class')">
 
-    @yield('main')
+      @yield('main')
 
-    @stack('js')
+      @stack('js')
 
-    <script>
-        document.body.style.display = "block"
-    </script>
+      @once
+        @prepend('js')
+          <!-- Libs JS -->
+          <script src="{{ asset('dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+
+          <!-- Tabler Core -->
+          <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
+        @endprepend
+      @endonce
+      
+
+      <script>
+          document.body.style.display = "block"
+      </script>
 
   </body>
 

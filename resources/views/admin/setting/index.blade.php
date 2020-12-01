@@ -2,8 +2,15 @@
 
 @section('content')
 
-    <div class="page-header">
-        <h2 class="page-title">Pengaturan</h2>
+    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="#">
+            Pengaturan
+        </a></li>
+    </ol>
+
+    <div class="page-header mt-2">
+        <h1>Pengaturan</h1>
     </div>
 
     @if (session('status'))
@@ -15,7 +22,7 @@
     <form action="{{ route('admin.setting.store') }}" method="post" enctype="multipart/form-data">
         @csrf
 
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-header">
               <h3 class="card-title">Pengaturan Umum</h3>
             </div>
@@ -37,15 +44,17 @@
 
                 </div>
 
-                <div class="form-file col-md-3 mb-3">
+                <div class="form-file col-md-3">
                     <label for="logo">Ganti logo</label>
                     <input type="file" id="logo" name="logo">
                 </div>
               
             </div>
-        </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="card-footer">
+                <input type="submit" value="Simpan Pengaturan" class="btn btn-success">
+            </div>
+        </div>
 
     </form>
 
