@@ -35,7 +35,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// Simplify the dialog windows.
     config.removeDialogTabs = 'image:advanced;link:advanced';
     
-    config.contentsCss = 'https://fonts.googleapis.com/css?family=Amiri:700|Aref+Ruqaa|Cairo|Lateef|Markazi+Text|Scheherazade&display=swap&subset=arabic';
+    config.contentsCss = 'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400%3b0,700%3b1,400%3b1,700&family=Aref+Ruqaa:wght@400%3b700&family=Cairo:wght@200%3b300%3b400%3b600%3b700%3b900&family=Lateef&family=Markazi+Text:wght@400%3b500%3b600%3b700&family=Scheherazade:wght@400%3b700&display=swap';
 
 	config.font_names = config.font_names + ';' + 'Amiri/Amiri;' + 'Aref Ruqaa/Aref Ruqaa;' + 'Cairo/Cairo;' + 'Lateef/Lateef;' + 'Scheherazade;' + 'Markazi/Markazi;';
 };
