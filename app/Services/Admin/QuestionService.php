@@ -2,9 +2,9 @@
 
 namespace App\Services\Admin;
 
-use App\Exam;
-use App\Question;
-use App\Answer;
+use App\Models\Exam;
+use App\Models\Question;
+use App\Models\Answer;
 
 class QuestionService
 {

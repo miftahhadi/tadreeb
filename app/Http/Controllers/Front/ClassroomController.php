@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Classroom;
+use App\Models\Classroom;
 use App\Http\Controllers\Controller;
 use App\Services\Front\ClassroomService;
 use Illuminate\Http\Request;

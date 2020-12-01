@@ -2,7 +2,7 @@
 
 namespace App\Services\Admin;
 
-use App\Group;
+use App\Models\Group;
 
 class GroupService
 {

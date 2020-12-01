@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\DataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Lesson;
+use App\Models\Lesson;
 use App\Http\Requests\Admin\StoreLessonRequest;
 use App\Http\Requests\Admin\UpdateLessonRequest;
 use App\Services\Admin\LessonService;
@@ -69,7 +69,7 @@ class LessonController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  App\Lesson $pelajaran
+     * @param  App\Models\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
     public function show(Lesson $pelajaran)
@@ -89,7 +89,7 @@ class LessonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  App\Lesson $pelajaran
+     * @param  App\Models\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
     public function edit(Lesson $pelajaran)
@@ -104,7 +104,7 @@ class LessonController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Lesson $pelajaran
+     * @param  App\Models\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateLessonRequest $request, Lesson $pelajaran)
@@ -117,7 +117,7 @@ class LessonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  App\Lesson $pelajaran
+     * @param  App\Models\Lesson $pelajaran
      * @return \Illuminate\Http\Response
      */
     public function destroy(Lesson $pelajaran)

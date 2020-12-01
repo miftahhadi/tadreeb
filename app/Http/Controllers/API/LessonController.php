@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Classroom;
+use App\Models\Classroom;
 use App\Http\Controllers\Controller;
-use App\Lesson;
+use App\Models\Lesson;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller

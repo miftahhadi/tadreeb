@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Classroom;
-use App\Exam;
+use App\Models\Classroom;
+use App\Models\Exam;
 use App\Http\Controllers\Controller;
 use App\Services\Front\ClassroomExamService;
 use Carbon\Carbon;

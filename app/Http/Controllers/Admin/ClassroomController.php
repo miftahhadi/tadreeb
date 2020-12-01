@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classroom;
-use App\Group;
+use App\Models\Classroom;
+use App\Models\Group;
 use App\Http\Controllers\Controller;
-use App\Lesson;
-use App\Section;
+use App\Models\Lesson;
+use App\Models\Section;
 use App\Services\Admin\ClassroomService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

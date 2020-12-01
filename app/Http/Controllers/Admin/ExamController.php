@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\UpdateExamRequest;
 use App\Services\Admin\ExamService;
 use App\Http\Requests\Admin\StoreExamRequest;
-use App\Exam;
+use App\Models\Exam;
 
 
 class ExamController extends Controller
@@ -91,7 +91,7 @@ class ExamController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  App\Exam  $ujian
+     * @param  App\Models\Exam  $ujian
      * @return \Illuminate\Http\Response
      */
     public function edit(Exam $ujian)

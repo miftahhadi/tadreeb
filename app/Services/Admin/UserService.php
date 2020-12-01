@@ -2,9 +2,9 @@
 
 namespace App\Services\Admin;
 
-use App\Classroom;
-use App\CsvUserData;
-use App\User;
+use App\Models\Classroom;
+use App\Models\CsvUserData;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Throwable;

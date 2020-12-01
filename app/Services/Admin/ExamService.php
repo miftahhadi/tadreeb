@@ -2,7 +2,7 @@
 
 namespace App\Services\Admin;
 
-use App\Exam;
+use App\Models\Exam;
 
 class ExamService
 {

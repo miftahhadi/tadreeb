@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\DataTable;
-use App\Group;
+use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\GroupService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

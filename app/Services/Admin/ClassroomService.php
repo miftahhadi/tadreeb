@@ -2,8 +2,8 @@
 
 namespace App\Services\Admin;
 
-use App\Classroom;
-use App\Group;
+use App\Models\Classroom;
+use App\Models\Group;
 use App\DataTable;
 use Illuminate\Support\Str;
 

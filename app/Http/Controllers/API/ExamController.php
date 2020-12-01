@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Answer;
-use App\ClassExamUser;
-use App\Exam;
+use App\Models\Answer;
+use App\Models\ClassExamUser;
+use App\Models\Exam;
 use App\Http\Controllers\Controller;
-use App\Question;
+use App\Models\Question;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller

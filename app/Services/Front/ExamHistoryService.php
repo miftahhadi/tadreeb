@@ -2,8 +2,8 @@
 
 namespace App\Services\Front;
 
-use App\ClassExamUser;
-use App\User;
+use App\Models\ClassExamUser;
+use App\Models\User;
 
 class ExamHistoryService 
 {

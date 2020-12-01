@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Lesson;
-use App\Section;
-use App\SectionContent;
+use App\Models\Lesson;
+use App\Models\Section;
+use App\Models\SectionContent;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller

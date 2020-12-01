@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Services\Admin\QuestionService;
 use App\Http\Requests\Admin\StoreQuestionRequest;
 use App\Http\Requests\Admin\UpdateQuestionRequest;
-use App\Exam;
-use App\Question;
+use App\Models\Exam;
+use App\Models\Question;
 
 class QuestionController extends Controller
 {
@@ -92,7 +92,7 @@ class QuestionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Question  $soal
+     * @param  App\Models\Question  $soal
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateQuestionRequest $request, Exam $ujian, Question $soal)

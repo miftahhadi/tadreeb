@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\CsvUserData;
+use App\Models\CsvUserData;
 use App\DataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Requests\CsvImportRequest;
-use App\User;
+use App\Models\User;
 use App\Services\Admin\UserService;
 use Illuminate\Http\Request;
 

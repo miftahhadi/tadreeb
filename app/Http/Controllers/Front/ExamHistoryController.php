@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Classroom;
-use App\ClassroomExam;
-use App\Exam;
+use App\Models\Classroom;
+use App\Models\ClassroomExam;
+use App\Models\Exam;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Front\ExamHistoryService;
-use App\User;
+use App\Models\User;
 
 class ExamHistoryController extends Controller
 {

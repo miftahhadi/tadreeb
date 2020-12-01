@@ -2,10 +2,10 @@
 
 namespace App\Services\Front;
 
-use App\ClassExamUser;
-use App\Classroom;
-use App\ClassroomExam;
-use App\Exam;
+use App\Models\ClassExamUser;
+use App\Models\Classroom;
+use App\Models\ClassroomExam;
+use App\Models\Exam;
 use Carbon\Carbon;
 
 class ClassroomExamService
