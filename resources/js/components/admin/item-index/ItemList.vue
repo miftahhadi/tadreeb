@@ -25,7 +25,7 @@
 
                             <tr v-for="item in items" :key="item.id">
                                 <td v-for="$prop in itemProperties" :key="$prop">{{ item[$prop] }}</td>
-                                <td >
+                                <td>
                                     <item-assign v-if="assign()"
                                         :item-id="item.id"
                                         :assign-url="assignUrl"
@@ -38,6 +38,7 @@
                                         :item-slug="item.slug"
                                         :item-id="item.id"
                                         :item-url="itemUrl"
+                                        :kelas-id="kelasId"
                                         @delete:item="deleteItem"
                                     ></item-action>
                                 </td>
@@ -68,6 +69,7 @@ export default {
         actionMode: String,
         assignUrl: String,
         assigned: Array,
+        kelasId: Number
     },
 
     computed: {

@@ -1,6 +1,31 @@
 <template>
     <div>
         <div class="btn-list flex-nowrap">
+
+            <template v-if="kelasId">
+
+                <a href="#" 
+                    class="btn btn-sm btn-ghost-primary"
+                    v-if="itemType != 'user'"
+                >
+                    Pengaturan
+                </a>
+
+                <a href="#" 
+                    class="btn btn-sm btn-ghost-primary"
+                    v-if="itemType == 'ujian'"
+                >
+                    Lihat Hasil
+                </a>
+
+                <a href="" class="btn btn-sm btn-ghost-danger">
+                    Keluarkan
+                </a>    
+
+            </template>
+
+            <template v-else>
+
                 <a :href="showUrl" class="btn btn-sm btn-ghost-primary">
                     Buka
                 </a>
@@ -17,15 +42,7 @@
                     Hapus
                 </button>
 
-                <a href="#" 
-                    class="btn btn-sm btn-ghost-primary"
-                >
-                    Pengaturan
-                </a>
-
-                <a href="" class="btn btn-sm btn-ghost-danger">
-                    Keluarkan
-                </a>
+            </template>                
                     
         </div>
     </div>
@@ -41,6 +58,7 @@ export default {
         itemSlug: String,
         itemId: Number,
         itemUrl: String,
+        kelasId: Number
     },
 
     data() {

@@ -3,6 +3,7 @@
     <kelas-item-tab
         item="ujian"
         kelas="{{ $kelas->nama }}"
+        :kelas-id="{{ $kelas->id }}"
         :list="true"
         :headings="{{ json_encode($service->exams['heading']) }}"
         :item-properties="{{ json_encode($service->exams['props']) }}"

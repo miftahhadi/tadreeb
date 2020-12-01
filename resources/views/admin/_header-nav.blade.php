@@ -20,7 +20,7 @@
                 </div>
             </a>
 
-            <div class="dropdown-menu dropdown-menu-arrow" aria-labelledby="accountMenuButton">
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" aria-labelledby="accountMenuButton">
                 <a href="#" class="dropdown-item">Set status</a>
                 <a href="#" class="dropdown-item">Profile & account</a>
                 <a href="#" class="dropdown-item">Feedback</a>

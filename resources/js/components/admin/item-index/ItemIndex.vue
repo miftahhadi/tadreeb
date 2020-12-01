@@ -42,6 +42,7 @@
                 :item-properties="itemProperties"
                 :assign-page="assignPage"
                 :item-url="itemUrl"
+                :kelas-id="kelasId"
                 @delete:item="deleteItem"
                 @refresh="$emit('refresh', data)"
             ></item-list>
@@ -69,6 +70,7 @@
             assignPage: Boolean,
             itemUrl: String,
             refresh: Boolean,
+            kelasId: Number
         },
         
         data() {

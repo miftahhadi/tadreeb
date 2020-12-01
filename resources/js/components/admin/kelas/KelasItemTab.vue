@@ -22,6 +22,7 @@
                 :item-properties="itemProperties"
                 :assignPage="true"
                 :key="indexKey"
+                :kelas-id="kelasId"
             ></item-index>
         </div>
 
@@ -46,6 +47,7 @@ export default {
     props: {
         item: String,
         kelas: String,
+        kelasId: Number,
         headings: Array,
         itemProperties: Array,
         fetchData: String,
