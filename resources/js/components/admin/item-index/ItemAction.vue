@@ -1,20 +1,31 @@
 <template>
     <div>
         <div class="btn-list flex-nowrap">
-                <a :href="showUrl" class="btn btn-sm btn-primary">Buka</a>
+                <a :href="showUrl" class="btn btn-sm btn-ghost-primary">
+                    Buka
+                </a>
 
-                <a :href="editUrl" class="btn btn-sm btn-light">Edit</a>
+                <a :href="editUrl" class="btn btn-sm btn-ghost-primary">
+                    Edit
+                </a>
 
-                <button v-if="assignPage" 
-                        class="btn btn-danger btn-sm"
-                >Keluarkan</button>
-
-                <button v-else
-                        class="btn btn-danger btn-sm" 
+                <button class="btn btn-sm btn-ghost-danger" 
                         data-toggle="modal" 
                         data-target="#deleteItemModal"
                         @click="deleteItem"
-                >Hapus</button>
+                >
+                    Hapus
+                </button>
+
+                <a href="#" 
+                    class="btn btn-sm btn-ghost-primary"
+                >
+                    Pengaturan
+                </a>
+
+                <a href="" class="btn btn-sm btn-ghost-danger">
+                    Keluarkan
+                </a>
                     
         </div>
     </div>
@@ -29,7 +40,6 @@ export default {
         itemType: String,
         itemSlug: String,
         itemId: Number,
-        assignPage: Boolean,
         itemUrl: String,
     },
 

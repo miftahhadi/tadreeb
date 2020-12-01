@@ -7,7 +7,7 @@
             <div class="dimmer-content">
                 
                 <div class="table-responsive">
-                    <table class="table table-vcenter card-table">
+                    <table class="table table-hover table-vcenter card-table">
 
                         <thead>
                             <tr>
@@ -25,12 +25,18 @@
 
                             <tr v-for="item in items" :key="item.id">
                                 <td v-for="$prop in itemProperties" :key="$prop">{{ item[$prop] }}</td>
-                                <td>
-                                    <item-action
+                                <td >
+                                    <item-assign v-if="assign()"
+                                        :item-id="item.id"
+                                        :assign-url="assignUrl"
+                                        :assigned="assigned.includes(item.id)"
+                                        @saved="$emit('saved')"
+                                    ></item-assign>
+                            
+                                    <item-action v-else
                                         :item-type="itemType"
                                         :item-slug="item.slug"
                                         :item-id="item.id"
-                                        :assign-page="assignPage"
                                         :item-url="itemUrl"
                                         @delete:item="deleteItem"
                                     ></item-action>
@@ -58,8 +64,10 @@ export default {
         loading: Boolean,
         headings: Array,
         itemProperties: Array,
-        assignPage: Boolean,
         itemUrl: String,
+        actionMode: String,
+        assignUrl: String,
+        assigned: Array,
     },
 
     computed: {
@@ -76,6 +84,14 @@ export default {
 
         isId(name) {
             return (name == 'ID') ? 'w-1' : '';
+        },
+
+        assign() {
+            return this.actionMode == 'assign'
+        },
+
+        kelas() {
+            return this.actionMode = 'kelas'
         }
     }
 }

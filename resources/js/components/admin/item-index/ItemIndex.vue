@@ -25,6 +25,8 @@
             <div class="col-auto ml-auto">
                 <pagination
                     :data="laravelData"
+                    :limit="1"
+                    :show-disabled="true"
                     @pagination-change-page="getResults"
                 ></pagination>
             </div>

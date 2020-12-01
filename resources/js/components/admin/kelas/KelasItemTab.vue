@@ -6,7 +6,7 @@
                 <h2>{{ title }}</h2>
             </div>
 
-            <div class="col-auto ml-auto" v-if="list">
+            <div class="col-auto ml-auto">
                 <button class="btn btn-primary" 
                         data-toggle="modal" 
                         :data-target="'#assign' + item + 'Modal'"
@@ -15,7 +15,7 @@
         </div>
 
         <div class="">
-            <item-index v-if="list"
+            <item-index
                 :item="item"
                 :fetch-url="fetchData"
                 :table-heading="headings"
@@ -46,10 +46,8 @@ export default {
     props: {
         item: String,
         kelas: String,
-        list: Boolean,
         headings: Array,
         itemProperties: Array,
-        list: Boolean,
         fetchData: String,
         assigned: Array,
     },
