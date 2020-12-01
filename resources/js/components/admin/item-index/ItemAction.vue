@@ -4,12 +4,14 @@
 
             <template v-if="kelasId">
 
-                <a href="#" 
+                <button 
                     class="btn btn-sm btn-ghost-primary"
                     v-if="itemType != 'user'"
+                    data-toggle="modal" 
+                    data-target="#settingModal"
                 >
                     Pengaturan
-                </a>
+                </button>
 
                 <a href="#" 
                     class="btn btn-sm btn-ghost-primary"

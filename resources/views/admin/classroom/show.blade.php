@@ -50,6 +50,8 @@
                 @include('admin.classroom._setting')
             </div>
 
+            <kelas-item-setting-modal></kelas-item-setting-modal>
+
         </div>
 
     </div>

@@ -31,6 +31,7 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 
 Vue.component('kelas-item-tab', require('./components/admin/kelas/KelasItemTab.vue').default);
 Vue.component('kelas-assign-modal', require('./components/admin/kelas/KelasAssignModal.vue').default);
+Vue.component('kelas-item-setting-modal', require('./components/admin/kelas/KelasItemSettingModal.vue').default);
 
 Vue.component('import-user', require('./components/admin/user/ImportUser.vue').default);
 
