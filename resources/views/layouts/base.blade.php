@@ -56,18 +56,13 @@
 
       @yield('main')
 
-      @stack('js')
+      <!-- Libs JS -->
+      <script src="{{ asset('dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
-      @once
-        @prepend('js')
-          <!-- Libs JS -->
-          <script src="{{ asset('dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+      <!-- Tabler Core -->
+      <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
 
-          <!-- Tabler Core -->
-          <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
-        @endprepend
-      @endonce
-      
+      @stack('js')      
 
       <script>
           document.body.style.display = "block"
