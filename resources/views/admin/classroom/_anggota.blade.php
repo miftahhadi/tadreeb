@@ -1,6 +1,6 @@
 <div id="anggota" class="tab-pane mt-4">
 
-    <kelas-item-tab
+    <kelas-item
         item="user"
         kelas="{{ $kelas->nama }}"
         :kelas-id="{{ $kelas->id }}"
@@ -9,6 +9,6 @@
         :item-properties="{{ json_encode($service->users['props']) }}"
         fetch-data="{{ $service->users['fetchUrl'] }}"
         :assigned=" {{ json_encode($service->users['assigned']) }}"
-    ></kelas-item-tab>
+    ></kelas-item>
 
 </div>

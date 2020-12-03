@@ -18,6 +18,7 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+Vue.component('modal', require('./components/Modal.vue').default);
 
 Vue.component('item-baru-form', require('./components/admin/general/ItemBaruForm.vue').default);
 
@@ -29,7 +30,11 @@ Vue.component('item-assign', require('./components/admin/item-index/ItemAssign.v
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 
-Vue.component('kelas-item-tab', require('./components/admin/kelas/KelasItemTab.vue').default);
+Vue.component('item-tab', require('./components/tabs/ItemTab.vue').default);
+Vue.component('tab-details', require('./components/tabs/TabDetails.vue').default);
+
+Vue.component('kelas-index', require('./components/admin/kelas/KelasIndex.vue').default);
+Vue.component('kelas-item', require('./components/admin/kelas/KelasItem.vue').default);
 Vue.component('kelas-assign-modal', require('./components/admin/kelas/KelasAssignModal.vue').default);
 Vue.component('kelas-item-setting-modal', require('./components/admin/kelas/KelasItemSettingModal.vue').default);
 

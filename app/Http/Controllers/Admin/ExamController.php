@@ -53,10 +53,6 @@ class ExamController extends Controller
                 );
     }
 
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -127,5 +123,10 @@ class ExamController extends Controller
         $this->examService->delete($ujian);
 
         return redirect(route('admin.ujian.index'));
+    }
+
+    public function showSetting()
+    {
+        
     }
 }

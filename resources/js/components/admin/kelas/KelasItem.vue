@@ -42,7 +42,7 @@
 
 <script>
 export default {
-    name: 'kelas-item-tab',
+    name: 'kelas-item',
 
     props: {
         item: String,

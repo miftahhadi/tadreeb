@@ -4,23 +4,24 @@
 
             <template v-if="kelasId">
 
-                <button 
+                <button
                     class="btn btn-sm btn-ghost-primary"
                     v-if="itemType != 'user'"
                     data-toggle="modal" 
-                    data-target="#settingModal"
+                    :data-target="'#setting' + itemType + 'Modal'"
+                    :data-item-id="itemId"
                 >
                     Pengaturan
                 </button>
 
-                <a href="#" 
+                <a :href="resultUrl" 
                     class="btn btn-sm btn-ghost-primary"
                     v-if="itemType == 'ujian'"
                 >
                     Lihat Hasil
                 </a>
 
-                <a href="" class="btn btn-sm btn-ghost-danger">
+                <a href="#" class="btn btn-sm btn-ghost-danger">
                     Keluarkan
                 </a>    
 
@@ -66,14 +67,11 @@ export default {
     data() {
         return {
             url: this.itemUrl ?? '/admin/' + this.itemType + '/',
+            selector: this.itemSlug ?? this.itemId
         }
     },
 
     computed: {
-        selector() {
-            return this.itemSlug ?? this.itemId;
-        },
-
         showUrl() {
             return this.url + this.selector;
         },
@@ -84,6 +82,18 @@ export default {
 
         assignText() {
             return 'Masukkan';
+        },
+
+        settingUrl() {
+            return (this.itemType != 'user') 
+                                ? this.url + this.selector + '/setting?kelas=' + this.kelasId
+                                : ''
+        },
+
+        resultUrl() {
+            return (this.itemType == 'ujian')
+                                ? this.url + this.selector + '/hasil'
+                                : ''
         }
     },
 

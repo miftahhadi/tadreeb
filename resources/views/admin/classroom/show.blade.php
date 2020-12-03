@@ -11,7 +11,7 @@
             </a></li>
         </ol>
 
-        <div>
+        <div class="mb-4">
             <h2 class="h1 font-weight-bold">{{ $kelas->nama }}</h2>
         
             <p>
@@ -24,36 +24,15 @@
             </ul>
         </div>
 
-        <div> <!-- Satu div ini ubah jadi komponen vue--> 
-            
-            <ul class="nav nav-tabs">
-                @foreach ($service->getNavMenu() as $key => $menu)
-                    <li class="nav-item">
-                        <a href="#{{ strtolower($menu) }}" 
-                            class="nav-link @if ($key == 0) active @endif" 
-                            data-toggle="tab"
-                        >{{ $menu }}</a>
-                    </li>
-                @endforeach
+        <kelas-index
+            kelas="{{ $kelas->nama }}"
+            :kelas-id="{{ $kelas->id }}"
+            :lesson-data="{{ json_encode($service->lessons) }}"
+            :exam-data="{{ json_encode($service->exams) }}"
+            :user-data="{{ json_encode($service->users) }}"
+        ></kelas-index>
 
-            </ul>
-
-            <div class="tab-content">
-                @include('admin.classroom._ikhtisar')
-
-                @include('admin.classroom._pelajaran')
         
-                @include('admin.classroom._ujian')
-        
-                @include('admin.classroom._anggota')
-
-                @include('admin.classroom._setting')
-            </div>
-
-            <kelas-item-setting-modal></kelas-item-setting-modal>
-
-        </div>
-
     </div>
 @endsection
 

@@ -63,12 +63,16 @@ Route::name('admin.')->group(function () {
         Route::get('/', 'AdminController@index')->name('dashboard');
 
         // Lessons
+        // Sections
         Route::get('pelajaran/{pelajaran}/section/{section}/ujian/assign', 'SectionController@listUnassignedExam');
+        Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); 
 
-        Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); // Sections
+        // Lesson Setting
+        Route::get('pelajaran/{pelajaran}/setting', 'LessonController@showSetting'); 
         Route::resource('pelajaran', 'LessonController');
     
         // Exams
+        Route::get('ujian/{ujian}/setting', 'ExamController@showSetting');
         Route::resource('ujian', 'ExamController');
     
         // Questions
