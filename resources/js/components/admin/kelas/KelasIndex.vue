@@ -127,10 +127,12 @@
         ></kelas-assign-modal>
 
         <kelas-item-setting-modal
+            ref="examSettingModal"
             item="pelajaran"
         ></kelas-item-setting-modal>
 
         <kelas-item-setting-modal
+            ref="lessonSettingModal"
             item="ujian"
         ></kelas-item-setting-modal>
     </div>
@@ -156,11 +158,9 @@ export default {
                 user: 0
             },
 
-            examSettingModal: null,
             examSettingModalTitle: null,
             examId: null,
 
-            lessonSettingModal: null,
             lessonSettingModalTitle: null,
             lessonId: null,
         }

@@ -2901,6 +2901,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-index',
   props: {
@@ -2917,10 +2919,8 @@ __webpack_require__.r(__webpack_exports__);
         exam: 0,
         user: 0
       },
-      examSettingModal: null,
       examSettingModalTitle: null,
       examId: null,
-      lessonSettingModal: null,
       lessonSettingModalTitle: null,
       lessonId: null
     };
@@ -42825,9 +42825,15 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("kelas-item-setting-modal", { attrs: { item: "pelajaran" } }),
+      _c("kelas-item-setting-modal", {
+        ref: "examSettingModal",
+        attrs: { item: "pelajaran" }
+      }),
       _vm._v(" "),
-      _c("kelas-item-setting-modal", { attrs: { item: "ujian" } })
+      _c("kelas-item-setting-modal", {
+        ref: "lessonSettingModal",
+        attrs: { item: "ujian" }
+      })
     ],
     1
   )
