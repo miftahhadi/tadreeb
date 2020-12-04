@@ -30,6 +30,7 @@
             :lesson-data="{{ json_encode($service->lessons) }}"
             :exam-data="{{ json_encode($service->exams) }}"
             :user-data="{{ json_encode($service->users) }}"
+            tz-name="{{ settings('tzName') }}"
         ></kelas-index>
 
         

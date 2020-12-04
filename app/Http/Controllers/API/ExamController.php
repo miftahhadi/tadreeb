@@ -6,7 +6,9 @@ use App\Models\Answer;
 use App\Models\ClassExamUser;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
+use App\Models\ClassroomExam;
 use App\Models\Question;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
@@ -89,5 +91,49 @@ class ExamController extends Controller
         $classExamUser->waktu_selesai = now('UTC');
 
         return $classExamUser->save();
+    }
+
+    public function getSetting($exam, Request $request)
+    {
+        $classexam = ClassroomExam::where([
+                        ['classroom_id', $request->input('kelas')],
+                        ['exam_id', $exam]
+                    ])->first();
+
+        if (!$classexam) {
+            return 0;
+        } 
+
+        $setting = [
+            'tampil' => $classexam->tampil,
+            'bukaAkses'=>  $classexam->buka,
+            'bukaHasil' => $classexam->buka_hasil,
+            'durasi' => $classexam->durasi,
+            'attempt' => $classexam->attempt,
+        ];
+
+        $setting['autoTampil'] = $this->setWaktu($classexam, 'tampil_otomatis');
+        $setting['autoBukaAkses'] = $this->setWaktu($classexam, 'buka_otomatis');
+        $setting['batasBuka'] = $this->setWaktu($classexam, 'batas_buka');
+
+        return $setting;
+
+    }
+
+    public function setWaktu($classexam, $classexamProp)
+    {
+        if ($classexam->$classexamProp instanceof Carbon) {
+            $dt = $classexam->$classexamProp->tz(settings('timezone'));
+
+            return [
+                'tanggal' => $dt->format('Y-m-d'),
+                'waktu' => $dt->format('H:i')
+            ];
+        } else {
+            return [
+                'tanggal' => null,
+                'waktu' => '00:00'
+            ];
+        }
     }
 }

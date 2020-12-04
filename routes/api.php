@@ -61,8 +61,8 @@ Route::group([
     Route::post('user/assign', 'ClassroomController@assignUser');
 });
 
-Route::group(['namespace' => 'auth:api', 'namespace' => 'API'], function() {
-    // Exam page
+Route::group(['middleware' => 'auth:api', 'namespace' => 'API'], function() {
+    // Exam 
     Route::get('ujian/{exam:id}', 'ExamController@getExam');
     Route::get('soal/{soal}', 'ExamController@getQuestion');
     Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
@@ -70,5 +70,8 @@ Route::group(['namespace' => 'auth:api', 'namespace' => 'API'], function() {
     Route::post('submit-ujian', 'ExamController@submitExam');
 
     Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
+
+    // Setting
+    Route::get('ujian/{exam:id}/setting', 'ExamController@getSetting');
 });
 

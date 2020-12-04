@@ -10,6 +10,7 @@
                     data-toggle="modal" 
                     :data-target="'#setting' + itemType + 'Modal'"
                     :data-item-id="itemId"
+                    @click="openSetting(itemId)"
                 >
                     Pengaturan
                 </button>
@@ -100,6 +101,10 @@ export default {
     methods: {
         deleteItem() {
             this.$emit('delete:item', this.itemId);
+        },
+
+        openSetting(itemId) {
+            this.$parent.$parent.$emit('show:setting', itemId)
         }
     }
 }

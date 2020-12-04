@@ -1937,6 +1937,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'modal',
   props: {
@@ -1949,11 +1956,18 @@ __webpack_require__.r(__webpack_exports__);
       "default": function _default() {
         return [];
       }
+    },
+    loading: {
+      type: Boolean,
+      "default": false
     }
   },
   computed: {
     modalClass: function modalClass() {
       return this.classes.join(' ');
+    },
+    isLoading: function isLoading() {
+      return this.loading ? 'active' : '';
     }
   }
 });
@@ -2182,6 +2196,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-action',
   props: {
@@ -2219,6 +2234,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     deleteItem: function deleteItem() {
       this.$emit('delete:item', this.itemId);
+    },
+    openSetting: function openSetting(itemId) {
+      this.$parent.$parent.$emit('show:setting', itemId);
     }
   }
 });
@@ -2763,6 +2781,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! luxon */ "./node_modules/luxon/build/cjs-browser/luxon.js");
+/* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2903,6 +2923,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-index',
   props: {
@@ -2910,25 +2936,44 @@ __webpack_require__.r(__webpack_exports__);
     kelasId: Number,
     lessonData: Object,
     examData: Object,
-    userData: Object
+    userData: Object,
+    tzName: String
   },
   data: function data() {
     return {
       key: {
         lesson: 0,
         exam: 0,
-        user: 0
+        user: 0,
+        examSetting: 0,
+        lessonSetting: 0
       },
-      examSettingModalTitle: null,
       examId: null,
-      lessonSettingModalTitle: null,
-      lessonId: null
+      lessonId: null,
+      loadingSetting: false,
+      DateTime: null
     };
   },
   mounted: function mounted() {
-    console.log(this.$children);
+    this.DateTime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"];
   },
-  methods: {}
+  methods: {
+    showExamSetting: function showExamSetting(id) {
+      var _this = this;
+
+      this.examId = id;
+      this.loadingSetting = true, axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelasId).then(function (response) {
+        if (response.data != 0) {
+          _this.$refs.examSettingModal.input = response.data;
+        }
+
+        _this.loadingSetting = false;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    processSettingData: function processSettingData(data) {}
+  }
 });
 
 /***/ }),
@@ -3156,15 +3201,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-item-setting-modal',
   props: {
-    item: String
+    item: String,
+    loading: Boolean,
+    timezone: String
   },
   data: function data() {
+    var _this$timezone;
+
     return {
-      title: null
+      input: {
+        tampil: 0,
+        bukaAkses: 0,
+        bukaHasil: 0,
+        autoTampil: {
+          tanggal: null,
+          waktu: '00:00'
+        },
+        autoBukaAkses: {
+          tanggal: null,
+          waktu: '00:00'
+        },
+        batasBuka: {
+          tanggal: null,
+          waktu: '00:00'
+        },
+        durasi: 0,
+        attempt: 0
+      },
+      tzName: (_this$timezone = this.timezone) !== null && _this$timezone !== void 0 ? _this$timezone : 'WIB'
     };
+  },
+  methods: {},
+  computed: {
+    title: function title() {
+      return this.item.charAt(0).toUpperCase() + this.item.slice(1);
+    }
   }
 });
 
@@ -41598,38 +41681,49 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "modal-content" }, [
-            _c("div", { staticClass: "modal-header" }, [
-              _c("h5", { staticClass: "modal-title" }, [_vm._t("title")], 2),
+            _c("div", { staticClass: "dimmer", class: _vm.isLoading }, [
+              _c("div", { staticClass: "loader" }),
               _vm._v(" "),
-              _c("button", {
-                staticClass: "btn-close",
-                attrs: {
-                  type: "button",
-                  "data-dismiss": "modal",
-                  "aria-label": "Close"
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "modal-body" }, [_vm._t("body")], 2),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "modal-footer" },
-              [
-                _vm._t("footer", [
+              _c("div", { staticClass: "dimmer-content" }, [
+                _c("div", { staticClass: "modal-header" }, [
                   _c(
-                    "button",
-                    {
-                      staticClass: "btn mr-auto",
-                      attrs: { type: "button", "data-bs-dismiss": "modal" }
-                    },
-                    [_vm._v("Close")]
-                  )
-                ])
-              ],
-              2
-            )
+                    "h5",
+                    { staticClass: "modal-title" },
+                    [_vm._t("title")],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c("button", {
+                    staticClass: "btn-close",
+                    attrs: {
+                      type: "button",
+                      "data-dismiss": "modal",
+                      "aria-label": "Close"
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [_vm._t("body")], 2),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "modal-footer" },
+                  [
+                    _vm._t("footer", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn mr-auto",
+                          attrs: { type: "button", "data-bs-dismiss": "modal" }
+                        },
+                        [_vm._v("Close")]
+                      )
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ])
           ])
         ]
       )
@@ -41847,6 +41941,11 @@ var render = function() {
                         "data-toggle": "modal",
                         "data-target": "#setting" + _vm.itemType + "Modal",
                         "data-item-id": _vm.itemId
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.openSetting(_vm.itemId)
+                        }
                       }
                     },
                     [_vm._v("\n                Pengaturan\n            ")]
@@ -42722,6 +42821,11 @@ var render = function() {
                   "item-properties": _vm.examData.props,
                   assignPage: true,
                   "kelas-id": _vm.kelasId
+                },
+                on: {
+                  "show:setting": function($event) {
+                    return _vm.showExamSetting($event)
+                  }
                 }
               })
             ],
@@ -42827,12 +42931,20 @@ var render = function() {
       _vm._v(" "),
       _c("kelas-item-setting-modal", {
         ref: "examSettingModal",
-        attrs: { item: "pelajaran" }
+        attrs: {
+          item: "ujian",
+          loading: _vm.loadingSetting,
+          timezone: _vm.tzName
+        }
       }),
       _vm._v(" "),
       _c("kelas-item-setting-modal", {
         ref: "lessonSettingModal",
-        attrs: { item: "ujian" }
+        attrs: {
+          item: "pelajaran",
+          loading: _vm.loadingSetting,
+          timezone: _vm.tzName
+        }
       })
     ],
     1
@@ -42944,13 +43056,15 @@ var render = function() {
     "div",
     [
       _c("modal", {
+        ref: "modal",
         attrs: {
           id: "setting" + _vm.item + "Modal",
-          classes: ["modal-lg", "modal-dialog-centered"]
+          classes: ["modal-lg", "modal-dialog-centered"],
+          loading: _vm.loading
         },
         scopedSlots: _vm._u([
           {
-            key: "header",
+            key: "title",
             fn: function() {
               return [_vm._v("Pengaturan " + _vm._s(_vm.title))]
             },
@@ -42964,7 +43078,7 @@ var render = function() {
                   _c(
                     "label",
                     { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Tampilkan ujian?")]
+                    [_vm._v("Tampilkan " + _vm._s(_vm.item) + "?")]
                   ),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
@@ -42974,8 +43088,28 @@ var render = function() {
                         { staticClass: "form-check form-check-inline" },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.input.tampil,
+                                expression: "input.tampil"
+                              }
+                            ],
                             staticClass: "form-check-input",
-                            attrs: { type: "radio", name: "tampil", value: "1" }
+                            attrs: {
+                              type: "radio",
+                              name: "tampil",
+                              value: "1"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.input.tampil, "1")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.input, "tampil", "1")
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "form-check-label" }, [
@@ -42989,8 +43123,28 @@ var render = function() {
                         { staticClass: "form-check form-check-inline" },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.input.tampil,
+                                expression: "input.tampil"
+                              }
+                            ],
                             staticClass: "form-check-input",
-                            attrs: { type: "radio", name: "tampil", value: "0" }
+                            attrs: {
+                              type: "radio",
+                              name: "tampil",
+                              value: "0"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.input.tampil, "0")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.input, "tampil", "0")
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "form-check-label" }, [
@@ -43016,8 +43170,24 @@ var render = function() {
                         { staticClass: "form-check form-check-inline" },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.input.bukaAkses,
+                                expression: "input.bukaAkses"
+                              }
+                            ],
                             staticClass: "form-check-input",
-                            attrs: { type: "radio", name: "buka", value: "1" }
+                            attrs: { type: "radio", name: "buka", value: "1" },
+                            domProps: {
+                              checked: _vm._q(_vm.input.bukaAkses, "1")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.input, "bukaAkses", "1")
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "form-check-label" }, [
@@ -43031,8 +43201,24 @@ var render = function() {
                         { staticClass: "form-check form-check-inline" },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.input.bukaAkses,
+                                expression: "input.bukaAkses"
+                              }
+                            ],
                             staticClass: "form-check-input",
-                            attrs: { type: "radio", name: "buka", value: "0" }
+                            attrs: { type: "radio", name: "buka", value: "0" },
+                            domProps: {
+                              checked: _vm._q(_vm.input.bukaAkses, "0")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.input, "bukaAkses", "0")
+                              }
+                            }
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "form-check-label" }, [
@@ -43058,11 +43244,27 @@ var render = function() {
                         { staticClass: "form-check form-check-inline" },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.input.bukaHasil,
+                                expression: "input.bukaHasil"
+                              }
+                            ],
                             staticClass: "form-check-input",
                             attrs: {
                               type: "radio",
                               name: "buka_hasil",
                               value: "1"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.input.bukaHasil, "1")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.input, "bukaHasil", "1")
+                              }
                             }
                           }),
                           _vm._v(" "),
@@ -43077,11 +43279,27 @@ var render = function() {
                         { staticClass: "form-check form-check-inline" },
                         [
                           _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.input.bukaHasil,
+                                expression: "input.bukaHasil"
+                              }
+                            ],
                             staticClass: "form-check-input",
                             attrs: {
                               type: "radio",
                               name: "buka_hasil",
                               value: "0"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.input.bukaHasil, "0")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.input, "bukaHasil", "0")
+                              }
                             }
                           }),
                           _vm._v(" "),
@@ -43098,29 +43316,75 @@ var render = function() {
                   _c(
                     "label",
                     { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Otomatis tampilkan pada")]
+                    [
+                      _vm._v(
+                        "Otomatis tampilkan pada (" + _vm._s(_vm.tzName) + ")"
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-auto" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.autoTampil.tanggal,
+                              expression: "input.autoTampil.tanggal"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "date",
                             name: "tampil_otomatis[tanggal]",
                             value: ""
+                          },
+                          domProps: { value: _vm.input.autoTampil.tanggal },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input.autoTampil,
+                                "tanggal",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-auto" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.autoTampil.waktu,
+                              expression: "input.autoTampil.waktu"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "time",
                             name: "tampil_otomatis[waktu]",
                             value: ""
+                          },
+                          domProps: { value: _vm.input.autoTampil.waktu },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input.autoTampil,
+                                "waktu",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ])
@@ -43132,29 +43396,75 @@ var render = function() {
                   _c(
                     "label",
                     { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Otomatis buka akses pada")]
+                    [
+                      _vm._v(
+                        "Otomatis buka akses pada (" + _vm._s(_vm.tzName) + ")"
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-auto" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.autoBukaAkses.tanggal,
+                              expression: "input.autoBukaAkses.tanggal"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "date",
                             name: "buka_otomatis[tanggal]",
                             value: ""
+                          },
+                          domProps: { value: _vm.input.autoBukaAkses.tanggal },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input.autoBukaAkses,
+                                "tanggal",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-auto" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.autoBukaAkses.waktu,
+                              expression: "input.autoBukaAkses.waktu"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "time",
                             name: "buka_otomatis[waktu]",
                             value: ""
+                          },
+                          domProps: { value: _vm.input.autoBukaAkses.waktu },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input.autoBukaAkses,
+                                "waktu",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ])
@@ -43166,29 +43476,75 @@ var render = function() {
                   _c(
                     "label",
                     { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Otomatis tutup akses pada")]
+                    [
+                      _vm._v(
+                        "Otomatis tutup akses pada (" + _vm._s(_vm.tzName) + ")"
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-auto" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.batasBuka.tanggal,
+                              expression: "input.batasBuka.tanggal"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "date",
                             name: "batas_buka[tanggal]",
                             value: ""
+                          },
+                          domProps: { value: _vm.input.batasBuka.tanggal },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input.batasBuka,
+                                "tanggal",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-auto" }, [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.input.batasBuka.waktu,
+                              expression: "input.batasBuka.waktu"
+                            }
+                          ],
                           staticClass: "form-control",
                           attrs: {
                             type: "time",
                             name: "batas_buka[waktu]",
                             value: ""
+                          },
+                          domProps: { value: _vm.input.batasBuka.waktu },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.input.batasBuka,
+                                "waktu",
+                                $event.target.value
+                              )
+                            }
                           }
                         })
                       ])
@@ -43197,31 +43553,73 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Durasi")]
-                  ),
+                  _c("div", { staticClass: "col-5" }, [
+                    _c("label", { staticClass: "form-label col-form-label" }, [
+                      _vm._v("Durasi")
+                    ]),
+                    _vm._v(" "),
+                    _c("small", { staticClass: "form-hint" }, [
+                      _vm._v("Isi dengan 0 jika tidak ingin memberi durasi")
+                    ])
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-auto" }, [
                     _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.input.durasi,
+                          expression: "input.durasi"
+                        }
+                      ],
                       staticClass: "form-control",
-                      attrs: { type: "number", name: "durasi", value: "" }
+                      attrs: { type: "number", name: "durasi", value: "" },
+                      domProps: { value: _vm.input.durasi },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.input, "durasi", $event.target.value)
+                        }
+                      }
                     })
                   ])
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Kesempatan mencoba")]
-                  ),
+                  _c("div", { staticClass: "col-5" }, [
+                    _c("label", { staticClass: "form-label col-form-label" }, [
+                      _vm._v("Kesempatan mencoba")
+                    ]),
+                    _vm._v(" "),
+                    _c("small", { staticClass: "form-hint" }, [
+                      _vm._v("Isi dengan 0 jika boleh dikerjakan tanpa batas")
+                    ])
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-auto" }, [
                     _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.input.attempt,
+                          expression: "input.attempt"
+                        }
+                      ],
                       staticClass: "form-control",
-                      attrs: { type: "number", name: "attempt", value: "" }
+                      attrs: { type: "number", name: "attempt", value: "" },
+                      domProps: { value: _vm.input.attempt },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.input, "attempt", $event.target.value)
+                        }
+                      }
                     })
                   ])
                 ])
@@ -58143,9 +58541,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\tabler\tabler.scss */"./resources/sass/tabler/tabler.scss");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\custom.scss */"./resources/sass/custom.scss");
+__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/tabler/tabler.scss */"./resources/sass/tabler/tabler.scss");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/custom.scss */"./resources/sass/custom.scss");
 
 
 /***/ })

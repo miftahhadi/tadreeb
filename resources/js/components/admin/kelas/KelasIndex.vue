@@ -56,6 +56,7 @@
                     :assignPage="true"
                     :kelas-id="kelasId"
                     :key="key.exam"
+                    @show:setting="showExamSetting($event)"
                 ></item-index>
 
             </tab-details>
@@ -128,17 +129,23 @@
 
         <kelas-item-setting-modal
             ref="examSettingModal"
-            item="pelajaran"
+            item="ujian"
+            :loading="loadingSetting"
+            :timezone="tzName"
         ></kelas-item-setting-modal>
 
         <kelas-item-setting-modal
             ref="lessonSettingModal"
-            item="ujian"
+            item="pelajaran"
+            :loading="loadingSetting"
+            :timezone="tzName"
         ></kelas-item-setting-modal>
     </div>
 </template>
 
 <script>
+import { DateTime } from "luxon";
+
 export default {
     name: 'kelas-index',
     
@@ -147,7 +154,8 @@ export default {
         kelasId: Number,
         lessonData: Object,
         examData: Object,
-        userData: Object
+        userData: Object,
+        tzName: String
     },
 
     data() {
@@ -155,23 +163,46 @@ export default {
             key: {
                 lesson: 0,
                 exam: 0,
-                user: 0
+                user: 0,
+                examSetting: 0,
+                lessonSetting: 0,
             },
 
-            examSettingModalTitle: null,
             examId: null,
-
-            lessonSettingModalTitle: null,
             lessonId: null,
+
+            loadingSetting: false,
+
+            DateTime: null,
         }
     },
 
     mounted() {
-        console.log(this.$children)
+        this.DateTime = DateTime;
     },
 
     methods: {
+        showExamSetting(id) {
+            this.examId = id
+            this.loadingSetting = true,
 
+            axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelasId)
+                    .then(response => {
+                        if (response.data != 0) {
+                            this.$refs.examSettingModal.input = response.data
+                        }
+                        this.loadingSetting = false
+                    }).catch(error => {
+                        console.log(error)
+                    })
+
+        },
+
+        processSettingData(data) {
+           
+
+            
+        }
     }
 }
 </script>
