@@ -125,8 +125,4 @@ class ExamController extends Controller
         return redirect(route('admin.ujian.index'));
     }
 
-    public function showSetting()
-    {
-        
-    }
 }

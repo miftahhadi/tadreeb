@@ -1,6 +1,6 @@
 <template>
     <div>
-        <modal :id="'setting' + item + 'Modal'"
+        <modal :id="id"
             :classes="['modal-lg', 'modal-dialog-centered']"
             :loading="loading"
             ref="modal"
@@ -128,24 +128,50 @@
             </template>
 
             <template #footer>
-                <input type="submit" value="Simpan" class="btn btn-success">
+                <!-- <p v-if="done" class="text-success">
+                    Pengaturan berhasil disimpan
+                </p>
+
+                <p v-else-if="error" class="text-success">
+                    Terjadi kesalahan
+                </p> -->
+
+                <button class="btn btn-success"
+                        @click="save"
+                > 
+                    <!-- <span v-if="saving"
+                            class="spinner-border spinner-border-sm mr-2" 
+                            role="status"
+                    ></span>
+
+                    <span v-if="done">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                    </span> -->
+                    Simpan
+                </button>
             </template>
         </modal>
     </div>
 </template>
 
 <script>
+// import "bootstrap";
+
 export default {
     name: 'kelas-item-setting-modal',
 
     props: {
         item: String,
         loading: Boolean,
+        saving: Boolean,
+        done: Boolean,
+        error: Boolean,
         timezone: String,
     },
 
     data() {
         return {
+            id: 'setting' + this.item + 'Modal',
             input: {
                 tampil: 0,
                 bukaAkses: 0,
@@ -166,19 +192,29 @@ export default {
                 attempt: 0,
             },
 
-            tzName: (this.timezone) ?? 'WIB'
+            tzName: (this.timezone) ?? 'WIB',
+
+            modal: null,
 
         }
     },
 
     methods: {
-
+        save() {
+            return this.$emit('save:setting', this.input);
+        }
     },
 
     computed: {
         title() {
             return this.item.charAt(0).toUpperCase() + this.item.slice(1);
         }
+    },
+
+    mounted() {
+        /* this.modal = new bootstrap.Modal(document.getElementById(this.id), {
+            keyboard: false,
+        }); */
     }
 }
 </script>

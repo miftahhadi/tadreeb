@@ -132,6 +132,7 @@
             item="ujian"
             :loading="loadingSetting"
             :timezone="tzName"
+            @save:setting="saveExamSetting"
         ></kelas-item-setting-modal>
 
         <kelas-item-setting-modal
@@ -145,6 +146,7 @@
 
 <script>
 import { DateTime } from "luxon";
+import swal from "sweetalert";
 
 export default {
     name: 'kelas-index',
@@ -164,16 +166,12 @@ export default {
                 lesson: 0,
                 exam: 0,
                 user: 0,
-                examSetting: 0,
-                lessonSetting: 0,
             },
 
             examId: null,
             lessonId: null,
 
             loadingSetting: false,
-
-            DateTime: null,
         }
     },
 
@@ -198,11 +196,20 @@ export default {
 
         },
 
-        processSettingData(data) {
-           
-
-            
-        }
+        saveExamSetting(data) {
+            axios.post('/api/ujian/setting', {
+                examId: this.examId,
+                kelasId: this.kelasId,
+                setting: data
+            }).then(response => {
+                swal({
+                    title: "Pengaturan berhasil disimpan",
+                    icon: "success",
+                });
+            }).catch(error => {
+                console.log(error)
+            })
+        } 
     }
 }
 </script>

@@ -1,7 +1,9 @@
 <template>
     <div class="modal fade" 
         :id="id " 
-        tabindex="-1" :aria-labelledby="id + 'Label'" aria-hidden="true">
+        tabindex="-1" :aria-labelledby="id + 'Label'" aria-hidden="true"
+        :data-backdrop="backdrop"
+    >
         <div class="modal-dialog" :class="modalClass" role="document">
             <div class="modal-content">
                 <div class="dimmer" :class="isLoading">
@@ -49,6 +51,10 @@ export default {
         },
         loading: {
             type: Boolean,
+            default: false
+        },
+        backdrop: {
+            type: [String, Boolean],
             default: false
         }
     },

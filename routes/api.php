@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'API'], function() {
     Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
 
     // Setting
-    Route::get('ujian/{exam:id}/setting', 'ExamController@getSetting');
+    Route::get('ujian/{exam:id}/setting', 'SettingController@getExamSetting');
+    Route::post('ujian/setting', 'SettingController@saveExamSetting');
 });
 

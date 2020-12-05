@@ -120,8 +120,4 @@ class LessonController extends Controller
         $this->lessonService->destroy($pelajaran);
     }
 
-    public function showSetting()
-    {
-        
-    }
 }

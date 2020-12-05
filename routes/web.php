@@ -67,12 +67,8 @@ Route::name('admin.')->group(function () {
         Route::get('pelajaran/{pelajaran}/section/{section}/ujian/assign', 'SectionController@listUnassignedExam');
         Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); 
 
-        // Lesson Setting
-        Route::get('pelajaran/{pelajaran}/setting', 'LessonController@showSetting'); 
         Route::resource('pelajaran', 'LessonController');
-    
-        // Exams
-        Route::get('ujian/{ujian}/setting', 'ExamController@showSetting');
+
         Route::resource('ujian', 'ExamController');
     
         // Questions
