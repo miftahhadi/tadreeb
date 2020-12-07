@@ -13,13 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@entry');
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 // Front area
 Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
@@ -57,7 +53,7 @@ Route::name('admin.')->group(function () {
     Route::group([
         'prefix' => 'admin',
         'namespace' => 'Admin',
-        'middleware' => 'auth',
+        'middleware' => ['auth', 'permission:access admin'],
     ], function () {
         //Dashboard
         Route::get('/', 'AdminController@index')->name('dashboard');

@@ -52,7 +52,9 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin.user.create');
+        return view('admin.user.create', [
+            'title' => 'Tambah User Baru'
+        ]);
     }
 
     public function getCsv()

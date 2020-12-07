@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $arrayOfAdminPermissions = ['create group','edit group','update group','delete group',
             'edit classroom','update classroom',
             'create user','edit user','update user','delete user','assign user to classroom','assign user to exam',
+            'access admin'
         ];
 
         $arrayOfSuperadminPermissions = ['read setting','update setting'];
