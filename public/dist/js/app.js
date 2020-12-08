@@ -3908,6 +3908,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
@@ -4072,8 +4086,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.submitting ? 'active' : '';
     },
     hasilUrl: function hasilUrl() {
-      var currentUrl = window.location.pathname;
-      return currentUrl.replace('/kerjakan', '/hasil/' + this.attempt);
+      return '/k/' + this.kelas + '/u/' + this.exam.slug + '/hasil?attempt=' + this.attempt;
     }
   }
 });
@@ -44576,7 +44589,35 @@ var render = function() {
                   }
                 },
                 [
-                  _c("i", { staticClass: "fas fa-chevron-circle-left" }),
+                  _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "icon",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          width: "24",
+                          height: "24",
+                          viewBox: "0 0 24 24",
+                          "stroke-width": "2",
+                          stroke: "currentColor",
+                          fill: "none",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            stroke: "none",
+                            d: "M0 0h24v24H0z",
+                            fill: "none"
+                          }
+                        }),
+                        _c("polyline", { attrs: { points: "15 6 9 12 15 18" } })
+                      ]
+                    )
+                  ]),
                   _vm._v(" "),
                   _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
                 ]
@@ -44593,7 +44634,48 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("Jawab")]
+                [
+                  _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "icon",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          width: "24",
+                          height: "24",
+                          viewBox: "0 0 24 24",
+                          "stroke-width": "2",
+                          stroke: "currentColor",
+                          fill: "none",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            stroke: "none",
+                            d: "M0 0h24v24H0z",
+                            fill: "none"
+                          }
+                        }),
+                        _c("polyline", {
+                          attrs: { points: "9 11 12 14 20 6" }
+                        }),
+                        _c("path", {
+                          attrs: {
+                            d:
+                              "M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"
+                          }
+                        })
+                      ]
+                    )
+                  ]),
+                  _vm._v(
+                    "\n                        Jawab\n                    "
+                  )
+                ]
               ),
               _vm._v(" "),
               _c(
@@ -44610,7 +44692,35 @@ var render = function() {
                 [
                   _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
                   _vm._v(" "),
-                  _c("i", { staticClass: "fas fa-chevron-circle-right" })
+                  _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "icon",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          width: "24",
+                          height: "24",
+                          viewBox: "0 0 24 24",
+                          "stroke-width": "2",
+                          stroke: "currentColor",
+                          fill: "none",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            stroke: "none",
+                            d: "M0 0h24v24H0z",
+                            fill: "none"
+                          }
+                        }),
+                        _c("polyline", { attrs: { points: "9 6 15 12 9 18" } })
+                      ]
+                    )
+                  ])
                 ]
               )
             ])
@@ -44621,7 +44731,7 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-4" }, [
-      _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card row" }, [
         _vm._m(1),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
@@ -44645,18 +44755,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-success btn-block",
-          attrs: {
-            type: "button",
-            "data-toggle": "modal",
-            "data-target": "#submitModal"
-          }
-        },
-        [_vm._v("\n            Selesai\n        ")]
-      )
+      _vm._m(2)
     ]),
     _vm._v(" "),
     _c(
@@ -44689,7 +44788,7 @@ var render = function() {
                   [
                     _vm.submitted
                       ? [
-                          _vm._m(2),
+                          _vm._m(3),
                           _vm._v(" "),
                           _c("div", { staticClass: "modal-footer" }, [
                             _c(
@@ -44713,7 +44812,7 @@ var render = function() {
                         ]
                       : _vm.expired
                       ? [
-                          _vm._m(3),
+                          _vm._m(4),
                           _vm._v(" "),
                           _c(
                             "div",
@@ -44744,7 +44843,7 @@ var render = function() {
                           )
                         ]
                       : [
-                          _vm._m(4),
+                          _vm._m(5),
                           _vm._v(" "),
                           _c("div", { staticClass: "modal-footer" }, [
                             _c(
@@ -44803,10 +44902,30 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex justify-content-center" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success btn-block mt-2",
+          attrs: {
+            type: "button",
+            "data-toggle": "modal",
+            "data-target": "#submitModal"
+          }
+        },
+        [_vm._v("\n                Selesai\n            ")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-body text-center" }, [
-      _c("span", { staticClass: "avatar avatar-xl bg-success text-white" }, [
-        _c("i", { staticClass: "fas fa-check" })
-      ]),
+      _c("span", {
+        staticClass: "avatar rounded-circle avatar-xl bg-success text-white",
+        staticStyle: { "background-image": "url('/static/check.svg')" }
+      }),
       _vm._v(" "),
       _c("h2", { staticClass: "mt-4" }, [
         _vm._v("Selamat! Anda selesai mengerjakan ujian")
@@ -58611,9 +58730,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\tabler\tabler.scss */"./resources/sass/tabler/tabler.scss");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\custom.scss */"./resources/sass/custom.scss");
+__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/tabler/tabler.scss */"./resources/sass/tabler/tabler.scss");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/custom.scss */"./resources/sass/custom.scss");
 
 
 /***/ })

@@ -22,18 +22,17 @@
 
                     @include('front.kelas._kelas-info')
 
-                    <ul class="nav nav-tabs justify-content-center bg-white rounded-lg">
+                    <ul class="nav nav-tabs justify-content-center bg-white rounded-lg mt-2">
                         @foreach ($service->nav as $nav)
                             <li class="nav-item">
                                 <a href="{{ route($nav['route'], $kelas->kode) }}" 
                                     class="nav-link @if(Route::currentRouteName() == $nav['route']) active @endif" 
-                                    data-toggle="tab"
                                 >{{ $nav['judul'] }}</a>
                             </li>                            
                         @endforeach
                     </ul>
 
-                    <div class="mt-4">
+                    <div class="mt-3">
 
                         @yield('content')
 

@@ -57,21 +57,30 @@
                                 :class="isPrevDisabled"
                                 @click="getQuestion(prevQuestion)"
                         >
-                            <i class="fas fa-chevron-circle-left"></i>
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
+                            </span>
                             <span class="ml-1">Sebelumnya</span>
                         </button>
 
                         <button class="btn btn-success"
                                 :class="[chosen, savingAnswer]"
                                 @click="updateAnswer(questionId)"
-                        >Jawab</button>
+                        >
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 11 12 14 20 6" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
+                            </span>
+                            Jawab
+                        </button>
                         
                         <button class="btn btn-white" 
                                 :class="isNextDisabled"
                                 @click="getQuestion(nextQuestion)"
                         >
                             <span class="mr-1">Lewati</span>
-                            <i class="fas fa-chevron-circle-right"></i>
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+                            </span>
                         </button>
                     </div>
                     
@@ -81,7 +90,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card">
+            <div class="card row">
                 <div class="card-header">
                     <h3 class="card-title">Direktori Soal</h3>
                 </div>
@@ -102,14 +111,16 @@
                 </div>
 
             </div>
-
-            <button type="button" 
-                    class="btn btn-success btn-block" 
-                    data-toggle="modal" 
-                    data-target="#submitModal"  
-            >
-                Selesai
-            </button>
+            
+            <div class="d-flex justify-content-center">
+                <button type="button" 
+                        class="btn btn-success btn-block mt-2" 
+                        data-toggle="modal" 
+                        data-target="#submitModal"  
+                >
+                    Selesai
+                </button>
+            </div>
 
         </div>
 
@@ -124,7 +135,10 @@
                             
                             <template v-if="submitted">
                                 <div class="modal-body text-center">
-                                    <span class="avatar avatar-xl bg-success text-white"><i class="fas fa-check"></i></span>
+                                    <span class="avatar rounded-circle avatar-xl bg-success text-white"
+                                            style="background-image: url('/static/check.svg')"        
+                                    >
+                                    </span>
 
                                     <h2 class="mt-4">Selamat! Anda selesai mengerjakan ujian</h2>
 
@@ -379,9 +393,7 @@ export default {
         },
 
         hasilUrl() {
-            const currentUrl = window.location.pathname;
-
-            return currentUrl.replace('/kerjakan', '/hasil/' + this.attempt);
+            return '/k/' + this.kelas + '/u/' + this.exam.slug + '/hasil?attempt=' + this.attempt;
         }
 
     },

@@ -7,7 +7,7 @@
 
             @include('front.ujian._top')
 
-            <div class="card">
+            <div class="card mt-2">
                 <div class="card-header">
                     <h2 class="card-title font-weight-bolder">Informasi Ujian</h2>
                 </div>
@@ -27,7 +27,7 @@
 
             </div>
 
-            <div class="alert alert-warning pb-0" role="alert">
+            <div class="alert alert-info pb-0 mt-2">
                 <ol>
                     <li>Awali segala hal baik dengan basmalah dan niat yang benar</li>
                     <li>Jelilah ketika membaca soal</li>
