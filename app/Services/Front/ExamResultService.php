@@ -5,7 +5,7 @@ namespace App\Services\Front;
 use App\Models\ClassExamUser;
 use App\Models\User;
 
-class ExamHistoryService 
+class ExamResultService 
 {
     protected $user; 
 
@@ -40,7 +40,7 @@ class ExamHistoryService
                     ['classroom_exam_id', $classexamid],
                     ['user_id', $this->user->id]
                 ])
-                ->orderBy('attempt', 'desc')
+                ->orderBy('attempt', 'asc')
                 ->get();
     }
 

@@ -10,7 +10,7 @@
                     <h2 class="page-title mb-2">Riwayat Pengerjaan</h2>
                     <span>Nama: {{ $nama }}</span>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mt-2">
                     <div class="card">
                         <div class="table-responsive">
                             <table class="table table-vcenter card-table">
@@ -34,9 +34,9 @@
                                             {{ $history->waktu_selesai }}
                                             </td>
                                             <td>{{ $history->attempt }}</td>
-                                            <td></td>
+                                            <td>{{ $history->score() }}</td>
                                             <td>
-                                            <a href="#">Lihat</a>
+                                            <a href="{{ '/k/' . $kelas->kode . '/u/' . $exam->slug . '/hasil?attempt=' . $history->attempt }}">Lihat</a>
                                             </td>
                                         </tr>
         

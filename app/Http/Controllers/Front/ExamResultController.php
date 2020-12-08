@@ -7,16 +7,16 @@ use App\Models\ClassroomExam;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Front\ExamHistoryService;
+use App\Services\Front\ExamResultService;
 use App\Models\User;
 
-class ExamHistoryController extends Controller
+class ExamResultController extends Controller
 {
     protected $service;
 
-    public function __construct(ExamHistoryService $examHistoryService)
+    public function __construct(ExamResultService $examResultService)
     {   
-        $this->service = $examHistoryService;
+        $this->service = $examResultService;
     }
 
     public function showHistory(Classroom $classroom, Exam $exam, Request $request)
