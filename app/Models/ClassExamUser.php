@@ -18,4 +18,15 @@ class ClassExamUser extends Pivot
     {
         return $this->belongsTo(User::class);
     }
+
+    public function score()
+    {
+        $answers = collect(json_decode($this->answers, true));
+
+        $score = $answers->map(function ($answer) {
+            return $answer['score'];
+        })->all();
+
+        return array_sum($score);
+    }
 }
