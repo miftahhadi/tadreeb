@@ -32,9 +32,9 @@ class ExamResultService
         return $this;
     }
 
-    public function getHistory($input = 0, int $classexamid)
+    public function getHistory($user = 0, int $classexamid) // $Input buat apa ya?
     {
-        $this->getUser($input);
+        $this->getUser($user);
 
         return ClassExamUser::where([
                     ['classroom_exam_id', $classexamid],

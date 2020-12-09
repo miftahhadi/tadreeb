@@ -10,7 +10,7 @@ class FrontController extends Controller
     public function index()
     {
         // $classrooms = auth()->user()->classrooms->
-        dd(auth()->user()->can('access admin'));
+
         return view('front.dashboard-user', [
             'title' => 'Halaman Depan'
         ]);

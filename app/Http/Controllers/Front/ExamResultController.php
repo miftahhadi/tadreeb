@@ -34,8 +34,10 @@ class ExamResultController extends Controller
         ]);
     }
 
-    public function showResult()
+    public function showResult(Classroom $classroom, Exam $exam, Request $request)
     {
-        
+        return view('front.ujian.result', [
+            'title' => 'Hasil - ' . $exam->judul . ' - ' . $classroom->nama
+        ]);
     }
 }
