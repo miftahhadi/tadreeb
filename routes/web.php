@@ -65,14 +65,15 @@ Route::name('admin.')->group(function () {
         Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); 
 
         Route::resource('pelajaran', 'LessonController');
-
-        Route::resource('ujian', 'ExamController');
-    
+        
         // Questions
-        Route::get('ujian/{ujian}/hasil', 'QuestionController@showResult')->name('ujian.hasil');
         Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
         Route::resource('ujian.soal', 'QuestionController')->except('index');
-    
+
+        // Exam
+        Route::get('ujian/{ujian}/hasil', 'ExamController@showResult')->name('ujian.hasil');
+        Route::resource('ujian', 'ExamController');
+        
         // Classrooms
         // Kalau pakai resource, entah kenapa parameternya jadi {kela}
         Route::name('grup.kelas.')->group(function() {

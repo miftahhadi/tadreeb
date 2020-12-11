@@ -58,4 +58,12 @@ class ExamService
         return $exam->delete();
     }
 
+    public function getResult(Exam $ujian, $kelasId = null)
+    {   
+        if (is_null($kelasId)) {
+            return $ujian->classrooms;
+
+        }
+    }
+
 }

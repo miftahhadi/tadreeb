@@ -67,4 +67,9 @@ class User extends Authenticatable
                     ]);
     }
 
+    public function classExamUsers()
+    {
+        return $this->hasMany(ClassExamUser::class);
+    }
+
 }

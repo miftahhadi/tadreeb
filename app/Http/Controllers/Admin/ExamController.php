@@ -8,17 +8,18 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\UpdateExamRequest;
 use App\Services\Admin\ExamService;
 use App\Http\Requests\Admin\StoreExamRequest;
+use App\Models\ClassroomExam;
 use App\Models\Exam;
 
 
 class ExamController extends Controller
 {
 
-    protected $examService;
+    protected $service;
 
     public function __construct(ExamService $examService)
     {
-        $this->examService = $examService;
+        $this->service = $examService;
     }
 
     /**
@@ -50,7 +51,7 @@ class ExamController extends Controller
         return response()->json(Exam::where('judul', 'like', '%' . $search . '%')
                                         ->orWhere('deskripsi', 'like', '%' .  $search . '%')
                                         ->paginate(10)
-                );
+                                );
     }
 
 
@@ -62,7 +63,7 @@ class ExamController extends Controller
      */
     public function store(StoreExamRequest $request)
     {
-        $exam = $this->examService->createExam($request->validated());
+        $exam = $this->service->createExam($request->validated());
 
         return redirect(route('admin.ujian.show', ['ujian' => $exam->slug]));
     }
@@ -79,8 +80,8 @@ class ExamController extends Controller
         return view('admin.exam.show', [
             'title' => $ujian->judul . ' - Ujian ',
             'ujian' => $ujian,
-            'questionTypes' => $this->examService->questionTypes,
-            'answerIcons' => $this->examService->answerIcons
+            'questionTypes' => $this->service->questionTypes,
+            'answerIcons' => $this->service->answerIcons
         ]);
     }
 
@@ -107,7 +108,7 @@ class ExamController extends Controller
      */
     public function update(UpdateExamRequest $request, Exam $ujian)
     {
-        $this->examService->update($request->validated(), $ujian);
+        $this->service->update($request->validated(), $ujian);
 
         return redirect(route('admin.ujian.index'));
     }
@@ -120,9 +121,45 @@ class ExamController extends Controller
      */
     public function destroy(Exam $ujian)
     {
-        $this->examService->delete($ujian);
+        $this->service->delete($ujian);
 
         return redirect(route('admin.ujian.index'));
+    }
+
+    public function showResult(Exam $ujian, Request $request)
+    {
+        if (is_null($request->input('kelas'))) {
+            
+            $kelas = $ujian->classrooms;
+            $heading = ['Kelas', 'Grup'];
+            
+            $data = [
+                'konten' => 'kelas',
+                'heading' => $heading,
+                'row' => $kelas
+            ];
+
+        } elseif ($request->input('kelas')) {
+            $classExam = ClassroomExam::with('users')->where([
+                            ['classroom_id', $request->input('kelas')],
+                            ['exam_id', $ujian->id]
+                        ])->first();
+            
+            $users = $classExam->users;
+            $heading = ['Nama', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
+
+            $data = [
+                'konten' => 'user',
+                'heading' =>$heading,
+                'row' => $users
+            ];
+        }
+
+        return view('admin.exam.result', [
+            'title' => 'Hasil - ' . $ujian->judul,
+            'ujian' => $ujian,
+            'data' => $data
+        ]);   
     }
 
 }

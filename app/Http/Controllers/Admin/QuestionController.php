@@ -112,9 +112,4 @@ class QuestionController extends Controller
 
         return redirect(route('admin.ujian.show', $ujian->slug));
     }
-
-    public function showResult(Exam $ujian, Request $request)
-    {
-        
-    }
 }
