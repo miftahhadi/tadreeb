@@ -16,10 +16,9 @@
                             <table class="table table-vcenter card-table">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>Ke-</th>
                                     <th>Mulai Mengerjakan</th>
                                     <th>Selesai Mengerjakan</th>
-                                    <th>Kali Mengerjakan</th>
                                     <th>Nilai</th>
                                     <th class="w-1"></th>
                                 </tr>
@@ -28,12 +27,13 @@
                                     @foreach ($histories as $key => $history)
                                 
                                         <tr>
-                                            <td>{{ ++$key }}</td>
-                                            <td>{{ $history->waktu_mulai }}</td>
-                                            <td>
-                                            {{ $history->waktu_selesai }}
-                                            </td>
                                             <td>{{ $history->attempt }}</td>
+                                            <td>
+                                                {{ $history->printWaktuMulai() }} 
+                                            </td>
+                                            <td>
+                                            {{ $history->printWaktuSelesai() }}
+                                            </td>
                                             <td>{{ $history->score() }}</td>
                                             <td>
                                             <a href="{{ '/k/' . $kelas->kode . '/u/' . $exam->slug . '/hasil?attempt=' . $history->attempt }}">Lihat</a>

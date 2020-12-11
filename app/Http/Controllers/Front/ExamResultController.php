@@ -36,8 +36,33 @@ class ExamResultController extends Controller
 
     public function showResult(Classroom $classroom, Exam $exam, Request $request)
     {
-        return view('front.ujian.result', [
-            'title' => 'Hasil - ' . $exam->judul . ' - ' . $classroom->nama
+        $classExam = ClassroomExam::where([
+            ['classroom_id', $classroom->id],
+            ['exam_id', $exam->id]
+        ])->first();
+
+        $this->service->setExam($exam);
+
+        if ($request->input('all')) {
+
+            $result = $this->service->getAllResult($classExam);
+
+        } else {
+
+            $userId = ($request->input('user')) ?? auth()->user()->id;
+
+            $attempt = ($request->input('attempt')) ?? null;
+
+            $result = $this->service->getResult($userId, $classExam->id, $attempt);
+        }
+
+        return view($this->service->template, [
+            'title' => 'Hasil ' . $exam->judul,
+            'kelas' => $classroom,
+            'exam' => $exam,
+            'service' => $this->service,
+            'userAnswers' => $this->service->userAnswers(),
+            'bukaKunci' => $classExam->buka_hasil
         ]);
     }
 }

@@ -69,6 +69,7 @@ Route::name('admin.')->group(function () {
         Route::resource('ujian', 'ExamController');
     
         // Questions
+        Route::get('ujian/{ujian}/hasil', 'QuestionController@showResult')->name('ujian.hasil');
         Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
         Route::resource('ujian.soal', 'QuestionController')->except('index');
     

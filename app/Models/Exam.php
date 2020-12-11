@@ -45,4 +45,20 @@ class Exam extends Model
     {
         return $this->morphToMany(Section::class, 'sectionable');
     }
+
+    public function totalScore()
+    {
+        $answers = collect();
+
+        foreach ($this->questions as $question) {
+            $answer = $question->answers->filter(function ($answer) {
+                            return $answer->nilai != 0;
+                        })->pluck('nilai');
+
+            $answers->push($answer);
+        }
+
+        return $answers->flatten()->sum();
+
+    }
 }

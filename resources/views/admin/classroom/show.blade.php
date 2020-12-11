@@ -19,6 +19,7 @@
             </p>
     
             <ul class="list-inline">
+                <li class="list-inline-item"><small><a href="{{ route('kelas.home', $kelas->kode) }}">Buka Halaman Kelas</a></small></li>
                 <li class="list-inline-item"><small><a href="#">Edit</a></small></li>
                 <li class="list-inline-item"><small><a href="#" class="text-danger">Hapus</a></small></li>
             </ul>

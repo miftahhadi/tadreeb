@@ -20,3 +20,9 @@
   white-space: normal;
 }
 
+.card-invalid {
+  background-color: rgba(229, 62, 62, 0.03);
+  border: 1px solid #e53e3e;
+  border-radius: inherit;
+}
+

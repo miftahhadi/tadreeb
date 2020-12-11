@@ -19,15 +19,6 @@ class QuestionController extends Controller
         $this->questionService = $questionService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -115,11 +106,15 @@ class QuestionController extends Controller
         return redirect(route('admin.ujian.index')); // TODO: buat route ke bank soal
     }
 
-
     public function unassignFromExam(Exam $ujian, Question $soal)
     {
         $ujian->questions()->detach($soal->id);
 
         return redirect(route('admin.ujian.show', $ujian->slug));
+    }
+
+    public function showResult(Exam $ujian, Request $request)
+    {
+        
     }
 }

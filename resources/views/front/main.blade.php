@@ -7,7 +7,7 @@
 
         <div class="content">
 
-            <div class="container-xl py-4">
+            <div class="container-xl py-2">
 
                 @yield('content')
 
