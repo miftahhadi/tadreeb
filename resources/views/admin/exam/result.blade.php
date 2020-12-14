@@ -3,8 +3,12 @@
 @section('examContent')
 <div class="row mb-2">
     <div class="col-auto">
-        <h2>Pilih Kelas</h2>
-        <p>Kelas yang mengujikan ujian {{ $ujian->judul }}:</p>
+
+        @if ($data['mode'] == 'classroomList')
+            <h2>Pilih Kelas</h2>
+            <p>Kelas yang mengujikan ujian {{ $ujian->judul }}:</p>
+        @endif
+
     </div>    
 </div>
 
@@ -27,28 +31,29 @@
         </thead>
 
         <tbody>
-            @if ($data['konten'] == 'kelas')
-                @foreach ($data['row'] as $key => $item)
+            @if ($data['mode'] == 'classroomList')
+                @foreach ($data['row'] as $key => $kelas)
                     <tr>
                         <td>{{ ++$key }}</td>
-                        <td>{{ $item->nama }}</td>
-                        <td>{{ $item->group->nama }}</td>
+                        <td>{{ $kelas->nama }}</td>
+                        <td>{{ $kelas->group->nama }}</td>
                         <td class="text-right">
-                            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->slug, 'kelas' => $item->id]) }}">Lihat</a>
+                            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->slug, 'kelas' => $kelas->id]) }}">Lihat</a>
                         </td>
                     </tr>
                 @endforeach
-            @else 
-                @foreach ($data['row'] as $key => $item)
+            @elseif ($data['mode'] == 'showDone')
+                @foreach ($data['row'] as $key => $user)
                     <tr>
                         <td>{{ ++$key }}</td>
-                        <td>{{ $item->nama }}</td>
-                        <td>{{ $item->pivot->printWaktuMulai() }}</td>
-                        <td>{{ $item->pivot->printWaktuSelesai() }}</td>
-                        <td>{{ $item->pivot->score() }}</td>
+                        <td>{{ $user->nama }}</td>
+                        <td>{{ $user->username }}</td>
+                        {{-- <td>{{ $user->pivot->printWaktuMulai() }}</td>
+                        <td>{{ $user->pivot->printWaktuSelesai() }}</td>
+                        <td>{{ $user->pivot->score() }}</td> --}}
                         <td class="text-right">
                             <div class="btn-list">
-                            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->slug, 'kelas' => $item->id]) }}">Lihat</a>
+                            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->slug, 'kelas' => $user->id]) }}">Lihat</a>
 
                             </div>
                         </td>

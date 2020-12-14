@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\UpdateExamRequest;
 use App\Services\Admin\ExamService;
 use App\Http\Requests\Admin\StoreExamRequest;
+use App\Models\Classroom;
 use App\Models\ClassroomExam;
 use App\Models\Exam;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class ExamController extends Controller
 {
@@ -130,29 +131,45 @@ class ExamController extends Controller
     {
         if (is_null($request->input('kelas'))) {
             
-            $kelas = $ujian->classrooms;
-            $heading = ['Kelas', 'Grup'];
-            
             $data = [
-                'konten' => 'kelas',
-                'heading' => $heading,
-                'row' => $kelas
+                'mode' => 'classroomList',
+                'heading' => ['Kelas', 'Grup'],
+                'row' => $ujian->classrooms
             ];
 
         } elseif ($request->input('kelas')) {
+
+            $kelas = Classroom::find($request->input('kelas'));
+
             $classExam = ClassroomExam::with('users')->where([
-                            ['classroom_id', $request->input('kelas')],
-                            ['exam_id', $ujian->id]
-                        ])->first();
-            
-            $users = $classExam->users;
-            $heading = ['Nama', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
+                ['classroom_id', $request->input('kelas')],
+                ['exam_id', $ujian->id]
+            ])->first();
+
+            if ($request->input('done') && $request->input('done') == 'true') {
+
+                $users = $kelas->usersDoneExam($classExam->id);
+
+                dd($classExam->usersDoneExamInClass());
+
+                $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
+
+                $mode = 'showDone';
+
+            } elseif ($request->input('done') && $request->input('done') == 'false') {
+                $users = $kelas->usersNotDoneExam($classExam->id);
+
+                $heading = ['Nama', 'Username'];
+
+                $mode = 'showNotDone';
+            }
 
             $data = [
-                'konten' => 'user',
+                'mode' => $mode,
                 'heading' =>$heading,
                 'row' => $users
             ];
+
         }
 
         return view('admin.exam.result', [

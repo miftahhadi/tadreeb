@@ -55,7 +55,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class);
     }
 
-    public function classroomexam()
+    public function classroomExams()
     {
         return $this->belongsToMany(ClassroomExam::class, 'classroomexam_user', 'user_id', 'classroom_exam_id')
                     ->using(ClassExamUser::class)

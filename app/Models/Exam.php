@@ -61,4 +61,8 @@ class Exam extends Model
         return $answers->flatten()->sum();
 
     }
+
+    public function usersDoneExamInClassroom($kelasId)
+    {
+    }
 }

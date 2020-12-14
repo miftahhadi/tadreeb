@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,5 +40,31 @@ class Classroom extends Model
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function usersDoneExam($classExamId)
+    {
+        return $this->usersDoneExamRaw($classExamId)->get();
+    }
+
+    public function usersDoneExamRaw($classExamId)
+    {
+        return $this->users()
+                        ->whereHas('classroomExams', function (Builder $query) use ($classExamId) {
+                            $query->where('classroom_exam_id', $classExamId);
+                        })
+                        ->with('classroomExams');
+    }
+
+    public function usersNotDoneExam($classExamId)
+    {
+        return $this->usersNotDoneExamRaw($classExamId)->get();
+    }
+
+    public function usersNotDoneExamRaw($classExamId)
+    {
+        return $this->users()->whereDoesntHave('classroomExams', function (Builder $query) use ($classExamId) {
+            $query->where('classroom_exam_id', $classExamId);
+        });
     }
 }

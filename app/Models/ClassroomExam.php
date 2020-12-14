@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ClassroomExam extends Pivot
@@ -24,4 +25,20 @@ class ClassroomExam extends Pivot
                         'waktu_selesai'
                     ]);
     }
+
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
+
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
+    }
+
+    public function usersDoneExamInClass()
+    {   
+        return $this->hasManyThrough(User::class, Classroom::class);
+    }
+
 }
