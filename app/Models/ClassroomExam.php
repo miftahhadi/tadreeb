@@ -36,9 +36,4 @@ class ClassroomExam extends Pivot
         return $this->belongsTo(Exam::class);
     }
 
-    public function usersDoneExamInClass()
-    {   
-        return $this->hasManyThrough(User::class, Classroom::class);
-    }
-
 }

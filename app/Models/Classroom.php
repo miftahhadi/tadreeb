@@ -37,34 +37,36 @@ class Classroom extends Model
                                                 ]);
     }
 
+    public function classroomExam()
+    {
+        return $this->hasOne(ClassroomExam::class);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class);
     }
 
-    public function usersDoneExam($classExamId)
-    {
-        return $this->usersDoneExamRaw($classExamId)->get();
-    }
 
-    public function usersDoneExamRaw($classExamId)
+    public function usersDoneExam($classExamId)
     {
         return $this->users()
                         ->whereHas('classroomExams', function (Builder $query) use ($classExamId) {
                             $query->where('classroom_exam_id', $classExamId);
                         })
-                        ->with('classroomExams');
+                        ->get()
+                        ->each(function ($user) use ($classExamId) {
+                            $user->examData = $user->classExamUsers()->where('classroom_exam_id', $classExamId)->first();
+                        });
     }
 
     public function usersNotDoneExam($classExamId)
     {
-        return $this->usersNotDoneExamRaw($classExamId)->get();
+        return $this->users()
+                    ->whereDoesntHave('classroomExams', function (Builder $query) use ($classExamId) {
+                        $query->where('classroom_exam_id', $classExamId);
+                    })
+                    ->get();
     }
 
-    public function usersNotDoneExamRaw($classExamId)
-    {
-        return $this->users()->whereDoesntHave('classroomExams', function (Builder $query) use ($classExamId) {
-            $query->where('classroom_exam_id', $classExamId);
-        });
-    }
 }

@@ -139,8 +139,6 @@ class ExamController extends Controller
 
         } elseif ($request->input('kelas')) {
 
-            $kelas = Classroom::find($request->input('kelas'));
-
             $classExam = ClassroomExam::with('users')->where([
                 ['classroom_id', $request->input('kelas')],
                 ['exam_id', $ujian->id]
@@ -148,23 +146,33 @@ class ExamController extends Controller
 
             if ($request->input('done') && $request->input('done') == 'true') {
 
-                $users = $kelas->usersDoneExam($classExam->id);
-
-                dd($classExam->usersDoneExamInClass());
+                $users = $classExam->classroom->usersDoneExam($classExam->id);
 
                 $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
 
                 $mode = 'showDone';
 
             } elseif ($request->input('done') && $request->input('done') == 'false') {
-                $users = $kelas->usersNotDoneExam($classExam->id);
+                $users = $classExam->classroom->usersNotDoneExam($classExam->id);
 
                 $heading = ['Nama', 'Username'];
 
                 $mode = 'showNotDone';
+           
+            } else {
+                $mode = 'showAll';
+
+                $heading = ['Nama', 'Username', 'Sudah Mengerjakan?'];
+
+                $users = $classExam->classroom
+                                    ->users
+                                    ->each(function ($user) use ($classExam) {
+                                        $user->doneExam = $user->hasDoneExam($classExam->id);
+                                    });
             }
 
             $data = [
+                'kelas' => $classExam->classroom,
                 'mode' => $mode,
                 'heading' =>$heading,
                 'row' => $users
@@ -175,7 +183,7 @@ class ExamController extends Controller
         return view('admin.exam.result', [
             'title' => 'Hasil - ' . $ujian->judul,
             'ujian' => $ujian,
-            'data' => $data
+            'data' => $data,
         ]);   
     }
 

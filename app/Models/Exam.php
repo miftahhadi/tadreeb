@@ -62,7 +62,4 @@ class Exam extends Model
 
     }
 
-    public function usersDoneExamInClassroom($kelasId)
-    {
-    }
 }
