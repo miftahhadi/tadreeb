@@ -93,7 +93,7 @@ export default {
 
         resultUrl() {
             return (this.itemType == 'ujian')
-                                ? this.url + this.selector + '/hasil'
+                                ? this.url + this.selector + '/hasil?kelas=' + this.kelasId
                                 : ''
         }
     },
