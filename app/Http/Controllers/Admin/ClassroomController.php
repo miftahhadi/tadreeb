@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Classroom;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
+use App\Models\ClassroomExam;
+use App\Models\Exam;
 use App\Models\Lesson;
 use App\Models\Section;
 use App\Services\Admin\ClassroomService;
@@ -59,7 +61,7 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Group $grup, Classroom $kelas)
+    public function show(Group $grup, Classroom $kelas, Request $request)
     {
         $title = $kelas->nama . ' - ' . $grup->nama;
 
@@ -104,17 +106,24 @@ class ClassroomController extends Controller
         //
     }
 
-    public function lessonExamSetting(Group $group, Classroom $kelas, Lesson $pelajaran, Section $section, $exam)
+    public function showExamResult(Group $grup, Classroom $kelas, Exam $exam, Request $request)
     {
-        $exam = $section->exams()->where('id', $exam);
+        $classExam = ClassroomExam::where([
+            ['classroom_id', $kelas->id],
+            ['exam_id', $exam->id]
+        ])->fist();
 
-        return view('admin.classroom.item-setting', [
-            'title' => 'Pengaturan ' . $exam->judul,
-            'group' => $group,
+        $data = $classExam->dataToShow($request->input('done'));
+        $data['kelas'] = $kelas;
+
+        return view('admin.classroom.exam-result', [
+            'title' => 'Hasil ' . $exam->judul . ' - ' . 'Kelas ' . $kelas->nama,
+            'grup' => $grup,
             'kelas' => $kelas,
-            'pelajaran' => $pelajaran,
-            'section' => $section,
-            'exam' => $exam     
+            'ujian' => $exam,
+            'data' => $data 
         ]);
     }
+
+
 }

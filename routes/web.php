@@ -86,24 +86,7 @@ Route::name('admin.')->group(function () {
                 Route::delete('kelas/{kelas}', 'ClassroomController@destroy')->name('destroy');
 
                 Route::group(['prefix' => 'kelas/{kelas}'], function () {
-
                     Route::get('/edit', 'ClassroomController@edit')->name('edit');
-
-                    Route::get('/pelajaran/{pelajaran}/section/{section}/ujian/{ujian}/pengaturan', 'ClassroomController@lessonExamSetting');
-
-                    Route::get('/pelajaran', 'ClassroomController@pelajaran');
-                    Route::get('/pelajaran/assign', 'ClassroomController@assignPelajaran');
-    
-                    Route::get('/ujian', 'ClassroomController@ujian');
-                    Route::get('/ujian/assign', 'ClassroomController@ujian');
-    
-    
-                    Route::get('/anggota', 'ClassroomController@anggota');
-                    Route::get('/anggota/assign', 'ClassroomController@anggota');
-    
-                    Route::get('/pengaturan', 'ClassroomController@pengaturan');
-                    Route::post('/pengaturan', 'ClassroomController@pengaturan');
-
                 });
                 
             });

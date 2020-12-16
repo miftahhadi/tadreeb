@@ -2234,7 +2234,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.itemType != 'user' ? this.url + this.selector + '/setting?kelas=' + this.kelasId : '';
     },
     resultUrl: function resultUrl() {
-      return this.itemType == 'ujian' ? this.url + this.selector + '/hasil' : '';
+      return this.itemType == 'ujian' ? this.url + this.selector + '/hasil?kelas=' + this.kelasId : '';
     }
   },
   methods: {
@@ -58730,9 +58730,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-__webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/tabler/tabler.scss */"./resources/sass/tabler/tabler.scss");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/vagrant/tadreeb-dev/resources/sass/custom.scss */"./resources/sass/custom.scss");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\tabler\tabler.scss */"./resources/sass/tabler/tabler.scss");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\sass\custom.scss */"./resources/sass/custom.scss");
 
 
 /***/ })
