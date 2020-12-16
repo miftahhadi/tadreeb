@@ -144,39 +144,8 @@ class ExamController extends Controller
                 ['exam_id', $ujian->id]
             ])->first();
 
-            if ($request->input('done') && $request->input('done') == 'true') {
-
-                $users = $classExam->classroom->usersDoneExam($classExam->id);
-
-                $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
-
-                $mode = 'showDone';
-
-            } elseif ($request->input('done') && $request->input('done') == 'false') {
-                $users = $classExam->classroom->usersNotDoneExam($classExam->id);
-
-                $heading = ['Nama', 'Username'];
-
-                $mode = 'showNotDone';
-           
-            } else {
-                $mode = 'showAll';
-
-                $heading = ['Nama', 'Username', 'Sudah Mengerjakan?'];
-
-                $users = $classExam->classroom
-                                    ->users
-                                    ->each(function ($user) use ($classExam) {
-                                        $user->doneExam = $user->hasDoneExam($classExam->id);
-                                    });
-            }
-
-            $data = [
-                'kelas' => $classExam->classroom,
-                'mode' => $mode,
-                'heading' =>$heading,
-                'row' => $users
-            ];
+            $data = $classExam->dataToShow($request->input('done'));
+            $data['kelas'] = $classExam->classroom;
 
         }
 
