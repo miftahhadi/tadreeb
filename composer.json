@@ -15,10 +15,8 @@
         "intervention/image": "^2.5",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.0",
-        "laravel/passport": "^10.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
-        "spatie/laravel-permission": "^3.16",
         "spatie/valuestore": "^1.2"
     },
     "require-dev": {

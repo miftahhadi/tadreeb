@@ -13,11 +13,11 @@ class HomeController extends Controller
             return redirect(route('login'));
         }
 
-        if (auth()->user()->can('access admin')) {
-            return redirect(route('admin.dashboard'));
-        } else {
+        // if (auth()->user()->can('access admin')) {
+        //     return redirect(route('admin.dashboard'));
+        // } else {
             return redirect(route('dashboard'));
-        }
+        // }
     }
 
     

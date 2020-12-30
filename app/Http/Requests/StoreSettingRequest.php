@@ -13,7 +13,8 @@ class StoreSettingRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->can('update setting');
+        // return auth()->user()->can('update setting');
+        return true;
     }
 
     /**
