@@ -21,6 +21,9 @@ class UserSeeder extends Seeder
             'username' => 'admin',
             'password' => Hash::make('1234qwer')
         ]);
+        
+        // Create profile
+        $admin->profile()->create();
 
         // Assign role
         $admin->roles()->attach(2);
@@ -34,6 +37,9 @@ class UserSeeder extends Seeder
             'username' => 'root',
             'password' => Hash::make('12admin12')
         ]);
+
+        // Create profile
+        $root->profile()->create();
 
         // Assign role
         $root->roles()->attach(1);

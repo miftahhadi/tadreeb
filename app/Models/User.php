@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function getFirstRole()
+    {
+        return $this->roles->pluck('role')->first();
+    }
+
     public function exams()
     {
         return $this->hasMany(Exam::class);
