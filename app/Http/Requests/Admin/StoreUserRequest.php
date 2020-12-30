@@ -13,7 +13,8 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->can('create user');
+        // return auth()->user()->can('create user');
+        return true;
     }
 
     /**

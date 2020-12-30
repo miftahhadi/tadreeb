@@ -22,15 +22,11 @@ class UserSeeder extends Seeder
             'password' => Hash::make('1234qwer')
         ]);
 
-        $admin->assignRole('admin');
-
         $root = User::create([
             'nama' => 'Root',
             'email' => 'root@admin.com',
             'username' => 'root',
             'password' => Hash::make('12admin12')
         ]);
-
-        $root->assignRole('superadmin');
     }
 }

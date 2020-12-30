@@ -18,7 +18,7 @@
                 </span>
                 <div class="d-none d-xl-block pl-2">
                     <div>{{ auth()->user()->nama }}</div>
-                    <div class="mt-1 small text-muted">{{ auth()->user()->getRoleNames()->first() }}</div>
+                    {{-- <div class="mt-1 small text-muted">{{ auth()->user()->getRoleNames()->first() }}</div> --}}
                 </div>
             </a>
 

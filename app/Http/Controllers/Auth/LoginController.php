@@ -32,11 +32,11 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        if (auth()->user()->can('access admin')) {
-            $this->redirectTo = route('admin.dashboard');
-        } else {
+        // if (auth()->user()->can('access admin')) {
+        //     $this->redirectTo = route('admin.dashboard');
+        // } else {
             $this->redirectTo = route('dashboard');
-        }
+        // }
 
         return $this->redirectTo;
     }
