@@ -75,6 +75,11 @@ class User extends Authenticatable
         return $this->roles->pluck('role')->first();
     }
 
+    public function canAccessAdmin()
+    {
+        return $this->tokens->pluck('name')->contains('admin');
+    }
+
     public function exams()
     {
         return $this->hasMany(Exam::class);
