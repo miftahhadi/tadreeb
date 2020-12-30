@@ -15,14 +15,14 @@
             </span>
             <div class="d-none d-xl-block pl-2">
               <div>{{ auth()->user()->nama }}</div>
-              {{-- <div class="mt-1 small text-muted">{{ auth()->user()->getRoleNames()->first() }}</div> --}}
+              <div class="mt-1 small text-muted">{{ auth()->user()->getRoleNames()->first() }}</div>
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" aria-labelledby="accountMenuButton">
             <a href="#" class="dropdown-item">Profile & account</a>
-            {{-- @if (auth()->user()->can('access admin')) --}}
+            @if (auth()->user()->can('access admin'))
               <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Halaman Admin</a>
-            {{-- @endif --}}
+            @endif
             <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <input type="submit" value="Logout" class="dropdown-item">

@@ -14,13 +14,11 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.5",
         "laravel/framework": "^8.0",
-        "laravel/jetstream": "^1.6",
         "laravel/legacy-factories": "^1.0",
         "laravel/passport": "^10.0",
-        "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
-        "livewire/livewire": "^2.0",
+        "spatie/laravel-permission": "^3.16",
         "spatie/valuestore": "^1.2"
     },
     "require-dev": {
@@ -33,8 +31,7 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "platform-check": false
+        "sort-packages": true
     },
     "extra": {
         "laravel": {

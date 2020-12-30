@@ -35,11 +35,11 @@ class ExamResultService
 
     public function getUser($input)
     {
-        // if (auth()->user()->can('show exam result')) {
+        if (auth()->user()->can('show exam result')) {
             $userId = ($input) ?? auth()->user()->id;
-        // } else {
-        //     $userId = auth()->user()->id;
-        // }
+        } else {
+            $userId = auth()->user()->id;
+        }
 
         $this->user = User::find($userId);
 

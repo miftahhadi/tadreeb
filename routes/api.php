@@ -38,7 +38,7 @@ Route::group(['namespace' => 'Admin'], function () {
 
     Route::get('kelas/{kelas}/pelajaran', 'ClassroomController@lessonList');
 
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'UserController@list');
         Route::get('user/search/{search}', 'UserController@search');
         Route::delete('user/{user}', 'UserController@destroy');    
@@ -48,7 +48,7 @@ Route::group(['namespace' => 'Admin'], function () {
 
 Route::group([
         'namespace' => 'API', 
-        'middleware' => 'auth:sanctum',
+        'middleware' => 'auth:api',
         'prefix' => 'kelas/{kelas}'
 ], function () {
     Route::get('pelajaran', 'ClassroomController@lesson');
@@ -61,7 +61,7 @@ Route::group([
     Route::post('user/assign', 'ClassroomController@assignUser');
 });
 
-Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() {
+Route::group(['middleware' => 'auth:api', 'namespace' => 'API'], function() {
     // Exam 
     Route::get('ujian/{exam:id}', 'ExamController@getExam');
     Route::get('soal/{soal}', 'ExamController@getQuestion');
