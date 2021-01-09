@@ -74,7 +74,7 @@
                 </div>
                 
                 <div class="btn-list">
-                    <button class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                    <button class="btn btn-white" data-dismiss="modal" aria-label="Close">
                         Batal
                     </button>
 

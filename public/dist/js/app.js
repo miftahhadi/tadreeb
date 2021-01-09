@@ -3959,6 +3959,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'modal',
   props: {
@@ -4461,6 +4463,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
@@ -4476,7 +4493,8 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       query: '',
       url: '/admin/' + this.item + '/',
-      itemToDelete: {}
+      itemToDelete: {},
+      itemToDeleteName: ''
     };
   },
   watch: {
@@ -4498,15 +4516,19 @@ __webpack_require__.r(__webpack_exports__);
         _this.loading = false;
       });
     },
-    deleteItem: function deleteItem(data) {
-      this.itemToDelete = data;
-    },
+    deleteItem: function deleteItem(data) {},
     openUrl: function openUrl(data) {
       return data.slug ? this.url + data.slug : this.url + data.id;
     },
     editUrl: function editUrl(data) {
       var edit = data.slug ? this.url + data.slug : this.url + data.id;
       return edit + '/edit';
+    },
+    callDelete: function callDelete(data) {
+      var _ref, _data$nama;
+
+      this.itemToDelete = data;
+      this.itemToDeleteName = (_ref = (_data$nama = data.nama) !== null && _data$nama !== void 0 ? _data$nama : data.name) !== null && _ref !== void 0 ? _ref : data.judul;
     }
   },
   created: function created() {
@@ -43862,23 +43884,30 @@ var render = function() {
               _c("div", { staticClass: "loader" }),
               _vm._v(" "),
               _c("div", { staticClass: "dimmer-content" }, [
-                _c("div", { staticClass: "modal-header" }, [
-                  _c(
-                    "h5",
-                    { staticClass: "modal-title" },
-                    [_vm._t("title")],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c("button", {
-                    staticClass: "btn-close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close"
-                    }
-                  })
-                ]),
+                _c(
+                  "div",
+                  { staticClass: "modal-header" },
+                  [
+                    _vm._t("header", [
+                      _c(
+                        "h5",
+                        { staticClass: "modal-title" },
+                        [_vm._t("title")],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _c("button", {
+                        staticClass: "btn-close",
+                        attrs: {
+                          type: "button",
+                          "data-dismiss": "modal",
+                          "aria-label": "Close"
+                        }
+                      })
+                    ])
+                  ],
+                  2
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "modal-body" }, [_vm._t("body")], 2),
                 _vm._v(" "),
@@ -44046,7 +44075,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn btn-secondary",
+                staticClass: "btn btn-white",
                 attrs: { "data-dismiss": "modal", "aria-label": "Close" }
               },
               [_vm._v("\n                    Batal\n                ")]
@@ -44467,6 +44496,11 @@ var render = function() {
                                 attrs: {
                                   "data-toggle": "modal",
                                   "data-target": "#deleteItemModal"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.callDelete(actionProps.item)
+                                  }
                                 }
                               },
                               [_vm._v("Hapus")]
@@ -44484,9 +44518,53 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("item-delete-modal", {
-        attrs: { "item-type": _vm.item, "item-to-delete": _vm.itemToDelete },
-        on: { deleted: _vm.getResults }
+      _c("modal", {
+        attrs: { id: "deleteItemModal", classes: ["modal-dialog-centered"] },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("Apakah Anda yakin?")]
+            },
+            proxy: true
+          },
+          {
+            key: "body",
+            fn: function() {
+              return [
+                _vm._v(
+                  "Anda akan menghapus " + _vm._s(_vm.itemToDeleteName) + " "
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-link link-secondary mr-auto",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Batal")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Ya, hapus")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
       })
     ],
     2
@@ -60957,8 +61035,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

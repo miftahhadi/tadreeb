@@ -40,7 +40,24 @@
                     </div>
                 </div>
 
-                @include('admin.general._new-item-modal')
+                <modal id="tambahBaru" :classes="['modal-dialog-centered']">
+                    <template #title>{{ ucfirst($item)}} Baru</template>
+        
+                    <template #body>
+                        <item-baru-form 
+                            judul="{{ $judul }}" 
+                            item="{{ $item }}" 
+                            action="{{ $action }}" 
+                            slug="{{ $slug }}"
+                        >
+                            @csrf
+                        
+                        </item-baru-form>
+                    </template>
+        
+                    <template #footer><span></span></template>
+                </modal>
+
             </template>
         </item-index>
 

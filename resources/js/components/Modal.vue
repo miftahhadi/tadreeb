@@ -12,10 +12,12 @@
                     
                     <div class="dimmer-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">
-                                <slot name="title"></slot>
-                            </h5>
-                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                            <slot name="header">
+                                <h5 class="modal-title">
+                                    <slot name="title"></slot>
+                                </h5>
+                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                            </slot>
                         </div>
                         
                         <div class="modal-body">

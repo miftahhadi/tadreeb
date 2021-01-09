@@ -56,7 +56,15 @@
             </data-table>
         </div>
 
-        @include('admin.general._new-item-modal')
+        {{-- @include('admin.general._new-item-modal') --}}
+
+        <modal>
+            <template #title>{{ ucfirst($item)}} Baru</template>
+
+            <template #body></template>
+
+            <template #footer></template>
+        </modal>
 
     </div>
 @endsection
