@@ -7,7 +7,7 @@ class DataTable
     protected static $headingOne = [
         [
             'name' => 'ID',
-            'widht' => null
+            'width' => '5%'
         ],
         [
             'name' => 'Judul',
@@ -23,7 +23,7 @@ class DataTable
     protected static $headingTwo = [
         [
             'name' => 'ID',
-            'widht' => null
+            'width' => null
         ],
         [
             'name' => 'Nama',
@@ -34,7 +34,7 @@ class DataTable
     protected static $headingThree = [
         [
             'name' => 'ID',
-            'widht' => null
+            'width' => null
         ],
         [
             'name' => 'Nama',

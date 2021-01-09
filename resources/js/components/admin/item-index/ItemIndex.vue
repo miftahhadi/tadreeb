@@ -1,16 +1,15 @@
 <template>
     <div>
+        <slot name="header"></slot>
 
-        <div class="row my-3">
+        <div class="row mt-4 mb-1">
 
             <div class="col-auto" v-if="search">
 
                 <div class="input-icon">
-                    <input type="text" 
-                            class="form-control form-control-rounded" 
-                            placeholder="Cari..."
-                            v-model="query"
-                            @input="getResults"
+                    <input type="text" class="form-control form-control-rounded" 
+                        placeholder="Cari..." v-model="query"
+                        @input="getResults"
                     >
 
                     <span class="input-icon-addon">
@@ -23,10 +22,8 @@
             
 
             <div class="col-auto ml-auto">
-                <pagination
-                    :data="laravelData"
-                    :limit="1"
-                    :show-disabled="true"
+                <pagination :data="laravelData"
+                    :limit="1" :show-disabled="true"
                     @pagination-change-page="getResults"
                 ></pagination>
             </div>
@@ -34,25 +31,30 @@
         </div>
 
         <div class="box">
-            <item-list
-                :item-type="item"
-                :items="laravelData.data"
-                :loading="loading"
-                :headings="tableHeading"
-                :item-properties="itemProperties"
-                :assign-page="assignPage"
-                :item-url="itemUrl"
-                :kelas-id="kelasId"
-                @delete:item="deleteItem"
-                @refresh="$emit('refresh', data)"
-            ></item-list>
+
+            <div class="card">
+                <div class="dimmer" :class="isLoading">
+                    <div class="loader"></div>
+
+                    <div class="dimmer-content">
+
+                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
+                            <template v-slot:action="actionProps">
+                                <div class="btn-list flex-nowrap">
+                                    <a :href="openUrl(actionProps.item)" class="btn btn-sm">Buka</a>
+                                    <a :href="editUrl(actionProps.item)" class="btn btn-sm">Edit</a>
+                                    <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal">Hapus</button>
+                                </div>
+                            </template>
+                        </data-table>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
         
-        <item-delete-modal
-            :item-type="item"
-            :item-to-delete="itemToDelete"
-            @deleted="getResults"
-        ></item-delete-modal>
+        <item-delete-modal :item-type="item" :item-to-delete="itemToDelete" @deleted="getResults"></item-delete-modal>
 
     </div>    
 </template>
@@ -67,10 +69,6 @@
             itemProperties: Array,
             search: Boolean,
             fetchUrl: String,
-            assignPage: Boolean,
-            itemUrl: String,
-            refresh: Boolean,
-            kelasId: Number
         },
         
         data() {
@@ -78,8 +76,16 @@
                 laravelData: {},
                 loading: false,
                 query: '',
+                url: '/admin/' + this.item + '/',
                 itemToDelete: {},
             }
+        },
+
+        watch: {
+            // whenever query changes, run this function
+            query: function(newQuery, oldQuery) {
+                this.debouncedGetResults()
+            },
         },
 
         methods: {
@@ -97,7 +103,20 @@
 
             deleteItem(data) {
                 this.itemToDelete = data;
+            },
+
+            openUrl(data) {
+                return (data.slug) ?  this.url + data.slug : this.url + data.id
+            },
+
+            editUrl(data) {
+                const edit = (data.slug) ? this.url + data.slug : this.url + data.id
+                return edit + '/edit' 
             }
+        },
+
+        created() {
+            this.debouncedGetResults = _.debounce(this.getResults, 500)
         },
 
         mounted() {
@@ -110,6 +129,10 @@
                             this.fetchUrl + '?page=' 
                             : this.fetchUrl + '/search/' + this.query + '?page=';
             },
+
+            isLoading() {
+                return (this.loading) ? 'active' : ''
+            }
         }
     }
 </script>

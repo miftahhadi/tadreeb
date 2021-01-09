@@ -30,7 +30,9 @@ class ExamController extends Controller
      */
     public function index()
     {
-        return view('admin.general.index', [
+        $exams = Exam::take(15)->get();
+
+        return view('admin.general.item-index', [
             'title' => 'Daftar Ujian',
             'fetchUrl' => '/api/ujian',
             'item' => 'ujian',
@@ -38,7 +40,8 @@ class ExamController extends Controller
             'slug' => 'Slug URL',
             'action' => route('admin.ujian.store'),
             'tableHeading' => json_encode(DataTable::heading()),
-            'itemProperties' => json_encode(DataTable::props())
+            'itemProperties' => json_encode(DataTable::props()),
+            'exams' => json_encode($exams)
         ]);
     }
 

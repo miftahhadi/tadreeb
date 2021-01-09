@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" 
-        :id="id " 
+        :id="id" 
         tabindex="-1" :aria-labelledby="id + 'Label'" aria-hidden="true"
         :data-backdrop="backdrop"
     >
