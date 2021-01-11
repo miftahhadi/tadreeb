@@ -4483,28 +4483,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
-    item: String,
-    tableHeading: Array,
-    itemProperties: Array,
+    item: {
+      type: String,
+      required: true
+    },
+    tableHeading: {
+      type: Array,
+      required: true
+    },
+    itemProperties: {
+      type: Array,
+      required: true
+    },
+    fetchUrl: {
+      type: String,
+      required: true
+    },
     search: Boolean,
-    fetchUrl: String,
     baseUrl: String,
     itemIdentifier: String,
     nameShownAs: String,
     deleteUrl: String
   },
   data: function data() {
-    var _this$baseUrl, _this$itemIdentifier, _this$nameShownAs;
+    var _this$baseUrl;
 
     return {
       laravelData: {},
       loading: false,
       query: '',
       base: (_this$baseUrl = this.baseUrl) !== null && _this$baseUrl !== void 0 ? _this$baseUrl : '/admin/' + this.item + '/',
-      identifier: (_this$itemIdentifier = this.itemIdentifier) !== null && _this$itemIdentifier !== void 0 ? _this$itemIdentifier : 'id',
-      itemName: (_this$nameShownAs = this.nameShownAs) !== null && _this$nameShownAs !== void 0 ? _this$nameShownAs : 'nama',
-      itemToDelete: {},
-      tableKey: 0
+      identifier: this.itemIdentifier != '' ? this.itemIdentifier : 'id',
+      itemName: this.nameShownAs != '' ? this.nameShownAs : 'nama',
+      itemToDelete: {}
     };
   },
   watch: {
@@ -44470,7 +44481,7 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "box" }, [
+      _c("div", { staticClass: "box mt-3" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "dimmer", class: _vm.isLoading }, [
             _c("div", { staticClass: "loader" }),
@@ -44480,7 +44491,6 @@ var render = function() {
               { staticClass: "dimmer-content" },
               [
                 _c("data-table", {
-                  key: _vm.tableKey,
                   attrs: {
                     headings: _vm.tableHeading,
                     properties: _vm.itemProperties,

@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin'], function () {
 
-    Route::get('pelajaran', 'LessonController@list');
-    Route::get('pelajaran/search/{search}', 'LessonController@search');
-    Route::delete('pelajaran/{pelajaran}', 'LessonController@destroy');
+    
 
     Route::group(['prefix' => 'pelajaran/{pelajaran}'], function () {
         Route::get('section', 'SectionController@list');
@@ -26,9 +24,7 @@ Route::group(['namespace' => 'Admin'], function () {
 
     
 
-    Route::get('grup', 'GroupController@list');
-    Route::get('grup/search/{search}', 'GroupController@search');
-    Route::delete('grup/{grup}', 'GroupController@destroy');
+    
 
     Route::get('grup/{grup}/kelas', 'ClassroomController@list');
     Route::get('grup/{grup}/kelas/search/{search}', 'ClassroomController@search');
@@ -60,7 +56,13 @@ Route::group([
 });
 
 Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() {
-    // Exam 
+    // Lessons
+    Route::get('pelajaran/search/{search}', 'LessonController@search');
+    Route::get('pelajaran', 'LessonController@list');
+
+    Route::delete('pelajaran/{pelajaran}', 'LessonController@destroy');
+
+    // Exams
     Route::get('ujian/search/{search}', 'ExamController@search');
     Route::get('ujian/{exam:id}', 'ExamController@getExam');
     Route::get('ujian', 'ExamController@list');
@@ -77,5 +79,10 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     // Setting
     Route::get('ujian/{exam:id}/setting', 'SettingController@getExamSetting');
     Route::post('ujian/setting', 'SettingController@saveExamSetting');
+
+    // Group
+    Route::get('grup/search/{search}', 'GroupController@search');
+    Route::get('grup', 'GroupController@list');
+    Route::delete('grup/{grup}', 'GroupController@destroy');
 });
 

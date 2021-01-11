@@ -23,7 +23,7 @@ class LessonController extends Controller
 
     public function index()
     {
-        return view('admin.general.index', [
+        return view('admin.general.item-index', [
             'title' => 'Daftar Pelajaran',
             'fetchUrl' => '/api/pelajaran',
             'item' => 'pelajaran',
@@ -31,22 +31,12 @@ class LessonController extends Controller
             'slug' => 'Slug URL',
             'action' => route('admin.pelajaran.store'),
             'tableHeading' => json_encode(DataTable::heading()),
-            'itemProperties' => json_encode(DataTable::props())
+            'itemProperties' => json_encode(DataTable::props()),
+            'identifier' => 'slug',
+            'nameShownAs' => 'judul'
         ]);
     }
 
-    public function list()
-    {
-        return response()->json(Lesson::paginate(10));
-    }
-
-    public function search($search)
-    {
-        return response()->json(Lesson::where('judul', 'like', '%' . $search . '%')
-                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(10)
-                );
-    }
 
     /**
      * Store a newly created resource in storage.

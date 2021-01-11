@@ -26,7 +26,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return view('admin.general.index', [
+        return view('admin.general.item-index', [
             'title' => 'Grup User',
             'fetchUrl' => '/api/grup',
             'item' => 'grup',
@@ -34,22 +34,11 @@ class GroupController extends Controller
             'slug' => '',
             'action' => route('admin.grup.store'),
             'tableHeading' => json_encode(DataTable::heading(2)),
-            'itemProperties' => json_encode(DataTable::props(2))
+            'itemProperties' => json_encode(DataTable::props(2)),
+            'nameShownAs' => 'nama'
         ]);
     }
 
-    public function list()
-    {
-        return response()->json(Group::paginate(10));
-    }
-
-    public function search($search)
-    {
-        return response()->json(Group::where('judul', 'like', '%' . $search . '%')
-                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(10)
-                );
-    }
 
     /**
      * Show the form for creating a new resource.

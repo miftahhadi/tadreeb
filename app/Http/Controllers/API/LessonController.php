@@ -9,14 +9,17 @@ use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function list()
     {
-        //
+        return response()->json(Lesson::paginate(10));
+    }
+
+    public function search($search)
+    {
+        return response()->json(Lesson::where('judul', 'like', '%' . $search . '%')
+                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->paginate(10)
+                );
     }
 
     /**
@@ -59,9 +62,9 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Lesson $pelajaran)
     {
-        //
+        return $pelajaran->delete();
     }
 
 }

@@ -30,7 +30,7 @@
             
         </div>
 
-        <div class="box">
+        <div class="box mt-3">
 
             <div class="card">
                 <div class="dimmer" :class="isLoading">
@@ -38,7 +38,7 @@
 
                     <div class="dimmer-content">
 
-                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true" :key="tableKey">
+                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
                             <template v-slot:action="actionProps">
                                 <div class="btn-list flex-nowrap">
                                     <a :href="openUrl(actionProps.item)" class="btn btn-sm">Buka</a>
@@ -80,11 +80,23 @@
         name: 'item-index',
 
         props: {
-            item: String,
-            tableHeading: Array,
-            itemProperties: Array,
+            item: {
+                type: String,
+                required: true
+            },
+            tableHeading: {
+                type: Array,
+                required: true
+            },
+            itemProperties: {
+                type: Array,
+                required: true
+            },
+            fetchUrl: {
+                type: String,
+                required: true
+            },
             search: Boolean,
-            fetchUrl: String,
             baseUrl: String,
             itemIdentifier: String,
             nameShownAs: String,
@@ -97,10 +109,9 @@
                 loading: false,
                 query: '',
                 base: this.baseUrl ?? '/admin/' + this.item + '/',
-                identifier: this.itemIdentifier ?? 'id',
-                itemName: this.nameShownAs ?? 'nama',
-                itemToDelete: {},
-                tableKey: 0,
+                identifier: (this.itemIdentifier != '') ? this.itemIdentifier : 'id',
+                itemName: (this.nameShownAs != '') ? this.nameShownAs : 'nama',
+                itemToDelete: {}
             }
         },
 
