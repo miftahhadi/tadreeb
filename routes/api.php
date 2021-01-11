@@ -24,9 +24,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('section', 'SectionController@list');
     });
 
-    Route::get('ujian', 'ExamController@list');
-    Route::get('ujian/search/{search}', 'ExamController@search');
-    Route::delete('ujian/{ujian}', 'ExamController@destroy');
+    
 
     Route::get('grup', 'GroupController@list');
     Route::get('grup/search/{search}', 'GroupController@search');
@@ -63,7 +61,12 @@ Route::group([
 
 Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() {
     // Exam 
+    Route::get('ujian/search/{search}', 'ExamController@search');
     Route::get('ujian/{exam:id}', 'ExamController@getExam');
+    Route::get('ujian', 'ExamController@list');
+
+    Route::delete('ujian/{ujian}', 'ExamController@destroy');
+    
     Route::get('soal/{soal}', 'ExamController@getQuestion');
     Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
     Route::post('update-jawaban', 'ExamController@updateUserAnswers');
