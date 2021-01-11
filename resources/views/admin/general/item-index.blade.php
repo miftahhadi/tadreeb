@@ -3,7 +3,7 @@
 @section('content')
     <div id="app">
 
-        <item-index item="{{ $item }}" fetch-url="{{ $fetchUrl }}" :table-heading="{{ $tableHeading }}" :item-properties="{{ $itemProperties }}" :search="true">
+        <item-index item="{{ $item }}" fetch-url="{{ $fetchUrl }}" :table-heading="{{ $tableHeading }}" :item-properties="{{ $itemProperties }}" :search="true" item-identifier="{{ $identifier }}" name-shown-as="{{ $nameShownAs }}">
             <template v-slot:header>
                 
                 <div class="page-header">

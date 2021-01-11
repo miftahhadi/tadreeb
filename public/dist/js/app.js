@@ -4402,6 +4402,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -4477,7 +4479,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
@@ -4485,16 +4487,24 @@ __webpack_require__.r(__webpack_exports__);
     tableHeading: Array,
     itemProperties: Array,
     search: Boolean,
-    fetchUrl: String
+    fetchUrl: String,
+    baseUrl: String,
+    itemIdentifier: String,
+    nameShownAs: String,
+    deleteUrl: String
   },
   data: function data() {
+    var _this$baseUrl, _this$itemIdentifier, _this$nameShownAs;
+
     return {
       laravelData: {},
       loading: false,
       query: '',
-      url: '/admin/' + this.item + '/',
+      base: (_this$baseUrl = this.baseUrl) !== null && _this$baseUrl !== void 0 ? _this$baseUrl : '/admin/' + this.item + '/',
+      identifier: (_this$itemIdentifier = this.itemIdentifier) !== null && _this$itemIdentifier !== void 0 ? _this$itemIdentifier : 'id',
+      itemName: (_this$nameShownAs = this.nameShownAs) !== null && _this$nameShownAs !== void 0 ? _this$nameShownAs : 'nama',
       itemToDelete: {},
-      itemToDeleteName: ''
+      tableKey: 0
     };
   },
   watch: {
@@ -4516,19 +4526,30 @@ __webpack_require__.r(__webpack_exports__);
         _this.loading = false;
       });
     },
-    deleteItem: function deleteItem(data) {},
+    deleteItem: function deleteItem() {
+      var _this2 = this;
+
+      var url = this.deleteUrl ? this.deleteUrl + this.itemToDelete[this.identifier] : '/api/' + this.item + '/' + this.itemToDelete[this.identifier];
+      axios["delete"](url).then(function (response) {
+        _this2.getResults();
+
+        sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
+          title: "Data berhasil dihapus",
+          icon: "success"
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     openUrl: function openUrl(data) {
-      return data.slug ? this.url + data.slug : this.url + data.id;
+      return this.base + data[this.identifier];
     },
     editUrl: function editUrl(data) {
-      var edit = data.slug ? this.url + data.slug : this.url + data.id;
+      var edit = this.base + data[this.identifier];
       return edit + '/edit';
     },
     callDelete: function callDelete(data) {
-      var _ref, _data$nama;
-
       this.itemToDelete = data;
-      this.itemToDeleteName = (_ref = (_data$nama = data.nama) !== null && _data$nama !== void 0 ? _data$nama : data.name) !== null && _ref !== void 0 ? _ref : data.judul;
     }
   },
   created: function created() {
@@ -44459,6 +44480,7 @@ var render = function() {
               { staticClass: "dimmer-content" },
               [
                 _c("data-table", {
+                  key: _vm.tableKey,
                   attrs: {
                     headings: _vm.tableHeading,
                     properties: _vm.itemProperties,
@@ -44533,7 +44555,9 @@ var render = function() {
             fn: function() {
               return [
                 _vm._v(
-                  "Anda akan menghapus " + _vm._s(_vm.itemToDeleteName) + " "
+                  "Anda akan menghapus " +
+                    _vm._s(_vm.itemToDelete[_vm.itemName]) +
+                    " "
                 )
               ]
             },
@@ -44556,7 +44580,8 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-danger",
-                    attrs: { type: "button", "data-dismiss": "modal" }
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: { click: _vm.deleteItem }
                   },
                   [_vm._v("Ya, hapus")]
                 )

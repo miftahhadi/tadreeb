@@ -38,7 +38,7 @@
 
                     <div class="dimmer-content">
 
-                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
+                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true" :key="tableKey">
                             <template v-slot:action="actionProps">
                                 <div class="btn-list flex-nowrap">
                                     <a :href="openUrl(actionProps.item)" class="btn btn-sm">Buka</a>
@@ -58,7 +58,7 @@
         
         <modal id="deleteItemModal" :classes="['modal-dialog-centered']">
             <template #title>Apakah Anda yakin?</template>
-            <template #body>Anda akan menghapus {{ itemToDeleteName }} </template>
+            <template #body>Anda akan menghapus {{ itemToDelete[itemName] }} </template>
             <template #footer>
                 <button type="button" class="btn btn-link link-secondary mr-auto" data-dismiss="modal">Batal</button>
                 
@@ -74,6 +74,8 @@
 </template>
 
 <script>
+    import swal from "sweetalert";
+
     export default {
         name: 'item-index',
 
@@ -83,6 +85,9 @@
             itemProperties: Array,
             search: Boolean,
             fetchUrl: String,
+            baseUrl: String,
+            itemIdentifier: String,
+            nameShownAs: String,
             deleteUrl: String
         },
         
@@ -91,9 +96,11 @@
                 laravelData: {},
                 loading: false,
                 query: '',
-                url: '/admin/' + this.item + '/',
+                base: this.baseUrl ?? '/admin/' + this.item + '/',
+                identifier: this.itemIdentifier ?? 'id',
+                itemName: this.nameShownAs ?? 'nama',
                 itemToDelete: {},
-                itemToDeleteName: ''
+                tableKey: 0,
             }
         },
 
@@ -118,23 +125,33 @@
             },
 
             deleteItem() {
-                const url = this.deleteUrl ?? '/admin/' + this.item + '/' + this.itemToDelete
+                const url = (this.deleteUrl) ? this.deleteUrl + this.itemToDelete[this.identifier] 
+                                             : '/api/' + this.item + '/' + this.itemToDelete[this.identifier]
 
                 axios.delete(url)
+                        .then(response => {
+                            this.getResults();
+                            swal({
+                                title: "Data berhasil dihapus",
+                                icon: "success",
+                            });
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
             },
 
             openUrl(data) {
-                return (data.slug) ?  this.url + data.slug : this.url + data.id
+                return this.base + data[this.identifier]
             },
 
             editUrl(data) {
-                const edit = (data.slug) ? this.url + data.slug : this.url + data.id
+                const edit =this.base + data[this.identifier]
                 return edit + '/edit' 
             },
 
             callDelete(data) {
                 this.itemToDelete = data;
-                this.itemToDeleteName = data.nama ?? data.name ?? data.judul;
             }
         },
 
