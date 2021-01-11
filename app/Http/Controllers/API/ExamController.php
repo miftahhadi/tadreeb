@@ -13,6 +13,26 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
+    public function list() 
+    {
+        return response()->json(Exam::paginate(10));
+    }
+
+    public function search($search)
+    {
+        return response()->json(Exam::where('judul', 'like', '%' . $search . '%')
+                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->paginate(10)
+                                );
+    }
+
+    public function destroy(Exam $ujian)
+    {
+        $ujian->questions()->detach();
+
+        return $ujian->delete();
+    }
+
     public function getExam(Exam $exam)
     {
         $exam->loadCount('questions');

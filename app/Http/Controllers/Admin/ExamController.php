@@ -41,21 +41,9 @@ class ExamController extends Controller
             'action' => route('admin.ujian.store'),
             'tableHeading' => json_encode(DataTable::heading()),
             'itemProperties' => json_encode(DataTable::props()),
-            'exams' => json_encode($exams)
+            'identifier' => 'slug',
+            'nameShownAs' => 'judul'
         ]);
-    }
-
-    public function list() 
-    {
-        return response()->json(Exam::paginate(10));
-    }
-
-    public function search($search)
-    {
-        return response()->json(Exam::where('judul', 'like', '%' . $search . '%')
-                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(10)
-                                );
     }
 
 
