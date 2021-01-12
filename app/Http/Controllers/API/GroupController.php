@@ -15,15 +15,15 @@ class GroupController extends Controller
 
     public function search($search)
     {
-        return response()->json(Group::where('judul', 'like', '%' . $search . '%')
-                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(10)
-                );
+        return response()->json(
+            Group::where('judul', 'like', '%' . $search . '%')
+                ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                ->paginate(10)
+            );
     }
 
     public function destroy(Group $grup)
     {
-        // Detach all classrooms
-        
+        return $grup->delete();   
     }
 }

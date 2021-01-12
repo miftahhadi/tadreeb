@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Classroom;
 use App\Http\Controllers\Controller;
+use App\Models\Group;
 use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
@@ -12,6 +13,20 @@ class ClassroomController extends Controller
     public function index()
     {
 
+    }
+
+    public function list(Group $grup) 
+    {
+        return response()->json($grup->classrooms()->paginate(25));
+    }
+
+    public function search($search)
+    {
+        return response()->json(
+            Classroom::where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                    ->paginate(25)
+            );
     }
 
     /**

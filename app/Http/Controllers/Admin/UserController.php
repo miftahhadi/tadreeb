@@ -23,7 +23,7 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('admin.general.index', [
+        return view('admin.user.index', [
             'title' => 'Daftar User',
             'fetchUrl' => '/api/user',
             'item' => 'user',
@@ -34,20 +34,6 @@ class UserController extends Controller
             'tableHeading' => json_encode(DataTable::heading('user')),
             'itemProperties' => json_encode(DataTable::props('user'))
         ]);
-    }
-
-    public function list()
-    {
-        return response()->json(User::paginate(25));
-    }
-
-    public function search($search)
-    {
-        return response()->json(User::where('nama', 'like', '%' . $search . '%')
-                                        ->orWhere('username', 'like', '%' .  $search . '%')
-                                        ->orWhere('email', 'like', '%' . $search . '%')
-                                        ->paginate(25)
-                );
     }
 
     public function create()

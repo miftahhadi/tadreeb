@@ -22,19 +22,6 @@ class ClassroomController extends Controller
         $this->classroomService = $classroomService;
     }
 
-    public function list(Group $grup) 
-    {
-        return response()->json($grup->classrooms()->paginate(25));
-    }
-
-    public function search($search)
-    {
-        return response()->json(Classroom::where('nama', 'like', '%' . $search . '%')
-                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(25)
-                );
-    }
-
 
     /**
      * Store a newly created resource in storage.
