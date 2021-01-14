@@ -41,7 +41,9 @@
                         <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
                             <template v-slot:action="actionProps">
                                 <div class="btn-list flex-nowrap">
-                                    <a :href="openUrl(actionProps.item)" class="btn btn-sm">Buka</a>
+                                    <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat</a>
+
+                                    <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-else>Buka</a>
 
                                     <a :href="editUrl(actionProps.item)" class="btn btn-sm">Edit</a>
                                     
@@ -58,7 +60,9 @@
         
         <modal id="deleteItemModal" :classes="['modal-dialog-centered']">
             <template #title>Apakah Anda yakin?</template>
-            <template #body>Anda akan menghapus {{ itemToDelete[itemName] }} </template>
+            <template #body>
+                <p>Anda akan menghapus {{ itemToDelete[itemName] }}, semua data terkait {{ item }} ini akan terhapus. Apakah Anda yakin?</p>
+            </template>
             <template #footer>
                 <button type="button" class="btn btn-link link-secondary mr-auto" data-dismiss="modal">Batal</button>
                 

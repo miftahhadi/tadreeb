@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function list()
     {
-        return response()->json(User::paginate(25));
+        return response()->json(User::with('roles')->paginate(25));
     }
 
     public function search($search)

@@ -15,8 +15,9 @@
 
             <tbody>
 
-                <tr v-for="item in data" :key="item.id">
-                    <td v-for="$prop in properties" :key="$prop">{{ item[$prop] }}</td>
+                <tr v-for="(item, index) in data" :key="item.id">
+                    <td v-for="$prop in properties" :key="$prop">{{ printItem(index,$prop) }}</td>
+
                     <td v-if="action">
                         <slot name="action" :item="item">
 
@@ -47,6 +48,18 @@ export default {
             type: Array,
         },
         action: Boolean
+    },
+
+    methods: {
+        printItem(index, prop) {
+            if (prop.includes('.')) {
+                const props = prop.split('.',2)
+
+                return this.data[index][props[0]][props[1]]
+            } else {
+                return this.data[index][prop]
+            }
+        }
     }
 }
 </script>

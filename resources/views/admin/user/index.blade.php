@@ -2,75 +2,71 @@
 
 @section('content')
 
-    <div class="page-header">
-        <h2 class="page-title">Daftar User</h2>
-    </div>
-    
-    <div class="row mb-3">
+<div id="app">
+    <item-index item="{{ $item }}" fetch-url="{{ $fetchUrl }}" :table-heading="{{ $tableHeading }}" :item-properties="{{ $itemProperties }}" :search="true" item-identifier="{{ $identifier ?? null }}" name-shown-as="{{ $nameShownAs ?? null }}">
+        <template v-slot:header>
+            
+            <div class="page-header">
+                <div class="row align-items-center mw-100">
 
-        <div class="col">
-            <div class="btn-list">
-                <a href="{{ route('admin.user.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> 
-                    <span class="ml-2">Tambah Baru</span>
-                </a>
-                <a href="#" class="btn btn-success">Impor dari .CSV</a>
-            </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <ol class="breadcrumb breadcrumb-arrows breadcrumb-alternate" aria-label="breadcrumbs">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href="#">
+                                    Daftar User
+                                </a></li>
+                            </ol>
+                        </div>
+                        <h1>
+                            <span class="text-truncate">Daftar User</span>
+                        </h1>
+                    </div>
 
-        </div>
+                    <div class="col-auto">
+                        <div class="btn-list">
+                            <button type="button" class="btn" 
+                                    data-toggle="modal" data-target="#tambahBaru"
+                            >
+        
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                </span>
+                                <span>Tambah Baru</span>
+                            
+                            </button>
 
-        <div class="col-auto">
-            <form action="." method="get">
-                <div class="input-icon">
-                  <span class="input-icon-addon">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
-                  </span>
-                  <input type="text" class="form-control form-control-rounded" placeholder="Search…">
+                            <a href="#" class="btn btn-success">Impor dari .CSV</a>
+
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
-
-    </div>
-
-    <div class="box">
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table table-vcenter table-hover card-table">
-                    <thead>
-                        <tr>
-                            <td class="w-1">ID</td>
-                            <td>Nama</td>
-                            <td>Username</td>
-                            <td>Role</td>
-                            <td>Jenis Kelamin</td>
-                            <td width="30%"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($users as $user)
-                            <tr>
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->nama }}</td>
-                                <td>{{ $user->username }}</td>
-                                <td></td>
-                                <td>{{ $user->gender }}</td>
-                                <td>
-                                    <div class="btn-list">
-                                        <a href="{{ route('admin.user.edit', ['user' => $user->id ]) }}" class="btn bg-light" data-toggle="tooltip" title="Edit">Edit</a>
-                                        <!-- Button modal trigger-->
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-id="" data-target="#hapusData">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td>Belum ada user</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
             </div>
-        </div>
-    </div>
+
+            <modal id="tambahBaru" :classes="['modal-dialog-centered']">
+                <template #title>{{ ucfirst($item)}} Baru</template>
+    
+                <template #body>
+                    <user-add-new-form>
+                        @csrf
+                    
+                    </user-add-new-form>
+                </template>
+    
+                <template #footer>
+                    <div class="btn-list mt-4">
+                        <a href="{{ route('admin.user.index') }}" class="btn btn-white">Batal</a>
+                        <input type="submit" name="submit" value="Simpan" class="btn btn-success">
+                    </div>
+                </template>
+            </modal>
+
+        </template>
+    </item-index>
+</div>
 
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush
