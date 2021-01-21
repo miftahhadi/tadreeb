@@ -4015,6 +4015,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4081,6 +4089,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 // TODO:    - input area belum bisa dikasih class is-invalid kalau error
 //          - kalau modal ditutup, input belum kereset
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-add-new-form',
   props: {
@@ -4089,6 +4098,8 @@ __webpack_require__.r(__webpack_exports__);
     slug: String
   },
   data: function data() {
+    var _this$storeUrl;
+
     return {
       judulPlaceholder: 'Tuliskan nama ' + this.item,
       input: {
@@ -4100,8 +4111,21 @@ __webpack_require__.r(__webpack_exports__);
         judul: null,
         slug: null
       },
+      saving: false,
+      slugLoading: false,
+      storeTo: (_this$storeUrl = this.storeUrl) !== null && _this$storeUrl !== void 0 ? _this$storeUrl : '/api/' + this.item,
       help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this.slug + '/nahwu-dasar-2</code></p>'
     };
+  },
+  watch: {
+    // whenever slug changes, run this function
+    'input.slug': function inputSlug(newSlug, oldSlug) {
+      console.log("new: %s, old: %s", newSlug, oldSlug);
+      this.debouncedCekSlug();
+    }
+  },
+  created: function created() {
+    this.debouncedCekSlug = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(this.cekSlug, 500);
   },
   methods: {
     slugify: function slugify() {
@@ -4123,14 +4147,35 @@ __webpack_require__.r(__webpack_exports__);
       if (this.input.slug == 0) {
         this.errors.slug = 'Slug URL tidak boleh kosong';
       } else {
+        this.slugLoading = true;
         axios.get('/api/' + this.item + '/slug/' + this.input.slug).then(function (response) {
+          console.log(response.data);
+
           if (response.data === 1) {
+            _this.slugLoading = false;
             _this.errors.slug = 'Slug ini sudah terpakai, mohon ganti dengan yang lain';
           } else {
+            _this.slugLoading = false;
             _this.errors.slug = null;
           }
         });
       }
+    },
+    save: function save() {
+      var _this2 = this;
+
+      this.saving = true;
+      axios.post(this.storeTo, {
+        data: this.input
+      }).then(function (response) {
+        console.log(response);
+        _this2.saving = false;
+        _this2.judul = '';
+        _this2.slug = 'judul-' + _this2.item + '-anda';
+        _this2.deskripsi = '';
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
     }
   },
   computed: {
@@ -5924,6 +5969,242 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'user-add-new-form'
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserIndex.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/user/UserIndex.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UserAddNewForm_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserAddNewForm.vue */ "./resources/js/components/admin/user/UserAddNewForm.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    UserAddNewForm: _UserAddNewForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  name: 'user-index',
+  props: {
+    item: {
+      type: String,
+      "default": 'user'
+    },
+    tableHeading: {
+      type: Array,
+      required: true
+    },
+    itemProperties: {
+      type: Array,
+      required: true
+    },
+    fetchUrl: {
+      type: String,
+      required: true
+    },
+    search: Boolean,
+    baseUrl: String,
+    itemIdentifier: String,
+    nameShownAs: String,
+    deleteUrl: String
+  },
+  data: function data() {
+    var _this$baseUrl;
+
+    return {
+      laravelData: {},
+      loading: false,
+      query: '',
+      base: (_this$baseUrl = this.baseUrl) !== null && _this$baseUrl !== void 0 ? _this$baseUrl : '/admin/' + this.item + '/',
+      identifier: this.itemIdentifier != '' ? this.itemIdentifier : 'id',
+      itemName: this.nameShownAs != '' ? this.nameShownAs : 'nama',
+      itemToDelete: {}
+    };
+  },
+  watch: {
+    // whenever query changes, run this function
+    query: function query(newQuery, oldQuery) {
+      this.debouncedGetResults();
+    }
+  },
+  methods: {
+    getResults: function getResults() {
+      var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.loading = true;
+      axios.get(this.uri + page).then(function (response) {
+        _this.loading = false;
+        _this.laravelData = response.data;
+      })["catch"](function (reponse) {
+        _this.loading = false;
+      });
+    },
+    deleteItem: function deleteItem() {
+      var _this2 = this;
+
+      var url = this.deleteUrl ? this.deleteUrl + this.itemToDelete[this.identifier] : '/api/' + this.item + '/' + this.itemToDelete[this.identifier];
+      axios["delete"](url).then(function (response) {
+        _this2.getResults();
+
+        swal({
+          title: "Data berhasil dihapus",
+          icon: "success"
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    openUrl: function openUrl(data) {
+      return this.base + data[this.identifier];
+    },
+    editUrl: function editUrl(data) {
+      var edit = this.base + data[this.identifier];
+      return edit + '/edit';
+    },
+    callDelete: function callDelete(data) {
+      this.itemToDelete = data;
+    }
+  },
+  created: function created() {
+    this.debouncedGetResults = _.debounce(this.getResults, 500);
+  },
+  mounted: function mounted() {
+    this.getResults();
+  },
+  computed: {
+    uri: function uri() {
+      return this.query == '' ? this.fetchUrl + '?page=' : this.fetchUrl + '/search/' + this.query + '?page=';
+    },
+    isLoading: function isLoading() {
+      return this.loading ? 'active' : '';
+    }
+  }
 });
 
 /***/ }),
@@ -44149,7 +44430,7 @@ var render = function() {
                       _vm.$set(_vm.input, "judul", $event.target.value)
                     },
                     function($event) {
-                      ;[_vm.slugify(), _vm.cekJudul(), _vm.cekSlug()]
+                      ;[_vm.slugify(), _vm.cekJudul()]
                     }
                   ]
                 }
@@ -44197,11 +44478,21 @@ var render = function() {
                                 _vm.$set(_vm.input, "slug", $event.target.value)
                               },
                               function($event) {
-                                ;[_vm.cekSlug(), _vm.cekSpasi()]
+                                return _vm.cekSpasi()
                               }
                             ]
                           }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _vm.slugLoading
+                          ? _c("span", { staticClass: "input-icon-addon" }, [
+                              _c("div", {
+                                staticClass:
+                                  "spinner-border spinner-border-sm text-muted",
+                                attrs: { role: "status" }
+                              })
+                            ])
+                          : _vm._e()
                       ])
                     ])
                   ]),
@@ -44265,11 +44556,23 @@ var render = function() {
               [_vm._v("\n                    Batal\n                ")]
             ),
             _vm._v(" "),
-            _c("input", {
-              staticClass: "btn btn-success",
-              class: _vm.disableSubmit,
-              attrs: { type: "submit", value: "Simpan" }
-            })
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                class: _vm.disableSubmit,
+                on: { click: _vm.save }
+              },
+              [
+                _vm._v("\n                    Simpan \n                    "),
+                _vm.saving
+                  ? _c("span", {
+                      staticClass: "spinner-border spinner-border-sm ml-2",
+                      attrs: { role: "status" }
+                    })
+                  : _vm._e()
+              ]
+            )
           ])
         ])
       ],
@@ -46972,6 +47275,373 @@ var staticRenderFns = [
             }
           })
         ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserIndex.vue?vue&type=template&id=2dd55c6e&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/user/UserIndex.vue?vue&type=template&id=2dd55c6e& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "page-header" }, [
+        _c("div", { staticClass: "row align-items-center mw-100" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-auto" }, [
+            _c("div", { staticClass: "btn-list" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn",
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "modal",
+                    "data-target": "#tambahBaru"
+                  }
+                },
+                [
+                  _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "icon",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          width: "24",
+                          height: "24",
+                          viewBox: "0 0 24 24",
+                          "stroke-width": "2",
+                          stroke: "currentColor",
+                          fill: "none",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            stroke: "none",
+                            d: "M0 0h24v24H0z",
+                            fill: "none"
+                          }
+                        }),
+                        _c("line", {
+                          attrs: { x1: "12", y1: "5", x2: "12", y2: "19" }
+                        }),
+                        _c("line", {
+                          attrs: { x1: "5", y1: "12", x2: "19", y2: "12" }
+                        })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Tambah Baru")])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "a",
+                { staticClass: "btn btn-success", attrs: { href: "#" } },
+                [
+                  _c("span", [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "icon",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          width: "24",
+                          height: "24",
+                          viewBox: "0 0 24 24",
+                          "stroke-width": "2",
+                          stroke: "currentColor",
+                          fill: "none",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            stroke: "none",
+                            d: "M0 0h24v24H0z",
+                            fill: "none"
+                          }
+                        }),
+                        _c("path", { attrs: { d: "M14 3v4a1 1 0 0 0 1 1h4" } }),
+                        _c("path", {
+                          attrs: {
+                            d:
+                              "M5 13v-8a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5.5m-9.5 -2h7m-3 -3l3 3l-3 3"
+                          }
+                        })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Impor dari .CSV")])
+                ]
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row mt-4 mb-1" }, [
+        _vm.search
+          ? _c("div", { staticClass: "col-auto" }, [
+              _c("div", { staticClass: "input-icon" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.query,
+                      expression: "query"
+                    }
+                  ],
+                  staticClass: "form-control form-control-rounded",
+                  attrs: { type: "text", placeholder: "Cari..." },
+                  domProps: { value: _vm.query },
+                  on: {
+                    input: [
+                      function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.query = $event.target.value
+                      },
+                      _vm.getResults
+                    ]
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "input-icon-addon" }, [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "icon",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "2",
+                        stroke: "currentColor",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                      }),
+                      _c("circle", { attrs: { cx: "10", cy: "10", r: "7" } }),
+                      _c("line", {
+                        attrs: { x1: "21", y1: "21", x2: "15", y2: "15" }
+                      })
+                    ]
+                  )
+                ])
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-auto ml-auto" },
+          [
+            _c("pagination", {
+              attrs: { data: _vm.laravelData, limit: 1, "show-disabled": true },
+              on: { "pagination-change-page": _vm.getResults }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "box mt-3" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "dimmer", class: _vm.isLoading }, [
+            _c("div", { staticClass: "loader" }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "dimmer-content" },
+              [
+                _c("data-table", {
+                  attrs: {
+                    headings: _vm.tableHeading,
+                    properties: _vm.itemProperties,
+                    data: _vm.laravelData.data,
+                    action: true
+                  },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "action",
+                      fn: function(actionProps) {
+                        return [
+                          _c("div", { staticClass: "btn-list flex-nowrap" }, [
+                            _vm.item == "user"
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-sm",
+                                    attrs: { href: "#" }
+                                  },
+                                  [_vm._v("Lihat")]
+                                )
+                              : _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-sm",
+                                    attrs: {
+                                      href: _vm.openUrl(actionProps.item)
+                                    }
+                                  },
+                                  [_vm._v("Buka")]
+                                ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-sm",
+                                attrs: { href: _vm.editUrl(actionProps.item) }
+                              },
+                              [_vm._v("Edit")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-outline-danger",
+                                attrs: {
+                                  "data-toggle": "modal",
+                                  "data-target": "#deleteItemModal"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.callDelete(actionProps.item)
+                                  }
+                                }
+                              },
+                              [_vm._v("Hapus")]
+                            )
+                          ])
+                        ]
+                      }
+                    }
+                  ])
+                })
+              ],
+              1
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("modal", {
+        attrs: { id: "tambahBaru", classes: ["modal-dialog-centered"] },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("Tambah User Baru")]
+            },
+            proxy: true
+          },
+          {
+            key: "body",
+            fn: function() {
+              return [_c("user-add-new-form")]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c("div", { staticClass: "btn-list mt-4" }, [
+                  _c(
+                    "a",
+                    { staticClass: "btn btn-white", attrs: { href: "#" } },
+                    [_vm._v("Batal")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "btn btn-success",
+                    attrs: { type: "submit", name: "submit", value: "Simpan" }
+                  })
+                ])
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col" }, [
+      _c("div", { staticClass: "mb-1" }, [
+        _c(
+          "ol",
+          {
+            staticClass: "breadcrumb breadcrumb-arrows breadcrumb-alternate",
+            attrs: { "aria-label": "breadcrumbs" }
+          },
+          [
+            _c("li", { staticClass: "breadcrumb-item" }, [
+              _c("a", { attrs: { href: "#" } }, [_vm._v("Dashboard")])
+            ]),
+            _vm._v(" "),
+            _c(
+              "li",
+              {
+                staticClass: "breadcrumb-item active",
+                attrs: { "aria-current": "page" }
+              },
+              [
+                _c("a", { attrs: { href: "#" } }, [
+                  _vm._v(
+                    "\n                            Daftar User\n                        "
+                  )
+                ])
+              ]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("h1", [
+        _c("span", { staticClass: "text-truncate" }, [_vm._v("Daftar User")])
       ])
     ])
   }
@@ -59974,6 +60644,7 @@ var map = {
 	"./components/admin/section/SectionPage.vue": "./resources/js/components/admin/section/SectionPage.vue",
 	"./components/admin/user/ImportUser.vue": "./resources/js/components/admin/user/ImportUser.vue",
 	"./components/admin/user/UserAddNewForm.vue": "./resources/js/components/admin/user/UserAddNewForm.vue",
+	"./components/admin/user/UserIndex.vue": "./resources/js/components/admin/user/UserIndex.vue",
 	"./components/front/ujian/ExamDoingPage.vue": "./resources/js/components/front/ujian/ExamDoingPage.vue",
 	"./components/front/ujian/ExamNumberButton.vue": "./resources/js/components/front/ujian/ExamNumberButton.vue",
 	"./components/front/ujian/Timer.vue": "./resources/js/components/front/ujian/Timer.vue",
@@ -61188,6 +61859,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/user/UserIndex.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/admin/user/UserIndex.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UserIndex_vue_vue_type_template_id_2dd55c6e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserIndex.vue?vue&type=template&id=2dd55c6e& */ "./resources/js/components/admin/user/UserIndex.vue?vue&type=template&id=2dd55c6e&");
+/* harmony import */ var _UserIndex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserIndex.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/user/UserIndex.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UserIndex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserIndex_vue_vue_type_template_id_2dd55c6e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserIndex_vue_vue_type_template_id_2dd55c6e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/user/UserIndex.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/user/UserIndex.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/admin/user/UserIndex.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserIndex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UserIndex.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserIndex.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserIndex_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/user/UserIndex.vue?vue&type=template&id=2dd55c6e&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/admin/user/UserIndex.vue?vue&type=template&id=2dd55c6e& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserIndex_vue_vue_type_template_id_2dd55c6e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UserIndex.vue?vue&type=template&id=2dd55c6e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserIndex.vue?vue&type=template&id=2dd55c6e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserIndex_vue_vue_type_template_id_2dd55c6e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserIndex_vue_vue_type_template_id_2dd55c6e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/front/ujian/ExamDoingPage.vue":
 /*!***************************************************************!*\
   !*** ./resources/js/components/front/ujian/ExamDoingPage.vue ***!
@@ -61540,8 +62280,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

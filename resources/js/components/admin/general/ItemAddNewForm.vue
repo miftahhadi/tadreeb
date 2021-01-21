@@ -10,7 +10,7 @@
                         <label class="form-label required">Nama</label>
                         <input type="text" class="form-control" 
                             name="judul" :placeholder="judulPlaceholder" v-model="input.judul" 
-                            @input="[slugify(), cekJudul(), cekSlug()]"
+                            @input="[slugify(), cekJudul()]"
                             :class="judulInvalid"
                         >
 
@@ -27,8 +27,11 @@
                                 <div class="input-group">
                                     <input type="text" v-model="input.slug" 
                                         name="slug" class="form-control" 
-                                        :class="slugInvalid" @input="[cekSlug(), cekSpasi()]"
+                                        :class="slugInvalid" @input="cekSpasi()"
                                     >
+                                    <span class="input-icon-addon" v-if="slugLoading">
+                                        <div class="spinner-border spinner-border-sm text-muted" role="status"></div>
+                                    </span>
                                 </div>                                
                             </div>
                         </div>
@@ -54,7 +57,10 @@
                         Batal
                     </button>
 
-                    <input type="submit" value="Simpan" class="btn btn-success" :class="disableSubmit">                     
+                    <button class="btn btn-success" :class="disableSubmit" @click="save">
+                        Simpan 
+                        <span class="spinner-border spinner-border-sm ml-2" role="status" v-if="saving"></span>
+                    </button>                     
                 </div>
 
             </div>
@@ -65,6 +71,8 @@
 <script>
 // TODO:    - input area belum bisa dikasih class is-invalid kalau error
 //          - kalau modal ditutup, input belum kereset
+import _ from "lodash";
+
 export default {
     name: 'item-add-new-form', 
     props: {
@@ -72,24 +80,39 @@ export default {
         storeUrl: String,
         slug: String
     },
+
     data() {
         return {
             judulPlaceholder: 'Tuliskan nama ' + this.item,
-
             input: {
                 judul: '',
                 slug: 'judul-' + this.item + '-anda',
                 deskripsi: '',
             },
-            
             errors: {
                 judul: null,
                 slug: null,
             },
+            saving: false,
+            slugLoading: false,
+            storeTo: this.storeUrl ?? '/api/' + this.item,
 
             help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this.slug + '/nahwu-dasar-2</code></p>' 
         }
     },
+
+    watch: {
+        // whenever slug changes, run this function
+        'input.slug': function(newSlug, oldSlug) {
+            console.log("new: %s, old: %s", newSlug, oldSlug)
+            this.debouncedCekSlug()
+        },
+    },
+
+    created() {
+        this.debouncedCekSlug = _.debounce(this.cekSlug, 500)
+    },
+
     methods: {
         slugify() {
             this.input.slug = this.input.judul.toLowerCase().trim().replace(/\s/g, '-');
@@ -111,16 +134,37 @@ export default {
             if (this.input.slug == 0 ) {
                 this.errors.slug = 'Slug URL tidak boleh kosong';
             } else {
+                this.slugLoading = true
                 axios.get('/api/' + this.item + '/slug/' + this.input.slug)
                         .then(response => {
+                            console.log(response.data)
                             if (response.data === 1) {
+                                this.slugLoading = false
                                 this.errors.slug = 'Slug ini sudah terpakai, mohon ganti dengan yang lain'
                             } else {
+                                this.slugLoading = false
                                 this.errors.slug = null
                             }
                         })
             }
         },
+
+        save() {
+            this.saving = true
+
+            axios.post(this.storeTo, {
+                data: this.input
+            }).then(response => {
+                console.log(response)
+
+                this.saving = false;
+                this.judul = '';
+                this.slug = 'judul-' + this.item + '-anda';
+                this.deskripsi = '';
+            }).catch(errors => {
+                console.log(errors)
+            })
+        }
 
     },
 
