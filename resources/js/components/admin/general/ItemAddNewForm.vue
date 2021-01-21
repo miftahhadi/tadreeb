@@ -1,27 +1,20 @@
 <template>
     <div>
-        <form 
-            :action="action" 
-            method="post" 
-        >
+        <form action="#" method="post" >
             <slot>
             </slot>
             <div class="row">
                 <div class="col">
 
                     <div class="form-group mb-3">
-                        <label class="form-label required">{{ judul }}</label>
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            name="judul" 
-                            :placeholder="input.judulPlaceholder" 
-                            v-model="input.judul" 
+                        <label class="form-label required">Nama</label>
+                        <input type="text" class="form-control" 
+                            name="judul" :placeholder="judulPlaceholder" v-model="input.judul" 
                             @input="[slugify(), cekJudul(), cekSlug()]"
                             :class="judulInvalid"
                         >
 
-                        <div v-if="errors.hasOwnProperty('judul')" class="invalid-feedback">{{ errors.judul}}</div>
+                        <small v-if="errors.judul != null" class="text-danger">{{ errors.judul }}</small>
                        
                     </div>
 
@@ -32,42 +25,25 @@
                         <div class="row row-sm">
                             <div class="col">
                                 <div class="input-group">
-                                    <input 
-                                        type="text" 
-                                        name="slug" 
-                                        class="form-control" 
-                                        v-model="input.slug"
-                                        @input="cekSlug"
-                                        @change="cekSpasi"
-                                        :class="slugInvalid"
+                                    <input type="text" v-model="input.slug" 
+                                        name="slug" class="form-control" 
+                                        :class="slugInvalid" @input="[cekSlug(), cekSpasi()]"
                                     >
                                 </div>                                
                             </div>
-                            <!-- <div class="col-auto align-self-center">
-                                <span class="form-help" 
-                                        data-toggle="popover" 
-                                        data-placement="top" 
-                                        :data-content="help" 
-                                        data-html="true" 
-                                        data-original-title="" title=""
-                                >?</span>
-                            </div> -->
                         </div>
 
                         <small class="form-hint">Gunakan (-) sebagai pemisah antar kata, bukan spasi.</small>
 
-                        <small v-if="errors.hasOwnProperty('slug')" class="text-danger">{{ errors.slug }}</small>
+                        <small v-if="errors.slug != null" class="text-danger">{{ errors.slug }}</small>
                             
                     </div>
 
                     <div class="form-group mb-3">
                         <label class="form-label">
                             Deskripsi
-                            <!-- <span class="form-label-description">Maks: 600 karakter</span> -->
                         </label>
-                        <textarea class="form-control" name="deskripsi" rows="6" placeholder="Deskripsi..."></textarea>
-                    
-                        <!-- <div class="invalid-feedback">{{ $message }}</div> -->
+                        <textarea class="form-control" name="deskripsi" rows="6" placeholder="Deskripsi..." v-model="input.deskripsi"></textarea>
 
                     </div>
         
@@ -89,27 +65,29 @@
 <script>
 // TODO:    - input area belum bisa dikasih class is-invalid kalau error
 //          - kalau modal ditutup, input belum kereset
-//          - kalau langsung input slug, spasi gak otomatis jadi '-'
 export default {
-    name: 'item-baru-form', 
+    name: 'item-add-new-form', 
     props: {
-        judul: String,
         item: String,
-        action: String,
+        storeUrl: String,
         slug: String
     },
     data() {
         return {
+            judulPlaceholder: 'Tuliskan nama ' + this.item,
+
             input: {
                 judul: '',
                 slug: 'judul-' + this.item + '-anda',
                 deskripsi: '',
-                judulPlaceholder: 'Tuliskan nama ' + this.item
             },
             
-            errors: {},
+            errors: {
+                judul: null,
+                slug: null,
+            },
 
-            help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this. slug + '/nahwu-dasar-2</code></p>' 
+            help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this.slug + '/nahwu-dasar-2</code></p>' 
         }
     },
     methods: {
@@ -118,11 +96,11 @@ export default {
         },
 
         cekSpasi() {
-            this.input.slg = this.input.slug.trim.replace(/\s/g, '-');
+            this.input.slug = this.input.slug.trim().replace(/\s/g, '-');
         },
 
         cekJudul() {
-            if (this.input.judul == 0 ) {
+            if (this.input.judul.length == 0 ) {
                 this.errors.judul = 'Judul tidak boleh kosong';
             } else {
                 this.errors.judul = null;
@@ -133,25 +111,36 @@ export default {
             if (this.input.slug == 0 ) {
                 this.errors.slug = 'Slug URL tidak boleh kosong';
             } else {
-                this.errors.slug = null;
+                axios.get('/api/' + this.item + '/slug/' + this.input.slug)
+                        .then(response => {
+                            if (response.data === 1) {
+                                this.errors.slug = 'Slug ini sudah terpakai, mohon ganti dengan yang lain'
+                            } else {
+                                this.errors.slug = null
+                            }
+                        })
             }
         },
 
     },
 
     computed: {
+        nameShownAs() {
+            return (this.item == 'kelas' || this.item == 'grup') ? 'Nama' : 'Judul'
+        },
+
         judulInvalid() {
-            if (this.errors.hasOwnProperty('judul')) {
+            if (this.errors.judul != null) {
                 return 'is-invalid';
             }
         },
 
         slugInvalid() {
-            return (this.errors.hasOwnProperty('slug')) ? 'is-invalid' : '';
+            return (this.errors.slug != null) ? 'is-invalid' : '';
         },
 
         disableSubmit() {
-            return (this.input.judul.length == 0 || this.input.slug.length == 0) ? 'disabled' : '';
+            return (this.input.judul.length == 0 || this.errors.judul != null || this.errors.slug != null) ? 'disabled' : '';
         },
     }
 }

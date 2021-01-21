@@ -13,11 +13,6 @@ class Lesson extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
-
     public function sections()
     {
         return $this->hasMany(Section::class);

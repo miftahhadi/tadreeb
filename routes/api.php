@@ -21,10 +21,9 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     Route::delete('user/{user}', 'UserController@destroy');  
 
     // Lessons
+    Route::get('pelajaran/slug/{slug}', 'LessonController@getSlug');
     Route::get('pelajaran/search/{search}', 'LessonController@search');
-    Route::get('pelajaran', 'LessonController@list');
-
-    Route::delete('pelajaran/{pelajaran}', 'LessonController@destroy');
+    Route::resource('pelajaran', 'LessonController');
 
     // Exams
     Route::get('ujian/search/{search}', 'ExamController@search');

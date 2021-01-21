@@ -9,17 +9,27 @@ use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
-    public function list()
+    public function index()
     {
         return response()->json(Lesson::paginate(10));
     }
 
     public function search($search)
     {
-        return response()->json(Lesson::where('judul', 'like', '%' . $search . '%')
-                                        ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->paginate(10)
-                );
+        return response()->json(
+            Lesson::where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                    ->paginate(10)
+        );
+    }
+
+    public function getSlug(Request $request)
+    {
+        $slug = $request['slug'];
+
+        $lesson = Lesson::where('slug', $slug)->first();
+
+        return ($lesson) ? true : false;
     }
 
     /**

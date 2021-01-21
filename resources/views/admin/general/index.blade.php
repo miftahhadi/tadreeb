@@ -56,7 +56,7 @@
             ></item-index>
         </div>
 
-        @include('admin.general._new-item-modal')
+        {{-- @include('admin.general._new-item-modal') --}}
 
     </div>
 @endsection

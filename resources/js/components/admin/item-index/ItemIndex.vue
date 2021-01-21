@@ -73,6 +73,14 @@
                 >Ya, hapus</button>
             </template>
         </modal>
+        
+        <modal id="tambahBaru" :classes="['modal-dialog-centered']">
+            <template #title>Tambah {{ item }} Baru</template>
+            <template #body>
+                <item-add-new-form :item="item" slug="Slug" :store-url="store"></item-add-new-form>
+            </template>
+            <template #footer></template>
+        </modal>
 
     </div>    
 </template>
@@ -104,6 +112,7 @@
             baseUrl: String,
             itemIdentifier: String,
             nameShownAs: String,
+            storeUrl: String,
             deleteUrl: String
         },
         
@@ -115,7 +124,8 @@
                 base: this.baseUrl ?? '/admin/' + this.item + '/',
                 identifier: (this.itemIdentifier != '') ? this.itemIdentifier : 'id',
                 itemName: (this.nameShownAs != '') ? this.nameShownAs : 'nama',
-                itemToDelete: {}
+                itemToDelete: {},
+                store: this.storeUrl ?? '/api/' + this.item 
             }
         },
 

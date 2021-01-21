@@ -26,7 +26,7 @@
                         
                         <div class="modal-footer">
                             <slot name="footer">
-                                <button type="button" class="btn mr-auto" data-bs-dismiss="modal">Close</button>
+
                             </slot>
                         </div>
                     </div>
