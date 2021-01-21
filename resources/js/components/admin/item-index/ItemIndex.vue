@@ -77,7 +77,7 @@
         <modal id="tambahBaru" :classes="['modal-dialog-centered']">
             <template #title>Tambah {{ item }} Baru</template>
             <template #body>
-                <item-add-new-form :item="item" slug="Slug" :store-url="store"></item-add-new-form>
+                <item-add-new-form :item="item" slug-name="Slug" :store-url="store"></item-add-new-form>
             </template>
             <template #footer></template>
         </modal>

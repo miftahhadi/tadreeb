@@ -1,70 +1,68 @@
 <template>
     <div>
-        <form action="#" method="post" >
-            <slot>
-            </slot>
-            <div class="row">
-                <div class="col">
+        <slot>
+        </slot>
+        <div class="row">
+            <div class="col">
 
-                    <div class="form-group mb-3">
-                        <label class="form-label required">Nama</label>
-                        <input type="text" class="form-control" 
-                            name="judul" :placeholder="judulPlaceholder" v-model="input.judul" 
-                            @input="[slugify(), cekJudul()]"
-                            :class="judulInvalid"
-                        >
+                <div class="form-group mb-3">
+                    <label class="form-label required">Nama</label>
+                    <input type="text" class="form-control" 
+                        name="judul" :placeholder="judulPlaceholder" v-model="input.judul" 
+                        @input="[slugify(), cekJudul()]"
+                        :class="judulInvalid"
+                    >
 
-                        <small v-if="errors.judul != null" class="text-danger">{{ errors.judul }}</small>
-                       
-                    </div>
+                    <small v-if="errors.judul != null" class="text-danger">{{ errors.judul }}</small>
+                    
+                </div>
 
-                    <div class="form-group mb-3" v-if="slug">
-                        <label class="form-label required">
-                            {{ slug }} 
-                        </label>
-                        <div class="row row-sm">
-                            <div class="col">
-                                <div class="input-group">
-                                    <input type="text" v-model="input.slug" 
-                                        name="slug" class="form-control" 
-                                        :class="slugInvalid" @input="cekSpasi()"
-                                    >
-                                    <span class="input-icon-addon" v-if="slugLoading">
-                                        <div class="spinner-border spinner-border-sm text-muted" role="status"></div>
-                                    </span>
-                                </div>                                
-                            </div>
+                <div class="form-group mb-3" v-if="slugName">
+                    <label class="form-label required">
+                        {{ slugName }} 
+                    </label>
+                    <div class="row row-sm">
+                        <div class="col">
+                            <div class="input-group">
+                                <input type="text" v-model="input.slug" 
+                                    name="slug" class="form-control" 
+                                    :class="slugInvalid" @input="cekSpasi()"
+                                >
+                                <span class="input-icon-addon" v-if="slugLoading">
+                                    <div class="spinner-border spinner-border-sm text-muted" role="status"></div>
+                                </span>
+                            </div>                                
                         </div>
-
-                        <small class="form-hint">Gunakan (-) sebagai pemisah antar kata, bukan spasi.</small>
-
-                        <small v-if="errors.slug != null" class="text-danger">{{ errors.slug }}</small>
-                            
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label class="form-label">
-                            Deskripsi
-                        </label>
-                        <textarea class="form-control" name="deskripsi" rows="6" placeholder="Deskripsi..." v-model="input.deskripsi"></textarea>
+                    <small class="form-hint">Gunakan (-) sebagai pemisah antar kata, bukan spasi.</small>
 
-                    </div>
-        
-                </div>
-                
-                <div class="btn-list">
-                    <button class="btn btn-white" data-dismiss="modal" aria-label="Close">
-                        Batal
-                    </button>
-
-                    <button class="btn btn-success" :class="disableSubmit" @click="save">
-                        Simpan 
-                        <span class="spinner-border spinner-border-sm ml-2" role="status" v-if="saving"></span>
-                    </button>                     
+                    <small v-if="errors.slug != null" class="text-danger">{{ errors.slug }}</small>
+                        
                 </div>
 
+                <div class="form-group mb-3">
+                    <label class="form-label">
+                        Deskripsi
+                    </label>
+                    <textarea class="form-control" name="deskripsi" rows="6" placeholder="Deskripsi..." v-model="input.deskripsi"></textarea>
+
+                </div>
+    
             </div>
-        </form>
+            
+            <div class="btn-list">
+                <button class="btn btn-white" data-dismiss="modal" aria-label="Close">
+                    Batal
+                </button>
+
+                <button class="btn btn-success" :class="disableSubmit" @click="save">
+                    Simpan 
+                    <span class="spinner-border spinner-border-sm ml-2" role="status" v-if="saving"></span>
+                </button>                     
+            </div>
+
+        </div>
     </div>
 </template>
 
@@ -78,7 +76,7 @@ export default {
     props: {
         item: String,
         storeUrl: String,
-        slug: String
+        slugName: String
     },
 
     data() {
@@ -97,7 +95,6 @@ export default {
             slugLoading: false,
             storeTo: this.storeUrl ?? '/api/' + this.item,
 
-            help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this.slug + '/nahwu-dasar-2</code></p>' 
         }
     },
 
@@ -158,9 +155,9 @@ export default {
                 console.log(response)
 
                 this.saving = false;
-                this.judul = '';
-                this.slug = 'judul-' + this.item + '-anda';
-                this.deskripsi = '';
+                this.input.judul = '';
+                this.input.slug = 'judul-' + this.item + '-anda';
+                this.input.deskripsi = '';
             }).catch(errors => {
                 console.log(errors)
             })

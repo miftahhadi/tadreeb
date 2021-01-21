@@ -4085,8 +4085,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 // TODO:    - input area belum bisa dikasih class is-invalid kalau error
 //          - kalau modal ditutup, input belum kereset
 
@@ -4095,7 +4093,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     item: String,
     storeUrl: String,
-    slug: String
+    slugName: String
   },
   data: function data() {
     var _this$storeUrl;
@@ -4113,8 +4111,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       saving: false,
       slugLoading: false,
-      storeTo: (_this$storeUrl = this.storeUrl) !== null && _this$storeUrl !== void 0 ? _this$storeUrl : '/api/' + this.item,
-      help: '<p>Slug akan muncul di alamat URL menuju' + this.item + '. Misalnya, <code>' + this.slug + '/nahwu-dasar-2</code></p>'
+      storeTo: (_this$storeUrl = this.storeUrl) !== null && _this$storeUrl !== void 0 ? _this$storeUrl : '/api/' + this.item
     };
   },
   watch: {
@@ -4170,9 +4167,9 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         console.log(response);
         _this2.saving = false;
-        _this2.judul = '';
-        _this2.slug = 'judul-' + _this2.item + '-anda';
-        _this2.deskripsi = '';
+        _this2.input.judul = '';
+        _this2.input.slug = 'judul-' + _this2.item + '-anda';
+        _this2.input.deskripsi = '';
       })["catch"](function (errors) {
         console.log(errors);
       });
@@ -44390,195 +44387,188 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "form",
-      { attrs: { action: "#", method: "post" } },
-      [
-        _vm._t("default"),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col" }, [
-            _c("div", { staticClass: "form-group mb-3" }, [
-              _c("label", { staticClass: "form-label required" }, [
-                _vm._v("Nama")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.input.judul,
-                    expression: "input.judul"
-                  }
-                ],
-                staticClass: "form-control",
-                class: _vm.judulInvalid,
-                attrs: {
-                  type: "text",
-                  name: "judul",
-                  placeholder: _vm.judulPlaceholder
-                },
-                domProps: { value: _vm.input.judul },
-                on: {
-                  input: [
-                    function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.input, "judul", $event.target.value)
-                    },
-                    function($event) {
-                      ;[_vm.slugify(), _vm.cekJudul()]
-                    }
-                  ]
-                }
-              }),
-              _vm._v(" "),
-              _vm.errors.judul != null
-                ? _c("small", { staticClass: "text-danger" }, [
-                    _vm._v(_vm._s(_vm.errors.judul))
-                  ])
-                : _vm._e()
+  return _c(
+    "div",
+    [
+      _vm._t("default"),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col" }, [
+          _c("div", { staticClass: "form-group mb-3" }, [
+            _c("label", { staticClass: "form-label required" }, [
+              _vm._v("Nama")
             ]),
             _vm._v(" "),
-            _vm.slug
-              ? _c("div", { staticClass: "form-group mb-3" }, [
-                  _c("label", { staticClass: "form-label required" }, [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.slug) +
-                        " \n                    "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row row-sm" }, [
-                    _c("div", { staticClass: "col" }, [
-                      _c("div", { staticClass: "input-group" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.input.slug,
-                              expression: "input.slug"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          class: _vm.slugInvalid,
-                          attrs: { type: "text", name: "slug" },
-                          domProps: { value: _vm.input.slug },
-                          on: {
-                            input: [
-                              function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(_vm.input, "slug", $event.target.value)
-                              },
-                              function($event) {
-                                return _vm.cekSpasi()
-                              }
-                            ]
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm.slugLoading
-                          ? _c("span", { staticClass: "input-icon-addon" }, [
-                              _c("div", {
-                                staticClass:
-                                  "spinner-border spinner-border-sm text-muted",
-                                attrs: { role: "status" }
-                              })
-                            ])
-                          : _vm._e()
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("small", { staticClass: "form-hint" }, [
-                    _vm._v(
-                      "Gunakan (-) sebagai pemisah antar kata, bukan spasi."
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm.errors.slug != null
-                    ? _c("small", { staticClass: "text-danger" }, [
-                        _vm._v(_vm._s(_vm.errors.slug))
-                      ])
-                    : _vm._e()
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group mb-3" }, [
-              _c("label", { staticClass: "form-label" }, [
-                _vm._v(
-                  "\n                        Deskripsi\n                    "
-                )
-              ]),
-              _vm._v(" "),
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.input.deskripsi,
-                    expression: "input.deskripsi"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  name: "deskripsi",
-                  rows: "6",
-                  placeholder: "Deskripsi..."
-                },
-                domProps: { value: _vm.input.deskripsi },
-                on: {
-                  input: function($event) {
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.input.judul,
+                  expression: "input.judul"
+                }
+              ],
+              staticClass: "form-control",
+              class: _vm.judulInvalid,
+              attrs: {
+                type: "text",
+                name: "judul",
+                placeholder: _vm.judulPlaceholder
+              },
+              domProps: { value: _vm.input.judul },
+              on: {
+                input: [
+                  function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.input, "deskripsi", $event.target.value)
+                    _vm.$set(_vm.input, "judul", $event.target.value)
+                  },
+                  function($event) {
+                    ;[_vm.slugify(), _vm.cekJudul()]
                   }
-                }
-              })
-            ])
+                ]
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.judul != null
+              ? _c("small", { staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(_vm.errors.judul))
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "btn-list" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-white",
-                attrs: { "data-dismiss": "modal", "aria-label": "Close" }
-              },
-              [_vm._v("\n                    Batal\n                ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-success",
-                class: _vm.disableSubmit,
-                on: { click: _vm.save }
-              },
-              [
-                _vm._v("\n                    Simpan \n                    "),
-                _vm.saving
-                  ? _c("span", {
-                      staticClass: "spinner-border spinner-border-sm ml-2",
-                      attrs: { role: "status" }
-                    })
+          _vm.slugName
+            ? _c("div", { staticClass: "form-group mb-3" }, [
+                _c("label", { staticClass: "form-label required" }, [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.slugName) +
+                      " \n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row row-sm" }, [
+                  _c("div", { staticClass: "col" }, [
+                    _c("div", { staticClass: "input-group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.input.slug,
+                            expression: "input.slug"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        class: _vm.slugInvalid,
+                        attrs: { type: "text", name: "slug" },
+                        domProps: { value: _vm.input.slug },
+                        on: {
+                          input: [
+                            function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.input, "slug", $event.target.value)
+                            },
+                            function($event) {
+                              return _vm.cekSpasi()
+                            }
+                          ]
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.slugLoading
+                        ? _c("span", { staticClass: "input-icon-addon" }, [
+                            _c("div", {
+                              staticClass:
+                                "spinner-border spinner-border-sm text-muted",
+                              attrs: { role: "status" }
+                            })
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("small", { staticClass: "form-hint" }, [
+                  _vm._v("Gunakan (-) sebagai pemisah antar kata, bukan spasi.")
+                ]),
+                _vm._v(" "),
+                _vm.errors.slug != null
+                  ? _c("small", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.slug))
+                    ])
                   : _vm._e()
-              ]
-            )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group mb-3" }, [
+            _c("label", { staticClass: "form-label" }, [
+              _vm._v("\n                    Deskripsi\n                ")
+            ]),
+            _vm._v(" "),
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.input.deskripsi,
+                  expression: "input.deskripsi"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                name: "deskripsi",
+                rows: "6",
+                placeholder: "Deskripsi..."
+              },
+              domProps: { value: _vm.input.deskripsi },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.input, "deskripsi", $event.target.value)
+                }
+              }
+            })
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "btn-list" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-white",
+              attrs: { "data-dismiss": "modal", "aria-label": "Close" }
+            },
+            [_vm._v("\n                Batal\n            ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success",
+              class: _vm.disableSubmit,
+              on: { click: _vm.save }
+            },
+            [
+              _vm._v("\n                Simpan \n                "),
+              _vm.saving
+                ? _c("span", {
+                    staticClass: "spinner-border spinner-border-sm ml-2",
+                    attrs: { role: "status" }
+                  })
+                : _vm._e()
+            ]
+          )
         ])
-      ],
-      2
-    )
-  ])
+      ])
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -45073,7 +45063,7 @@ var render = function() {
                 _c("item-add-new-form", {
                   attrs: {
                     item: _vm.item,
-                    slug: "Slug",
+                    "slug-name": "Slug",
                     "store-url": _vm.store
                   }
                 })
