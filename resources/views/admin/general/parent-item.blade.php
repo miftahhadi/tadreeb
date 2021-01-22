@@ -47,13 +47,13 @@
         </div>
 
         <div class="mt-4 card">
-            <data-table :headings="{{ $tableHeading }}" 
+            <v-table :headings="{{ $tableHeading }}" 
                 :properties="{{ $itemProperties }}"
                 :data="{{ $exams }}" :action="true">
 
                 <template #action>Hapus @{{ id }}</template>
 
-            </data-table>
+            </v-table>
         </div>
 
         {{-- @include('admin.general._new-item-modal') --}}

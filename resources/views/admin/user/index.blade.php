@@ -43,24 +43,6 @@
                 </div>
             </div>
 
-            <modal id="tambahBaru" :classes="['modal-dialog-centered']">
-                <template #title>{{ ucfirst($item)}} Baru</template>
-    
-                <template #body>
-                    <user-add-new-form>
-                        @csrf
-                    
-                    </user-add-new-form>
-                </template>
-    
-                <template #footer>
-                    <div class="btn-list mt-4">
-                        <a href="{{ route('admin.user.index') }}" class="btn btn-white">Batal</a>
-                        <input type="submit" name="submit" value="Simpan" class="btn btn-success">
-                    </div>
-                </template>
-            </modal>
-
         </template>
     </item-index>
 </div>

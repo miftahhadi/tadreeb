@@ -60,8 +60,6 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    protected $with = ['profile'];
-
     public function profile()
     {
         return $this->hasOne(Profile::class);

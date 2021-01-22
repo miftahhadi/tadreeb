@@ -27,12 +27,9 @@ class UserController extends Controller
             'title' => 'Daftar User',
             'fetchUrl' => '/api/user',
             'item' => 'user',
-            'judul' => 'Judul ujian',
-            'slug' => 'Slug URL',
-            'url' => $_SERVER['SERVER_NAME'] . '/kelas/{kelas}/ujian',
-            'action' => route('admin.ujian.store'),
             'tableHeading' => json_encode(DataTable::heading('user')),
-            'itemProperties' => json_encode(DataTable::props('user'))
+            'itemProperties' => json_encode(DataTable::props('user')),
+            'nameShownAs' => 'name'
         ]);
     }
 

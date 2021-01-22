@@ -78,7 +78,7 @@
 
                     <div class="dimmer-content">
 
-                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
+                        <v-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
                             <template v-slot:action="actionProps">
                                 <div class="btn-list flex-nowrap">
                                     <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat</a>
@@ -90,7 +90,7 @@
                                     <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal" @click="callDelete(actionProps.item)">Hapus</button>
                                 </div>
                             </template>
-                        </data-table>
+                        </v-table>
 
                     </div>
                 </div>

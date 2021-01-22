@@ -38,7 +38,7 @@
 
                     <div class="dimmer-content">
 
-                        <data-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
+                        <v-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
                             <template v-slot:action="actionProps">
                                 <div class="btn-list flex-nowrap">
                                     <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat</a>
@@ -50,7 +50,7 @@
                                     <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal" @click="callDelete(actionProps.item)">Hapus</button>
                                 </div>
                             </template>
-                        </data-table>
+                        </v-table>
 
                     </div>
                 </div>
@@ -77,7 +77,14 @@
         <modal id="tambahBaru" :classes="['modal-dialog-centered']">
             <template #title>Tambah {{ item }} Baru</template>
             <template #body>
-                <item-add-new-form :item="item" slug-name="Slug" :store-url="store"></item-add-new-form>
+                <item-add-new-form v-if="item != 'user'"
+                    :user-id="userId" 
+                    :item="item" 
+                    :slug-name="slugName" 
+                    :store-url="store"
+                    @saved="getResults()"
+                    @savedAndGo="goToItem($event)"
+                ></item-add-new-form>
             </template>
             <template #footer></template>
         </modal>
@@ -92,6 +99,7 @@
         name: 'item-index',
 
         props: {
+            userId: Number,
             item: {
                 type: String,
                 required: true
@@ -125,7 +133,7 @@
                 identifier: (this.itemIdentifier != '') ? this.itemIdentifier : 'id',
                 itemName: (this.nameShownAs != '') ? this.nameShownAs : 'nama',
                 itemToDelete: {},
-                store: this.storeUrl ?? '/api/' + this.item 
+                store: this.storeUrl ?? '/api/' + this.item,
             }
         },
 
@@ -177,6 +185,10 @@
 
             callDelete(data) {
                 this.itemToDelete = data;
+            },
+
+            goToItem(data) {
+                window.location.href = this.base + data[this.identifier]
             }
         },
 
@@ -197,6 +209,10 @@
 
             isLoading() {
                 return (this.loading) ? 'active' : ''
+            },
+
+            slugName() {
+                return (this.item != 'grup' && this.item != 'kelas') ? 'Slug' : null
             }
         }
     }

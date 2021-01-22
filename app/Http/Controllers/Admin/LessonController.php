@@ -32,7 +32,6 @@ class LessonController extends Controller
             'action' => route('admin.pelajaran.store'),
             'tableHeading' => json_encode(DataTable::heading()),
             'itemProperties' => json_encode(DataTable::props()),
-            'identifier' => 'slug',
             'nameShownAs' => 'judul'
         ]);
     }

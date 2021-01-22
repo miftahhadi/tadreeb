@@ -33,7 +33,7 @@
 
 <script>
 export default {
-    name: 'data-table',
+    name: 'v-table',
     
     props: {
         headings: {

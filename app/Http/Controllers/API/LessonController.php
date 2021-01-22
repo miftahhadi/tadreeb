@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Classroom;
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
@@ -40,19 +39,18 @@ class LessonController extends Controller
      */
     public function store(Request $request)
     {
-        return 'yes';
+        $data = $request->input('data');
+
+        $lesson = Lesson::create([
+            'user_id' => $request->input('userId'),
+            'judul' => $data['judul'],
+            'slug' => $data['slug'],
+            'deskripsi' => $data['deskripsi']
+        ]);
+
+        return response($lesson);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

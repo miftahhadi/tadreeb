@@ -17,7 +17,7 @@
                     
                 </div>
 
-                <div class="form-group mb-3" v-if="slugName">
+                <div class="form-group mb-3" v-if="slugName != null">
                     <label class="form-label required">
                         {{ slugName }} 
                     </label>
@@ -50,8 +50,15 @@
                 </div>
     
             </div>
-            
-            <div class="btn-list">
+        </div>
+
+        <label class="form-check">
+            <input class="form-check-input" type="checkbox" v-model="stayHere">
+            <span class="form-check-label">Tetap di halaman ini setelah menyimpan data</span>
+        </label>
+
+        <div class="row d-flex align-items-center">
+            <div class="col-auto btn-list">
                 <button class="btn btn-white" data-dismiss="modal" aria-label="Close">
                     Batal
                 </button>
@@ -59,10 +66,18 @@
                 <button class="btn btn-success" :class="disableSubmit" @click="save">
                     Simpan 
                     <span class="spinner-border spinner-border-sm ml-2" role="status" v-if="saving"></span>
-                </button>                     
+                </button>                   
             </div>
-
+            <div class="col d-flex align-items-center">
+                <transition>
+                    <span class="text-success" v-if="saved">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                        Item berhasil disimpan
+                    </span>  
+                </transition>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -74,6 +89,7 @@ import _ from "lodash";
 export default {
     name: 'item-add-new-form', 
     props: {
+        userId: Number,
         item: String,
         storeUrl: String,
         slugName: String
@@ -84,7 +100,7 @@ export default {
             judulPlaceholder: 'Tuliskan nama ' + this.item,
             input: {
                 judul: '',
-                slug: 'judul-' + this.item + '-anda',
+                slug: '',
                 deskripsi: '',
             },
             errors: {
@@ -95,24 +111,33 @@ export default {
             slugLoading: false,
             storeTo: this.storeUrl ?? '/api/' + this.item,
 
+            stayHere: false,
+            saved: false
         }
     },
 
     watch: {
         // whenever slug changes, run this function
         'input.slug': function(newSlug, oldSlug) {
-            console.log("new: %s, old: %s", newSlug, oldSlug)
-            this.debouncedCekSlug()
+            this.validateSlug()
         },
     },
 
     created() {
-        this.debouncedCekSlug = _.debounce(this.cekSlug, 500)
+        this.debouncedCekSlug = _.debounce(this.cekSlug, 1000)
+    },
+
+    mounted() {
+        if (this.slugName) {
+            this.input.slug = 'judul-' + this.item + '-anda'
+        }
     },
 
     methods: {
         slugify() {
-            this.input.slug = this.input.judul.toLowerCase().trim().replace(/\s/g, '-');
+            if (this.slugName) {
+                this.input.slug = this.input.judul.toLowerCase().trim().replace(/\s/g, '-');                
+            }
         },
 
         cekSpasi() {
@@ -127,40 +152,55 @@ export default {
             }
         },
 
-        cekSlug() {
+        validateSlug() {
             if (this.input.slug == 0 ) {
                 this.errors.slug = 'Slug URL tidak boleh kosong';
             } else {
                 this.slugLoading = true
-                axios.get('/api/' + this.item + '/slug/' + this.input.slug)
-                        .then(response => {
-                            console.log(response.data)
-                            if (response.data === 1) {
-                                this.slugLoading = false
-                                this.errors.slug = 'Slug ini sudah terpakai, mohon ganti dengan yang lain'
-                            } else {
-                                this.slugLoading = false
-                                this.errors.slug = null
-                            }
-                        })
+
+                this.debouncedCekSlug()
             }
+        },
+
+        cekSlug() {   
+            axios.get('/api/' + this.item + '/slug/' + this.input.slug)
+                    .then(response => {
+                        console.log(response.data)
+                        if (response.data === 1) {
+                            this.slugLoading = false
+                            this.errors.slug = 'Slug ini sudah terpakai, mohon ganti dengan yang lain'
+                        } else {
+                            this.slugLoading = false
+                            this.errors.slug = null
+                        }
+                    })
         },
 
         save() {
             this.saving = true
 
             axios.post(this.storeTo, {
-                data: this.input
+                data: this.input,
+                userId: this.userId
             }).then(response => {
-                console.log(response)
+                if (this.stayHere) {
+                    this.saving = false;
+                    this.input.judul = '';
+                    this.input.slug = 'judul-' + this.item + '-anda';
+                    this.input.deskripsi = '';
 
-                this.saving = false;
-                this.input.judul = '';
-                this.input.slug = 'judul-' + this.item + '-anda';
-                this.input.deskripsi = '';
+                    this.saved = true
+
+                    this.$emit('saved')
+                } else {
+                    this.$emit('savedAndGo', response.data)
+                }
+
             }).catch(errors => {
                 console.log(errors)
             })
+
+            setTimeout(this.saved = false, 3000);
         }
 
     },
