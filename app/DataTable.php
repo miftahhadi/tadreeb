@@ -54,7 +54,7 @@ class DataTable
         ],
         [
             'name' => 'Nama',
-            'width' => '40%'
+            'width' => '30%'
         ],
         [
             'name' => 'Username',
@@ -62,6 +62,10 @@ class DataTable
         ],
         [
             'name' => 'Jenis Kelamin',
+            'width' => null
+        ],
+        [
+            'name' => 'Peran',
             'width' => null
         ]
     ];
@@ -72,7 +76,7 @@ class DataTable
     
     protected static $propsThree = ['id', 'nama', 'kode'];
     
-    protected static $propsUser = ['id', 'name', 'username', 'profile.gender'];
+    protected static $propsUser = ['id', 'name', 'username', 'gender', 'role'];
 
     public static function heading($parameter = null)
     {
