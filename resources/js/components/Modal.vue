@@ -13,7 +13,7 @@
                     <div class="dimmer-content">
                         <div class="modal-header">
                             <slot name="header">
-                                <h5 class="modal-title">
+                                <h5 class="modal-title capitalize">
                                     <slot name="title"></slot>
                                 </h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
@@ -72,3 +72,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+    .capitalize {
+        text-transform: capitalize;
+    }
+</style>
