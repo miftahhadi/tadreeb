@@ -9,7 +9,6 @@
                 <div class="input-icon">
                     <input type="text" class="form-control form-control-rounded" 
                         placeholder="Cari..." v-model="query"
-                        @input="getResults"
                     >
 
                     <span class="input-icon-addon">
