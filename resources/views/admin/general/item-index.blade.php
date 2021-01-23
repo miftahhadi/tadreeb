@@ -11,12 +11,7 @@
 
                         <div class="col">
                             <div class="mb-1">
-                                <ol class="breadcrumb breadcrumb-arrows breadcrumb-alternate" aria-label="breadcrumbs">
-                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"><a href="#">
-                                        {{ ucfirst($item) }}
-                                    </a></li>
-                                </ol>
+                                @include('admin._breadcrumb')
                             </div>
                             <h1>
                                 <span class="text-truncate">{{ ucfirst($item) }}</span>

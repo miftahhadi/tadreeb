@@ -4,25 +4,7 @@
 
 <div id="app">
 
-    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
-        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.grup.index') }}">Grup</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="#">
-            {{ $grup->nama }}
-        </a></li>
-    </ol>
-
-    <div class="mt-2">
-        <h2 class="h1 font-weight-bold">{{ $grup->nama }}</h2>
-        <p>
-            {{ $grup->deskripsi }}
-        </p>
-    
-        <ul class="list-inline">
-            <li class="list-inline-item"><small><a href="#">Edit</a></small></li>
-            <li class="list-inline-item"><small><a href="#" class="text-danger">Hapus</a></small></li>
-        </ul>
-    </div>
+    @include('admin._item-header')
 
     <div class="row">
         <div class="col-auto">
@@ -31,7 +13,7 @@
         <div class="col-auto ml-auto">
     
             <button type="button" 
-                    class="btn btn-primary" 
+                    class="btn" 
                     data-toggle="modal" 
                     data-target="#tambahBaru">
                 
@@ -44,16 +26,6 @@
     
         </div>
     </div>
-
-    <item-index
-        item="{{ $item }}"
-        fetch-url="{{ $fetchUrl }}"
-        :table-heading="{{ $tableHeading }}"
-        :item-properties="{{ $itemProperties }}"
-        item-url="{{ $itemUrl }}"
-      ></item-index>
-
-    @include('admin.general._new-item-modal')
 
 </div>
 @endsection

@@ -26,17 +26,19 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return view('admin.general.item-index', [
-            'title' => 'Grup User',
-            'fetchUrl' => '/api/grup',
-            'item' => 'grup',
-            'judul' => 'Nama Grup',
-            'slug' => '',
-            'action' => route('admin.grup.store'),
-            'tableHeading' => json_encode(DataTable::heading(2)),
-            'itemProperties' => json_encode(DataTable::props(2)),
-            'nameShownAs' => 'nama'
-        ]);
+        $breadcrumbs = [];
+
+        $title = 'Grup User';
+        $fetchUrl = '/api/grup';
+        $item = 'grup';
+        $judul = 'Nama Grup';
+        $tableHeading = json_encode(DataTable::heading(2));
+        $itemProperties = json_encode(DataTable::props(2));
+        $nameShownAs = 'nama';
+
+        return view('admin.general.item-index', compact(
+            'breadcrumbs','title', 'fetchUrl', 'item', 'judul', 'tableHeading', 'itemProperties', 'nameShownAs'
+        ));
     }
 
 
@@ -74,20 +76,29 @@ class GroupController extends Controller
      */
     public function show(Group $grup)
     {
-        return view('admin.grup.show', [
-            'title' => $grup->nama . ' - Grup User ',  
-            'fetchUrl' => '/api/grup/' . $grup->id . '/kelas',
-            'grup' => $grup,
-            'item' => 'kelas',
-            'judul' => 'Nama Kelas',
-            'action' => route('admin.grup.kelas.store', $grup->id),
-            'slug' => '',
+        $title = $grup->nama . ' - Grup User ';
+        $fetchUrl = '/api/grup/' . $grup->id . '/kelas';
+        $item = 'kelas';
+        $judul = 'Nama Kelas';
+        $action = route('admin.grup.kelas.store', $grup->id);
+        $tableHeading = json_encode(DataTable::heading(3));
+        $itemProperties = json_encode(DataTable::props(3));
+        $itemUrl = '/admin/grup/' . $grup->id . '/kelas/';
+        $slug = '';
 
-            'tableHeading' => json_encode(DataTable::heading(3)),
-            'itemProperties' => json_encode(DataTable::props(3)),
+        $breadcrumbs = [
+            [
+                'name' => $grup->nama,
+                'href' => route('admin.grup.show', $grup->id)
+            ]
+        ];
 
-            'itemUrl' => '/admin/grup/' . $grup->id . '/kelas/',
-        ]);
+        $itemName = $grup->nama;
+        $itemDescription = $grup->deskripsi;
+
+        return view('admin.grup.show', compact(
+            'breadcrumbs', 'title', 'fetchUrl', 'grup', 'item', 'judul', 'action', 'slug', 'tableHeading', 'itemProperties', 'itemUrl', 'itemName', 'itemDescription'
+        ));
     }
 
     /**
