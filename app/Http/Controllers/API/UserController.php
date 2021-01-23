@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function list()
+    public function index()
     {
         return response()
                 ->json(User::select('id','name', 'username')

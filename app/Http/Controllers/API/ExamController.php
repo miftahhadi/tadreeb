@@ -13,17 +13,41 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
-    public function list() 
+    public function index() 
     {
-        return response()->json(Exam::paginate(10));
+        return response()->json(Exam::orderBy('created_at', 'desc')->paginate(15));
     }
 
     public function search($search)
     {
         return response()->json(Exam::where('judul', 'like', '%' . $search . '%')
                                         ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                                        ->orderBy('id', 'desc')
                                         ->paginate(10)
                                 );
+    }
+
+    public function getSlug(Request $request)
+    {
+        $slug = $request['slug'];
+
+        $exam = Exam::where('slug', $slug)->first();
+
+        return ($exam) ? true : false;
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->input('data');
+
+        $exam = Exam::create([
+            'user_id' => $request->input('userId'),
+            'judul' => $data['judul'],
+            'slug' => $data['slug'],
+            'deskripsi' => $data['deskripsi']
+        ]);
+
+        return response($exam);
     }
 
     public function destroy(Exam $ujian)

@@ -10,7 +10,7 @@ class LessonController extends Controller
 {
     public function index()
     {
-        return response()->json(Lesson::paginate(10));
+        return response()->json(Lesson::orderBy('created_at')->paginate(15));
     }
 
     public function search($search)

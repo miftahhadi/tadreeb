@@ -16,9 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() {
     // Users
-    Route::get('user', 'UserController@list');
     Route::get('user/search/{search}', 'UserController@search');
-    Route::delete('user/{user}', 'UserController@destroy');  
+    Route::resource('user', 'UserController');
 
     // Lessons
     Route::get('pelajaran/slug/{slug}', 'LessonController@getSlug');
@@ -28,7 +27,8 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     // Exams
     Route::get('ujian/search/{search}', 'ExamController@search');
     Route::get('ujian/{exam:id}', 'ExamController@getExam');
-    Route::get('ujian', 'ExamController@list');
+    Route::get('ujian/slug/{slug}', 'ExamController@getSlug');
+    Route::resource('ujian', 'ExamController');
 
     Route::delete('ujian/{ujian}', 'ExamController@destroy');
     
@@ -45,13 +45,10 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
     // Group
     Route::get('grup/search/{search}', 'GroupController@search');
-    Route::get('grup', 'GroupController@list');
-    Route::delete('grup/{grup}', 'GroupController@destroy');
+    Route::resource('grup', 'GroupController');
 
     // Classrooms
-    Route::get('grup/{grup}/kelas', 'ClassroomController@list');
     Route::get('grup/{grup}/kelas/search/{search}', 'ClassroomController@search');
-    Route::delete('grup/{grup}/kelas/{kelas}', 'ClassroomController@destroy');
 
     Route::group(['prefix' => 'kelas/{kelas}'], function () {
         Route::get('pelajaran', 'ClassroomController@lesson');
@@ -63,5 +60,8 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
         Route::get('user', 'ClassroomController@user');
         Route::post('user/assign', 'ClassroomController@assignUser');
     });
+
+    Route::resource('grup/{grup}/kelas', 'ClassroomController');
+
 });
 

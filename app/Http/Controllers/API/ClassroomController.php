@@ -10,14 +10,9 @@ use Illuminate\Http\Request;
 class ClassroomController extends Controller
 {
 
-    public function index()
+    public function index(Group $grup) 
     {
-
-    }
-
-    public function list(Group $grup) 
-    {
-        return response()->json($grup->classrooms()->paginate(25));
+        return response()->json($grup->classrooms()->orderBy('created_at', 'desc')->paginate(25));
     }
 
     public function search($search)

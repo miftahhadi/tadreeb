@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    public function list()
+    public function index()
     {
-        return response()->json(Group::paginate(10));
+        return response()->json(Group::orderBy('created_at', 'desc')->paginate(10));
     }
 
     public function search($search)
@@ -20,6 +20,17 @@ class GroupController extends Controller
                 ->orWhere('deskripsi', 'like', '%' .  $search . '%')
                 ->paginate(10)
             );
+    }
+    public function store(Request $request)
+    {
+        $data = $request->input('data');
+
+        $grup = Group::create([
+            'nama' => $data['judul'],
+            'deskripsi' => $data['deskripsi']
+        ]);
+
+        return response($grup);
     }
 
     public function destroy(Group $grup)
