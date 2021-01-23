@@ -69,12 +69,10 @@
                 </button>                   
             </div>
             <div class="col d-flex align-items-center">
-                <transition>
-                    <span class="text-success" v-if="saved">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
-                        Item berhasil disimpan
-                    </span>  
-                </transition>
+                <span class="text-success" v-if="saved">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+                    Item berhasil disimpan
+                </span>  
             </div>
         </div>
 
@@ -145,6 +143,8 @@ export default {
         },
 
         cekJudul() {
+            this.saved = false
+            
             if (this.input.judul.length == 0 ) {
                 this.errors.judul = 'Judul tidak boleh kosong';
             } else {
@@ -153,6 +153,10 @@ export default {
         },
 
         validateSlug() {
+            if (this.slugName == null) {
+                return
+            }
+
             if (this.input.slug == 0 ) {
                 this.errors.slug = 'Slug URL tidak boleh kosong';
             } else {
