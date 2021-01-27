@@ -40,7 +40,7 @@
                         <v-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
                             <template v-slot:action="actionProps">
                                 <div class="btn-list flex-nowrap">
-                                    <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat</a>
+                                    <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat Profil</a>
 
                                     <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-else>Buka</a>
 
@@ -76,7 +76,10 @@
         <modal id="tambahBaru" :classes="['modal-dialog-centered']">
             <template #title>Tambah {{ item }} Baru</template>
             <template #body>
-                <item-add-new-form v-if="item != 'user'"
+                <user-add-new-form v-if="item == 'user'">
+
+                </user-add-new-form>
+                <item-add-new-form v-else
                     :user-id="userId" 
                     :item="item" 
                     :slug-name="slugName" 
@@ -93,8 +96,11 @@
 
 <script>
     import swal from "sweetalert";
+    import UserAddNewForm from '../user/UserAddNewForm.vue';
 
     export default {
+        components: { UserAddNewForm },
+
         name: 'item-index',
 
         props: {

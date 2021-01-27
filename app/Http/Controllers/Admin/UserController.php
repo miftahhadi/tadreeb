@@ -23,7 +23,10 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('admin.user.index', [
+        $breadcrumbs = [];
+
+        return view('admin.general.item-index', [
+            'breadcrumbs' => $breadcrumbs,
             'title' => 'Daftar User',
             'fetchUrl' => '/api/user',
             'item' => 'user',

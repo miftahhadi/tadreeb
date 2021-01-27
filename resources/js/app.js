@@ -3,6 +3,9 @@ require('./bootstrap');
 require('alpinejs');
 
 window.Vue = require('vue');
+window.VueFormulate = require('@braid/vue-formulate');
+
+Vue.use(VueFormulate.default);
 
 /**
  * The following block of code may be used to automatically register your

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() {
     // Users
     Route::get('user/search/{search}', 'UserController@search');
+    Route::get('user/check-data', 'UserController@checkData');
     Route::resource('user', 'UserController');
 
     // Lessons

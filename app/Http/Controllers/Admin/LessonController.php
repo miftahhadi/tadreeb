@@ -23,17 +23,23 @@ class LessonController extends Controller
 
     public function index()
     {
-        return view('admin.general.item-index', [
-            'title' => 'Daftar Pelajaran',
-            'fetchUrl' => '/api/pelajaran',
-            'item' => 'pelajaran',
-            'judul' => 'Judul pelajaran',
-            'slug' => 'Slug URL',
-            'action' => route('admin.pelajaran.store'),
-            'tableHeading' => json_encode(DataTable::heading()),
-            'itemProperties' => json_encode(DataTable::props()),
-            'nameShownAs' => 'judul'
-        ]);
+        $breadcrumbs = [];
+
+        $title = 'Daftar Pelajaran';
+        $fetchUrl = '/api/pelajaran';
+        $item = 'pelajaran';
+        $judul = 'Judul pelajaran';
+        $slug = 'Slug URL';
+        $action = route('admin.pelajaran.store');
+        $tableHeading = json_encode(DataTable::heading());
+        $itemProperties = json_encode(DataTable::props());
+        $nameShownAs = 'judul';
+
+        return view('admin.general.item-index', compact(
+            'breadcrumbs', 'title', 'fetchUrl', 'item', 'judul', 'slug',
+            'action', 'tableHeading', 'itemProperties',
+            'nameShownAs'
+        ));
     }
 
 

@@ -3,7 +3,17 @@
 @section('content')
     <div id="app">
 
-        <item-index :user-id="{{ auth()->user()->id }}" item="{{ $item }}" fetch-url="{{ $fetchUrl }}" :table-heading="{{ $tableHeading }}" :item-properties="{{ $itemProperties }}" :search="true" item-identifier="{{ $identifier ?? null }}" name-shown-as="{{ $nameShownAs ?? null }}">
+        <item-index 
+            :user-id="{{ auth()->user()->id }}" 
+            item="{{ $item }}" 
+            fetch-url="{{ $fetchUrl }}" 
+            :table-heading="{{ $tableHeading }}" 
+            :item-properties="{{ $itemProperties }}" 
+            :search="true" 
+            item-identifier="{{ $identifier ?? null }}" 
+            name-shown-as="{{ $nameShownAs ?? null }}"
+            store-url="{{ $storeUrl ?? null }}"
+        >
             <template v-slot:header>
                 
                 <div class="page-header">
@@ -30,6 +40,10 @@
                                     <span>Tambah Baru</span>
                                 
                                 </button>
+
+                                @if ($item = 'user')
+                                    <a href="#" class="btn btn-success">Impor dari .CSV</a>
+                                @endif
                             </div>
                         </div>
                     </div>

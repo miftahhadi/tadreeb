@@ -27,11 +27,41 @@ class UserController extends Controller
     public function search($search)
     {
         return response()->json(
-            User::where('nama', 'like', '%' . $search . '%')
+            User::where('name', 'like', '%' . $search . '%')
                 ->orWhere('username', 'like', '%' .  $search . '%')
                 ->orWhere('email', 'like', '%' . $search . '%')
                 ->paginate(25)
         );
+    }
+
+    public function checkData(Request $request)
+    {
+        $type = $request->input('type');
+        $data = $request->input('data');
+
+        $user = User::where($type, $data)->first();
+
+        return ($user) ? 1 : 0;
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->input('data');
+
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'username' => $data['username']
+        ]);
+
+        $user->profile->create([
+            'gender' => $data['gender'],
+            'tanggal_lahir' => $data['tanggal_lahir'],
+            'whatsapp' => $data['whatsapp'],
+            'telegram' => $data['telegram']
+        ]);
+
+        return $user;
     }
 
     public function destroy(User $user)

@@ -29,9 +29,11 @@ class StoreUserRequest extends FormRequest
             'user.email' => ['required', 'unique:users,email'],
             'user.username' => ['required', 'unique:users,username'],
             'user.password' => 'required',
-            'role' => '',
-            'user.gender' => '',
-            'user.tanggal_lahir' => ''
+            'role.name' => '',
+            'profile.gender' => '',
+            'profile.tanggal_lahir' => '',
+            'profile.whatsapp' => '',
+            'profile.telegram' => ''
         ];
     }
 

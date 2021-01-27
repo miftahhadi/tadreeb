@@ -30,18 +30,21 @@ class ExamController extends Controller
      */
     public function index()
     {
+        $breadcrumbs = [];
 
-        return view('admin.general.item-index', [
-            'title' => 'Daftar Ujian',
-            'fetchUrl' => '/api/ujian',
-            'item' => 'ujian',
-            'judul' => 'Judul ujian',
-            'slug' => 'Slug URL',
-            'action' => route('admin.ujian.store'),
-            'tableHeading' => json_encode(DataTable::heading()),
-            'itemProperties' => json_encode(DataTable::props()),
-            'nameShownAs' => 'judul'
-        ]);
+        $title = 'Daftar Ujian';
+        $fetchUrl = '/api/ujian';
+        $item = 'ujian';
+        $judul = 'Judul ujian';
+        $tableHeading = json_encode(DataTable::heading());
+        $itemProperties = json_encode(DataTable::props());
+        $nameShownAs = 'judul';
+
+        return view('admin.general.item-index', compact(
+            'breadcrumbs','title', 'fetchUrl', 'item', 'judul',
+            'tableHeading', 'itemProperties',
+            'nameShownAs' 
+        ));
     }
 
 
