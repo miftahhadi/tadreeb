@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -48,20 +49,30 @@ class UserController extends Controller
     {
         $data = $request->input('data');
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'username' => $data['username']
-        ]);
+        try {
+            $user = User::create([
+                'name' => $data['nama'],
+                'email' => $data['email'],
+                'username' => $data['username'],
+                'password' => Hash::make($data['password'])
+            ]);
+    
+            $user->profile()->create([
+                'gender' => $data['gender'],
+                'tanggal_lahir' => $data['tanggal_lahir'],
+                'whatsapp' => $data['whatsapp'],
+                'telegram' => $data['telegram']
+            ]);
 
-        $user->profile->create([
-            'gender' => $data['gender'],
-            'tanggal_lahir' => $data['tanggal_lahir'],
-            'whatsapp' => $data['whatsapp'],
-            'telegram' => $data['telegram']
-        ]);
+            return 'user created';
+        } catch (\Throwable $th) {
+            return 'error: ' . $th;
+        }
+    }
 
-        return $user;
+    public function show(User $user)
+    {
+        return response($user->load('profile'));
     }
 
     public function destroy(User $user)
