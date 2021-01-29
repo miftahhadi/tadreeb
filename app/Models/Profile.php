@@ -11,6 +11,8 @@ class Profile extends Model
 
     protected $guarded = [];
 
+    protected $dates = ['tanggal_lahir'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
