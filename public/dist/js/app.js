@@ -4169,10 +4169,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4265,10 +4265,11 @@ __webpack_require__.r(__webpack_exports__);
 //          - kalau modal ditutup, input belum kereset
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'item-add-new-form',
+  name: 'item-edit-form',
   props: {
     userId: Number,
     item: String,
+    itemId: Number,
     storeUrl: String,
     slugName: String
   },
@@ -4360,12 +4361,13 @@ __webpack_require__.r(__webpack_exports__);
         data: this.input,
         userId: this.userId
       }).then(function (response) {
+        _this2.saving = false;
+        _this2.saved = true;
+
         if (_this2.stayHere) {
-          _this2.saving = false;
           _this2.input.judul = '';
           _this2.input.slug = 'judul-' + _this2.item + '-anda';
           _this2.input.deskripsi = '';
-          _this2.saved = true;
 
           _this2.$emit('saved');
         } else {
@@ -4647,7 +4649,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _user_UserAddNewForm_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../user/UserAddNewForm.vue */ "./resources/js/components/admin/user/UserAddNewForm.vue");
 //
 //
 //
@@ -4744,12 +4745,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    UserAddNewForm: _user_UserAddNewForm_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
-  },
   name: 'item-index',
   props: {
     userId: Number,
@@ -4787,6 +4797,7 @@ __webpack_require__.r(__webpack_exports__);
       identifier: this.itemIdentifier != '' ? this.itemIdentifier : 'id',
       itemName: this.nameShownAs != '' ? this.nameShownAs : 'nama',
       itemToDelete: {},
+      itemId: null,
       store: (_this$storeUrl = this.storeUrl) !== null && _this$storeUrl !== void 0 ? _this$storeUrl : '/api/' + this.item
     };
   },
@@ -6078,10 +6089,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=script&lang=js&":
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=script&lang=js& ***!
-  \************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserEditForm.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/user/UserEditForm.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -6240,18 +6251,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'user-add-new-form',
+  name: 'user-edit-form',
   data: function data() {
     return {
+      userId: null,
       input: {
         nama: null,
         username: null,
@@ -6271,7 +6276,8 @@ __webpack_require__.r(__webpack_exports__);
         peran: null
       },
       saving: false,
-      saved: false
+      saved: false,
+      stayHere: false
     };
   },
   watch: {
@@ -6280,12 +6286,20 @@ __webpack_require__.r(__webpack_exports__);
     },
     'input.email': function inputEmail(newEmail, oldEmail) {
       this.validate('email');
+    },
+    userId: function userId(newUserId, oldUserId) {
+      this.getUser(newUserId);
     }
   },
   created: function created() {
     this.debouncedCheckData = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(this.checkData, 500);
   },
   methods: {
+    getUser: function getUser(id) {
+      axios.get('/api/user/' + id).then(function (response) {
+        console.log(response.data);
+      });
+    },
     validate: function validate($type) {
       this.error[$type] = null;
 
@@ -6313,10 +6327,24 @@ __webpack_require__.r(__webpack_exports__);
       return str.charAt(0).toUpperCase() + str.slice(1);
     },
     save: function save() {
+      var _this2 = this;
+
+      this.saving = true;
       axios.post('/api/user', {
         data: this.input
       }).then(function (response) {
-        console.log(response.data);
+        _this2.saving = false;
+        _this2.saved = true;
+
+        if (_this2.stayHere) {
+          for (var key in _this2.input) {
+            _this2.input[key] = null;
+          }
+
+          _this2.$emit('saved');
+        } else {
+          _this2.$emit('savedAndGo', response.data);
+        }
       });
     }
   },
@@ -6358,7 +6386,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _UserAddNewForm_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserAddNewForm.vue */ "./resources/js/components/admin/user/UserAddNewForm.vue");
 //
 //
 //
@@ -6480,11 +6507,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    UserAddNewForm: _UserAddNewForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
   name: 'user-index',
   props: {
     item: {
@@ -45507,10 +45530,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=template&id=38406048&":
-/*!*******************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=template&id=38406048& ***!
-  \*******************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=template&id=0edba953&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=template&id=0edba953& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -46181,10 +46204,18 @@ var render = function() {
                                 ),
                             _vm._v(" "),
                             _c(
-                              "a",
+                              "button",
                               {
                                 staticClass: "btn btn-sm",
-                                attrs: { href: _vm.editUrl(actionProps.item) }
+                                attrs: {
+                                  "data-toggle": "modal",
+                                  "data-target": "#edit"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    _vm.$refs.edit.userId = actionProps.item.id
+                                  }
+                                }
                               },
                               [_vm._v("Edit")]
                             ),
@@ -46275,7 +46306,7 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("modal", {
-        attrs: { id: "tambahBaru", classes: ["modal-dialog-centered"] },
+        attrs: { id: "edit", classes: ["modal-dialog-centered"] },
         scopedSlots: _vm._u([
           {
             key: "title",
@@ -46289,10 +46320,23 @@ var render = function() {
             fn: function() {
               return [
                 _vm.item == "user"
-                  ? _c("user-add-new-form")
-                  : _c("item-add-new-form", {
+                  ? _c("user-edit-form", {
+                      ref: "edit",
+                      attrs: { "user-id": _vm.itemId },
+                      on: {
+                        saved: function($event) {
+                          return _vm.getResults()
+                        },
+                        savedAndGo: function($event) {
+                          return _vm.goToItem($event)
+                        }
+                      }
+                    })
+                  : _c("item-edit-form", {
+                      ref: "edit",
                       attrs: {
                         "user-id": _vm.userId,
+                        "item-id": _vm.itemId,
                         item: _vm.item,
                         "slug-name": _vm.slugName,
                         "store-url": _vm.store
@@ -48300,10 +48344,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=template&id=9a0e7792&":
-/*!****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=template&id=9a0e7792& ***!
-  \****************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserEditForm.vue?vue&type=template&id=52ea3d02&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/user/UserEditForm.vue?vue&type=template&id=52ea3d02& ***!
+  \**************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -48334,7 +48378,7 @@ var render = function() {
           staticClass: "form-control",
           attrs: {
             type: "text",
-            placeholder: "Masukkan nama user",
+            placeholder: "misal: Ahmad Syukran",
             name: "user[nama]"
           },
           domProps: { value: _vm.input.nama },
@@ -48389,7 +48433,7 @@ var render = function() {
           staticClass: "form-control",
           attrs: {
             type: "email",
-            placeholder: "Masukkan email",
+            placeholder: "misal: ahmad.sy@email.com",
             name: "user[email]"
           },
           domProps: { value: _vm.input.email },
@@ -48439,7 +48483,7 @@ var render = function() {
           staticClass: "form-control",
           attrs: {
             type: "text",
-            placeholder: "Masukkan username",
+            placeholder: "misal: ahmad.syukran, ahmad123, dll",
             name: "user[username]",
             autocomplete: "off"
           },
@@ -48490,7 +48534,7 @@ var render = function() {
           staticClass: "form-control",
           attrs: {
             type: "password",
-            placeholder: "Password",
+            placeholder: "misal: 1234qwer",
             name: "user[password]"
           },
           domProps: { value: _vm.input.password },
@@ -48723,8 +48767,8 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group mb-3 row" }, [
-      _c("label", { staticClass: "form-label col-3 col-form-label required" }, [
-        _vm._v("Nomor WhatsApp")
+      _c("label", { staticClass: "form-label col-3 col-form-label" }, [
+        _vm._v("WhatsApp")
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col" }, [
@@ -48740,7 +48784,7 @@ var render = function() {
           staticClass: "form-control",
           attrs: {
             type: "text",
-            placeholder: "Nomor WhatsApp aktif",
+            placeholder: "misal: +6281234567890",
             name: "profile[whatsapp]"
           },
           domProps: { value: _vm.input.whatsapp },
@@ -48752,28 +48796,12 @@ var render = function() {
               _vm.$set(_vm.input, "whatsapp", $event.target.value)
             }
           }
-        }),
-        _vm._v(" "),
-        _c(
-          "small",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.error.whatsapp,
-                expression: "error.whatsapp"
-              }
-            ],
-            staticClass: "text-danger"
-          },
-          [_vm._v(_vm._s(_vm.error.whatsapp))]
-        )
+        })
       ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group mb-3 row" }, [
-      _c("label", { staticClass: "form-label col-3 col-form-label required" }, [
+      _c("label", { staticClass: "form-label col-3 col-form-label" }, [
         _vm._v("Telegram")
       ]),
       _vm._v(" "),
@@ -48790,7 +48818,7 @@ var render = function() {
           staticClass: "form-control",
           attrs: {
             type: "text",
-            placeholder: "Nomor atau akun telegram",
+            placeholder: "misal: @user.name",
             name: "profile[telegram]"
           },
           domProps: { value: _vm.input.telegram },
@@ -48802,23 +48830,50 @@ var render = function() {
               _vm.$set(_vm.input, "telegram", $event.target.value)
             }
           }
-        }),
-        _vm._v(" "),
-        _c(
-          "small",
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("label", { staticClass: "form-check mt-3" }, [
+      _c("input", {
+        directives: [
           {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.error.telegram,
-                expression: "error.telegram"
+            name: "model",
+            rawName: "v-model",
+            value: _vm.stayHere,
+            expression: "stayHere"
+          }
+        ],
+        staticClass: "form-check-input",
+        attrs: { type: "checkbox" },
+        domProps: {
+          checked: Array.isArray(_vm.stayHere)
+            ? _vm._i(_vm.stayHere, null) > -1
+            : _vm.stayHere
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.stayHere,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && (_vm.stayHere = $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  (_vm.stayHere = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
               }
-            ],
-            staticClass: "text-danger"
-          },
-          [_vm._v(_vm._s(_vm.error.telegram))]
-        )
+            } else {
+              _vm.stayHere = $$c
+            }
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("span", { staticClass: "form-check-label" }, [
+        _vm._v("Tetap di halaman ini setelah menyimpan data")
       ])
     ]),
     _vm._v(" "),
@@ -49181,7 +49236,7 @@ var render = function() {
           {
             key: "body",
             fn: function() {
-              return [_c("user-add-new-form")]
+              return undefined
             },
             proxy: true
           },
@@ -62237,7 +62292,7 @@ module.exports = function(module) {
 var map = {
 	"./components/Modal.vue": "./resources/js/components/Modal.vue",
 	"./components/VTable.vue": "./resources/js/components/VTable.vue",
-	"./components/admin/general/ItemAddNewForm.vue": "./resources/js/components/admin/general/ItemAddNewForm.vue",
+	"./components/admin/general/ItemEditForm.vue": "./resources/js/components/admin/general/ItemEditForm.vue",
 	"./components/admin/item-index/ItemAction.vue": "./resources/js/components/admin/item-index/ItemAction.vue",
 	"./components/admin/item-index/ItemAssign.vue": "./resources/js/components/admin/item-index/ItemAssign.vue",
 	"./components/admin/item-index/ItemDeleteModal.vue": "./resources/js/components/admin/item-index/ItemDeleteModal.vue",
@@ -62250,7 +62305,7 @@ var map = {
 	"./components/admin/section/SectionAssignExam.vue": "./resources/js/components/admin/section/SectionAssignExam.vue",
 	"./components/admin/section/SectionPage.vue": "./resources/js/components/admin/section/SectionPage.vue",
 	"./components/admin/user/ImportUser.vue": "./resources/js/components/admin/user/ImportUser.vue",
-	"./components/admin/user/UserAddNewForm.vue": "./resources/js/components/admin/user/UserAddNewForm.vue",
+	"./components/admin/user/UserEditForm.vue": "./resources/js/components/admin/user/UserEditForm.vue",
 	"./components/admin/user/UserIndex.vue": "./resources/js/components/admin/user/UserIndex.vue",
 	"./components/front/ujian/ExamDoingPage.vue": "./resources/js/components/front/ujian/ExamDoingPage.vue",
 	"./components/front/ujian/ExamNumberButton.vue": "./resources/js/components/front/ujian/ExamNumberButton.vue",
@@ -62520,17 +62575,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/general/ItemAddNewForm.vue":
-/*!******************************************************************!*\
-  !*** ./resources/js/components/admin/general/ItemAddNewForm.vue ***!
-  \******************************************************************/
+/***/ "./resources/js/components/admin/general/ItemEditForm.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/admin/general/ItemEditForm.vue ***!
+  \****************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ItemAddNewForm_vue_vue_type_template_id_38406048___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ItemAddNewForm.vue?vue&type=template&id=38406048& */ "./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=template&id=38406048&");
-/* harmony import */ var _ItemAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ItemAddNewForm.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=script&lang=js&");
+/* harmony import */ var _ItemEditForm_vue_vue_type_template_id_0edba953___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ItemEditForm.vue?vue&type=template&id=0edba953& */ "./resources/js/components/admin/general/ItemEditForm.vue?vue&type=template&id=0edba953&");
+/* harmony import */ var _ItemEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ItemEditForm.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -62540,9 +62595,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _ItemAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ItemAddNewForm_vue_vue_type_template_id_38406048___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ItemAddNewForm_vue_vue_type_template_id_38406048___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _ItemEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ItemEditForm_vue_vue_type_template_id_0edba953___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ItemEditForm_vue_vue_type_template_id_0edba953___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -62552,38 +62607,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/admin/general/ItemAddNewForm.vue"
+component.options.__file = "resources/js/components/admin/general/ItemEditForm.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************!*\
-  !*** ./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************/
+/***/ "./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ItemAddNewForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ItemEditForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=template&id=38406048&":
-/*!*************************************************************************************************!*\
-  !*** ./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=template&id=38406048& ***!
-  \*************************************************************************************************/
+/***/ "./resources/js/components/admin/general/ItemEditForm.vue?vue&type=template&id=0edba953&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/admin/general/ItemEditForm.vue?vue&type=template&id=0edba953& ***!
+  \***********************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemAddNewForm_vue_vue_type_template_id_38406048___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ItemAddNewForm.vue?vue&type=template&id=38406048& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemAddNewForm.vue?vue&type=template&id=38406048&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemAddNewForm_vue_vue_type_template_id_38406048___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemEditForm_vue_vue_type_template_id_0edba953___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ItemEditForm.vue?vue&type=template&id=0edba953& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=template&id=0edba953&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemEditForm_vue_vue_type_template_id_0edba953___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemAddNewForm_vue_vue_type_template_id_38406048___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemEditForm_vue_vue_type_template_id_0edba953___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -63417,17 +63472,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/user/UserAddNewForm.vue":
-/*!***************************************************************!*\
-  !*** ./resources/js/components/admin/user/UserAddNewForm.vue ***!
-  \***************************************************************/
+/***/ "./resources/js/components/admin/user/UserEditForm.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/admin/user/UserEditForm.vue ***!
+  \*************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _UserAddNewForm_vue_vue_type_template_id_9a0e7792___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserAddNewForm.vue?vue&type=template&id=9a0e7792& */ "./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=template&id=9a0e7792&");
-/* harmony import */ var _UserAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserAddNewForm.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=script&lang=js&");
+/* harmony import */ var _UserEditForm_vue_vue_type_template_id_52ea3d02___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserEditForm.vue?vue&type=template&id=52ea3d02& */ "./resources/js/components/admin/user/UserEditForm.vue?vue&type=template&id=52ea3d02&");
+/* harmony import */ var _UserEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserEditForm.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/user/UserEditForm.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -63437,9 +63492,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _UserAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _UserAddNewForm_vue_vue_type_template_id_9a0e7792___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _UserAddNewForm_vue_vue_type_template_id_9a0e7792___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _UserEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserEditForm_vue_vue_type_template_id_52ea3d02___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserEditForm_vue_vue_type_template_id_52ea3d02___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -63449,38 +63504,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/admin/user/UserAddNewForm.vue"
+component.options.__file = "resources/js/components/admin/user/UserEditForm.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************/
+/***/ "./resources/js/components/admin/user/UserEditForm.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/admin/user/UserEditForm.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UserAddNewForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAddNewForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UserEditForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserEditForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=template&id=9a0e7792&":
-/*!**********************************************************************************************!*\
-  !*** ./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=template&id=9a0e7792& ***!
-  \**********************************************************************************************/
+/***/ "./resources/js/components/admin/user/UserEditForm.vue?vue&type=template&id=52ea3d02&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/admin/user/UserEditForm.vue?vue&type=template&id=52ea3d02& ***!
+  \********************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAddNewForm_vue_vue_type_template_id_9a0e7792___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UserAddNewForm.vue?vue&type=template&id=9a0e7792& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserAddNewForm.vue?vue&type=template&id=9a0e7792&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAddNewForm_vue_vue_type_template_id_9a0e7792___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditForm_vue_vue_type_template_id_52ea3d02___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./UserEditForm.vue?vue&type=template&id=52ea3d02& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/user/UserEditForm.vue?vue&type=template&id=52ea3d02&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditForm_vue_vue_type_template_id_52ea3d02___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAddNewForm_vue_vue_type_template_id_9a0e7792___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditForm_vue_vue_type_template_id_52ea3d02___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

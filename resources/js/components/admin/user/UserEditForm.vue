@@ -5,15 +5,13 @@
             <div class="col">
                 <input type="text" 
                         class="form-control" 
-                        placeholder="Masukkan nama user" 
+                        placeholder="misal: Ahmad Syukran" 
                         name="user[nama]" 
                         v-model="input.nama"
                         @input="validate('nama')"
                 >
 
-                <!-- @error('nama') -->
-                    <small class="text-danger" v-show="error.nama">{{ error.nama }}</small>
-                <!-- @enderror   -->
+                <small class="text-danger" v-show="error.nama">{{ error.nama }}</small>
 
             </div>
         </div>
@@ -21,11 +19,9 @@
         <div class="form-group mb-3 row">
             <label class="form-label col-3 col-form-label required">Email</label>
             <div class="col">
-                <input type="email" class="form-control" placeholder="Masukkan email" name="user[email]" v-model="input.email">
+                <input type="email" class="form-control" placeholder="misal: ahmad.sy@email.com" name="user[email]" v-model="input.email">
 
-                <!-- @error('email') -->
-                    <small class="text-danger" v-show="error.email">{{ error.email }}</small>
-                <!-- @enderror   -->
+                <small class="text-danger" v-show="error.email">{{ error.email }}</small>
 
             </div>
         </div>
@@ -36,7 +32,7 @@
             <div class="col">
                 <input type="text" 
                         class="form-control" 
-                        placeholder="Masukkan username" 
+                        placeholder="misal: ahmad.syukran, ahmad123, dll" 
                         name="user[username]" 
                         autocomplete="off"
                         v-model="input.username"
@@ -52,15 +48,13 @@
             <div class="col">
                 <input type="password" 
                         class="form-control" 
-                        placeholder="Password" 
+                        placeholder="misal: 1234qwer" 
                         name="user[password]" 
                         v-model="input.password"
                         @input="validate('password')"
                 >
 
-                <!-- @error('password') -->
-                     <small class="text-danger" v-show="error.password" @input="validate('password')">{{ error.password}}</small>
-                <!-- @enderror   -->
+                <small class="text-danger" v-show="error.password" @input="validate('password')">{{ error.password}}</small>
 
             </div>
         </div>
@@ -83,9 +77,7 @@
                     </label>
                 </div>
 
-                <!-- @error('role') -->
-                    <small class="text-danger" v-show="error.peran" @change="validate('peran')">{{ error.peran }}</small>
-                <!-- @enderror   -->
+                <small class="text-danger" v-show="error.peran" @change="validate('peran')">{{ error.peran }}</small>
                     
             </div>
         </div>
@@ -116,24 +108,25 @@
         </div>
 
         <div class="form-group mb-3 row">
-            <label class="form-label col-3 col-form-label required">Nomor WhatsApp</label>
+            <label class="form-label col-3 col-form-label">WhatsApp</label>
             <div class="col">
-                <input type="text" class="form-control" placeholder="Nomor WhatsApp aktif" name="profile[whatsapp]" v-model="input.whatsapp">
-
-                <small class="text-danger" v-show="error.whatsapp">{{ error.whatsapp }}</small>
+                <input type="text" class="form-control" placeholder="misal: +6281234567890" name="profile[whatsapp]" v-model="input.whatsapp">
 
             </div>
         </div>
 
         <div class="form-group mb-3 row">
-            <label class="form-label col-3 col-form-label required">Telegram</label>
+            <label class="form-label col-3 col-form-label">Telegram</label>
             <div class="col">
-                <input type="text" class="form-control" placeholder="Nomor atau akun telegram" name="profile[telegram]" v-model="input.telegram">
-
-                <small class="text-danger" v-show="error.telegram">{{ error.telegram }}</small>
+                <input type="text" class="form-control" placeholder="misal: @user.name" name="profile[telegram]" v-model="input.telegram">
 
             </div>
         </div>
+
+        <label class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" v-model="stayHere">
+            <span class="form-check-label">Tetap di halaman ini setelah menyimpan data</span>
+        </label>
 
         <div class="row d-flex align-items-center">
             <div class="col-auto btn-list">
@@ -160,10 +153,11 @@
 import _ from "lodash";
 
 export default {
-    name: 'user-add-new-form',
+    name: 'user-edit-form',
 
     data() {
         return {
+            userId: null,
             input: {
                 nama: null,
                 username: null,
@@ -183,7 +177,8 @@ export default {
                 peran: null
             },
             saving: false,
-            saved: false
+            saved: false,
+            stayHere: false,
         }
     },
 
@@ -194,6 +189,10 @@ export default {
 
         'input.email': function(newEmail, oldEmail) {
             this.validate('email')
+        },
+
+        userId: function(newUserId, oldUserId) {
+            this.getUser(newUserId)
         }
     },
 
@@ -202,6 +201,13 @@ export default {
     },
 
     methods: {
+        getUser(id) {
+            axios.get('/api/user/' + id)
+                    .then(response => {
+                        console.log(response.data)
+                    })
+        },
+
         validate($type) {
             this.error[$type] = null;
 
@@ -232,10 +238,24 @@ export default {
         },
 
         save() {
+            this.saving = true
+
             axios.post('/api/user', {
                 data: this.input
             }).then(response => {
-                console.log(response.data)
+                this.saving = false
+                this.saved = true
+
+                if (this.stayHere) {        
+                    for (let key in this.input) {
+                        this.input[key] = null
+                    }
+
+                    this.$emit('saved')
+                } else {
+                    this.$emit('savedAndGo', response.data)
+                }
+
             })
         }
     },

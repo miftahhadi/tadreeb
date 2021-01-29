@@ -104,7 +104,7 @@
             <template #title>Tambah User Baru</template>
 
             <template #body>
-                <user-add-new-form></user-add-new-form>
+
             </template>
 
             <template #footer>
@@ -120,10 +120,7 @@
 </template>
 
 <script>
-import UserAddNewForm from './UserAddNewForm.vue'
-
 export default {
-    components: { UserAddNewForm },
     name: 'user-index',
 
     props: {

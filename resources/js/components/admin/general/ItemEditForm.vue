@@ -85,10 +85,11 @@
 import _ from "lodash";
 
 export default {
-    name: 'item-add-new-form', 
+    name: 'item-edit-form', 
     props: {
         userId: Number,
         item: String,
+        itemId: Number,
         storeUrl: String,
         slugName: String
     },
@@ -187,13 +188,13 @@ export default {
                 data: this.input,
                 userId: this.userId
             }).then(response => {
+                this.saving = false;
+                this.saved = true
+
                 if (this.stayHere) {
-                    this.saving = false;
                     this.input.judul = '';
                     this.input.slug = 'judul-' + this.item + '-anda';
                     this.input.deskripsi = '';
-
-                    this.saved = true
 
                     this.$emit('saved')
                 } else {

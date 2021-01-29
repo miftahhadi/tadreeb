@@ -44,7 +44,12 @@
 
                                     <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-else>Buka</a>
 
-                                    <a :href="editUrl(actionProps.item)" class="btn btn-sm">Edit</a>
+                                    <button 
+                                        class="btn btn-sm"                                     
+                                        data-toggle="modal" 
+                                        data-target="#edit"
+                                        @click="$refs.edit.userId = actionProps.item.id"
+                                    >Edit</button>
                                     
                                     <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal" @click="callDelete(actionProps.item)">Hapus</button>
                                 </div>
@@ -65,28 +70,36 @@
             <template #footer>
                 <button type="button" class="btn btn-link link-secondary mr-auto" data-dismiss="modal">Batal</button>
                 
-                <button type="button" 
-                        class="btn btn-danger" 
-                        data-dismiss="modal"
-                        @click="deleteItem"
+                <button 
+                    type="button" 
+                    class="btn btn-danger" 
+                    data-dismiss="modal"
+                    @click="deleteItem"
                 >Ya, hapus</button>
             </template>
         </modal>
         
-        <modal id="tambahBaru" :classes="['modal-dialog-centered']">
+        <modal id="edit" :classes="['modal-dialog-centered']">
             <template #title>Tambah {{ item }} Baru</template>
             <template #body>
-                <user-add-new-form v-if="item == 'user'">
-
-                </user-add-new-form>
-                <item-add-new-form v-else
+                <user-edit-form 
+                    v-if="item == 'user'"
+                    @saved="getResults()"
+                    @savedAndGo="goToItem($event)"
+                    :user-id="itemId"
+                    ref="edit"
+                >
+                </user-edit-form>
+                <item-edit-form v-else
                     :user-id="userId" 
+                    :item-id="itemId"
                     :item="item" 
                     :slug-name="slugName" 
                     :store-url="store"
                     @saved="getResults()"
                     @savedAndGo="goToItem($event)"
-                ></item-add-new-form>
+                    ref="edit"
+                ></item-edit-form>
             </template>
             <template #footer></template>
         </modal>
@@ -96,11 +109,8 @@
 
 <script>
     import swal from "sweetalert";
-    import UserAddNewForm from '../user/UserAddNewForm.vue';
 
     export default {
-        components: { UserAddNewForm },
-
         name: 'item-index',
 
         props: {
@@ -138,6 +148,7 @@
                 identifier: (this.itemIdentifier != '') ? this.itemIdentifier : 'id',
                 itemName: (this.nameShownAs != '') ? this.nameShownAs : 'nama',
                 itemToDelete: {},
+                itemId: null,
                 store: this.storeUrl ?? '/api/' + this.item,
             }
         },

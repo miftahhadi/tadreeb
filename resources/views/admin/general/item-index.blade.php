@@ -30,8 +30,11 @@
 
                         <div class="col-auto">
                             <div class="btn-list">
-                                <button type="button" class="btn" 
-                                        data-toggle="modal" data-target="#tambahBaru"
+                                <button 
+                                    type="button" 
+                                    class="btn" 
+                                    data-toggle="modal" 
+                                    data-target="#edit"
                                 >
             
                                     <span>
