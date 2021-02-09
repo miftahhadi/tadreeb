@@ -48,7 +48,7 @@
                                         class="btn btn-sm"                                     
                                         data-toggle="modal" 
                                         data-target="#edit"
-                                        @click="$refs.edit.userId = actionProps.item.id"
+                                        @click="callEdit(actionProps.item)"
                                     >Edit</button>
                                     
                                     <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal" @click="callDelete(actionProps.item)">Hapus</button>
@@ -201,6 +201,11 @@
 
             callDelete(data) {
                 this.itemToDelete = data;
+            },
+
+            callEdit(item) {
+                this.$refs.edit.reset()
+                this.$refs.edit.id = item.id
             },
 
             goToItem(data) {

@@ -39,10 +39,11 @@ class UserController extends Controller
     {
         $type = $request->input('type');
         $data = $request->input('data');
+        $id = $request->input('id');
 
         $user = User::where($type, $data)->first();
 
-        return ($user) ? 1 : 0;
+        return ($user && $user['id'] != $id) ? 1 : 0;
     }
 
     public function store(Request $request)

@@ -157,7 +157,7 @@ export default {
 
     data() {
         return {
-            userId: null,
+            id: null,
             input: {
                 nama: null,
                 username: null,
@@ -191,8 +191,8 @@ export default {
             this.validate('email')
         },
 
-        userId: function(newUserId, oldUserId) {
-            this.getUser(newUserId)
+        id: function(newid, oldid) {
+            this.getUser(newid)
         }
     },
 
@@ -204,6 +204,13 @@ export default {
         getUser(id) {
             axios.get('/api/user/' + id)
                     .then(response => {
+                        this.input.nama = response.data.name
+                        this.input.username = response.data.username
+                        this.input.email = response.data.email
+                        this.input.gender = response.data.profile.gender
+                        this.input.tanggal_lahir = response.data.profile.tanggal_lahir
+                        this.input.whatsapp = response.data.whatsapp
+                        this.input.telegram = response.data.telegram
                         console.log(response.data)
                     })
         },
@@ -222,7 +229,7 @@ export default {
 
         checkData($type) {
             if (this.input[$type] != '') {
-                const checkUri = '/api/user/check-data?type=' + $type + '&data=' + this.input[$type];
+                const checkUri = '/api/user/check-data?type=' + $type + '&data=' + this.input[$type] + '&id=' + this.id;
             
                 axios.get(checkUri)
                     .then(response => {
@@ -230,6 +237,19 @@ export default {
                             this.error[$type] = this.capitalize($type) + ' ini sudah terpakai, coba yang lain.'
                         } 
                     })   
+            }
+        },
+        
+        reset() {
+            const inputKeys = Object.keys(this.input)
+            const errorKeys = Object.keys(this.error)
+
+            for (let key of inputKeys) {
+                this.input[key] == null
+            }
+
+            for (let key of errorKeys) {
+                this.error[key] == null 
             }
         },
 

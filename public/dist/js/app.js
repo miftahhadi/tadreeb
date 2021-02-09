@@ -4270,12 +4270,12 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     userId: Number,
     item: String,
-    itemId: Number,
     storeUrl: String,
     slugName: String
   },
   data: function data() {
     return {
+      id: null,
       judulPlaceholder: {
         'ujian': 'Ujian 1 Sharaf Dasar',
         'pelajaran': 'Elektrodinamika Relativistik',
@@ -4398,27 +4398,32 @@ __webpack_require__.r(__webpack_exports__);
       return this.errors.slug != null ? 'is-invalid' : '';
     },
     disableSubmit: function disableSubmit() {
-      return !this.validated || this.slugLoading ? 'disabled' : '';
+      return !this.validated || this.slugName != null && this.slugLoading == true ? 'disabled' : '';
     },
     validated: function validated() {
       var keys = Object.keys(this.errors);
-      var emptyData = 0;
+      var emptyData = [];
 
       for (var _i = 0, _keys = keys; _i < _keys.length; _i++) {
         var key = _keys[_i];
 
-        if (key == 'slug' && this.slugName && this.input[key] == '') {
-          emptyData += 1;
-        } else if (this.input[key] == '') {
-          emptyData += 1;
+        if (key == 'slug' && this.slugName == null) {
+          continue;
+        }
+
+        if (this.input[key] == '') {
+          emptyData.push(key);
         }
       }
 
-      var errors = 0;
+      var errors = [];
 
       for (var _i2 = 0, _keys2 = keys; _i2 < _keys2.length; _i2++) {
         var _key = _keys2[_i2];
-        errors += this.errors[_key] != null ? 1 : 0;
+
+        if (this.errors[_key] != null) {
+          errors.push(_key);
+        }
       }
 
       return emptyData == 0 && errors == 0;
@@ -4873,6 +4878,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     callDelete: function callDelete(data) {
       this.itemToDelete = data;
+    },
+    callEdit: function callEdit(item) {
+      this.$refs.edit.reset();
+      this.$refs.edit.id = item.id;
     },
     goToItem: function goToItem(data) {
       window.location.href = this.base + data[this.identifier];
@@ -6285,7 +6294,7 @@ __webpack_require__.r(__webpack_exports__);
   name: 'user-edit-form',
   data: function data() {
     return {
-      userId: null,
+      id: null,
       input: {
         nama: null,
         username: null,
@@ -6316,8 +6325,8 @@ __webpack_require__.r(__webpack_exports__);
     'input.email': function inputEmail(newEmail, oldEmail) {
       this.validate('email');
     },
-    userId: function userId(newUserId, oldUserId) {
-      this.getUser(newUserId);
+    id: function id(newid, oldid) {
+      this.getUser(newid);
     }
   },
   created: function created() {
@@ -6325,7 +6334,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getUser: function getUser(id) {
+      var _this = this;
+
       axios.get('/api/user/' + id).then(function (response) {
+        _this.input.nama = response.data.name;
+        _this.input.username = response.data.username;
+        _this.input.email = response.data.email;
+        _this.input.gender = response.data.profile.gender;
+        _this.input.tanggal_lahir = response.data.profile.tanggal_lahir;
+        _this.input.whatsapp = response.data.whatsapp;
+        _this.input.telegram = response.data.telegram;
         console.log(response.data);
       });
     },
@@ -6341,38 +6359,52 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     checkData: function checkData($type) {
-      var _this = this;
+      var _this2 = this;
 
       if (this.input[$type] != '') {
-        var checkUri = '/api/user/check-data?type=' + $type + '&data=' + this.input[$type];
+        var checkUri = '/api/user/check-data?type=' + $type + '&data=' + this.input[$type] + '&id=' + this.id;
         axios.get(checkUri).then(function (response) {
           if (response.data == 1) {
-            _this.error[$type] = _this.capitalize($type) + ' ini sudah terpakai, coba yang lain.';
+            _this2.error[$type] = _this2.capitalize($type) + ' ini sudah terpakai, coba yang lain.';
           }
         });
+      }
+    },
+    reset: function reset() {
+      var inputKeys = Object.keys(this.input);
+      var errorKeys = Object.keys(this.error);
+
+      for (var _i = 0, _inputKeys = inputKeys; _i < _inputKeys.length; _i++) {
+        var key = _inputKeys[_i];
+        this.input[key] == null;
+      }
+
+      for (var _i2 = 0, _errorKeys = errorKeys; _i2 < _errorKeys.length; _i2++) {
+        var _key = _errorKeys[_i2];
+        this.error[_key] == null;
       }
     },
     capitalize: function capitalize(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
     },
     save: function save() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.saving = true;
       axios.post('/api/user', {
         data: this.input
       }).then(function (response) {
-        _this2.saving = false;
-        _this2.saved = true;
+        _this3.saving = false;
+        _this3.saved = true;
 
-        if (_this2.stayHere) {
-          for (var key in _this2.input) {
-            _this2.input[key] = null;
+        if (_this3.stayHere) {
+          for (var key in _this3.input) {
+            _this3.input[key] = null;
           }
 
-          _this2.$emit('saved');
+          _this3.$emit('saved');
         } else {
-          _this2.$emit('savedAndGo', response.data);
+          _this3.$emit('savedAndGo', response.data);
         }
       });
     }
@@ -6386,17 +6418,17 @@ __webpack_require__.r(__webpack_exports__);
       var keys = Object.keys(this.error);
       var emptyData = 0;
 
-      for (var _i = 0, _keys = keys; _i < _keys.length; _i++) {
-        var key = _keys[_i];
+      for (var _i3 = 0, _keys = keys; _i3 < _keys.length; _i3++) {
+        var key = _keys[_i3];
         emptyData += this.input[key] == null ? 1 : 0;
       }
 
       console.log('emptyData: ' + emptyData);
       var errors = 0;
 
-      for (var _i2 = 0, _keys2 = keys; _i2 < _keys2.length; _i2++) {
-        var _key = _keys2[_i2];
-        errors += this.error[_key] != null ? 1 : 0;
+      for (var _i4 = 0, _keys2 = keys; _i4 < _keys2.length; _i4++) {
+        var _key2 = _keys2[_i4];
+        errors += this.error[_key2] != null ? 1 : 0;
       }
 
       return emptyData == 0 && errors == 0;
@@ -46246,7 +46278,7 @@ var render = function() {
                                 },
                                 on: {
                                   click: function($event) {
-                                    _vm.$refs.edit.userId = actionProps.item.id
+                                    return _vm.callEdit(actionProps.item)
                                   }
                                 }
                               },
@@ -63995,8 +64027,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

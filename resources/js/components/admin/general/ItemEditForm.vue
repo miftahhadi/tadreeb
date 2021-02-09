@@ -90,13 +90,13 @@ export default {
     props: {
         userId: Number,
         item: String,
-        itemId: Number,
         storeUrl: String,
         slugName: String
     },
 
     data() {
         return {
+            id: null,
             judulPlaceholder: {
                 'ujian': 'Ujian 1 Sharaf Dasar',
                 'pelajaran': 'Elektrodinamika Relativistik',
@@ -236,25 +236,30 @@ export default {
         },
 
         disableSubmit() {
-            return (!this.validated || this.slugLoading) ? 'disabled' : '';
+            return (!this.validated || (this.slugName != null && this.slugLoading == true)) ? 'disabled' : '';
         },
 
         validated() {
             const keys = Object.keys(this.errors)
-            let emptyData = 0;
+            let emptyData = [];
 
             for (let key of keys) {
-                if (key == 'slug' && this.slugName && this.input[key] == '') {
-                    emptyData += 1;
-                } else if (this.input[key] == '') {
-                    emptyData += 1;
+
+                if (key == 'slug' && this.slugName == null) {
+                    continue;
+                }
+
+                if (this.input[key] == '') {    
+                    emptyData.push(key)
                 }
             }
 
-            let errors = 0;
+            let errors = [];
 
             for (let key of keys) {
-                errors += (this.errors[key] != null) ? 1 : 0;
+                if (this.errors[key] != null) {
+                    errors.push(key)
+                }
             }
 
             return (emptyData == 0 && errors == 0)
