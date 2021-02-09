@@ -8,7 +8,7 @@
                 <div class="form-group mb-3">
                     <label class="form-label required">Nama</label>
                     <input type="text" class="form-control" 
-                        name="judul" :placeholder="judulPlaceholder" v-model="input.judul" 
+                        name="judul" :placeholder="'misal: ' + judulPlaceholder[item]" v-model="input.judul" 
                         @input="[slugify(), cekJudul()]"
                         :class="judulInvalid"
                     >
@@ -26,6 +26,7 @@
                             <div class="input-group">
                                 <input type="text" v-model="input.slug" 
                                     name="slug" class="form-control" 
+                                    placeholder="judul-pelajaran-anda"
                                     :class="slugInvalid" @input="cekSpasi()"
                                 >
                                 <span class="input-icon-addon" v-if="slugLoading">
@@ -96,7 +97,12 @@ export default {
 
     data() {
         return {
-            judulPlaceholder: 'Tuliskan nama ' + this.item,
+            judulPlaceholder: {
+                'ujian': 'Ujian 1 Sharaf Dasar',
+                'pelajaran': 'Elektrodinamika Relativistik',
+                'grup': 'Reguler Januari 2021',
+                'kelas': 'Nahwu Dasar 5A' 
+            },
             input: {
                 judul: '',
                 slug: '',
@@ -108,10 +114,11 @@ export default {
             },
             saving: false,
             slugLoading: false,
-            storeTo: this.storeUrl ?? '/api/' + this.item,
+            storeTo: (this.storeUrl != '') ? this.storeUrl : '/api/' + this.item,
 
             stayHere: false,
-            saved: false
+            saved: false,
+            reset: false
         }
     },
 
@@ -126,12 +133,6 @@ export default {
         this.debouncedCekSlug = _.debounce(this.cekSlug, 1000)
     },
 
-    mounted() {
-        if (this.slugName) {
-            this.input.slug = 'judul-' + this.item + '-anda'
-        }
-    },
-
     methods: {
         slugify() {
             if (this.slugName) {
@@ -140,10 +141,12 @@ export default {
         },
 
         cekSpasi() {
+            this.reset = false,
             this.input.slug = this.input.slug.trim().replace(/\s/g, '-');
         },
 
         cekJudul() {
+            this.reset = false,
             this.saved = false
             
             if (this.input.judul.length == 0 ) {
@@ -154,13 +157,14 @@ export default {
         },
 
         validateSlug() {
-            if (this.slugName == null) {
+            if (this.slugName == null || this.reset) {
                 return
             }
 
-            if (this.input.slug == 0 ) {
+            if (this.input.slug.length == 0 ) {
                 this.errors.slug = 'Slug URL tidak boleh kosong';
             } else {
+                this.errors.slug = null
                 this.slugLoading = true
 
                 this.debouncedCekSlug()
@@ -168,6 +172,11 @@ export default {
         },
 
         cekSlug() {   
+            if (this.input.slug.length == 0) {
+                this.slugLoading = false;
+                return
+            }
+
             axios.get('/api/' + this.item + '/slug/' + this.input.slug)
                     .then(response => {
                         console.log(response.data)
@@ -192,8 +201,10 @@ export default {
                 this.saved = true
 
                 if (this.stayHere) {
+                    this.reset = true;
+
                     this.input.judul = '';
-                    this.input.slug = 'judul-' + this.item + '-anda';
+                    this.input.slug = '';
                     this.input.deskripsi = '';
 
                     this.$emit('saved')
@@ -205,7 +216,6 @@ export default {
                 console.log(errors)
             })
 
-            setTimeout(this.saved = false, 3000);
         }
 
     },
@@ -226,8 +236,30 @@ export default {
         },
 
         disableSubmit() {
-            return (this.input.judul.length == 0 || this.errors.judul != null || this.errors.slug != null) ? 'disabled' : '';
+            return (!this.validated || this.slugLoading) ? 'disabled' : '';
         },
+
+        validated() {
+            const keys = Object.keys(this.errors)
+            let emptyData = 0;
+
+            for (let key of keys) {
+                if (key == 'slug' && this.slugName && this.input[key] == '') {
+                    emptyData += 1;
+                } else if (this.input[key] == '') {
+                    emptyData += 1;
+                }
+            }
+
+            let errors = 0;
+
+            for (let key of keys) {
+                errors += (this.errors[key] != null) ? 1 : 0;
+            }
+
+            return (emptyData == 0 && errors == 0)
+
+        }
     }
 }
 </script>

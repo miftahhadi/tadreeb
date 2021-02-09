@@ -4261,6 +4261,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 // TODO:    - input area belum bisa dikasih class is-invalid kalau error
 //          - kalau modal ditutup, input belum kereset
 
@@ -4274,10 +4275,13 @@ __webpack_require__.r(__webpack_exports__);
     slugName: String
   },
   data: function data() {
-    var _this$storeUrl;
-
     return {
-      judulPlaceholder: 'Tuliskan nama ' + this.item,
+      judulPlaceholder: {
+        'ujian': 'Ujian 1 Sharaf Dasar',
+        'pelajaran': 'Elektrodinamika Relativistik',
+        'grup': 'Reguler Januari 2021',
+        'kelas': 'Nahwu Dasar 5A'
+      },
       input: {
         judul: '',
         slug: '',
@@ -4289,9 +4293,10 @@ __webpack_require__.r(__webpack_exports__);
       },
       saving: false,
       slugLoading: false,
-      storeTo: (_this$storeUrl = this.storeUrl) !== null && _this$storeUrl !== void 0 ? _this$storeUrl : '/api/' + this.item,
+      storeTo: this.storeUrl != '' ? this.storeUrl : '/api/' + this.item,
       stayHere: false,
-      saved: false
+      saved: false,
+      reset: false
     };
   },
   watch: {
@@ -4303,11 +4308,6 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.debouncedCekSlug = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(this.cekSlug, 1000);
   },
-  mounted: function mounted() {
-    if (this.slugName) {
-      this.input.slug = 'judul-' + this.item + '-anda';
-    }
-  },
   methods: {
     slugify: function slugify() {
       if (this.slugName) {
@@ -4315,10 +4315,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     cekSpasi: function cekSpasi() {
-      this.input.slug = this.input.slug.trim().replace(/\s/g, '-');
+      this.reset = false, this.input.slug = this.input.slug.trim().replace(/\s/g, '-');
     },
     cekJudul: function cekJudul() {
-      this.saved = false;
+      this.reset = false, this.saved = false;
 
       if (this.input.judul.length == 0) {
         this.errors.judul = 'Judul tidak boleh kosong';
@@ -4327,19 +4327,25 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     validateSlug: function validateSlug() {
-      if (this.slugName == null) {
+      if (this.slugName == null || this.reset) {
         return;
       }
 
-      if (this.input.slug == 0) {
+      if (this.input.slug.length == 0) {
         this.errors.slug = 'Slug URL tidak boleh kosong';
       } else {
+        this.errors.slug = null;
         this.slugLoading = true;
         this.debouncedCekSlug();
       }
     },
     cekSlug: function cekSlug() {
       var _this = this;
+
+      if (this.input.slug.length == 0) {
+        this.slugLoading = false;
+        return;
+      }
 
       axios.get('/api/' + this.item + '/slug/' + this.input.slug).then(function (response) {
         console.log(response.data);
@@ -4365,8 +4371,9 @@ __webpack_require__.r(__webpack_exports__);
         _this2.saved = true;
 
         if (_this2.stayHere) {
+          _this2.reset = true;
           _this2.input.judul = '';
-          _this2.input.slug = 'judul-' + _this2.item + '-anda';
+          _this2.input.slug = '';
           _this2.input.deskripsi = '';
 
           _this2.$emit('saved');
@@ -4376,7 +4383,6 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (errors) {
         console.log(errors);
       });
-      setTimeout(this.saved = false, 3000);
     }
   },
   computed: {
@@ -4392,7 +4398,30 @@ __webpack_require__.r(__webpack_exports__);
       return this.errors.slug != null ? 'is-invalid' : '';
     },
     disableSubmit: function disableSubmit() {
-      return this.input.judul.length == 0 || this.errors.judul != null || this.errors.slug != null ? 'disabled' : '';
+      return !this.validated || this.slugLoading ? 'disabled' : '';
+    },
+    validated: function validated() {
+      var keys = Object.keys(this.errors);
+      var emptyData = 0;
+
+      for (var _i = 0, _keys = keys; _i < _keys.length; _i++) {
+        var key = _keys[_i];
+
+        if (key == 'slug' && this.slugName && this.input[key] == '') {
+          emptyData += 1;
+        } else if (this.input[key] == '') {
+          emptyData += 1;
+        }
+      }
+
+      var errors = 0;
+
+      for (var _i2 = 0, _keys2 = keys; _i2 < _keys2.length; _i2++) {
+        var _key = _keys2[_i2];
+        errors += this.errors[_key] != null ? 1 : 0;
+      }
+
+      return emptyData == 0 && errors == 0;
     }
   }
 });
@@ -6370,7 +6399,7 @@ __webpack_require__.r(__webpack_exports__);
         errors += this.error[_key] != null ? 1 : 0;
       }
 
-      return emptyData == 0 && errors == 0 ? true : false;
+      return emptyData == 0 && errors == 0;
     }
   }
 });
@@ -45571,7 +45600,7 @@ var render = function() {
               attrs: {
                 type: "text",
                 name: "judul",
-                placeholder: _vm.judulPlaceholder
+                placeholder: "misal: " + _vm.judulPlaceholder[_vm.item]
               },
               domProps: { value: _vm.input.judul },
               on: {
@@ -45620,7 +45649,11 @@ var render = function() {
                         ],
                         staticClass: "form-control",
                         class: _vm.slugInvalid,
-                        attrs: { type: "text", name: "slug" },
+                        attrs: {
+                          type: "text",
+                          name: "slug",
+                          placeholder: "judul-pelajaran-anda"
+                        },
                         domProps: { value: _vm.input.slug },
                         on: {
                           input: [

@@ -10,7 +10,7 @@ class LessonController extends Controller
 {
     public function index()
     {
-        return response()->json(Lesson::orderBy('created_at')->paginate(15));
+        return response()->json(Lesson::orderBy('created_at', 'desc')->paginate(15));
     }
 
     public function search($search)
@@ -18,6 +18,7 @@ class LessonController extends Controller
         return response()->json(
             Lesson::where('judul', 'like', '%' . $search . '%')
                     ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                    ->orderBy('created_at', 'desc')
                     ->paginate(10)
         );
     }

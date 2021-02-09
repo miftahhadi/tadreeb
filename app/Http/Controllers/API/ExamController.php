@@ -22,7 +22,7 @@ class ExamController extends Controller
     {
         return response()->json(Exam::where('judul', 'like', '%' . $search . '%')
                                         ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                                        ->orderBy('id', 'desc')
+                                        ->orderBy('created_at', 'desc')
                                         ->paginate(10)
                                 );
     }

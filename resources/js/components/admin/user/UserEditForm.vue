@@ -281,7 +281,7 @@ export default {
                 errors += (this.error[key] != null) ? 1 : 0;
             }
 
-            return (emptyData == 0 && errors == 0) ? true : false
+            return (emptyData == 0 && errors == 0)
         }
     }
 }

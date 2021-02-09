@@ -44,8 +44,8 @@
                                 
                                 </button>
 
-                                @if ($item = 'user')
-                                    <a href="#" class="btn btn-success">Impor dari .CSV</a>
+                                @if ($item == 'user')
+                                    <a href="{{ route('admin.user.getCsv') }}" class="btn btn-success">Impor dari .CSV</a>
                                 @endif
                             </div>
                         </div>

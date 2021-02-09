@@ -77,7 +77,14 @@ class User extends Authenticatable
 
     public function canAccessAdmin()
     {
-        return $this->tokens->pluck('name')->contains('admin');
+        $access = 0;
+        $hasAccess = ['admin', 'superadmin'];
+
+        foreach ($hasAccess as $role) {
+            $access += ($this->roles()->pluck('role')->contains($role)) ? 1 : 0;
+        }
+
+        return ($access > 0 );
     }
 
     public function exams()

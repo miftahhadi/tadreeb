@@ -18,6 +18,7 @@ class GroupController extends Controller
         return response()->json(
             Group::where('judul', 'like', '%' . $search . '%')
                 ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                ->orderBy('created_at', 'desc')
                 ->paginate(10)
             );
     }
