@@ -54,7 +54,7 @@ Route::name('admin.')->group(function () {
     Route::group([
         'prefix' => 'admin',
         'namespace' => 'Admin',
-        'middleware' => 'auth',
+        'middleware' => ['auth', 'admin'],
     ], function () {
         //Dashboard
         Route::get('/', 'AdminController@index')->name('dashboard');
