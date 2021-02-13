@@ -216,7 +216,20 @@ export default {
                 console.log(errors)
             })
 
-        }
+        },
+
+        reset() {
+            const inputKeys = Object.keys(this.input)
+            const errorKeys = Object.keys(this.error)
+
+            for (let key of inputKeys) {
+                this.input[key] == null
+            }
+
+            for (let key of errorKeys) {
+                this.error[key] == null 
+            }
+        },
 
     },
 
