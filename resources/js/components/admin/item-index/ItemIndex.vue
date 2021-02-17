@@ -2,25 +2,13 @@
     <div>
         <slot name="header"></slot>
 
-        <div class="row mt-4 mb-1">
-
-            <div class="col-auto" v-if="search">
-
-                <div class="input-icon">
-                    <input type="text" class="form-control form-control-rounded" 
-                        placeholder="Cari..." v-model="query"
-                    >
-
-                    <span class="input-icon-addon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
-                    </span>
-                    
-                </div>
-
-            </div>
-            
-
-            <div class="col-auto ml-auto">
+        <item-list 
+            :headings="tableHeading" 
+            :properties="itemProperties" 
+            :data="laravelData.data" 
+            :action="true"
+        >
+            <template v-slot:top-right>
                 <div class="btn-list">
                     <button 
                         type="button" 
@@ -40,6 +28,48 @@
                         <a href="/admin/user/import-csv" class="btn btn-success" v-if="item == 'user'">Impor dari .CSV</a>
 
                 </div>
+            </template>
+
+            <template v-slot:action="actionProps">
+                <div class="btn-list flex-nowrap">
+                    <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat Profil</a>
+
+                    <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-else>Buka</a>
+
+                    <button 
+                        class="btn btn-sm"                                     
+                        data-toggle="modal" 
+                        data-target="#edit"
+                        @click="callEdit(actionProps.item)"
+                    >Edit</button>
+                    
+                    <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal" @click="callDelete(actionProps.item)">Hapus</button>
+                </div>
+            </template>
+        </item-list>
+
+        <div class="row mt-4 mb-1">
+
+            <div class="col-auto" v-if="search">
+
+                <div class="input-icon">
+                    <input type="text" class="form-control form-control-rounded" 
+                        placeholder="Cari..." v-model="query"
+                    >
+
+                    <span class="input-icon-addon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
+                    </span>
+                    
+                </div>
+
+            </div>
+            
+
+            <div class="col-auto ml-auto">
+                <slot name="top-right"></slot>
+
+                
             </div>
             
         </div>
@@ -54,20 +84,10 @@
 
                         <v-table :headings="tableHeading" :properties="itemProperties" :data="laravelData.data" :action="true">
                             <template v-slot:action="actionProps">
-                                <div class="btn-list flex-nowrap">
-                                    <a href="#" class="btn btn-sm" v-if="item == 'user'">Lihat Profil</a>
+                                <slot name="action">
 
-                                    <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-else>Buka</a>
-
-                                    <button 
-                                        class="btn btn-sm"                                     
-                                        data-toggle="modal" 
-                                        data-target="#edit"
-                                        @click="callEdit(actionProps.item)"
-                                    >Edit</button>
-                                    
-                                    <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteItemModal" @click="callDelete(actionProps.item)">Hapus</button>
-                                </div>
+                                </slot>
+                                
                             </template>
                         </v-table>
 
