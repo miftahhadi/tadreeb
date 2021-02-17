@@ -211,7 +211,6 @@ export default {
                         this.input.tanggal_lahir = response.data.profile.tanggal_lahir
                         this.input.whatsapp = response.data.whatsapp
                         this.input.telegram = response.data.telegram
-                        console.log(response.data)
                     })
         },
 
@@ -245,11 +244,11 @@ export default {
             const errorKeys = Object.keys(this.error)
 
             for (let key of inputKeys) {
-                this.input[key] == null
+                this.input[key] = null
             }
 
             for (let key of errorKeys) {
-                this.error[key] == null 
+                this.error[key] = null 
             }
         },
 
@@ -293,7 +292,6 @@ export default {
             for (let key of keys) {
                 emptyData += (this.input[key] == null) ? 1 : 0;
             }
-            console.log('emptyData: ' + emptyData)
 
             let errors = 0;
             

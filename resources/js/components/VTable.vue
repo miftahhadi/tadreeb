@@ -15,7 +15,7 @@
 
             <tbody>
 
-                <tr v-for="(item, index) in data" :key="item.id">
+                <tr v-for="(item, index) in itemData" :key="item.id">
                     <td v-for="$prop in properties" :key="$prop">{{ printItem(index,$prop) }}</td>
 
                     <td v-if="action">
@@ -44,7 +44,7 @@ export default {
             type: Array,
             required: true
         },
-        data: {
+        itemData: {
             type: Array,
         },
         action: Boolean
@@ -55,9 +55,9 @@ export default {
             if (prop.includes('.')) {
                 const props = prop.split('.',2)
 
-                return this.data[index][props[0]][props[1]]
+                return this.itemData[index][props[0]][props[1]]
             } else {
-                return this.data[index][prop]
+                return this.itemData[index][prop]
             }
         }
     }

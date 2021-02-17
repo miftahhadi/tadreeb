@@ -2,7 +2,7 @@
     <div>
         <div class="row mt-4 mb-1">
 
-            <div class="col-auto" v-if="search">
+            <div class="col-auto">
 
                 <div class="input-icon">
                     <input type="text" class="form-control form-control-rounded" 
@@ -36,11 +36,11 @@
                         <v-table 
                             :headings="tableHeading" 
                             :properties="itemProperties" 
-                            :data="laravelData.data" 
+                            :item-data="laravelData.data" 
                             :action="true"
                         >
-                            <template v-slot:action>
-                                <slot name="action">
+                            <template v-slot:action="slotProp">
+                                <slot name="action" :item="slotProp.item">
 
                                 </slot>
                                 
@@ -122,5 +122,18 @@ export default {
     mounted() {
         this.getResults();
     },
+
+    computed: {
+        uri() {
+            return (this.query == '') ? 
+                        this.fetchUrl + '?page=' 
+                        : this.fetchUrl + '/search/' + this.query + '?page=';
+        },
+
+        isLoading() {
+            return (this.loading) ? 'active' : ''
+        },
+
+    }
 }
 </script>

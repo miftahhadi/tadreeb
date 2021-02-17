@@ -9,7 +9,6 @@
             fetch-url="{{ $fetchUrl }}" 
             :table-heading="{{ $tableHeading }}" 
             :item-properties="{{ $itemProperties }}" 
-            :search="true" 
             item-identifier="{{ $identifier ?? null }}" 
             name-shown-as="{{ $nameShownAs ?? null }}"
             store-url="{{ $storeUrl ?? null }}"

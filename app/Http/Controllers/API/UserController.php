@@ -65,6 +65,8 @@ class UserController extends Controller
                 'telegram' => $data['telegram']
             ]);
 
+            $user->roles()->sync([$data['peran']]);
+
             return 'user created';
         } catch (\Throwable $th) {
             return 'error: ' . $th;

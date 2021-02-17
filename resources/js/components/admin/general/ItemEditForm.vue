@@ -118,7 +118,7 @@ export default {
 
             stayHere: false,
             saved: false,
-            reset: false
+            resetted: false
         }
     },
 
@@ -141,12 +141,12 @@ export default {
         },
 
         cekSpasi() {
-            this.reset = false,
+            this.resetted = false,
             this.input.slug = this.input.slug.trim().replace(/\s/g, '-');
         },
 
         cekJudul() {
-            this.reset = false,
+            this.resetted = false,
             this.saved = false
             
             if (this.input.judul.length == 0 ) {
@@ -157,7 +157,7 @@ export default {
         },
 
         validateSlug() {
-            if (this.slugName == null || this.reset) {
+            if (this.slugName == null || this.resetted) {
                 return
             }
 
@@ -201,7 +201,7 @@ export default {
                 this.saved = true
 
                 if (this.stayHere) {
-                    this.reset = true;
+                    this.resetted = true;
 
                     this.input.judul = '';
                     this.input.slug = '';
@@ -223,11 +223,11 @@ export default {
             const errorKeys = Object.keys(this.error)
 
             for (let key of inputKeys) {
-                this.input[key] == null
+                this.input[key] = null
             }
 
             for (let key of errorKeys) {
-                this.error[key] == null 
+                this.error[key] = null 
             }
         },
 
