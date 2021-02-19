@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="row mt-4 mb-1">
+        <div class="row mb-1">
 
-            <div class="col-auto">
+            <div class="col-auto" v-if="search">
 
                 <div class="input-icon">
                     <input type="text" class="form-control form-control-rounded" 
@@ -84,6 +84,7 @@ export default {
             type: String,
             required: true
         },
+        search: Boolean
     },
 
     data() {

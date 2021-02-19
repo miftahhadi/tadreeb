@@ -8,6 +8,7 @@
             :tableHeading="tableHeading" 
             :itemProperties="itemProperties" 
             :action="true"
+            :search="true"
             ref="list"
         >
             <template v-slot:top-right>
