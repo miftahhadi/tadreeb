@@ -4268,6 +4268,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-edit-form',
   props: {
+    parentId: Number,
     userId: Number,
     item: String,
     storeUrl: String,
@@ -4365,7 +4366,8 @@ __webpack_require__.r(__webpack_exports__);
       this.saving = true;
       axios.post(this.storeTo, {
         data: this.input,
-        userId: this.userId
+        userId: this.userId,
+        parentId: this.parentId
       }).then(function (response) {
         _this2.saving = false;
         _this2.saved = true;
@@ -4853,11 +4855,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
   props: {
     userId: Number,
+    parentId: Number,
     item: {
       type: String,
       required: true
@@ -4897,7 +4901,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteItem: function deleteItem() {
       var _this = this;
 
-      var url = this.deleteUrl ? this.deleteUrl + this.itemToDelete[this.identifier] : '/api/' + this.item + '/' + this.itemToDelete[this.identifier];
+      var url = this.deleteUrl ? this.deleteUrl + '/' + this.itemToDelete[this.identifier] : '/api/' + this.item + '/' + this.itemToDelete[this.identifier];
       axios["delete"](url).then(function (response) {
         _this.$refs.list.getResults();
 
@@ -4905,6 +4909,7 @@ __webpack_require__.r(__webpack_exports__);
           title: "Data berhasil dihapus",
           icon: "success"
         });
+        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -46555,6 +46560,7 @@ var render = function() {
                       ref: "edit",
                       attrs: {
                         "user-id": _vm.userId,
+                        "parent-id": _vm.parentId,
                         "item-id": _vm.itemId,
                         item: _vm.item,
                         "slug-name": _vm.slugName,
@@ -64401,8 +64407,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

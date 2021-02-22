@@ -88,6 +88,7 @@ import _ from "lodash";
 export default {
     name: 'item-edit-form', 
     props: {
+        parentId: Number,
         userId: Number,
         item: String,
         storeUrl: String,
@@ -195,7 +196,8 @@ export default {
 
             axios.post(this.storeTo, {
                 data: this.input,
-                userId: this.userId
+                userId: this.userId,
+                parentId: this.parentId
             }).then(response => {
                 this.saving = false;
                 this.saved = true

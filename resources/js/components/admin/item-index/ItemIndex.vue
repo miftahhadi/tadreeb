@@ -86,6 +86,7 @@
                 </user-edit-form>
                 <item-edit-form v-else
                     :user-id="userId" 
+                    :parent-id="parentId"
                     :item-id="itemId"
                     :item="item" 
                     :slug-name="slugName" 
@@ -109,6 +110,7 @@
 
         props: {
             userId: Number,
+            parentId: Number,
             item: {
                 type: String,
                 required: true
@@ -146,7 +148,7 @@
 
         methods: {
             deleteItem() {
-                const url = (this.deleteUrl) ? this.deleteUrl + this.itemToDelete[this.identifier] 
+                const url = (this.deleteUrl) ? this.deleteUrl + '/' + this.itemToDelete[this.identifier] 
                                              : '/api/' + this.item + '/' + this.itemToDelete[this.identifier]
 
                 axios.delete(url)
@@ -156,6 +158,8 @@
                                 title: "Data berhasil dihapus",
                                 icon: "success",
                             });
+
+                            console.log(response)
                         })
                         .catch(error => {
                             console.log(error);

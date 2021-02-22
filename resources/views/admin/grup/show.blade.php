@@ -8,17 +8,19 @@
 
     <item-tab>
         <tab-details name="Kelas" :selected="true">
-            <item-assigned
+            <item-index
                 :user-id="{{ auth()->user()->id }}" 
+                :parent-id="{{ $grup->id }}"
                 item="kelas" 
                 fetch-url="{{ $fetchUrl }}" 
                 :table-heading="{{ $tableHeading }}" 
                 :item-properties="{{ $itemProperties }}" 
                 item-identifier="{{ $identifier ?? null }}" 
                 name-shown-as="Nama"
-                store-url="{{ route('admin.grup.kelas.store', ['grup' => $grup->id]) }}"
+                store-url="{{ '/api/grup/' . $grup->id . '/kelas' }}"
+                delete-url="{{ '/api/grup/' . $grup->id . '/kelas'}}"
                 base-url="/admin/grup/{{ $grup->id }}/kelas/"
-            ></item-assigned>
+            ></item-index>
         </tab-details>
 
         <tab-details name="Item Bersama">

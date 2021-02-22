@@ -6,13 +6,14 @@ use App\Models\Classroom;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ClassroomController extends Controller
 {
 
     public function index(Group $grup) 
     {
-        return response()->json($grup->classrooms()->orderBy('created_at', 'desc')->paginate(25));
+        return response()->json($grup->classrooms()->orderBy('id', 'desc')->paginate(25));
     }
 
     public function search($search)
@@ -20,6 +21,7 @@ class ClassroomController extends Controller
         return response()->json(
             Classroom::where('nama', 'like', '%' . $search . '%')
                     ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                    ->orderBy('id', 'desc')
                     ->paginate(25)
             );
     }
@@ -32,7 +34,21 @@ class ClassroomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $grup = Group::find($request->input('parentId'));
+        $data = $request->input('data');
+
+        if ($grup) {
+            $classroom = $grup->classrooms()->create([
+                'nama' => $data['judul'],
+                'kode' => Str::random(10),
+                'deskripsi' => $data['deskripsi']
+            ]);
+
+            return $classroom;
+        } else {
+            return 'Error';
+        }
+        
     }
 
     /**
@@ -66,7 +82,11 @@ class ClassroomController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $kelas = Classroom::find($id);
+
+        $kelas->delete();
+
+        return;
     }
 
     public function lesson(Classroom $kelas)
