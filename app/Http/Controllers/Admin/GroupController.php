@@ -88,8 +88,8 @@ class GroupController extends Controller
 
         $breadcrumbs = [
             [
-                'name' => $grup->nama,
-                'href' => route('admin.grup.show', $grup->id)
+                'name' => 'Grup & Kelas',
+                'href' => route('admin.grup.index')
             ]
         ];
 

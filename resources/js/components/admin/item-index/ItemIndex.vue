@@ -34,7 +34,7 @@
 
             <template v-slot:action="actionProps">
                 <div class="btn-list flex-nowrap">
-                    <a :href="'/admin/' + item + '/' + actionProps.item.id" class="btn btn-sm" v-text="(item == 'user') ? 'Lihat Profil' : 'Buka'">Lihat Profil</a>
+                    <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-text="(item == 'user') ? 'Lihat Profil' : 'Buka'">Lihat Profil</a>
 
                     <!-- <button 
                         class="btn btn-sm"                                     
@@ -43,10 +43,10 @@
                         @click="callEdit(actionProps.item)"
                     >Edit</button> -->
 
-                    <a :href="'/admin/' + item + '/' + actionProps.item.id + '/edit'" class="btn btn-sm">Edit</a>
+                    <a :href="editUrl(actionProps.item)" class="btn btn-sm">Edit</a>
                     
                     <button 
-                        class="btn btn-sm btn-outline-danger" 
+                        class="btn btn-sm btn-danger" 
                         data-toggle="modal" 
                         data-target="#deleteItemModal" 
                         @click="callDelete(actionProps.item)"

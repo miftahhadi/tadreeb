@@ -8,9 +8,7 @@
 
     <item-tab>
         <tab-details name="Kelas" :selected="true">
-            <h2>Daftar Kelas</h2>
-
-            <item-index
+            <item-assigned
                 :user-id="{{ auth()->user()->id }}" 
                 item="kelas" 
                 fetch-url="{{ $fetchUrl }}" 
@@ -19,11 +17,16 @@
                 item-identifier="{{ $identifier ?? null }}" 
                 name-shown-as="Nama"
                 store-url="{{ route('admin.grup.kelas.store', ['grup' => $grup->id]) }}"
-            ></item-index>
+                base-url="/admin/grup/{{ $grup->id }}/kelas/"
+            ></item-assigned>
         </tab-details>
 
         <tab-details name="Item Bersama">
-            <h2>Daftar Item Bersama</h2>
+            ** Coming Soon **
+        </tab-details>
+
+        <tab-details name="Pengaturan">
+            ** Coming Soon ** 
         </tab-details>
     </item-tab>
 

@@ -54,8 +54,22 @@ class ClassroomController extends Controller
 
         $service = $this->classroomService->show($kelas);
 
+        $breadcrumbs = [
+            [
+                'name' => 'Grup & Kelas',
+                'href' => route('admin.grup.index')
+            ],
+            [
+                'name' => $grup->nama,
+                'href' => route('admin.grup.show', $grup->id)
+            ]
+        ];
+
+        $itemName = $kelas->nama;
+        $itemDescription = $kelas->deskripsi;
+
         return view('admin.classroom.show', compact(
-            'title', 'grup', 'kelas', 'service'
+            'title', 'grup', 'kelas', 'service', 'breadcrumbs', 'itemName', 'itemDescription'
         ));
     }
 

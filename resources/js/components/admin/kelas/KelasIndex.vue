@@ -21,15 +21,12 @@
                     </div>
                 </div>
 
-                <item-index
+                <item-assigned
                     item="pelajaran"
-                    :fetch-url="lessonData.fetchUrl"
-                    :table-heading="lessonData.heading"
-                    :item-properties="lessonData.props"
-                    :assignPage="true"
+                    :item-data="lessonData"
                     :kelas-id="kelasId"
                     :key="key.lesson"
-                ></item-index>
+                ></item-assigned>
 
             </tab-details>
 
@@ -48,16 +45,13 @@
                     </div>
                 </div>
 
-                <item-index
+                <item-assigned
                     item="ujian"
-                    :fetch-url="examData.fetchUrl"
-                    :table-heading="examData.heading"
-                    :item-properties="examData.props"
-                    :assignPage="true"
+                    :item-data="examData"
                     :kelas-id="kelasId"
                     :key="key.exam"
                     @show:setting="showExamSetting($event)"
-                ></item-index>
+                ></item-assigned>
 
             </tab-details>
 
@@ -76,15 +70,12 @@
                     </div>
                 </div>
 
-                <item-index
+                <item-assigned
                     item="user"
-                    :fetch-url="userData.fetchUrl"
-                    :table-heading="userData.heading"
-                    :item-properties="userData.props"
-                    :assignPage="true"
+                    :item-data="userData"
                     :kelas-id="kelasId"
                     :key="key.user"
-                ></item-index>
+                ></item-assigned>
 
             </tab-details>
 
@@ -147,8 +138,10 @@
 <script>
 import { DateTime } from "luxon";
 import swal from "sweetalert";
+import ItemAssigned from '../item-index/ItemAssigned.vue';
 
 export default {
+  components: { ItemAssigned },
     name: 'kelas-index',
     
     props: {

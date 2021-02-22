@@ -27,11 +27,12 @@
 
         <div class="box mt-3">
 
-            <div class="card">
-                <div class="dimmer" :class="isLoading">
-                    <div class="loader"></div>
+            <div class="dimmer" :class="isLoading">
+                <div class="loader"></div>
 
-                    <div class="dimmer-content">
+                <div class="dimmer-content">
+
+                    <div class="card">
 
                         <v-table 
                             :headings="tableHeading" 
@@ -47,16 +48,16 @@
                             </template>
                         </v-table>
 
+                        <div class="card-footer d-flex align-items-center" v-if="laravelData.last_page != 1">
+                            <pagination class="pagination m-0 ml-auto" :data="laravelData"
+                                :limit="1" :show-disabled="true"
+                                @pagination-change-page="getResults"
+                            ></pagination>
+                        </div>
+
                     </div>
-                </div>
 
-                <div class="card-footer d-flex align-items-center" v-if="laravelData.last_page != 1">
-                    <pagination class="pagination m-0 ml-auto" :data="laravelData"
-                        :limit="1" :show-disabled="true"
-                        @pagination-change-page="getResults"
-                    ></pagination>
                 </div>
-
             </div>
 
         </div>
