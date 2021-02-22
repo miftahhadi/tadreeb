@@ -6,12 +6,19 @@ use Illuminate\Database\Eloquent\Relations\MorphPivot;
 
 class Examable extends MorphPivot
 {   
+    protected $table = 'examables';
+
     protected $dates = [
         'tampil_otomatis',
         'buka_otomatis',
         'batas_buka',
         
     ];
+
+    public function tes()
+    {
+        return 'yes';
+    }
 
     public function users()
     {

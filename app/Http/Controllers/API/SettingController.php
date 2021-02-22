@@ -12,15 +12,9 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    private function getExamable($kelasId, $examId)
-    {
-        $kelas = Classroom::find($kelasId);
-        return $kelas->examable()->where('exam_id', $examId)->first();
-    }
-
     public function getExamSetting(Exam $exam, Request $request)
     {
-        $examable = $this->getExamable($request->input('kelas'), $exam->id);
+        $examable = $exam->classrooms()->find($request->input('kelas')->pivot);
 
         if (!$examable) {
             return 0;
@@ -66,7 +60,8 @@ class SettingController extends Controller
 
     public function saveExamSetting(Request $request)
     {
-        $examable = $this->getExamable($request['kelasId'], $request['examId']);
+        $exam = Exam::find($request['examId']);
+        $examable = $exam->classrooms()->find($request['kelasId'])->pivot;
 
         $setting = $request['setting'];
 
