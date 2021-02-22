@@ -21,7 +21,7 @@
                             <item-assign
                                 :item-id="actionProp.item.id"
                                 :assign-url="assignUrl"
-                                :assigned="assigned.includes(item.id)"
+                                :assigned="assigned.includes(actionProp.item.id)"
                                 @saved="$emit('saved')"
                             ></item-assign>
                         </template>
@@ -32,7 +32,7 @@
 
                 <template #footer>
                     <button class="btn" data-dismiss="modal">Batal</button>
-                    <input type="submit" value="Tambahkan" class="btn btn-success">
+                    <!-- <input type="submit" value="Tambahkan" class="btn btn-success"> -->
                 </template>
 
             </modal>

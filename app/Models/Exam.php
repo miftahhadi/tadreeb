@@ -23,7 +23,7 @@ class Exam extends Model
     public function classrooms()
     {
         return $this->morphedByMany(Classroom::class, 'examable')
-                        ->using(ClassroomExam::class)
+                        ->using(Examable::class)
                         ->withPivot([
                             'id',
                             'tampil',
@@ -35,6 +35,11 @@ class Exam extends Model
                             'durasi',
                             'attempt'
                         ]);
+    }
+
+    public function examable()
+    {
+        return $this->hasOne(Examable::class);
     }
 
     public function sections()

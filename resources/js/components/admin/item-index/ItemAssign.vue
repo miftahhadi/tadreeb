@@ -1,10 +1,13 @@
 <template>
     <div>
-        <button class="btn"
-                :class="[buttonColor, buttonLoading]"
-                v-text="buttonText"
-                @click.prevent="assignItem"
+        <button 
+            v-if="!assigned"
+            class="btn btn-primary"
+            :class="buttonLoading"
+            v-text="buttonText"
+            @click.prevent="assignItem"
         ></button>
+        <div class="text-muted" v-else><i>Item sudah ditambahkan</i></div>
     </div>
 </template>
 

@@ -3,34 +3,40 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Models\ClassroomExam;
+use App\Models\Exam;
+use App\Models\Examable;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    public function getExamSetting($examId, Request $request)
+    private function getExamable($kelasId, $examId)
     {
-        $classexam = ClassroomExam::where([
-                        ['classroom_id', $request->input('kelas')],
-                        ['exam_id', $examId]
-                    ])->first();
+        $kelas = Classroom::find($kelasId);
+        return $kelas->examable()->where('exam_id', $examId)->first();
+    }
 
-        if (!$classexam) {
+    public function getExamSetting(Exam $exam, Request $request)
+    {
+        $examable = $this->getExamable($request->input('kelas'), $exam->id);
+
+        if (!$examable) {
             return 0;
         } 
 
         $setting = [
-            'tampil' => $classexam->tampil,
-            'bukaAkses'=>  $classexam->buka,
-            'bukaHasil' => $classexam->buka_hasil,
-            'durasi' => $classexam->durasi,
-            'attempt' => $classexam->attempt,
+            'tampil' => $examable->tampil,
+            'bukaAkses'=>  $examable->buka,
+            'bukaHasil' => $examable->buka_hasil,
+            'durasi' => $examable->durasi,
+            'attempt' => $examable->attempt,
         ];
 
-        $setting['autoTampil'] = $this->setWaktu($classexam, 'tampil_otomatis');
-        $setting['autoBukaAkses'] = $this->setWaktu($classexam, 'buka_otomatis');
-        $setting['batasBuka'] = $this->setWaktu($classexam, 'batas_buka');
+        $setting['autoTampil'] = $this->setWaktu($examable, 'tampil_otomatis');
+        $setting['autoBukaAkses'] = $this->setWaktu($examable, 'buka_otomatis');
+        $setting['batasBuka'] = $this->setWaktu($examable, 'batas_buka');
 
         return $setting;
 
@@ -41,10 +47,10 @@ class SettingController extends Controller
 
     }
 
-    public function setWaktu($classexam, $classexamProp)
+    public function setWaktu($model, $modelProp)
     {
-        if ($classexam->$classexamProp instanceof Carbon) {
-            $dt = $classexam->$classexamProp->tz(settings('timezone'));
+        if ($model->$modelProp instanceof Carbon) {
+            $dt = $model->$modelProp->tz(settings('timezone'));
 
             return [
                 'tanggal' => $dt->format('Y-m-d'),
@@ -60,24 +66,21 @@ class SettingController extends Controller
 
     public function saveExamSetting(Request $request)
     {
-        $classexam = ClassroomExam::where([
-                        ['classroom_id', $request['kelasId']],
-                        ['exam_id', $request['examId']]
-                    ])->first();
+        $examable = $this->getExamable($request['kelasId'], $request['examId']);
 
         $setting = $request['setting'];
 
-        $classexam->tampil = $setting['tampil'];
-        $classexam->buka = $setting['bukaAkses'];
-        $classexam->buka_hasil = $setting['bukaHasil'];
-        $classexam->durasi = $setting['durasi'];
-        $classexam->attempt = $setting['attempt'];
+        $examable->tampil = $setting['tampil'];
+        $examable->buka = $setting['bukaAkses'];
+        $examable->buka_hasil = $setting['bukaHasil'];
+        $examable->durasi = $setting['durasi'];
+        $examable->attempt = $setting['attempt'];
 
-        $classexam->tampil_otomatis = $this->timeSetting($setting['autoTampil']);
-        $classexam->buka_otomatis = $this->timeSetting($setting['autoBukaAkses']);
-        $classexam->batas_buka = $this->timeSetting($setting['batasBuka']);
+        $examable->tampil_otomatis = $this->timeSetting($setting['autoTampil']);
+        $examable->buka_otomatis = $this->timeSetting($setting['autoBukaAkses']);
+        $examable->batas_buka = $this->timeSetting($setting['batasBuka']);
 
-        return $classexam->save();
+        return $examable->save();
     }
 
     protected function timeSetting($setting) 

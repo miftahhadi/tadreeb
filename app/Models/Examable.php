@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 
 class Examable extends MorphPivot
-{
+{   
     protected $dates = [
         'tampil_otomatis',
         'buka_otomatis',

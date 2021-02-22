@@ -4578,6 +4578,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-assign',
   props: {
@@ -46053,17 +46056,21 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("button", {
-      staticClass: "btn",
-      class: [_vm.buttonColor, _vm.buttonLoading],
-      domProps: { textContent: _vm._s(_vm.buttonText) },
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.assignItem($event)
-        }
-      }
-    })
+    !_vm.assigned
+      ? _c("button", {
+          staticClass: "btn btn-primary",
+          class: _vm.buttonLoading,
+          domProps: { textContent: _vm._s(_vm.buttonText) },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.assignItem($event)
+            }
+          }
+        })
+      : _c("div", { staticClass: "text-muted" }, [
+          _c("i", [_vm._v("Item sudah ditambahkan")])
+        ])
   ])
 }
 var staticRenderFns = []
@@ -46779,7 +46786,9 @@ var render = function() {
                               attrs: {
                                 "item-id": actionProp.item.id,
                                 "assign-url": _vm.assignUrl,
-                                assigned: _vm.assigned.includes(_vm.item.id)
+                                assigned: _vm.assigned.includes(
+                                  actionProp.item.id
+                                )
                               },
                               on: {
                                 saved: function($event) {
@@ -46804,12 +46813,7 @@ var render = function() {
                     "button",
                     { staticClass: "btn", attrs: { "data-dismiss": "modal" } },
                     [_vm._v("Batal")]
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "btn btn-success",
-                    attrs: { type: "submit", value: "Tambahkan" }
-                  })
+                  )
                 ]
               },
               proxy: true
