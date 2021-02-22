@@ -4670,7 +4670,8 @@ __webpack_require__.r(__webpack_exports__);
     kelasId: {
       type: Number,
       required: true
-    }
+    },
+    setting: String
   }
 });
 
@@ -5194,73 +5195,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-assign-modal',
   props: {
@@ -5281,27 +5215,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getResults: function getResults() {
-      var _this = this;
-
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      this.loading = true;
-      axios.get(this.uri + page).then(function (response) {
-        _this.loading = false;
-        _this.laravelData = response.data;
-      })["catch"](function (reponse) {
-        _this.loading = false;
-      });
-    },
     massAssign: function massAssign() {}
   },
   computed: {
-    isLoading: function isLoading() {
-      return this.loading ? 'active' : '';
-    },
-    uri: function uri() {
-      return this.query == '' ? this.fetchUrl + '?page=' : this.fetchUrl + '/search/' + this.query + '?page=';
-    },
     title: function title() {
       if (this.item == 'user') {
         return 'Anggota';
@@ -5309,9 +5225,6 @@ __webpack_require__.r(__webpack_exports__);
         return this.item.charAt(0).toUpperCase() + this.item.slice(1);
       }
     }
-  },
-  mounted: function mounted() {
-    this.getResults();
   }
 });
 
@@ -5331,6 +5244,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _item_index_ItemAssigned_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../item-index/ItemAssigned.vue */ "./resources/js/components/admin/item-index/ItemAssigned.vue");
+//
+//
+//
 //
 //
 //
@@ -5783,8 +5699,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 // import "bootstrap";
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-item-setting-modal',
@@ -5800,7 +5714,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this$timezone;
 
     return {
-      id: 'setting' + this.item + 'Modal',
+      id: this.item + 'Setting' + 'Modal',
       input: {
         tampil: 0,
         bukaAkses: 0,
@@ -46196,7 +46110,7 @@ var render = function() {
                       staticClass: "btn btn-sm",
                       attrs: {
                         "data-toggle": "modal",
-                        "data-target": "#examSettingModal"
+                        "data-target": "#" + _vm.setting
                       }
                     },
                     [_vm._v("Pengaturan")]
@@ -46848,252 +46762,36 @@ var render = function() {
               key: "body",
               fn: function() {
                 return [
-                  _c("div", { staticClass: "row mb-3" }, [
-                    _c("div", { staticClass: "col-auto" }, [
-                      _c("div", { staticClass: "input-icon" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.query,
-                              expression: "query"
-                            }
-                          ],
-                          staticClass: "form-control form-control-rounded",
-                          attrs: { type: "text", placeholder: "Cari..." },
-                          domProps: { value: _vm.query },
-                          on: {
-                            input: [
-                              function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.query = $event.target.value
-                              },
-                              _vm.getResults
-                            ]
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "input-icon-addon" }, [
-                          _c(
-                            "svg",
-                            {
-                              staticClass: "icon",
+                  _c("item-list", {
+                    attrs: {
+                      item: _vm.item,
+                      "table-heading": _vm.headings,
+                      "item-properties": _vm.itemProperties,
+                      "fetch-url": _vm.fetchUrl,
+                      search: true
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "action",
+                        fn: function(actionProp) {
+                          return [
+                            _c("item-assign", {
                               attrs: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                width: "24",
-                                height: "24",
-                                viewBox: "0 0 24 24",
-                                "stroke-width": "2",
-                                stroke: "currentColor",
-                                fill: "none",
-                                "stroke-linecap": "round",
-                                "stroke-linejoin": "round"
-                              }
-                            },
-                            [
-                              _c("path", {
-                                attrs: { stroke: "none", d: "M0 0h24v24H0z" }
-                              }),
-                              _c("circle", {
-                                attrs: { cx: "10", cy: "10", r: "7" }
-                              }),
-                              _c("line", {
-                                attrs: {
-                                  x1: "21",
-                                  y1: "21",
-                                  x2: "15",
-                                  y2: "15"
+                                "item-id": actionProp.item.id,
+                                "assign-url": _vm.assignUrl,
+                                assigned: _vm.assigned.includes(_vm.item.id)
+                              },
+                              on: {
+                                saved: function($event) {
+                                  return _vm.$emit("saved")
                                 }
-                              })
-                            ]
-                          )
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-auto ml-auto" },
-                      [
-                        _c("pagination", {
-                          attrs: {
-                            data: _vm.laravelData,
-                            limit: 1,
-                            "show-disabled": true
-                          },
-                          on: { "pagination-change-page": _vm.getResults }
-                        })
-                      ],
-                      1
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "box" }, [
-                    _c("div", { staticClass: "card" }, [
-                      _c(
-                        "div",
-                        { staticClass: "dimmer", class: _vm.isLoading },
-                        [
-                          _c("div", { staticClass: "loader" }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "dimmer-content" }, [
-                            _c("div", { staticClass: "table-responsive" }, [
-                              _c(
-                                "table",
-                                {
-                                  staticClass:
-                                    "table card-table table-vcenter text-nowrap datatable"
-                                },
-                                [
-                                  _c("thead", [
-                                    _c(
-                                      "tr",
-                                      [
-                                        _c("th", { staticClass: "w-1" }, [
-                                          _c("input", {
-                                            staticClass:
-                                              "form-check-input m-0 align-middle",
-                                            attrs: {
-                                              type: "checkbox",
-                                              disabled: ""
-                                            }
-                                          })
-                                        ]),
-                                        _vm._v(" "),
-                                        _vm._l(
-                                          _vm.headings.slice(0, 2),
-                                          function(heading) {
-                                            return _c(
-                                              "th",
-                                              {
-                                                key: heading.id,
-                                                attrs: { width: heading.width }
-                                              },
-                                              [_vm._v(_vm._s(heading.name))]
-                                            )
-                                          }
-                                        ),
-                                        _vm._v(" "),
-                                        _c("th")
-                                      ],
-                                      2
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "tbody",
-                                    _vm._l(_vm.laravelData.data, function(
-                                      item
-                                    ) {
-                                      return _c(
-                                        "tr",
-                                        { key: item.id },
-                                        [
-                                          _c("td", [
-                                            _c("input", {
-                                              directives: [
-                                                {
-                                                  name: "model",
-                                                  rawName: "v-model",
-                                                  value: _vm.itemId,
-                                                  expression: "itemId"
-                                                }
-                                              ],
-                                              staticClass:
-                                                "form-check-input m-0 align-middle",
-                                              attrs: {
-                                                type: "checkbox",
-                                                "aria-label": "Pilih" + item
-                                              },
-                                              domProps: {
-                                                value: item.id,
-                                                checked: Array.isArray(
-                                                  _vm.itemId
-                                                )
-                                                  ? _vm._i(
-                                                      _vm.itemId,
-                                                      item.id
-                                                    ) > -1
-                                                  : _vm.itemId
-                                              },
-                                              on: {
-                                                change: function($event) {
-                                                  var $$a = _vm.itemId,
-                                                    $$el = $event.target,
-                                                    $$c = $$el.checked
-                                                      ? true
-                                                      : false
-                                                  if (Array.isArray($$a)) {
-                                                    var $$v = item.id,
-                                                      $$i = _vm._i($$a, $$v)
-                                                    if ($$el.checked) {
-                                                      $$i < 0 &&
-                                                        (_vm.itemId = $$a.concat(
-                                                          [$$v]
-                                                        ))
-                                                    } else {
-                                                      $$i > -1 &&
-                                                        (_vm.itemId = $$a
-                                                          .slice(0, $$i)
-                                                          .concat(
-                                                            $$a.slice($$i + 1)
-                                                          ))
-                                                    }
-                                                  } else {
-                                                    _vm.itemId = $$c
-                                                  }
-                                                }
-                                              }
-                                            })
-                                          ]),
-                                          _vm._v(" "),
-                                          _vm._l(
-                                            _vm.itemProperties.slice(0, 2),
-                                            function($prop) {
-                                              return _c("td", { key: $prop }, [
-                                                _vm._v(_vm._s(item[$prop]))
-                                              ])
-                                            }
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "td",
-                                            { staticClass: "text-right" },
-                                            [
-                                              _c("item-assign", {
-                                                attrs: {
-                                                  "item-id": item.id,
-                                                  "assign-url": _vm.assignUrl,
-                                                  assigned: _vm.assigned.includes(
-                                                    item.id
-                                                  )
-                                                },
-                                                on: {
-                                                  saved: function($event) {
-                                                    return _vm.$emit("saved")
-                                                  }
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        2
-                                      )
-                                    }),
-                                    0
-                                  )
-                                ]
-                              )
-                            ])
-                          ])
-                        ]
-                      )
+                              }
+                            })
+                          ]
+                        }
+                      }
                     ])
-                  ])
+                  })
                 ]
               },
               proxy: true
@@ -47184,7 +46882,8 @@ var render = function() {
                 attrs: {
                   item: "pelajaran",
                   "item-data": _vm.lessonData,
-                  "kelas-id": _vm.kelasId
+                  "kelas-id": _vm.kelasId,
+                  setting: "pelajaranSettingModal"
                 }
               })
             ],
@@ -47220,7 +46919,8 @@ var render = function() {
                 attrs: {
                   item: "ujian",
                   "item-data": _vm.examData,
-                  "kelas-id": _vm.kelasId
+                  "kelas-id": _vm.kelasId,
+                  setting: "ujianSettingModal"
                 },
                 on: {
                   "show:setting": function($event) {

@@ -26,7 +26,9 @@
                     :item-data="lessonData"
                     :kelas-id="kelasId"
                     :key="key.lesson"
-                ></item-assigned>
+                    setting="pelajaranSettingModal"
+                >
+                </item-assigned>
 
             </tab-details>
 
@@ -49,6 +51,7 @@
                     item="ujian"
                     :item-data="examData"
                     :kelas-id="kelasId"
+                    setting="ujianSettingModal"
                     :key="key.exam"
                     @show:setting="showExamSetting($event)"
                 ></item-assigned>

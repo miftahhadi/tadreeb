@@ -136,9 +136,7 @@
                     Terjadi kesalahan
                 </p> -->
 
-                <button class="btn btn-success"
-                        @click="save"
-                > 
+                <button class="btn btn-success" @click="save"> 
                     <!-- <span v-if="saving"
                             class="spinner-border spinner-border-sm mr-2" 
                             role="status"
@@ -171,7 +169,7 @@ export default {
 
     data() {
         return {
-            id: 'setting' + this.item + 'Modal',
+            id: this.item + 'Setting'  + 'Modal',
             input: {
                 tampil: 0,
                 bukaAkses: 0,

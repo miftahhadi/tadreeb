@@ -12,7 +12,7 @@
                     <button 
                         class="btn btn-sm"
                         data-toggle="modal" 
-                        data-target="#examSettingModal" 
+                        :data-target="'#' + setting" 
                     >Pengaturan</button>
                     <button class="btn btn-sm btn-danger">Buang</button>
                 </div>
@@ -38,8 +38,8 @@ export default {
         kelasId: {
             type: Number,
             required: true
-        }
-
+        },
+        setting: String
     }
 }
 </script>
