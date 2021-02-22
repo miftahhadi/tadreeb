@@ -1,7 +1,7 @@
 <template>
     <div>
         <button 
-            v-if="!assigned"
+            v-if="!status"
             class="btn btn-primary"
             :class="buttonLoading"
             v-text="buttonText"
