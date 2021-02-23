@@ -182,6 +182,7 @@ export default {
 
             axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelasId)
                     .then(response => {
+                        console.log(response.data)
                         if (response.data != 0) {
                             this.$refs.examSettingModal.input = response.data
                         }
@@ -206,6 +207,14 @@ export default {
                 console.log(error)
             })
         } 
+    },
+
+    created() {
+        EventBus.$on('callSetting', data => {
+            if (data.item == 'ujian') {
+                this.showExamSetting(data.id)
+            }
+        })
     }
 }
 </script>

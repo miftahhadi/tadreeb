@@ -4659,6 +4659,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-assigned',
   props: {
@@ -4675,6 +4679,14 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     },
     setting: String
+  },
+  methods: {
+    callSetting: function callSetting(id) {
+      EventBus.$emit('callSetting', {
+        item: this.item,
+        id: id
+      });
+    }
   }
 });
 
@@ -5424,6 +5436,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.examId = id;
       this.loadingSetting = true, axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelasId).then(function (response) {
+        console.log(response.data);
+
         if (response.data != 0) {
           _this.$refs.examSettingModal.input = response.data;
         }
@@ -5447,6 +5461,15 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    EventBus.$on('callSetting', function (data) {
+      if (data.item == 'ujian') {
+        _this2.showExamSetting(data.id);
+      }
+    });
   }
 });
 
@@ -46108,7 +46131,7 @@ var render = function() {
         scopedSlots: _vm._u([
           {
             key: "action",
-            fn: function() {
+            fn: function(actionProp) {
               return [
                 _c("div", { staticClass: "btn-list flex-nowrap" }, [
                   _c(
@@ -46118,18 +46141,27 @@ var render = function() {
                       attrs: {
                         "data-toggle": "modal",
                         "data-target": "#" + _vm.setting
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.callSetting(actionProp.item.id)
+                        }
                       }
                     },
                     [_vm._v("Pengaturan")]
                   ),
                   _vm._v(" "),
-                  _c("button", { staticClass: "btn btn-sm btn-danger" }, [
-                    _vm._v("Buang")
-                  ])
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-danger",
+                      attrs: { "data-toggle": "modal" }
+                    },
+                    [_vm._v("Buang")]
+                  )
                 ])
               ]
-            },
-            proxy: true
+            }
           }
         ])
       })
@@ -47177,11 +47209,9 @@ var render = function() {
             fn: function() {
               return [
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Tampilkan " + _vm._s(_vm.item) + "?")]
-                  ),
+                  _c("label", { staticClass: "col-5" }, [
+                    _vm._v("Tampilkan " + _vm._s(_vm.item) + "?")
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", [
@@ -47259,11 +47289,9 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Buka akses?")]
-                  ),
+                  _c("label", { staticClass: "col-5" }, [
+                    _vm._v("Buka akses?")
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", [
@@ -47333,11 +47361,9 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [_vm._v("Buka hasil?")]
-                  ),
+                  _c("label", { staticClass: "col-5" }, [
+                    _vm._v("Buka hasil?")
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", [
@@ -47415,15 +47441,11 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [
-                      _vm._v(
-                        "Otomatis tampilkan pada (" + _vm._s(_vm.tzName) + ")"
-                      )
-                    ]
-                  ),
+                  _c("label", { staticClass: "col-5" }, [
+                    _vm._v(
+                      "Otomatis tampilkan pada (" + _vm._s(_vm.tzName) + ")"
+                    )
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", { staticClass: "row" }, [
@@ -47495,15 +47517,11 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [
-                      _vm._v(
-                        "Otomatis buka akses pada (" + _vm._s(_vm.tzName) + ")"
-                      )
-                    ]
-                  ),
+                  _c("label", { staticClass: "col-5" }, [
+                    _vm._v(
+                      "Otomatis buka akses pada (" + _vm._s(_vm.tzName) + ")"
+                    )
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", { staticClass: "row" }, [
@@ -47575,15 +47593,11 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
-                  _c(
-                    "label",
-                    { staticClass: "form-label col-5 col-form-label" },
-                    [
-                      _vm._v(
-                        "Otomatis tutup akses pada (" + _vm._s(_vm.tzName) + ")"
-                      )
-                    ]
-                  ),
+                  _c("label", { staticClass: "col-5" }, [
+                    _vm._v(
+                      "Otomatis tutup akses pada (" + _vm._s(_vm.tzName) + ")"
+                    )
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col" }, [
                     _c("div", { staticClass: "row" }, [
@@ -47656,9 +47670,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
                   _c("div", { staticClass: "col-5" }, [
-                    _c("label", { staticClass: "form-label col-form-label" }, [
-                      _vm._v("Durasi")
-                    ]),
+                    _c("label", [_vm._v("Durasi (menit)")]),
                     _vm._v(" "),
                     _c("small", { staticClass: "form-hint" }, [
                       _vm._v("Isi dengan 0 jika tidak ingin memberi durasi")
@@ -47692,9 +47704,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group mb-3 row" }, [
                   _c("div", { staticClass: "col-5" }, [
-                    _c("label", { staticClass: "form-label col-form-label" }, [
-                      _vm._v("Kesempatan mencoba")
-                    ]),
+                    _c("label", [_vm._v("Kesempatan mencoba")]),
                     _vm._v(" "),
                     _c("small", { staticClass: "form-hint" }, [
                       _vm._v("Isi dengan 0 jika boleh dikerjakan tanpa batas")
@@ -62381,6 +62391,7 @@ Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ ".
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+window.EventBus = new Vue();
 var app = new Vue({
   el: '#app'
 });

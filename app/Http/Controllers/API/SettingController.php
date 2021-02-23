@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\ClassroomExam;
 use App\Models\Exam;
-use App\Models\Examable;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,7 +11,7 @@ class SettingController extends Controller
 {
     public function getExamSetting(Exam $exam, Request $request)
     {
-        $examable = $exam->classrooms()->find($request->input('kelas')->pivot);
+        $examable = $exam->classrooms()->find($request['kelas'])->pivot;
 
         if (!$examable) {
             return 0;
@@ -33,7 +30,6 @@ class SettingController extends Controller
         $setting['batasBuka'] = $this->setWaktu($examable, 'batas_buka');
 
         return $setting;
-
     }
 
     public function getLessonSetting($lessonId, Request $request)

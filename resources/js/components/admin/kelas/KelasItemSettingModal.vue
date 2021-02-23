@@ -10,7 +10,7 @@
             <template #body>
 
                 <div class="form-group mb-3 row">
-                    <label class="form-label col-5 col-form-label">Tampilkan {{ item }}?</label>
+                    <label class="col-5">Tampilkan {{ item }}?</label>
                     <div class="col">
                         <div>
                             <label class="form-check form-check-inline">
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="form-group mb-3 row">
-                    <label class="form-label col-5 col-form-label">Buka akses?</label>
+                    <label class="col-5">Buka akses?</label>
                     <div class="col">
                         <div>
                             <label class="form-check form-check-inline">
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="form-group mb-3 row">
-                    <label class="form-label col-5 col-form-label">Buka hasil?</label>
+                    <label class="col-5">Buka hasil?</label>
                     <div class="col">
                         <div>
                             <label class="form-check form-check-inline">
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="form-group mb-3 row">
-                    <label class="form-label col-5 col-form-label">Otomatis tampilkan pada ({{ tzName }})</label>
+                    <label class="col-5">Otomatis tampilkan pada ({{ tzName }})</label>
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="form-group mb-3 row">
-                    <label class="form-label col-5 col-form-label">Otomatis buka akses pada ({{ tzName }})</label>
+                    <label class="col-5">Otomatis buka akses pada ({{ tzName }})</label>
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="form-group mb-3 row">
-                    <label class="form-label col-5 col-form-label">Otomatis tutup akses pada ({{ tzName }})</label>
+                    <label class="col-5">Otomatis tutup akses pada ({{ tzName }})</label>
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
@@ -104,7 +104,7 @@
 
                 <div class="form-group mb-3 row">
                     <div class="col-5">
-                        <label class="form-label col-form-label">Durasi</label>
+                        <label>Durasi (menit)</label>
                         <small class="form-hint">Isi dengan 0 jika tidak ingin memberi durasi</small>
                     </div>
 
@@ -117,7 +117,7 @@
 
                 <div class="form-group mb-3 row">
                     <div class="col-5">
-                        <label class="form-label col-form-label">Kesempatan mencoba</label>
+                        <label>Kesempatan mencoba</label>
                         <small class="form-hint">Isi dengan 0 jika boleh dikerjakan tanpa batas</small>
                     </div>
                     <div class="col-auto">

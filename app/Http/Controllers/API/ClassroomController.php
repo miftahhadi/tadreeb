@@ -113,6 +113,11 @@ class ClassroomController extends Controller
         return $kelas->exams()->toggle($ujian);
     }
 
+    public function unassignExam(Classroom $kelas, Request $request)
+    {
+
+    }
+
     public function user(Classroom $kelas)
     {
         return json_encode($kelas->users()->paginate(20));

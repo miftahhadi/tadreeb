@@ -7,14 +7,18 @@
             :fetch-url="itemData.fetchUrl"
         >
 
-            <template v-slot:action>
+            <template v-slot:action="actionProp">
                 <div class="btn-list flex-nowrap">
                     <button 
                         class="btn btn-sm"
                         data-toggle="modal" 
                         :data-target="'#' + setting" 
+                        @click="callSetting(actionProp.item.id)"
                     >Pengaturan</button>
-                    <button class="btn btn-sm btn-danger">Buang</button>
+                    <button 
+                        class="btn btn-sm btn-danger"
+                        data-toggle="modal"
+                    >Buang</button>
                 </div>
             </template>
 
@@ -40,6 +44,16 @@ export default {
             required: true
         },
         setting: String
+    },
+
+    methods: {
+        callSetting(id)
+        {
+            EventBus.$emit('callSetting', {
+                item: this.item,
+                id: id
+            })
+        }
     }
 }
 </script>
