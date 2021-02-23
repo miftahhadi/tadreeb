@@ -38,11 +38,6 @@ class Classroom extends Model
                         ]);
     }
 
-    public function examable()
-    {
-        return $this->hasOne(Examable::class);
-    }
-
     public function classroomExam()
     {
         return $this->hasOne(ClassroomExam::class);

@@ -15,11 +15,6 @@ class Examable extends MorphPivot
         
     ];
 
-    public function tes()
-    {
-        return 'yes';
-    }
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'classroomexam_user', 'classroom_exam_id', 'user_id')
