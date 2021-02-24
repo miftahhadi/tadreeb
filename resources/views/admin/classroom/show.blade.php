@@ -6,8 +6,7 @@
         @include('admin._item-header')
 
         <kelas-index
-            kelas="{{ $kelas->nama }}"
-            :kelas-id="{{ $kelas->id }}"
+            :kelas="{{ $kelas }}"
             :lesson-data="{{ json_encode($service->lessons) }}"
             :exam-data="{{ json_encode($service->exams) }}"
             :user-data="{{ json_encode($service->users) }}"

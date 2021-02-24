@@ -4663,6 +4663,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-assigned',
   props: {
@@ -4685,6 +4690,12 @@ __webpack_require__.r(__webpack_exports__);
       EventBus.$emit('callSetting', {
         item: this.item,
         id: id
+      });
+    },
+    callUnassign: function callUnassign(data) {
+      EventBus.$emit('callUnassign', {
+        item: this.item,
+        itemData: data
       });
     }
   }
@@ -5258,158 +5269,178 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _item_index_ItemAssigned_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../item-index/ItemAssigned.vue */ "./resources/js/components/admin/item-index/ItemAssigned.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    ItemAssigned: _item_index_ItemAssigned_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
-  },
   name: 'kelas-index',
   props: {
-    kelas: String,
-    kelasId: Number,
+    kelas: Object,
     lessonData: Object,
     examData: Object,
     userData: Object,
@@ -5424,7 +5455,9 @@ __webpack_require__.r(__webpack_exports__);
       },
       examId: null,
       lessonId: null,
-      loadingSetting: false
+      loadingSetting: false,
+      itemToUnassign: {},
+      deleteKey: 0
     };
   },
   mounted: function mounted() {
@@ -5434,8 +5467,9 @@ __webpack_require__.r(__webpack_exports__);
     showExamSetting: function showExamSetting(id) {
       var _this = this;
 
+      this.resetSetting();
       this.examId = id;
-      this.loadingSetting = true, axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelasId).then(function (response) {
+      this.loadingSetting = true, axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelas.id).then(function (response) {
         console.log(response.data);
 
         if (response.data != 0) {
@@ -5450,7 +5484,7 @@ __webpack_require__.r(__webpack_exports__);
     saveExamSetting: function saveExamSetting(data) {
       axios.post('/api/ujian/setting', {
         examId: this.examId,
-        kelasId: this.kelasId,
+        kelasId: this.kelas.id,
         setting: data
       }).then(function (response) {
         sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
@@ -5460,15 +5494,46 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    resetSetting: function resetSetting() {
+      var setting = this.$refs.examSettingModal.input;
+      var props = Object.keys(setting);
+
+      for (var _i = 0, _props = props; _i < _props.length; _i++) {
+        var key = _props[_i];
+
+        if (_typeof(setting[key]) === 'object') {
+          setting[key].tanggal = null;
+          setting[key].waktu = '00:00';
+        } else {
+          setting[key] = null;
+        }
+      }
+    },
+    unassignItem: function unassignItem() {
+      var _this2 = this;
+
+      var url = '/api/kelas/' + this.kelas.id + '/' + this.itemToUnassign.type + '/unassign';
+      axios.post(url, {
+        item: this.itemToUnassign.data
+      }).then(function (response) {
+        _this2.key.exam += 1;
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this3 = this;
 
     EventBus.$on('callSetting', function (data) {
       if (data.item == 'ujian') {
-        _this2.showExamSetting(data.id);
+        _this3.showExamSetting(data.id);
       }
+    });
+    EventBus.$on('callUnassign', function (data) {
+      _this3.itemToUnassign.type = data.item;
+      _this3.itemToUnassign.data = data.itemData;
     });
   }
 });
@@ -46155,7 +46220,15 @@ var render = function() {
                     "button",
                     {
                       staticClass: "btn btn-sm btn-danger",
-                      attrs: { "data-toggle": "modal" }
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#unassignItemModal"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.callUnassign(actionProp.item)
+                        }
+                      }
                     },
                     [_vm._v("Buang")]
                   )
@@ -46918,7 +46991,7 @@ var render = function() {
                 attrs: {
                   item: "pelajaran",
                   "item-data": _vm.lessonData,
-                  "kelas-id": _vm.kelasId,
+                  "kelas-id": _vm.kelas.id,
                   setting: "pelajaranSettingModal"
                 }
               })
@@ -46955,13 +47028,8 @@ var render = function() {
                 attrs: {
                   item: "ujian",
                   "item-data": _vm.examData,
-                  "kelas-id": _vm.kelasId,
+                  "kelas-id": _vm.kelas.id,
                   setting: "ujianSettingModal"
-                },
-                on: {
-                  "show:setting": function($event) {
-                    return _vm.showExamSetting($event)
-                  }
                 }
               })
             ],
@@ -46997,7 +47065,7 @@ var render = function() {
                 attrs: {
                   item: "user",
                   "item-data": _vm.userData,
-                  "kelas-id": _vm.kelasId
+                  "kelas-id": _vm.kelas.id
                 }
               })
             ],
@@ -47014,7 +47082,7 @@ var render = function() {
       _c("kelas-assign-modal", {
         attrs: {
           item: "ujian",
-          kelas: _vm.kelas,
+          kelas: _vm.kelas.nama,
           headings: _vm.examData.heading,
           "fetch-url": "/api/ujian",
           "item-properties": _vm.examData.props,
@@ -47031,7 +47099,7 @@ var render = function() {
       _c("kelas-assign-modal", {
         attrs: {
           item: "pelajaran",
-          kelas: _vm.kelas,
+          kelas: _vm.kelas.nama,
           headings: _vm.lessonData.heading,
           "fetch-url": "/api/pelajaran",
           "item-properties": _vm.lessonData.props,
@@ -47048,7 +47116,7 @@ var render = function() {
       _c("kelas-assign-modal", {
         attrs: {
           item: "user",
-          kelas: _vm.kelas,
+          kelas: _vm.kelas.nama,
           headings: _vm.userData.heading,
           "fetch-url": "/api/user",
           "item-properties": _vm.userData.props,
@@ -47079,6 +47147,64 @@ var render = function() {
           loading: _vm.loadingSetting,
           timezone: _vm.tzName
         }
+      }),
+      _vm._v(" "),
+      _c("modal", {
+        attrs: { id: "unassignItemModal", classes: ["modal-dialog-centered"] },
+        scopedSlots: _vm._u([
+          {
+            key: "header",
+            fn: function() {
+              return [_vm._v("\n            Hapus item dari kelas\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "body",
+            fn: function() {
+              return [
+                _vm._v(
+                  "\n            Apakah Anda yakin menghapus item ini dari kelas " +
+                    _vm._s(_vm.kelas.nama) +
+                    "? Semua data kelas " +
+                    _vm._s(_vm.kelas.nama) +
+                    " terkait item ini akan hilang\n        "
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-link link-secondary mr-auto",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Batal")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        return _vm.unassignItem()
+                      }
+                    }
+                  },
+                  [_vm._v("Ya, hapus")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
       })
     ],
     1
@@ -62379,6 +62505,8 @@ Vue.use(VueFormulate["default"]);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
+window.EventBus = new Vue();
+
 var files = __webpack_require__("./resources/js sync recursive \\.vue$/");
 
 files.keys().map(function (key) {
@@ -62391,7 +62519,6 @@ Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ ".
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.EventBus = new Vue();
 var app = new Vue({
   el: '#app'
 });

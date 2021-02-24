@@ -10,12 +10,6 @@ use Illuminate\Support\Str;
 
 class ClassroomController extends Controller
 {
-
-    public function index(Group $grup) 
-    {
-        return response()->json($grup->classrooms()->orderBy('id', 'desc')->paginate(25));
-    }
-
     public function search($search)
     {
         return response()->json(
@@ -115,7 +109,8 @@ class ClassroomController extends Controller
 
     public function unassignExam(Classroom $kelas, Request $request)
     {
-
+        $ujian = $request['item'];
+        return $kelas->exams()->detach($ujian['id']);
     }
 
     public function user(Classroom $kelas)

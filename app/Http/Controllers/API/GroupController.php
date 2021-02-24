@@ -38,4 +38,20 @@ class GroupController extends Controller
     {
         return $grup->delete();   
     }
+
+    public function listClassrooms(Group $grup) 
+    {
+        return response()->json($grup->classrooms()->orderBy('id', 'desc')->paginate(25));
+    }
+
+    public function searchClassrooms(Group $grup, $search)
+    {
+        return response()->json(
+            $grup->classrooms()
+                    ->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('deskripsi', 'like', '%' .  $search . '%')
+                    ->orderBy('id', 'desc')
+                    ->paginate(25)
+            );
+    }
 }

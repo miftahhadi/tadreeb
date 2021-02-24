@@ -9,16 +9,21 @@
 
             <template v-slot:action="actionProp">
                 <div class="btn-list flex-nowrap">
+
                     <button 
                         class="btn btn-sm"
                         data-toggle="modal" 
                         :data-target="'#' + setting" 
                         @click="callSetting(actionProp.item.id)"
                     >Pengaturan</button>
+
                     <button 
                         class="btn btn-sm btn-danger"
                         data-toggle="modal"
+                        data-target="#unassignItemModal"
+                        @click="callUnassign(actionProp.item)"
                     >Buang</button>
+
                 </div>
             </template>
 
@@ -47,12 +52,18 @@ export default {
     },
 
     methods: {
-        callSetting(id)
-        {
+        callSetting(id) {
             EventBus.$emit('callSetting', {
                 item: this.item,
                 id: id
             })
+        },
+
+        callUnassign(data) {
+            EventBus.$emit('callUnassign', {
+                item: this.item,
+                itemData: data
+            }) 
         }
     }
 }

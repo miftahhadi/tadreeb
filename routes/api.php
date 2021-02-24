@@ -49,7 +49,9 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     Route::resource('grup', 'GroupController');
 
     // Classrooms
-    Route::get('grup/{grup}/kelas/search/{search}', 'ClassroomController@search');
+    Route::get('grup/{grup}/kelas/search/{search}', 'GroupController@searchClassrooms');
+    Route::get('grup/{grup}/kelas', 'GroupController@listClassrooms');
+
 
     Route::group(['prefix' => 'kelas/{kelas}'], function () {
         Route::get('pelajaran', 'ClassroomController@lesson');
@@ -65,7 +67,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
         Route::post('user/unassign', 'ClassroomController@unassignUser');
     });
 
-    Route::resource('grup/{grup}/kelas', 'ClassroomController');
+    Route::resource('kelas', 'ClassroomController');
 
 });
 

@@ -24,7 +24,7 @@
                 <item-assigned
                     item="pelajaran"
                     :item-data="lessonData"
-                    :kelas-id="kelasId"
+                    :kelas-id="kelas.id"
                     :key="key.lesson"
                     setting="pelajaranSettingModal"
                 >
@@ -50,10 +50,9 @@
                 <item-assigned
                     item="ujian"
                     :item-data="examData"
-                    :kelas-id="kelasId"
+                    :kelas-id="kelas.id"
                     setting="ujianSettingModal"
                     :key="key.exam"
-                    @show:setting="showExamSetting($event)"
                 ></item-assigned>
 
             </tab-details>
@@ -76,7 +75,7 @@
                 <item-assigned
                     item="user"
                     :item-data="userData"
-                    :kelas-id="kelasId"
+                    :kelas-id="kelas.id"
                     :key="key.user"
                 ></item-assigned>
 
@@ -90,7 +89,7 @@
 
         <kelas-assign-modal
             item="ujian"
-            :kelas="kelas"
+            :kelas="kelas.nama"
             :headings="examData.heading"
             fetch-url="/api/ujian"
             :item-properties="examData.props"
@@ -101,7 +100,7 @@
 
         <kelas-assign-modal
             item="pelajaran"
-            :kelas="kelas"
+            :kelas="kelas.nama"
             :headings="lessonData.heading"
             fetch-url="/api/pelajaran"
             :item-properties="lessonData.props"
@@ -112,7 +111,7 @@
 
         <kelas-assign-modal
             item="user"
-            :kelas="kelas"
+            :kelas="kelas.nama"
             :headings="userData.heading"
             fetch-url="/api/user"
             :item-properties="userData.props"
@@ -135,21 +134,43 @@
             :loading="loadingSetting"
             :timezone="tzName"
         ></kelas-item-setting-modal>
+
+        <modal
+            id="unassignItemModal"
+            :classes="['modal-dialog-centered']"
+        >
+            <template #header>
+                Hapus item dari kelas
+            </template>
+
+            <template #body>
+                Apakah Anda yakin menghapus item ini dari kelas {{ kelas.nama }}? Semua data kelas {{ kelas.nama }} terkait item ini akan hilang
+            </template>
+
+            <template #footer>
+                <button type="button" class="btn btn-link link-secondary mr-auto" data-dismiss="modal">Batal</button>
+                
+                <button 
+                    type="button" 
+                    class="btn btn-danger" 
+                    data-dismiss="modal"
+                    @click="unassignItem()"
+                >Ya, hapus</button>
+            </template>
+
+        </modal>
     </div>
 </template>
 
 <script>
 import { DateTime } from "luxon";
 import swal from "sweetalert";
-import ItemAssigned from '../item-index/ItemAssigned.vue';
 
 export default {
-  components: { ItemAssigned },
     name: 'kelas-index',
     
     props: {
-        kelas: String,
-        kelasId: Number,
+        kelas: Object,
         lessonData: Object,
         examData: Object,
         userData: Object,
@@ -168,6 +189,9 @@ export default {
             lessonId: null,
 
             loadingSetting: false,
+
+            itemToUnassign: {},
+            deleteKey: 0
         }
     },
 
@@ -177,10 +201,12 @@ export default {
 
     methods: {
         showExamSetting(id) {
+            this.resetSetting()
+
             this.examId = id
             this.loadingSetting = true,
 
-            axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelasId)
+            axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelas.id)
                     .then(response => {
                         console.log(response.data)
                         if (response.data != 0) {
@@ -196,7 +222,7 @@ export default {
         saveExamSetting(data) {
             axios.post('/api/ujian/setting', {
                 examId: this.examId,
-                kelasId: this.kelasId,
+                kelasId: this.kelas.id,
                 setting: data
             }).then(response => {
                 swal({
@@ -206,7 +232,34 @@ export default {
             }).catch(error => {
                 console.log(error)
             })
-        } 
+        },
+
+        resetSetting() {
+            let setting = this.$refs.examSettingModal.input
+
+            const props = Object.keys(setting)
+
+            for (let key of props) {
+                if (typeof setting[key] === 'object') {
+                    setting[key].tanggal = null
+                    setting[key].waktu = '00:00'
+                } else {
+                    setting[key] = null
+                }
+            }
+        },
+
+        unassignItem() {
+            const url = '/api/kelas/' + this.kelas.id + '/' + this.itemToUnassign.type + '/unassign';
+
+            axios.post(url, {
+                item: this.itemToUnassign.data
+            }).then(response => {
+                this.key.exam += 1
+            }).catch(error => {
+                console.log(error)
+            })
+        }
     },
 
     created() {
@@ -214,6 +267,11 @@ export default {
             if (data.item == 'ujian') {
                 this.showExamSetting(data.id)
             }
+        });
+
+        EventBus.$on('callUnassign', data => {
+            this.itemToUnassign.type = data.item
+            this.itemToUnassign.data = data.itemData
         })
     }
 }
