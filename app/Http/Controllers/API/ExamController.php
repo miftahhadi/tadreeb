@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\ClassExamUser;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Models\ClassroomExam;
 use App\Models\Question;
 use Carbon\Carbon;
@@ -26,7 +27,7 @@ class ExamController extends Controller
                                         ->paginate(10)
                                 );
     }
-
+    
     public function getSlug(Request $request)
     {
         $slug = $request['slug'];
@@ -57,20 +58,20 @@ class ExamController extends Controller
         return $ujian->delete();
     }
 
-    public function getExam(Exam $exam)
+    public function getExam(Exam $ujian)
     {
-        $exam->loadCount('questions');
+        $ujian->loadCount('questions');
 
-        $questionIds = $exam->questions()->get()->pluck('id');
+        $questionIds = $ujian->questions()->get()->pluck('id');
 
-        $questions = $exam->questions()->with('answers')->get();
+        $questions = $ujian->questions()->with('answers')->get();
 
         foreach ($questions as $question) {
             $question['input'] = ($question['tipe'] == 'Jawaban Ganda') ? 'checkbox' : 'radio';
         }
 
         return json_encode([
-                        'exam' => $exam, 
+                        'exam' => $ujian, 
                         'questionIds' => $questionIds, 
                         'questions' => collect($questions)->keyBy('id')
                     ]);
@@ -137,4 +138,8 @@ class ExamController extends Controller
         return $classExamUser->save();
     }
 
+    public function getClassrooms(Exam $ujian, Request $request)
+    {
+        return response()->json($ujian->classrooms()->paginate(20));
+    }
 }

@@ -133,6 +133,16 @@ class ExamController extends Controller
 
     public function showResult(Exam $ujian, Request $request)
     {
+        $breadcrumbs = [
+            [
+                'name' => 'Ujian',
+                'href' => route('admin.ujian.index')
+            ]
+        ];
+
+        $itemName = $ujian->judul;
+        $itemDescription = $ujian->deskripsi;
+
         if (is_null($request->input('kelas'))) {
             
             $data = [
@@ -143,21 +153,48 @@ class ExamController extends Controller
 
         } elseif ($request->input('kelas')) {
 
-            $classExam = ClassroomExam::with('users')->where([
-                ['classroom_id', $request->input('kelas')],
-                ['exam_id', $ujian->id]
-            ])->first();
+            $examable = $ujian->classrooms()->find($request->input('kelas'))->pivot;
 
-            $data = $classExam->dataToShow($request->input('done'));
-            $data['kelas'] = $classExam->classroom;
+            $data = $examable->dataToShow($request->input('done'));
+            $data['kelas'] = $examable->classroom;
 
         }
 
         return view('admin.exam.result', [
             'title' => 'Hasil - ' . $ujian->judul,
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription,
             'ujian' => $ujian,
             'data' => $data,
         ]);   
+    }
+
+    public function showClassrooms(Exam $ujian)
+    {
+        // dd($ujian->classrooms()->paginate(10));
+        $breadcrumbs = [
+            [
+                'name' => 'Ujian',
+                'href' => route('admin.ujian.index')
+            ]
+        ];
+
+        $itemName = $ujian->judul;
+        $itemDescription = $ujian->deskripsi;
+
+        $tableHeading = json_encode(DataTable::heading(3));
+        $itemProperties = json_encode(DataTable::props(3));
+
+        return view('admin.exam.kelas', [
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription,
+            'ujian' => $ujian,
+            'title' => $ujian->judul,
+            'tableHeading' => $tableHeading,
+            'itemProperties' => $itemProperties
+        ]);
     }
 
 }

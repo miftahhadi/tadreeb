@@ -27,16 +27,16 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
     // Exams
     Route::get('ujian/search/{search}', 'ExamController@search');
-    Route::get('ujian/{exam:id}', 'ExamController@getExam');
-    Route::get('ujian/slug/{slug}', 'ExamController@getSlug');
     Route::resource('ujian', 'ExamController');
 
-    Route::delete('ujian/{ujian}', 'ExamController@destroy');
-    
-    Route::get('soal/{soal}', 'ExamController@getQuestion');
-    Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
-    Route::post('update-jawaban', 'ExamController@updateUserAnswers');
-    Route::post('submit-ujian', 'ExamController@submitExam');
+    Route::group(['prefix' => 'ujian/{ujian}'], function() {
+        Route::get('kelas', 'ExamController@getClassrooms');
+
+        Route::get('soal/{soal}', 'ExamController@getQuestion');
+        Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
+        Route::post('update-jawaban', 'ExamController@updateUserAnswers');
+        Route::post('submit-ujian', 'ExamController@submitExam');
+    });
 
     Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
 

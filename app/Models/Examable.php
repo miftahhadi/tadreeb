@@ -39,6 +39,7 @@ class Examable extends MorphPivot
 
     public function dataToShow($done = null)
     {
+        dd($this->classroom);
         if ($done && $done == 'true') {
 
             $users = $this->classroom->usersDoneExam($this->id);

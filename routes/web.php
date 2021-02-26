@@ -72,6 +72,8 @@ Route::name('admin.')->group(function () {
 
         // Exam
         Route::get('ujian/{ujian}/hasil', 'ExamController@showResult')->name('ujian.hasil');
+        Route::get('ujian/{ujian}/kelas', 'ExamController@showClassrooms')->name('ujian.kelas');
+
         Route::resource('ujian', 'ExamController');
         
         // Classrooms
