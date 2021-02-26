@@ -106,9 +106,11 @@ export default {
     },
 
     methods: {
-        getResults(page = 1) {
+        getResults(page = null) {
             this.loading = true;
-            axios.get(this.uri + page)
+            let getUri = (page == null) ? this.fetchUrl : this.uri + page;
+            
+            axios.get(getUri)
                     .then(response => {
                         this.loading = false;
                         this.laravelData = response.data;
