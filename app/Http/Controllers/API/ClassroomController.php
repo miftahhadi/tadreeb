@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Models\Classroom;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
+use App\Models\Profile;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -46,17 +48,6 @@ class ClassroomController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -85,43 +76,57 @@ class ClassroomController extends Controller
 
     public function lesson(Classroom $kelas)
     {
-        return json_encode($kelas->lessons()->paginate(20));
-    }
-
-    public function assignLesson(Classroom $kelas, Request $request)
-    {
-        $pelajaran = $request->input('itemId');
-
-        return $kelas->lessons()->toggle($pelajaran);
+        return response()
+                ->json(
+                    $kelas
+                        ->lessons()
+                        ->orderByPivot('id', 'desc')
+                        ->paginate(20)
+                );
     }
 
     public function exam(Classroom $kelas)
     {
-        return json_encode($kelas->exams()->paginate(20));
-    }
-
-    public function assignExam(Classroom $kelas, Request $request)
-    {
-        $ujian = $request->input('itemId');
-
-        return $kelas->exams()->toggle($ujian);
-    }
-
-    public function unassignExam(Classroom $kelas, Request $request)
-    {
-        $ujian = $request['item'];
-        return $kelas->exams()->detach($ujian['id']);
+        return response()
+                ->json(
+                    $kelas
+                    ->exams()
+                    ->orderByPivot('id', 'desc')
+                    ->paginate(20)
+                );
     }
 
     public function user(Classroom $kelas)
     {
-        return json_encode($kelas->users()->paginate(20));
+        return response()
+                ->json(
+                    $kelas->users()
+                            ->addSelect([
+                                'gender' => Profile::select('gender')
+                                                    ->whereColumn('user_id', 'users.id'),
+                                'role' => Role::select('role')
+                                                ->join('role_user', 'roles.id', '=', 'role_user.role_id')
+                                                ->whereColumn('role_user.user_id', 'users.id')
+                            ])
+                            ->paginate(20)
+                    );
     }
 
-    public function assignUser(Classroom $kelas, Request $request)
+    public function assignItem(Classroom $kelas, Request $request)
     {
-        $ujian = $request->input('itemId');
+        $item = $request['itemType'];
+        $itemId = $request['itemId'];
 
-        return $kelas->users()->toggle($ujian);
+        return $kelas->$item()->syncWithoutDetaching($itemId);
     }
+
+    public function unassignItem(Classroom $kelas, Request $request)
+    {
+        $item = $request['itemType'];
+        $itemId = $request['itemId'];
+
+        return $kelas->$item()->detach($itemId);
+
+    }
+
 }

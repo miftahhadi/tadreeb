@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import _ from "lodash";
+
 export default {
     name: 'item-list',
 
@@ -118,7 +120,16 @@ export default {
     },
 
     created() {
-        this.debouncedGetResults = _.debounce(this.getResults, 500)
+        this.debouncedGetResults = _.debounce(this.getResults, 500);
+
+        // Listening to delete from other components
+        // EventBus.$on('deleteFromItemList', function (id) {
+        //     _.remove(this.laravelData.data, function(data) {
+        //         data.id == id
+        //     });
+        // })
+
+        // Problem: kalau gini, semua instance ItemList bakal dengerin, perlu unique identifier supaya cuma instance yang ini aja yang disasar
     },
 
     mounted() {

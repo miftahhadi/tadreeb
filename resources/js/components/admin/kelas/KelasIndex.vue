@@ -7,8 +7,10 @@
             </tab-details>
 
             <tab-details name="Pelajaran">
+                
+                ** Soon ** 
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col">
                         <h2>Pelajaran</h2>
                     </div>
@@ -25,10 +27,10 @@
                     item="pelajaran"
                     :item-data="lessonData"
                     :kelas-id="kelas.id"
-                    :key="key.lesson"
+                    :key="key.pelajaran"
                     setting="pelajaranSettingModal"
                 >
-                </item-assigned>
+                </item-assigned> -->
 
             </tab-details>
 
@@ -52,7 +54,7 @@
                     :item-data="examData"
                     :kelas-id="kelas.id"
                     setting="ujianSettingModal"
-                    :key="key.exam"
+                    :key="key.ujian"
                 ></item-assigned>
 
             </tab-details>
@@ -93,21 +95,21 @@
             :headings="examData.heading"
             fetch-url="/api/ujian"
             :item-properties="examData.props"
-            :assign-url="examData.fetchUrl + '/assign'"
+            :assign-url="assignUrl"
             :assigned="examData.assigned"
-            @saved="key.exam += 1"
+            @saved="key.ujian += 1"
         ></kelas-assign-modal>
 
-        <kelas-assign-modal
+        <!-- <kelas-assign-modal
             item="pelajaran"
             :kelas="kelas.nama"
             :headings="lessonData.heading"
             fetch-url="/api/pelajaran"
             :item-properties="lessonData.props"
-            :assign-url="lessonData.fetchUrl + '/assign'"
+            :assign-url="assignUrl"
             :assigned="lessonData.assigned"
-            @saved="key.lesson += 1"
-        ></kelas-assign-modal>
+            @saved="key.pelajaran += 1"
+        ></kelas-assign-modal> -->
 
         <kelas-assign-modal
             item="user"
@@ -115,7 +117,7 @@
             :headings="userData.heading"
             fetch-url="/api/user"
             :item-properties="userData.props"
-            :assign-url="userData.fetchUrl + '/assign'"
+            :assign-url="assignUrl"
             :assigned="userData.assigned"
             @saved="key.user += 1"
         ></kelas-assign-modal>
@@ -180,8 +182,8 @@ export default {
     data() {
         return {
             key: {
-                lesson: 0,
-                exam: 0,
+                pelajaran: 0,
+                ujian: 0,
                 user: 0,
             },
 
@@ -191,7 +193,10 @@ export default {
             loadingSetting: false,
 
             itemToUnassign: {},
-            deleteKey: 0
+            deleteKey: 0,
+
+            assignUrl: '/api/kelas/' + this.kelas.id + '/assign',
+            unassignUrl: '/api/kelas/' + this.kelas.id + '/unassign',
         }
     },
 
@@ -250,12 +255,17 @@ export default {
         },
 
         unassignItem() {
-            const url = '/api/kelas/' + this.kelas.id + '/' + this.itemToUnassign.type + '/unassign';
+            const itemType = {
+                pelajaran: 'lessons',
+                ujian: 'exams',
+                user: 'users'
+            }
 
-            axios.post(url, {
-                item: this.itemToUnassign.data
+            axios.post(this.unassignUrl, {
+                itemId: this.itemToUnassign.data.id,
+                itemType: itemType[this.itemToUnassign.type]
             }).then(response => {
-                this.key.exam += 1
+                this.key[this.itemToUnassign.type] += 1
             }).catch(error => {
                 console.log(error)
             })

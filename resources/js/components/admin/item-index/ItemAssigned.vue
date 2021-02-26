@@ -10,7 +10,9 @@
             <template v-slot:action="actionProp">
                 <div class="btn-list flex-nowrap">
 
-                    <button 
+                    <a href="#" class="btn btn-sm" v-if="item == 'ujian'">Hasil</a>
+
+                    <button v-if="setting"
                         class="btn btn-sm"
                         data-toggle="modal" 
                         :data-target="'#' + setting" 

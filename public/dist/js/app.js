@@ -4584,6 +4584,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-assign',
   props: {
+    itemType: String,
     itemId: Number,
     assignUrl: String,
     assigned: Boolean
@@ -4600,7 +4601,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = true;
       axios.post(this.assignUrl, {
-        itemId: this.itemId
+        itemId: this.itemId,
+        itemType: this.itemType
       }).then(function (response) {
         _this.status = !_this.status;
         _this.loading = false;
@@ -4635,6 +4637,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -4982,6 +4986,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -5048,6 +5054,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-list',
   props: {
@@ -5097,7 +5104,13 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    this.debouncedGetResults = _.debounce(this.getResults, 500);
+    this.debouncedGetResults = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(this.getResults, 500); // Listening to delete from other components
+    // EventBus.$on('deleteFromItemList', function (id) {
+    //     _.remove(this.laravelData.data, function(data) {
+    //         data.id == id
+    //     });
+    // })
+    // Problem: kalau gini, semua instance ItemList bakal dengerin, perlu unique identifier supaya cuma instance yang ini aja yang disasar
   },
   mounted: function mounted() {
     this.getResults();
@@ -5221,6 +5234,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-assign-modal',
   props: {
@@ -5237,7 +5251,12 @@ __webpack_require__.r(__webpack_exports__);
       laravelData: {},
       loading: false,
       query: '',
-      itemId: []
+      itemId: [],
+      itemType: {
+        pelajaran: 'lessons',
+        ujian: 'exams',
+        user: 'users'
+      }
     };
   },
   methods: {
@@ -5435,6 +5454,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5449,15 +5470,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   data: function data() {
     return {
       key: {
-        lesson: 0,
-        exam: 0,
+        pelajaran: 0,
+        ujian: 0,
         user: 0
       },
       examId: null,
       lessonId: null,
       loadingSetting: false,
       itemToUnassign: {},
-      deleteKey: 0
+      deleteKey: 0,
+      assignUrl: '/api/kelas/' + this.kelas.id + '/assign',
+      unassignUrl: '/api/kelas/' + this.kelas.id + '/unassign'
     };
   },
   mounted: function mounted() {
@@ -5513,11 +5536,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     unassignItem: function unassignItem() {
       var _this2 = this;
 
-      var url = '/api/kelas/' + this.kelas.id + '/' + this.itemToUnassign.type + '/unassign';
-      axios.post(url, {
-        item: this.itemToUnassign.data
+      var itemType = {
+        pelajaran: 'lessons',
+        ujian: 'exams',
+        user: 'users'
+      };
+      axios.post(this.unassignUrl, {
+        itemId: this.itemToUnassign.data.id,
+        itemType: itemType[this.itemToUnassign.type]
       }).then(function (response) {
-        _this2.key.exam += 1;
+        _this2.key[_this2.itemToUnassign.type] += 1;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -46199,22 +46227,32 @@ var render = function() {
             fn: function(actionProp) {
               return [
                 _c("div", { staticClass: "btn-list flex-nowrap" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm",
-                      attrs: {
-                        "data-toggle": "modal",
-                        "data-target": "#" + _vm.setting
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.callSetting(actionProp.item.id)
-                        }
-                      }
-                    },
-                    [_vm._v("Pengaturan")]
-                  ),
+                  _vm.item == "ujian"
+                    ? _c(
+                        "a",
+                        { staticClass: "btn btn-sm", attrs: { href: "#" } },
+                        [_vm._v("Hasil")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.setting
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm",
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#" + _vm.setting
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.callSetting(actionProp.item.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Pengaturan")]
+                      )
+                    : _vm._e(),
                   _vm._v(" "),
                   _c(
                     "button",
@@ -46889,6 +46927,7 @@ var render = function() {
                           return [
                             _c("item-assign", {
                               attrs: {
+                                "item-type": _vm.itemType[_vm.item],
                                 "item-id": actionProp.item.id,
                                 "assign-url": _vm.assignUrl,
                                 assigned: _vm.assigned.includes(
@@ -46962,42 +47001,9 @@ var render = function() {
             _c("h2", [_vm._v("Ikhtisar")])
           ]),
           _vm._v(" "),
-          _c(
-            "tab-details",
-            { attrs: { name: "Pelajaran" } },
-            [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col" }, [
-                  _c("h2", [_vm._v("Pelajaran")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-auto ml-auto" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: {
-                        "data-toggle": "modal",
-                        "data-target": "#assignPelajaranModal"
-                      }
-                    },
-                    [_vm._v("Tambah Pelajaran")]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("item-assigned", {
-                key: _vm.key.lesson,
-                attrs: {
-                  item: "pelajaran",
-                  "item-data": _vm.lessonData,
-                  "kelas-id": _vm.kelas.id,
-                  setting: "pelajaranSettingModal"
-                }
-              })
-            ],
-            1
-          ),
+          _c("tab-details", { attrs: { name: "Pelajaran" } }, [
+            _vm._v("\n            \n            ** Soon ** \n\n            ")
+          ]),
           _vm._v(" "),
           _c(
             "tab-details",
@@ -47024,7 +47030,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("item-assigned", {
-                key: _vm.key.exam,
+                key: _vm.key.ujian,
                 attrs: {
                   item: "ujian",
                   "item-data": _vm.examData,
@@ -47086,29 +47092,12 @@ var render = function() {
           headings: _vm.examData.heading,
           "fetch-url": "/api/ujian",
           "item-properties": _vm.examData.props,
-          "assign-url": _vm.examData.fetchUrl + "/assign",
+          "assign-url": _vm.assignUrl,
           assigned: _vm.examData.assigned
         },
         on: {
           saved: function($event) {
-            _vm.key.exam += 1
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("kelas-assign-modal", {
-        attrs: {
-          item: "pelajaran",
-          kelas: _vm.kelas.nama,
-          headings: _vm.lessonData.heading,
-          "fetch-url": "/api/pelajaran",
-          "item-properties": _vm.lessonData.props,
-          "assign-url": _vm.lessonData.fetchUrl + "/assign",
-          assigned: _vm.lessonData.assigned
-        },
-        on: {
-          saved: function($event) {
-            _vm.key.lesson += 1
+            _vm.key.ujian += 1
           }
         }
       }),
@@ -47120,7 +47109,7 @@ var render = function() {
           headings: _vm.userData.heading,
           "fetch-url": "/api/user",
           "item-properties": _vm.userData.props,
-          "assign-url": _vm.userData.fetchUrl + "/assign",
+          "assign-url": _vm.assignUrl,
           assigned: _vm.userData.assigned
         },
         on: {
@@ -64249,8 +64238,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })

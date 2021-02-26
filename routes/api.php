@@ -54,17 +54,12 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
 
     Route::group(['prefix' => 'kelas/{kelas}'], function () {
+        Route::post('assign', 'ClassroomController@assignItem');
+        Route::post('unassign', 'ClassroomController@unassignItem');
+
         Route::get('pelajaran', 'ClassroomController@lesson');
-        Route::post('pelajaran/assign', 'ClassroomController@assignLesson');
-        Route::post('pelajaran/unassign', 'ClassroomController@unassignLesson');
-
         Route::get('ujian', 'ClassroomController@exam');
-        Route::post('ujian/assign', 'ClassroomController@assignExam');
-        Route::post('ujian/unassign', 'ClassroomController@unassignExam');
-
         Route::get('user', 'ClassroomController@user');
-        Route::post('user/assign', 'ClassroomController@assignUser');
-        Route::post('user/unassign', 'ClassroomController@unassignUser');
     });
 
     Route::resource('kelas', 'ClassroomController');

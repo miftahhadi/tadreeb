@@ -19,6 +19,7 @@
                     
                         <template v-slot:action="actionProp">
                             <item-assign
+                                :item-type="itemType[item]"
                                 :item-id="actionProp.item.id"
                                 :assign-url="assignUrl"
                                 :assigned="assigned.includes(actionProp.item.id)"
@@ -62,6 +63,12 @@ export default {
             loading: false,
             query: '',
             itemId: [],
+            
+            itemType: {
+                pelajaran: 'lessons',
+                ujian: 'exams',
+                user: 'users'
+            }
         }
     },
 

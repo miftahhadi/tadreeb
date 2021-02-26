@@ -16,6 +16,7 @@ export default {
     name: 'item-assign',
 
     props: {
+        itemType: String,
         itemId: Number,
         assignUrl: String,
         assigned: Boolean
@@ -31,8 +32,10 @@ export default {
     methods: {
         assignItem() {
             this.loading = true;
+
             axios.post(this.assignUrl, {
-                    itemId: this.itemId
+                    itemId: this.itemId,
+                    itemType: this.itemType
                 })
                 .then(response => {
                     this.status = ! this.status;

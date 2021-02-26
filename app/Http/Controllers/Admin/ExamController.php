@@ -69,12 +69,24 @@ class ExamController extends Controller
      */
     public function show(Exam $ujian)
     {
+        $breadcrumbs = [
+            [
+                'name' => 'Ujian',
+                'href' => route('admin.ujian.index')
+            ]
+        ];
+
+        $itemName = $ujian->judul;
+        $itemDescription = $ujian->deskripsi;
 
         return view('admin.exam.show', [
             'title' => $ujian->judul . ' - Ujian ',
             'ujian' => $ujian,
             'questionTypes' => $this->service->questionTypes,
-            'answerIcons' => $this->service->answerIcons
+            'answerIcons' => $this->service->answerIcons,
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription
         ]);
     }
 
