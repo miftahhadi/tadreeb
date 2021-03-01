@@ -19,7 +19,7 @@
                     <td v-for="$prop in properties" :key="$prop">{{ printItem(index,$prop) }}</td>
 
                     <td v-if="action">
-                        <slot name="action" :item="item">
+                        <slot name="action" :item="item" :index="index">
 
                         </slot>
                     </td>

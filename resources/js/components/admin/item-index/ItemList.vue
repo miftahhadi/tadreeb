@@ -41,7 +41,7 @@
                             :action="true"
                         >
                             <template v-slot:action="slotProp">
-                                <slot name="action" :item="slotProp.item">
+                                <slot name="action" :item="slotProp.item" :index="slotProp.index">
 
                                 </slot>
                                 
