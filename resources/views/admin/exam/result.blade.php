@@ -22,15 +22,15 @@
 
     @if ($data['mode'] != 'classroomList')
         <div class="btn-list">
-            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id]) }}"
+            <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'page' => 'hasil']) }}"
                 class="btn @if ($data['mode'] == 'showAll') bg-indigo-lt @endif"
             >Semua anggota kelas</a>
 
-            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'done' => 'true']) }}"
+            <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'page' => 'hasil', 'done' => 'true']) }}"
                 class="btn @if ($data['mode'] == 'showDone') bg-indigo-lt @endif"
             >Sudah mengerjakan</a>
 
-            <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'done' => 'false']) }}"
+            <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'page' => 'hasil', 'done' => 'false']) }}"
                 class="btn @if ($data['mode'] == 'showNotDone') bg-indigo-lt @endif"
             >Belum mengerjakan</a>
         </div>

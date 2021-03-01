@@ -207,8 +207,12 @@ class ExamController extends Controller
         ]);   
     }
 
-    public function showClassrooms(Exam $ujian)
+    public function showClassrooms(Exam $ujian, Request $request)
     {
+        if ($request->input('page') && $request->input('page') == 'hasil') {
+            return $this->showResult($ujian, $request);
+        }
+
         $breadcrumbs = [
             [
                 'name' => 'Ujian',

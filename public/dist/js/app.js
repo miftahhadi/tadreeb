@@ -45880,8 +45880,9 @@ var render = function() {
                         href:
                           "/admin/ujian/" +
                           _vm.examId +
-                          "/hasil?kelas=" +
-                          actionProp.item.id
+                          "/kelas?kelas=" +
+                          actionProp.item.id +
+                          "&page=hasil"
                       }
                     },
                     [_vm._v("Hasil")]
@@ -64476,8 +64477,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })
