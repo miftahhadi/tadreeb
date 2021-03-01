@@ -37,42 +37,4 @@ class Examable extends MorphPivot
         return $this->belongsTo(Exam::class);
     }
 
-    public function dataToShow($done = null)
-    {
-        dd($this->classroom);
-        if ($done && $done == 'true') {
-
-            $users = $this->classroom->usersDoneExam($this->id);
-
-            $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
-
-            $mode = 'showDone';
-
-        } elseif ($done && $done == 'false') {
-            $users = $this->classroom->usersNotDoneExam($this->id);
-
-            $heading = ['Nama', 'Username'];
-
-            $mode = 'showNotDone';
-       
-        } else {
-            $mode = 'showAll';
-
-            $heading = ['Nama', 'Username', 'Sudah Mengerjakan?'];
-
-            $id = $this->id;
-
-            $users = $this->classroom
-                                ->users
-                                ->each(function ($user) use ($id) {
-                                    $user->doneExam = $user->hasDoneExam($id);
-                                });
-        }
-
-        return [
-            'mode' => $mode,
-            'heading' => $heading,
-            'row' => $users
-        ];
-    }
 }

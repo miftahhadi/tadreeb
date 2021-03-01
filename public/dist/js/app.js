@@ -4197,12 +4197,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-kelas',
   props: {
     examId: Number,
     tableHeading: Array,
     itemProperties: Array
+  },
+  data: function data() {
+    return {
+      setting: null,
+      settingId: null
+    };
+  },
+  methods: {
+    getSetting: function getSetting(data) {
+      this.$refs.settingModal.input = this.$refs.list.laravelData.data[data].pivot;
+      this.settingId = data;
+      console.log('Getting data: \n');
+      console.log(this.$refs.list.laravelData.data[data].pivot);
+    },
+    updateSetting: function updateSetting(data) {}
+  },
+  created: function created() {
+    EventBus.$on('save:setting', function (data) {
+      console.log('Change data to: \n');
+      console.log(data);
+      this.$refs.list.laravelData.data[this.settingId].pivot = data;
+    });
   }
 });
 
@@ -5592,16 +5627,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   },
   created: function created() {
-    var _this3 = this;
-
     EventBus.$on('callSetting', function (data) {
       if (data.item == 'ujian') {
-        _this3.showExamSetting(data.id);
+        this.showExamSetting(data.id);
       }
     });
     EventBus.$on('callUnassign', function (data) {
-      _this3.itemToUnassign.type = data.item;
-      _this3.itemToUnassign.data = data.itemData;
+      this.itemToUnassign.type = data.item;
+      this.itemToUnassign.data = data.itemData;
     });
   }
 });
@@ -5899,7 +5932,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     save: function save() {
-      return this.$emit('save:setting', this.input);
+      return EventBus.$emit('save:setting', this.input);
     }
   },
   computed: {
@@ -45767,7 +45800,11 @@ var render = function() {
               }),
               _vm._v(" "),
               _vm.action
-                ? _c("td", [_vm._t("action", null, { item: item })], 2)
+                ? _c(
+                    "td",
+                    [_vm._t("action", null, { item: item, index: index })],
+                    2
+                  )
                 : _vm._e()
             ],
             2
@@ -45804,6 +45841,7 @@ var render = function() {
     "div",
     [
       _c("item-list", {
+        ref: "list",
         attrs: {
           item: "kelas",
           "fetch-url": "/api/ujian/" + _vm.examId + "/kelas",
@@ -45817,9 +45855,22 @@ var render = function() {
             fn: function(actionProp) {
               return [
                 _c("div", { staticClass: "btn-list flex-nowrap" }, [
-                  _c("a", { staticClass: "btn btn-sm", attrs: { href: "#" } }, [
-                    _vm._v("Pengaturan")
-                  ]),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm",
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#kelasSettingModal"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.getSetting(actionProp.index)
+                        }
+                      }
+                    },
+                    [_vm._v("Pengaturan")]
+                  ),
                   _vm._v(" "),
                   _c(
                     "a",
@@ -45840,6 +45891,11 @@ var render = function() {
             }
           }
         ])
+      }),
+      _vm._v(" "),
+      _c("kelas-item-setting-modal", {
+        ref: "settingModal",
+        attrs: { item: "kelas" }
       })
     ],
     1
@@ -46868,7 +46924,12 @@ var render = function() {
                     {
                       key: "action",
                       fn: function(slotProp) {
-                        return [_vm._t("action", null, { item: slotProp.item })]
+                        return [
+                          _vm._t("action", null, {
+                            item: slotProp.item,
+                            index: slotProp.index
+                          })
+                        ]
                       }
                     }
                   ],
@@ -64415,8 +64476,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })

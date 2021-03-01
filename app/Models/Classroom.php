@@ -49,23 +49,23 @@ class Classroom extends Model
     }
 
 
-    public function usersDoneExam($classExamId)
+    public function usersDoneExam($examableId)
     {
         return $this->users()
-                        ->whereHas('classroomExams', function (Builder $query) use ($classExamId) {
-                            $query->where('classroom_exam_id', $classExamId);
+                        ->whereHas('examable', function (Builder $query) use ($examableId) {
+                            $query->where('examable_id', $examableId);
                         })
                         ->get()
-                        ->each(function ($user) use ($classExamId) {
-                            $user->examData = $user->classExamUsers()->where('classroom_exam_id', $classExamId)->first();
+                        ->each(function ($user) use ($examableId) {
+                            $user->examData = $user->classExamUsers()->where('examable_id', $examableId)->first();
                         });
     }
 
-    public function usersNotDoneExam($classExamId)
+    public function usersNotDoneExam($examableId)
     {
         return $this->users()
-                    ->whereDoesntHave('classroomExams', function (Builder $query) use ($classExamId) {
-                        $query->where('classroom_exam_id', $classExamId);
+                    ->whereDoesntHave('examable', function (Builder $query) use ($examableId) {
+                        $query->where('examable_id', $examableId);
                     })
                     ->get();
     }

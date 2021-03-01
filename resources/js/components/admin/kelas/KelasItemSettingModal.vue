@@ -199,7 +199,7 @@ export default {
 
     methods: {
         save() {
-            return this.$emit('save:setting', this.input);
+            return EventBus.$emit('save:setting', this.input);
         }
     },
 

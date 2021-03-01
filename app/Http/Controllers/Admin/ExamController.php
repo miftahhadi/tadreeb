@@ -153,10 +153,47 @@ class ExamController extends Controller
 
         } elseif ($request->input('kelas')) {
 
-            $examable = $ujian->classrooms()->find($request->input('kelas'))->pivot;
+            // $examable = $ujian->classrooms()->find($request->input('kelas'))->pivot;
+            $kelas = $ujian->classrooms()->find($request->input('kelas'));
+            $examable = $kelas->pivot;
+            
+            $done = $request->input('done');
 
-            $data = $examable->dataToShow($request->input('done'));
-            $data['kelas'] = $examable->classroom;
+            if ($done && $done == 'true') {
+
+                $users = $kelas->usersDoneExam($examable->id);
+    
+                $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
+    
+                $mode = 'showDone';
+    
+            } elseif ($done && $done == 'false') {
+                $users = $kelas->usersNotDoneExam($examable->id);
+    
+                $heading = ['Nama', 'Username'];
+    
+                $mode = 'showNotDone';
+           
+            } else {
+                $mode = 'showAll';
+    
+                $heading = ['Nama', 'Username', 'Sudah Mengerjakan?'];
+    
+                $id = $examable->id;
+    
+                $users = $kelas
+                                    ->users
+                                    ->each(function ($user) use ($id) {
+                                        $user->doneExam = $user->hasDoneExam($id);
+                                    });
+            }
+
+            $data = [
+                'mode' => $mode,
+                'heading' => $heading,
+                'row' => $users,
+                'kelas' => $kelas
+            ];
 
         }
 
@@ -172,7 +209,6 @@ class ExamController extends Controller
 
     public function showClassrooms(Exam $ujian)
     {
-        // dd($ujian->classrooms()->paginate(10));
         $breadcrumbs = [
             [
                 'name' => 'Ujian',

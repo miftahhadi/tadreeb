@@ -273,13 +273,13 @@ export default {
     },
 
     created() {
-        EventBus.$on('callSetting', data => {
+        EventBus.$on('callSetting', function (data) {
             if (data.item == 'ujian') {
                 this.showExamSetting(data.id)
             }
         });
 
-        EventBus.$on('callUnassign', data => {
+        EventBus.$on('callUnassign', function (data) {
             this.itemToUnassign.type = data.item
             this.itemToUnassign.data = data.itemData
         })
