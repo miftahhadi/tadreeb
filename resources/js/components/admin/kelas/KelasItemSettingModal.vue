@@ -30,11 +30,11 @@
                     <div class="col">
                         <div>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="buka" value="1" v-model="input.bukaAkses">
+                                <input class="form-check-input" type="radio" name="buka" value="1" v-model="input.buka">
                                 <span class="form-check-label">Buka</span>
                             </label>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="buka" value="0" v-model="input.bukaAkses">
+                                <input class="form-check-input" type="radio" name="buka" value="0" v-model="input.buka">
                                 <span class="form-check-label">Tutup</span>
                             </label>
                         </div>
@@ -46,11 +46,11 @@
                     <div class="col">
                         <div>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="buka_hasil" value="1" v-model="input.bukaHasil">
+                                <input class="form-check-input" type="radio" name="buka_hasil" value="1" v-model="input.buka_hasil">
                                 <span class="form-check-label">Buka</span>
                             </label>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="buka_hasil" value="0" v-model="input.bukaHasil">
+                                <input class="form-check-input" type="radio" name="buka_hasil" value="0" v-model="input.buka_hasil">
                                 <span class="form-check-label">Tutup</span>
                             </label>
                         </div>
@@ -62,10 +62,10 @@
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
-                                <input type="date" class="form-control" name="tampil_otomatis[tanggal]" value="" v-model="input.autoTampil.tanggal">
+                                <input type="date" class="form-control" name="tampil_otomatis[tanggal]" value="" v-model="input.tampil_otomatis.tanggal">
                             </div>
                             <div class="col-auto">
-                                <input type="time" class="form-control" name="tampil_otomatis[waktu]" value="" v-model="input.autoTampil.waktu">
+                                <input type="time" class="form-control" name="tampil_otomatis[waktu]" value="" v-model="input.tampil_otomatis.waktu">
                             </div>
                         </div>
                         
@@ -77,10 +77,10 @@
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
-                                <input type="date" class="form-control" name="buka_otomatis[tanggal]" value="" v-model="input.autoBukaAkses.tanggal">
+                                <input type="date" class="form-control" name="buka_otomatis[tanggal]" value="" v-model="input.buka_otomatis.tanggal">
                             </div>
                             <div class="col-auto">
-                                <input type="time" class="form-control" name="buka_otomatis[waktu]" value="" v-model="input.autoBukaAkses.waktu">
+                                <input type="time" class="form-control" name="buka_otomatis[waktu]" value="" v-model="input.buka_otomatis.waktu">
                             </div>
                         </div>
                         
@@ -92,10 +92,10 @@
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
-                                <input type="date" class="form-control" name="batas_buka[tanggal]" value="" v-model="input.batasBuka.tanggal">
+                                <input type="date" class="form-control" name="batas_buka[tanggal]" value="" v-model="input.batas_buka.tanggal">
                             </div>
                             <div class="col-auto">
-                                <input type="time" class="form-control" name="batas_buka[waktu]" value="" v-model="input.batasBuka.waktu">
+                                <input type="time" class="form-control" name="batas_buka[waktu]" value="" v-model="input.batas_buka.waktu">
                             </div>
                         </div>
                         
@@ -172,17 +172,17 @@ export default {
             id: this.item + 'Setting'  + 'Modal',
             input: {
                 tampil: 0,
-                bukaAkses: 0,
-                bukaHasil: 0,
-                autoTampil: {
+                buka: 0,
+                buka_hasil: 0,
+                tampil_otomatis: {
                     tanggal: null,
                     waktu: '00:00'
                 },
-                autoBukaAkses: {
+                buka_otomatis: {
                     tanggal: null,
                     waktu: '00:00'
                 },
-                batasBuka: {
+                batas_buka: {
                     tanggal: null,
                     waktu: '00:00'
                 },

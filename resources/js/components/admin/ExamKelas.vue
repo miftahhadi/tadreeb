@@ -31,41 +31,68 @@
 </template>
 
 <script>
-export default {
-    name: 'exam-kelas',
+    import { DateTime } from "luxon";
+import ConfirmsPasswordVue from '../../../../vendor/laravel/jetstream/stubs/inertia/resources/js/Jetstream/ConfirmsPassword.vue';
 
-    props: {
-        examId: Number,
-        tableHeading: Array,
-        itemProperties: Array
-    },
+    export default {
+        name: 'exam-kelas',
 
-    data() {
-        return {
-            setting: null,
-            settingId: null,
-        }
-    },
-
-    methods: {
-        getSetting(data) {
-            this.$refs.settingModal.input = this.$refs.list.laravelData.data[data].pivot
-            this.settingId = data
-            console.log('Getting data: \n')
-            console.log(this.$refs.list.laravelData.data[data].pivot)
+        props: {
+            examId: Number,
+            tableHeading: Array,
+            itemProperties: Array
         },
 
-        updateSetting(data) {
+        data() {
+            return {
+                setting: null,
+                settingId: null,
+            }
+        },
 
+        methods: {
+            getSetting(id) {
+                this.settingId = id
+
+                const data = this.$refs.list.laravelData.data[id].pivot
+                const keys = Object.keys(data)
+
+                let result = {}
+
+                const datetime = ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
+
+                keys.forEach((key) => {
+                    console.log(key)
+                    console.log(typeof data[key])
+                    if (datetime.includes(key) && typeof data[key] != 'null') {
+                        const datetime = DateTime.fromSQL(data[key])
+                        
+                        data[key] = {
+                            tanggal: datetime.toFormat('yyyy-LL-dd'),
+                            waktu: datetime.toFormat('HH:mm')
+                        }
+                    } 
+                })
+
+                console.log(data)
+        
+            },
+
+            formatDate() {
+
+            },
+
+            updateSetting(data) {
+
+            }
+        },
+
+        created() {
+            EventBus.$on('save:setting', function (data) {
+                console.log('Change data to: \n')
+                console.log(data)
+                this.$refs.list.laravelData.data[this.settingId].pivot = data
+            })
         }
-    },
-
-    created() {
-        EventBus.$on('save:setting', function (data) {
-            console.log('Change data to: \n')
-            console.log(data)
-            this.$refs.list.laravelData.data[this.settingId].pivot = data
-        })
     }
-}
 </script>
