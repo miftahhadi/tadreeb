@@ -26,13 +26,13 @@
         <kelas-item-setting-modal
             item="kelas"
             ref="settingModal"
+            @save:setting="updateSetting"
         ></kelas-item-setting-modal>
     </div>
 </template>
 
 <script>
     import { DateTime } from "luxon";
-import ConfirmsPasswordVue from '../../../../vendor/laravel/jetstream/stubs/inertia/resources/js/Jetstream/ConfirmsPassword.vue';
 
     export default {
         name: 'exam-kelas',
@@ -57,42 +57,45 @@ import ConfirmsPasswordVue from '../../../../vendor/laravel/jetstream/stubs/iner
                 const data = this.$refs.list.laravelData.data[id].pivot
                 const keys = Object.keys(data)
 
-                let result = {}
+                const datetime= ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
 
-                const datetime = ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
-
-                keys.forEach((key) => {
-                    console.log(key)
-                    console.log(typeof data[key])
-                    if (datetime.includes(key) && typeof data[key] != 'null') {
-                        const datetime = DateTime.fromSQL(data[key])
+                keys.forEach(function (key) {
+                    if (datetime.includes(key) && data[key] != null) {
+                        const datetime = DateTime.fromISO(data[key])
                         
                         data[key] = {
                             tanggal: datetime.toFormat('yyyy-LL-dd'),
                             waktu: datetime.toFormat('HH:mm')
                         }
-                    } 
+                    } else if (datetime.includes(key) && data[key] == null) {
+                        data[key] = {
+                            tanggal: null,
+                            waktu: '00:00'
+                        }
+                    }
                 })
 
+                this.$refs.settingModal.input = data
+            },
+
+            updateSetting(setting) {
+                const data = this.$refs.list.laravelData.data[this.settingId].pivot
+                const keys = Object.keys(data)
+
+                keys.forEach(function (key) {
+                    if (this.datetime.includes(key) && setting[key].tanggal != '') {
+                        const datetime = DateTime.fromISO(data[key].tanggal + 'T' + data[key].waktu, {zone: '+07:00'})
+
+                        data[key] = datetime.toSQL()
+                    } else if (this.datetime.includes(key) && setting[key].tanggal == '') {
+                        data[key] = null
+                    } else {
+                        data[key] = setting[key]
+                    }
+                })
                 console.log(data)
-        
-            },
-
-            formatDate() {
-
-            },
-
-            updateSetting(data) {
-
             }
         },
 
-        created() {
-            EventBus.$on('save:setting', function (data) {
-                console.log('Change data to: \n')
-                console.log(data)
-                this.$refs.list.laravelData.data[this.settingId].pivot = data
-            })
-        }
     }
 </script>
