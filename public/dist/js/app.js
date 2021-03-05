@@ -4180,6 +4180,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! luxon */ "./node_modules/luxon/build/cjs-browser/luxon.js");
 /* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -4213,6 +4215,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-kelas',
@@ -4224,48 +4227,64 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       setting: null,
-      settingId: null
+      settingId: null,
+      kelasId: null,
+      dt: ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
     };
   },
   methods: {
     getSetting: function getSetting(id) {
-      this.settingId = id;
+      var setting = this.$refs.settingModal.input;
       var data = this.$refs.list.laravelData.data[id].pivot;
-      var keys = Object.keys(data);
-      var datetime = ['buka_otomatis', 'tampil_otomatis', 'batas_buka'];
-      keys.forEach(function (key) {
-        if (datetime.includes(key) && data[key] != null) {
-          var _datetime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromISO(data[key]);
+      this.settingId = id;
+      this.kelasId = this.$refs.list.laravelData.data[id].id;
 
-          data[key] = {
-            tanggal: _datetime.toFormat('yyyy-LL-dd'),
-            waktu: _datetime.toFormat('HH:mm')
+      for (var key in setting) {
+        if (this.dt.includes(key) && data[key] != null) {
+          var datetime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromISO(data[key]).setZone('UTC+7');
+          this.$refs.settingModal.input[key] = {
+            tanggal: datetime.toFormat('yyyy-LL-dd'),
+            waktu: datetime.toFormat('HH:mm')
           };
-        } else if (datetime.includes(key) && data[key] == null) {
-          data[key] = {
+        } else if (this.dt.includes(key) && data[key] == null) {
+          this.$refs.settingModal.input[key] = {
             tanggal: null,
             waktu: '00:00'
           };
+        } else {
+          this.$refs.settingModal.input[key] = data[key];
         }
-      });
-      this.$refs.settingModal.input = data;
+      }
     },
     updateSetting: function updateSetting(setting) {
       var data = this.$refs.list.laravelData.data[this.settingId].pivot;
-      var keys = Object.keys(data);
-      keys.forEach(function (key) {
-        if (this.datetime.includes(key) && setting[key].tanggal != '') {
-          var datetime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromISO(data[key].tanggal + 'T' + data[key].waktu, {
-            zone: '+07:00'
+
+      for (var key in setting) {
+        if (this.dt.includes(key) && setting[key].tanggal != '') {
+          var datetime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromISO(setting[key].tanggal + 'T' + setting[key].waktu, {
+            zone: 'UTC+7'
           });
-          data[key] = datetime.toSQL();
-        } else if (this.datetime.includes(key) && setting[key].tanggal == '') {
+          var newdt = datetime.setZone('utc');
+          data[key] = newdt.toISO();
+        } else if (this.dt.includes(key) && setting[key].tanggal == '') {
           data[key] = null;
         } else {
           data[key] = setting[key];
         }
+      }
+
+      axios.post('/api/ujian/setting', {
+        examId: this.examId,
+        kelasId: this.kelasId,
+        setting: data
+      }).then(function (response) {
+        sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
+          title: "Data berhasil dihapus",
+          icon: "success"
+        });
+      })["catch"](function (error) {
+        console.log(error);
       });
-      console.log(data);
     }
   }
 });
@@ -5961,9 +5980,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     save: function save() {
-      return this.$emit('save:setting', {
-        data: this.input
-      });
+      return this.$emit('save:setting', this.input);
     }
   },
   computed: {
@@ -62917,14 +62934,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************!*\
   !*** ./resources/js/components/admin/ExamKelas.vue ***!
   \*****************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ExamKelas_vue_vue_type_template_id_7006476c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExamKelas.vue?vue&type=template&id=7006476c& */ "./resources/js/components/admin/ExamKelas.vue?vue&type=template&id=7006476c&");
 /* harmony import */ var _ExamKelas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExamKelas.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ExamKelas.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ExamKelas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ExamKelas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -62954,7 +62972,7 @@ component.options.__file = "resources/js/components/admin/ExamKelas.vue"
 /*!******************************************************************************!*\
   !*** ./resources/js/components/admin/ExamKelas.vue?vue&type=script&lang=js& ***!
   \******************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64507,8 +64525,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })

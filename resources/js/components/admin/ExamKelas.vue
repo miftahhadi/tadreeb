@@ -33,6 +33,7 @@
 
 <script>
     import { DateTime } from "luxon";
+    import swal from "sweetalert";
 
     export default {
         name: 'exam-kelas',
@@ -47,53 +48,67 @@
             return {
                 setting: null,
                 settingId: null,
+                kelasId: null,
+
+                dt: ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
             }
         },
 
         methods: {
             getSetting(id) {
-                this.settingId = id
-
+                const setting = this.$refs.settingModal.input
                 const data = this.$refs.list.laravelData.data[id].pivot
-                const keys = Object.keys(data)
 
-                const datetime= ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
+                this.settingId = id
+                this.kelasId = this.$refs.list.laravelData.data[id].id
 
-                keys.forEach(function (key) {
-                    if (datetime.includes(key) && data[key] != null) {
-                        const datetime = DateTime.fromISO(data[key])
+                for (let key in setting) {
+                    if (this.dt.includes(key) && data[key] != null) {
+                        const datetime = DateTime.fromISO(data[key]).setZone('UTC+7')
                         
-                        data[key] = {
+                        this.$refs.settingModal.input[key] = {
                             tanggal: datetime.toFormat('yyyy-LL-dd'),
                             waktu: datetime.toFormat('HH:mm')
                         }
-                    } else if (datetime.includes(key) && data[key] == null) {
-                        data[key] = {
+                    } else if (this.dt.includes(key) && data[key] == null) {
+                        this.$refs.settingModal.input[key] = {
                             tanggal: null,
                             waktu: '00:00'
                         }
+                    } else {
+                        this.$refs.settingModal.input[key] = data[key]
                     }
-                })
-
-                this.$refs.settingModal.input = data
+                }
             },
 
             updateSetting(setting) {
                 const data = this.$refs.list.laravelData.data[this.settingId].pivot
-                const keys = Object.keys(data)
 
-                keys.forEach(function (key) {
-                    if (this.datetime.includes(key) && setting[key].tanggal != '') {
-                        const datetime = DateTime.fromISO(data[key].tanggal + 'T' + data[key].waktu, {zone: '+07:00'})
+                for (let key in setting) {
+                    if (this.dt.includes(key) && setting[key].tanggal != '') {
+                        const datetime = DateTime.fromISO(setting[key].tanggal + 'T' + setting[key].waktu, {zone: 'UTC+7'})
+                        const newdt = datetime.setZone('utc')
 
-                        data[key] = datetime.toSQL()
-                    } else if (this.datetime.includes(key) && setting[key].tanggal == '') {
+                        data[key] = newdt.toISO()
+                    } else if (this.dt.includes(key) && setting[key].tanggal == '') {
                         data[key] = null
                     } else {
                         data[key] = setting[key]
                     }
+                }
+
+                axios.post('/api/ujian/setting', {
+                    examId: this.examId,
+                    kelasId: this.kelasId,
+                    setting: data
+                }).then(response => {
+                    swal({
+                        title: "Data berhasil dihapus",
+                        icon: "success",
+                    });
+                }).catch(error => {
+                    console.log(error)
                 })
-                console.log(data)
             }
         },
 

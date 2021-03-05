@@ -9,6 +9,19 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    private $examSettingField = [
+        'tampil', 
+        'buka', 
+        'buka_hasil', 
+        'tampil_otomatis', 
+        'buka_otomatis', 
+        'batas_buka', 
+        'durasi', 
+        'attempt'
+    ];
+
+    private $datetimeField = ['tampil_otomatis', 'buka_otomatis', 'batas_buka'];
+
     public function getExamSetting(Exam $exam, Request $request)
     {
         $examable = $exam->classrooms()->find($request['kelas'])->pivot;
@@ -61,15 +74,9 @@ class SettingController extends Controller
 
         $setting = $request['setting'];
 
-        $examable->tampil = $setting['tampil'];
-        $examable->buka = $setting['bukaAkses'];
-        $examable->buka_hasil = $setting['bukaHasil'];
-        $examable->durasi = $setting['durasi'];
-        $examable->attempt = $setting['attempt'];
-
-        $examable->tampil_otomatis = $this->timeSetting($setting['autoTampil']);
-        $examable->buka_otomatis = $this->timeSetting($setting['autoBukaAkses']);
-        $examable->batas_buka = $this->timeSetting($setting['batasBuka']);
+        foreach ($this->examSettingField as $field) {
+            $examable->$field = $setting[$field];
+        }
 
         return $examable->save();
     }

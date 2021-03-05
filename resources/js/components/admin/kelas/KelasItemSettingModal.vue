@@ -199,9 +199,7 @@ export default {
 
     methods: {
         save() {
-            return this.$emit('save:setting', {
-                data: this.input
-            });
+            return this.$emit('save:setting', this.input);
         }
     },
 
