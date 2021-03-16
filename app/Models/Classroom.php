@@ -30,8 +30,9 @@ class Classroom extends Model
                             'id', 
                             'tampil', 
                             'buka', 
-                            'buka_hasil', 
+                            'buka_hasil',
                             'tampil_otomatis', 
+                            'buka_otomatis', 
                             'batas_buka', 
                             'durasi', 
                             'attempt'

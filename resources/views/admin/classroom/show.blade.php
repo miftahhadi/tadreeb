@@ -32,8 +32,8 @@
                     pengaturan
                 @else 
                     <kelas-item
+                        :kelas="{{ json_encode($kelas) }}"
                         :item-data="{{ json_encode($service->itemData) }}"
-                        item="ujian"
                     ></kelas-item>
                 @endif
 

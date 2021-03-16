@@ -15,7 +15,7 @@
                         class="btn btn-sm" 
                         data-toggle="modal"
                         data-target="#kelasSettingModal"
-                        @click="getSetting(actionProp.index)"
+                        @click="callSetting(actionProp.index, actionProp.item)"
                     >Pengaturan</button>
                     
                     <a :href="'/admin/ujian/' + examId + '/kelas?kelas=' + actionProp.item.id + '&page=hasil' " class="btn btn-sm">Hasil</a>
@@ -32,12 +32,9 @@
 </template>
 
 <script>
-    import  { examSetting } from '../../mixins/ExamSetting';
 
     export default {
         name: 'exam-kelas',
-
-        mixins: [examSetting],
 
         props: {
             examId: Number,
@@ -56,8 +53,23 @@
         },
 
         methods: {
-            
+            callSetting(index, item) {
+                const setting = item.pivot
+
+                EventBus.$emit('setting:get', {
+                    kelasId: item.id,
+                    examId: this.examId,
+                    setting: setting,
+                    settingId: index
+                })
+            },
         },
+
+        created() {
+            EventBus.$on('setting:update', (data) => {
+                this.$refs.list.laravelData.data[data.settingId].pivot = data.setting
+            })
+        }
 
     }
 </script>

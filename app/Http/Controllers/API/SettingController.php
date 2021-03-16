@@ -78,7 +78,9 @@ class SettingController extends Controller
             $examable->$field = $setting[$field];
         }
 
-        return $examable->save();
+        $examable->save();
+
+        return $examable;
     }
 
     protected function timeSetting($setting) 

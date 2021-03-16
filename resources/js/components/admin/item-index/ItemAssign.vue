@@ -40,7 +40,7 @@ export default {
                 .then(response => {
                     this.status = ! this.status;
                     this.loading = false;
-                    this.$emit('saved')
+                    EventBus.$emit('item:assigned')
                 }).
                 catch(error => {
                     console.log(error);

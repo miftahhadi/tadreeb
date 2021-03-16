@@ -56,6 +56,7 @@ class ClassroomService
         $itemId = $this->getItemName($item, 'plural') . '.id';
 
         $data =  [
+            'item' => $item,
             'heading' => DataTable::heading($param),
             'props' => DataTable::props($param),
             'fetchUrl' => '/api/kelas/' . $this->kelas->id . '/' . $item,

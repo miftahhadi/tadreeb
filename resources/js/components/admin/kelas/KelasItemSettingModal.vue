@@ -136,7 +136,7 @@
                     Terjadi kesalahan
                 </p> -->
 
-                <button class="btn btn-success" @click="save"> 
+                <button class="btn btn-success" @click="updateSetting()"> 
                     <!-- <span v-if="saving"
                             class="spinner-border spinner-border-sm mr-2" 
                             role="status"
@@ -153,7 +153,7 @@
 </template>
 
 <script>
-// import "bootstrap";
+import { DateTime } from "luxon";
 
 export default {
     name: 'kelas-item-setting-modal',
@@ -192,15 +192,82 @@ export default {
 
             tzName: (this.timezone) ?? 'WIB',
 
-            modal: null,
+            settingId: null,
+            examId: null,
+            kelasId: null,
+
+            dt: ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
 
         }
     },
 
     methods: {
-        save() {
-            return this.$emit('save:setting', this.input);
-        }
+        getSetting(data) {
+            this.kelasId = data.kelasId
+            this.examId = data.examId
+            this.settingId = data.settingId
+
+            const setting = data.setting
+
+            for (let key in this.input) {
+                if (this.dt.includes(key) && setting[key] != null) {
+                    const datetime = DateTime.fromISO(setting[key]).setZone('UTC+7')
+                    
+                    this.input[key] = {
+                        tanggal: datetime.toFormat('yyyy-LL-dd'),
+                        waktu: datetime.toFormat('HH:mm')
+                    }
+                } else if (this.dt.includes(key) && setting[key] == null) {
+                    this.input[key] = {
+                        tanggal: null,
+                        waktu: '00:00'
+                    }
+                } else {
+                    this.input[key] = setting[key]
+                }
+            }
+        },
+
+        updateSetting() {
+            const data = {}
+
+            for (let key in this.input) {
+                if (this.dt.includes(key) && this.input[key].tanggal != '') {
+                    const datetime = DateTime.fromISO(this.input[key].tanggal + 'T' + this.input[key].waktu, {zone: 'UTC+7'})
+                    const newdt = datetime.setZone('utc')
+
+                    data[key] = newdt.toISO()
+                } else if (this.dt.includes(key) && this.input[key].tanggal == '') {
+                    data[key] = null
+                } else {
+                    data[key] = this.input[key]
+                }
+            }
+
+            EventBus.$emit('setting:update', {
+                settingId: this.settingId,
+                setting: data
+            })
+
+            axios.post('/api/ujian/setting', {
+                examId: this.examId,
+                kelasId: this.kelasId,
+                setting: data
+            }).then(response => {
+                swal({
+                    title: "Data berhasil disimpan",
+                    icon: "success",
+                });
+
+                EventBus.$emit('setting:update', {
+                    settingId: this.settingId,
+                    setting: response.data
+                })
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+
     },
 
     computed: {
@@ -208,11 +275,11 @@ export default {
             return this.item.charAt(0).toUpperCase() + this.item.slice(1);
         }
     },
-
-    mounted() {
-        /* this.modal = new bootstrap.Modal(document.getElementById(this.id), {
-            keyboard: false,
-        }); */
+    
+    created() {
+        EventBus.$on('setting:get', (data) => {
+            this.getSetting(data)
+        })
     }
 }
 </script>

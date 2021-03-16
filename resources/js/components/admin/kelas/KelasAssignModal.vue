@@ -23,7 +23,6 @@
                                 :item-id="actionProp.item.id"
                                 :assign-url="assignUrl"
                                 :assigned="assigned.includes(actionProp.item.id)"
-                                @saved="$emit('saved')"
                             ></item-assign>
                         </template>
                     
