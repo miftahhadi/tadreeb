@@ -71,10 +71,6 @@ export default {
     name: 'item-list',
 
     props: {
-        item: {
-            type: String,
-            required: true
-        },
         tableHeading: {
             type: Array,
             required: true

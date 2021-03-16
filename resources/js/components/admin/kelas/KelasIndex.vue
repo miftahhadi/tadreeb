@@ -10,28 +10,6 @@
                 
                 ** Soon ** 
 
-                <!-- <div class="row">
-                    <div class="col">
-                        <h2>Pelajaran</h2>
-                    </div>
-
-                    <div class="col-auto ml-auto">
-                        <button class="btn btn-primary" 
-                                data-toggle="modal" 
-                                data-target="#assignPelajaranModal"
-                        >Tambah Pelajaran</button>
-                    </div>
-                </div>
-
-                <item-assigned
-                    item="pelajaran"
-                    :item-data="lessonData"
-                    :kelas-id="kelas.id"
-                    :key="key.pelajaran"
-                    setting="pelajaranSettingModal"
-                >
-                </item-assigned> -->
-
             </tab-details>
 
             <tab-details name="Ujian">
@@ -53,7 +31,7 @@
                     item="ujian"
                     :item-data="examData"
                     :kelas-id="kelas.id"
-                    setting="ujianSettingModal"
+                    setting="examSettingModal"
                     :key="key.ujian"
                 ></item-assigned>
 
@@ -61,7 +39,7 @@
 
             <tab-details name="Anggota">
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col">
                         <h2>Anggota</h2>
                     </div>
@@ -79,7 +57,7 @@
                     :item-data="userData"
                     :kelas-id="kelas.id"
                     :key="key.user"
-                ></item-assigned>
+                ></item-assigned> -->
 
             </tab-details>
 
@@ -111,7 +89,7 @@
             @saved="key.pelajaran += 1"
         ></kelas-assign-modal> -->
 
-        <kelas-assign-modal
+        <!-- <kelas-assign-modal
             item="user"
             :kelas="kelas.nama"
             :headings="userData.heading"
@@ -120,22 +98,22 @@
             :assign-url="assignUrl"
             :assigned="userData.assigned"
             @saved="key.user += 1"
-        ></kelas-assign-modal>
+        ></kelas-assign-modal> -->
 
-        <kelas-item-setting-modal
+        <!-- <kelas-item-setting-modal
             ref="examSettingModal"
             item="ujian"
             :loading="loadingSetting"
             :timezone="tzName"
             @save:setting="saveExamSetting"
-        ></kelas-item-setting-modal>
+        ></kelas-item-setting-modal> -->
 
-        <kelas-item-setting-modal
+        <!-- <kelas-item-setting-modal
             ref="lessonSettingModal"
             item="pelajaran"
             :loading="loadingSetting"
             :timezone="tzName"
-        ></kelas-item-setting-modal>
+        ></kelas-item-setting-modal> -->
 
         <modal
             id="unassignItemModal"
@@ -205,54 +183,54 @@ export default {
     },
 
     methods: {
-        showExamSetting(id) {
-            this.resetSetting()
+        // showExamSetting(id) {
+        //     this.resetSetting()
 
-            this.examId = id
-            this.loadingSetting = true,
+        //     this.examId = id
+        //     this.loadingSetting = true,
 
-            axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelas.id)
-                    .then(response => {
-                        console.log(response.data)
-                        if (response.data != 0) {
-                            this.$refs.examSettingModal.input = response.data
-                        }
-                        this.loadingSetting = false
-                    }).catch(error => {
-                        console.log(error)
-                    })
+        //     axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelas.id)
+        //             .then(response => {
+        //                 console.log(response.data)
+        //                 if (response.data != 0) {
+        //                     this.$refs.examSettingModal.input = response.data
+        //                 }
+        //                 this.loadingSetting = false
+        //             }).catch(error => {
+        //                 console.log(error)
+        //             })
 
-        },
+        // },
 
-        saveExamSetting(data) {
-            axios.post('/api/ujian/setting', {
-                examId: this.examId,
-                kelasId: this.kelas.id,
-                setting: data
-            }).then(response => {
-                swal({
-                    title: "Pengaturan berhasil disimpan",
-                    icon: "success",
-                });
-            }).catch(error => {
-                console.log(error)
-            })
-        },
+        // saveExamSetting(data) {
+        //     axios.post('/api/ujian/setting', {
+        //         examId: this.examId,
+        //         kelasId: this.kelas.id,
+        //         setting: data
+        //     }).then(response => {
+        //         swal({
+        //             title: "Pengaturan berhasil disimpan",
+        //             icon: "success",
+        //         });
+        //     }).catch(error => {
+        //         console.log(error)
+        //     })
+        // },
 
-        resetSetting() {
-            let setting = this.$refs.examSettingModal.input
+        // resetSetting() {
+        //     let setting = this.$refs.examSettingModal.input
 
-            const props = Object.keys(setting)
+        //     const props = Object.keys(setting)
 
-            for (let key of props) {
-                if (typeof setting[key] === 'object') {
-                    setting[key].tanggal = null
-                    setting[key].waktu = '00:00'
-                } else {
-                    setting[key] = null
-                }
-            }
-        },
+        //     for (let key of props) {
+        //         if (typeof setting[key] === 'object') {
+        //             setting[key].tanggal = null
+        //             setting[key].waktu = '00:00'
+        //         } else {
+        //             setting[key] = null
+        //         }
+        //     }
+        // },
 
         unassignItem() {
             const itemType = {
@@ -273,11 +251,11 @@ export default {
     },
 
     created() {
-        EventBus.$on('callSetting', function (data) {
-            if (data.item == 'ujian') {
-                this.showExamSetting(data.id)
-            }
-        });
+        // EventBus.$on('callSetting', function (data) {
+        //     if (data.item == 'ujian') {
+        //         this.showExamSetting(data.id)
+        //     }
+        // });
 
         EventBus.$on('callUnassign', function (data) {
             this.itemToUnassign.type = data.item

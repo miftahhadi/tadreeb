@@ -80,6 +80,15 @@ Route::name('admin.')->group(function () {
         // Kalau pakai resource, entah kenapa parameternya jadi {kela}
         Route::name('grup.kelas.')->group(function() {
             Route::group(['prefix' => 'grup/{grup}/'], function () { 
+
+                // Classroom's subpages
+                Route::group(['prefix' => 'kelas/{kelas}/'], function () {
+                    Route::get('pelajaran', 'ClassroomController@showLessons')->name('pelajaran');
+                    Route::get('ujian', 'ClassroomController@showExams')->name('ujian');
+                    Route::get('anggota', 'ClassroomController@showMembers')->name('anggota');
+                    Route::get('setting', 'ClassroomController@showSettings')->name('setting');
+                });
+
                 Route::get('kelas/{kelas}', 'ClassroomController@show')->name('show');
                 
                 Route::post('kelas', 'ClassroomController@store')->name('store');

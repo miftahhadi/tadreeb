@@ -96,7 +96,7 @@ class ClassroomController extends Controller
                 );
     }
 
-    public function user(Classroom $kelas)
+    public function member(Classroom $kelas)
     {
         return response()
                 ->json(

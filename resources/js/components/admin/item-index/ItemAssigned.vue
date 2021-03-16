@@ -1,7 +1,6 @@
 <template>
     <div>
         <item-list
-            :item="item"
             :table-heading="itemData.heading"
             :item-properties="itemData.props"
             :fetch-url="itemData.fetchUrl"
@@ -30,12 +29,23 @@
             </template>
 
         </item-list>
+
+        <kelas-item-setting-modal
+            item="exam"
+            ref="settingModal"
+            @save:setting="updateSetting"
+        ></kelas-item-setting-modal>
+
     </div>
 </template>
 
 <script>
+import { examSetting } from '../../../mixins/ExamSetting'
+
 export default {
     name: 'item-assigned',
+
+    mixins: [examSetting],
 
     props: {
         item: {
@@ -55,10 +65,10 @@ export default {
 
     methods: {
         callSetting(id) {
-            EventBus.$emit('callSetting', {
-                item: this.item,
-                id: id
-            })
+            // EventBus.$emit('callSetting', {
+            //     item: this.item,
+            //     id: id
+            // })
         },
 
         callUnassign(data) {

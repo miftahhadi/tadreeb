@@ -4178,10 +4178,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! luxon */ "./node_modules/luxon/build/cjs-browser/luxon.js");
-/* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
-/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _mixins_ExamSetting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/ExamSetting */ "./resources/js/mixins/ExamSetting.js");
 //
 //
 //
@@ -4215,10 +4212,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-kelas',
+  mixins: [_mixins_ExamSetting__WEBPACK_IMPORTED_MODULE_0__["examSetting"]],
   props: {
     examId: Number,
     tableHeading: Array,
@@ -4232,61 +4229,7 @@ __webpack_require__.r(__webpack_exports__);
       dt: ['buka_otomatis', 'tampil_otomatis', 'batas_buka']
     };
   },
-  methods: {
-    getSetting: function getSetting(id) {
-      var setting = this.$refs.settingModal.input;
-      var data = this.$refs.list.laravelData.data[id].pivot;
-      this.settingId = id;
-      this.kelasId = this.$refs.list.laravelData.data[id].id;
-
-      for (var key in setting) {
-        if (this.dt.includes(key) && data[key] != null) {
-          var datetime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromISO(data[key]).setZone('UTC+7');
-          this.$refs.settingModal.input[key] = {
-            tanggal: datetime.toFormat('yyyy-LL-dd'),
-            waktu: datetime.toFormat('HH:mm')
-          };
-        } else if (this.dt.includes(key) && data[key] == null) {
-          this.$refs.settingModal.input[key] = {
-            tanggal: null,
-            waktu: '00:00'
-          };
-        } else {
-          this.$refs.settingModal.input[key] = data[key];
-        }
-      }
-    },
-    updateSetting: function updateSetting(setting) {
-      var data = this.$refs.list.laravelData.data[this.settingId].pivot;
-
-      for (var key in setting) {
-        if (this.dt.includes(key) && setting[key].tanggal != '') {
-          var datetime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"].fromISO(setting[key].tanggal + 'T' + setting[key].waktu, {
-            zone: 'UTC+7'
-          });
-          var newdt = datetime.setZone('utc');
-          data[key] = newdt.toISO();
-        } else if (this.dt.includes(key) && setting[key].tanggal == '') {
-          data[key] = null;
-        } else {
-          data[key] = setting[key];
-        }
-      }
-
-      axios.post('/api/ujian/setting', {
-        examId: this.examId,
-        kelasId: this.kelasId,
-        setting: data
-      }).then(function (response) {
-        sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
-          title: "Data berhasil dihapus",
-          icon: "success"
-        });
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    }
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -4759,6 +4702,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mixins_ExamSetting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/ExamSetting */ "./resources/js/mixins/ExamSetting.js");
 //
 //
 //
@@ -4794,8 +4738,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-assigned',
+  mixins: [_mixins_ExamSetting__WEBPACK_IMPORTED_MODULE_0__["examSetting"]],
   props: {
     item: {
       type: String,
@@ -4812,11 +4764,10 @@ __webpack_require__.r(__webpack_exports__);
     setting: String
   },
   methods: {
-    callSetting: function callSetting(id) {
-      EventBus.$emit('callSetting', {
-        item: this.item,
-        id: id
-      });
+    callSetting: function callSetting(id) {// EventBus.$emit('callSetting', {
+      //     item: this.item,
+      //     id: id
+      // })
     },
     callUnassign: function callUnassign(data) {
       EventBus.$emit('callUnassign', {
@@ -5180,10 +5131,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-list',
   props: {
-    item: {
-      type: String,
-      required: true
-    },
     tableHeading: {
       type: Array,
       required: true
@@ -5411,30 +5358,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(luxon__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 /* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -5610,54 +5533,49 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.DateTime = luxon__WEBPACK_IMPORTED_MODULE_0__["DateTime"];
   },
   methods: {
-    showExamSetting: function showExamSetting(id) {
-      var _this = this;
-
-      this.resetSetting();
-      this.examId = id;
-      this.loadingSetting = true, axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelas.id).then(function (response) {
-        console.log(response.data);
-
-        if (response.data != 0) {
-          _this.$refs.examSettingModal.input = response.data;
-        }
-
-        _this.loadingSetting = false;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    saveExamSetting: function saveExamSetting(data) {
-      axios.post('/api/ujian/setting', {
-        examId: this.examId,
-        kelasId: this.kelas.id,
-        setting: data
-      }).then(function (response) {
-        sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
-          title: "Pengaturan berhasil disimpan",
-          icon: "success"
-        });
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    resetSetting: function resetSetting() {
-      var setting = this.$refs.examSettingModal.input;
-      var props = Object.keys(setting);
-
-      for (var _i = 0, _props = props; _i < _props.length; _i++) {
-        var key = _props[_i];
-
-        if (_typeof(setting[key]) === 'object') {
-          setting[key].tanggal = null;
-          setting[key].waktu = '00:00';
-        } else {
-          setting[key] = null;
-        }
-      }
-    },
+    // showExamSetting(id) {
+    //     this.resetSetting()
+    //     this.examId = id
+    //     this.loadingSetting = true,
+    //     axios.get('/api/ujian/' + this.examId + '/setting?kelas=' + this.kelas.id)
+    //             .then(response => {
+    //                 console.log(response.data)
+    //                 if (response.data != 0) {
+    //                     this.$refs.examSettingModal.input = response.data
+    //                 }
+    //                 this.loadingSetting = false
+    //             }).catch(error => {
+    //                 console.log(error)
+    //             })
+    // },
+    // saveExamSetting(data) {
+    //     axios.post('/api/ujian/setting', {
+    //         examId: this.examId,
+    //         kelasId: this.kelas.id,
+    //         setting: data
+    //     }).then(response => {
+    //         swal({
+    //             title: "Pengaturan berhasil disimpan",
+    //             icon: "success",
+    //         });
+    //     }).catch(error => {
+    //         console.log(error)
+    //     })
+    // },
+    // resetSetting() {
+    //     let setting = this.$refs.examSettingModal.input
+    //     const props = Object.keys(setting)
+    //     for (let key of props) {
+    //         if (typeof setting[key] === 'object') {
+    //             setting[key].tanggal = null
+    //             setting[key].waktu = '00:00'
+    //         } else {
+    //             setting[key] = null
+    //         }
+    //     }
+    // },
     unassignItem: function unassignItem() {
-      var _this2 = this;
+      var _this = this;
 
       var itemType = {
         pelajaran: 'lessons',
@@ -5668,18 +5586,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         itemId: this.itemToUnassign.data.id,
         itemType: itemType[this.itemToUnassign.type]
       }).then(function (response) {
-        _this2.key[_this2.itemToUnassign.type] += 1;
+        _this.key[_this.itemToUnassign.type] += 1;
       })["catch"](function (error) {
         console.log(error);
       });
     }
   },
   created: function created() {
-    EventBus.$on('callSetting', function (data) {
-      if (data.item == 'ujian') {
-        this.showExamSetting(data.id);
-      }
-    });
+    // EventBus.$on('callSetting', function (data) {
+    //     if (data.item == 'ujian') {
+    //         this.showExamSetting(data.id)
+    //     }
+    // });
     EventBus.$on('callUnassign', function (data) {
       this.itemToUnassign.type = data.item;
       this.itemToUnassign.data = data.itemData;
@@ -5740,16 +5658,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'kelas-item',
   props: {
     item: String,
-    kelas: String,
-    kelasId: Number,
-    headings: Array,
-    itemProperties: Array,
-    fetchData: String,
-    assigned: Array
+    itemData: Object
   },
   data: function data() {
     return {
@@ -46429,7 +46349,6 @@ var render = function() {
     [
       _c("item-list", {
         attrs: {
-          item: _vm.item,
           "table-heading": _vm.itemData.heading,
           "item-properties": _vm.itemData.props,
           "fetch-url": _vm.itemData.fetchUrl
@@ -46488,6 +46407,12 @@ var render = function() {
             }
           }
         ])
+      }),
+      _vm._v(" "),
+      _c("kelas-item-setting-modal", {
+        ref: "settingModal",
+        attrs: { item: "exam" },
+        on: { "save:setting": _vm.updateSetting }
       })
     ],
     1
@@ -47220,7 +47145,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("tab-details", { attrs: { name: "Pelajaran" } }, [
-            _vm._v("\n            \n            ** Soon ** \n\n            ")
+            _vm._v("\n            \n            ** Soon ** \n\n        ")
           ]),
           _vm._v(" "),
           _c(
@@ -47253,48 +47178,14 @@ var render = function() {
                   item: "ujian",
                   "item-data": _vm.examData,
                   "kelas-id": _vm.kelas.id,
-                  setting: "ujianSettingModal"
+                  setting: "examSettingModal"
                 }
               })
             ],
             1
           ),
           _vm._v(" "),
-          _c(
-            "tab-details",
-            { attrs: { name: "Anggota" } },
-            [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col" }, [
-                  _c("h2", [_vm._v("Anggota")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-auto ml-auto" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: {
-                        "data-toggle": "modal",
-                        "data-target": "#assignAnggotaModal"
-                      }
-                    },
-                    [_vm._v("Tambah Anggota")]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("item-assigned", {
-                key: _vm.key.user,
-                attrs: {
-                  item: "user",
-                  "item-data": _vm.userData,
-                  "kelas-id": _vm.kelas.id
-                }
-              })
-            ],
-            1
-          ),
+          _c("tab-details", { attrs: { name: "Anggota" } }),
           _vm._v(" "),
           _c("tab-details", { attrs: { name: "Pengaturan" } }, [
             _c("h2", [_vm._v("Pengaturan")])
@@ -47317,42 +47208,6 @@ var render = function() {
           saved: function($event) {
             _vm.key.ujian += 1
           }
-        }
-      }),
-      _vm._v(" "),
-      _c("kelas-assign-modal", {
-        attrs: {
-          item: "user",
-          kelas: _vm.kelas.nama,
-          headings: _vm.userData.heading,
-          "fetch-url": "/api/user",
-          "item-properties": _vm.userData.props,
-          "assign-url": _vm.assignUrl,
-          assigned: _vm.userData.assigned
-        },
-        on: {
-          saved: function($event) {
-            _vm.key.user += 1
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("kelas-item-setting-modal", {
-        ref: "examSettingModal",
-        attrs: {
-          item: "ujian",
-          loading: _vm.loadingSetting,
-          timezone: _vm.tzName
-        },
-        on: { "save:setting": _vm.saveExamSetting }
-      }),
-      _vm._v(" "),
-      _c("kelas-item-setting-modal", {
-        ref: "lessonSettingModal",
-        attrs: {
-          item: "pelajaran",
-          loading: _vm.loadingSetting,
-          timezone: _vm.tzName
         }
       }),
       _vm._v(" "),
@@ -47442,62 +47297,97 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col" }, [
-          _c("h2", [_vm._v(_vm._s(_vm.title))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-auto ml-auto" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary",
-              attrs: {
-                "data-toggle": "modal",
-                "data-target": "#assign" + _vm.item + "Modal"
-              }
-            },
-            [_vm._v("Tambah " + _vm._s(_vm.title))]
-          )
-        ])
-      ]),
+      _vm._m(0),
       _vm._v(" "),
-      _c(
-        "div",
-        {},
-        [
-          _c("item-index", {
-            key: _vm.indexKey,
-            attrs: {
-              item: _vm.item,
-              "fetch-url": _vm.fetchData,
-              "table-heading": _vm.headings,
-              "item-properties": _vm.itemProperties,
-              assignPage: true,
-              "kelas-id": _vm.kelasId
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("kelas-assign-modal", {
+      _c("item-list", {
         attrs: {
-          item: _vm.item,
-          kelas: _vm.kelas,
-          headings: _vm.headings,
-          "fetch-url": _vm.fetchItemUrl,
-          "item-properties": _vm.itemProperties,
-          "assign-url": _vm.assignUrl,
-          assigned: _vm.assigned
+          "table-heading": _vm.itemData.heading,
+          "item-properties": _vm.itemData.props,
+          "fetch-url": _vm.itemData.fetchUrl
         },
-        on: { saved: _vm.refreshIndex }
+        scopedSlots: _vm._u([
+          {
+            key: "action",
+            fn: function(actionProp) {
+              return [
+                _c("div", { staticClass: "btn-list flex-nowrap" }, [
+                  _vm.item == "ujian"
+                    ? _c(
+                        "a",
+                        { staticClass: "btn btn-sm", attrs: { href: "#" } },
+                        [_vm._v("Hasil")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.setting
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm",
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#" + _vm.setting
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.callSetting(actionProp.item.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Pengaturan")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm btn-danger",
+                      attrs: {
+                        "data-toggle": "modal",
+                        "data-target": "#unassignItemModal"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.callUnassign(actionProp.item)
+                        }
+                      }
+                    },
+                    [_vm._v("Buang")]
+                  )
+                ])
+              ]
+            }
+          }
+        ])
       })
     ],
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col" }, [_c("h2", [_vm._v("Ujian")])]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-auto ml-auto" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: {
+              "data-toggle": "modal",
+              "data-target": "#assignUjianModal"
+            }
+          },
+          [_vm._v("Tambah Ujian")]
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -62934,15 +62824,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************!*\
   !*** ./resources/js/components/admin/ExamKelas.vue ***!
   \*****************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ExamKelas_vue_vue_type_template_id_7006476c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExamKelas.vue?vue&type=template&id=7006476c& */ "./resources/js/components/admin/ExamKelas.vue?vue&type=template&id=7006476c&");
 /* harmony import */ var _ExamKelas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExamKelas.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ExamKelas.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ExamKelas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ExamKelas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -62972,7 +62861,7 @@ component.options.__file = "resources/js/components/admin/ExamKelas.vue"
 /*!******************************************************************************!*\
   !*** ./resources/js/components/admin/ExamKelas.vue?vue&type=script&lang=js& ***!
   \******************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64515,6 +64404,76 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TabDetails_vue_vue_type_template_id_1ec1fdc3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/mixins/ExamSetting.js":
+/*!********************************************!*\
+  !*** ./resources/js/mixins/ExamSetting.js ***!
+  \********************************************/
+/*! exports provided: examSetting */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "examSetting", function() { return examSetting; });
+var examSetting = {
+  methods: {
+    getSetting: function getSetting(id) {
+      var setting = this.$refs.settingModal.input;
+      var data = this.$refs.list.laravelData.data[id].pivot;
+      this.settingId = id;
+      this.kelasId = this.$refs.list.laravelData.data[id].id;
+
+      for (var key in setting) {
+        if (this.dt.includes(key) && data[key] != null) {
+          var datetime = DateTime.fromISO(data[key]).setZone('UTC+7');
+          this.$refs.settingModal.input[key] = {
+            tanggal: datetime.toFormat('yyyy-LL-dd'),
+            waktu: datetime.toFormat('HH:mm')
+          };
+        } else if (this.dt.includes(key) && data[key] == null) {
+          this.$refs.settingModal.input[key] = {
+            tanggal: null,
+            waktu: '00:00'
+          };
+        } else {
+          this.$refs.settingModal.input[key] = data[key];
+        }
+      }
+    },
+    updateSetting: function updateSetting(setting) {
+      var data = this.$refs.list.laravelData.data[this.settingId].pivot;
+
+      for (var key in setting) {
+        if (this.dt.includes(key) && setting[key].tanggal != '') {
+          var datetime = DateTime.fromISO(setting[key].tanggal + 'T' + setting[key].waktu, {
+            zone: 'UTC+7'
+          });
+          var newdt = datetime.setZone('utc');
+          data[key] = newdt.toISO();
+        } else if (this.dt.includes(key) && setting[key].tanggal == '') {
+          data[key] = null;
+        } else {
+          data[key] = setting[key];
+        }
+      }
+
+      axios.post('/api/ujian/setting', {
+        examId: this.examId,
+        kelasId: this.kelasId,
+        setting: data
+      }).then(function (response) {
+        swal({
+          title: "Data berhasil disimpan",
+          icon: "success"
+        });
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  }
+};
 
 /***/ }),
 

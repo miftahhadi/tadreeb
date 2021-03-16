@@ -3,39 +3,46 @@
 
         <div class="row">
             <div class="col">
-                <h2>{{ title }}</h2>
+                <h2>Ujian</h2>
             </div>
 
             <div class="col-auto ml-auto">
                 <button class="btn btn-primary" 
                         data-toggle="modal" 
-                        :data-target="'#assign' + item + 'Modal'"
-                >Tambah {{ title }}</button>
+                        data-target="#assignUjianModal"
+                >Tambah Ujian</button>
             </div>
         </div>
 
-        <div class="">
-            <item-index
-                :item="item"
-                :fetch-url="fetchData"
-                :table-heading="headings"
-                :item-properties="itemProperties"
-                :assignPage="true"
-                :key="indexKey"
-                :kelas-id="kelasId"
-            ></item-index>
-        </div>
+        <item-list
+            :table-heading="itemData.heading"
+            :item-properties="itemData.props"
+            :fetch-url="itemData.fetchUrl"
+        >
 
-        <kelas-assign-modal
-            :item="item"
-            :kelas="kelas"
-            :headings="headings"
-            :fetch-url="fetchItemUrl"
-            :item-properties="itemProperties"
-            :assign-url="assignUrl"
-            :assigned="assigned"
-            @saved="refreshIndex"
-        ></kelas-assign-modal>
+            <template v-slot:action="actionProp">
+                <div class="btn-list flex-nowrap">
+
+                    <a href="#" class="btn btn-sm" v-if="item == 'ujian'">Hasil</a>
+
+                    <button v-if="setting"
+                        class="btn btn-sm"
+                        data-toggle="modal" 
+                        :data-target="'#' + setting" 
+                        @click="callSetting(actionProp.item.id)"
+                    >Pengaturan</button>
+
+                    <button 
+                        class="btn btn-sm btn-danger"
+                        data-toggle="modal"
+                        data-target="#unassignItemModal"
+                        @click="callUnassign(actionProp.item)"
+                    >Buang</button>
+
+                </div>
+            </template>
+
+        </item-list>
     
     </div>
 </template>
@@ -46,12 +53,7 @@ export default {
 
     props: {
         item: String,
-        kelas: String,
-        kelasId: Number,
-        headings: Array,
-        itemProperties: Array,
-        fetchData: String,
-        assigned: Array,
+        itemData: Object
     },
 
     data() {

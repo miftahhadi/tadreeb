@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
         Route::get('pelajaran', 'ClassroomController@lesson');
         Route::get('ujian', 'ClassroomController@exam');
-        Route::get('user', 'ClassroomController@user');
+        Route::get('anggota', 'ClassroomController@member');
     });
 
     Route::resource('kelas', 'ClassroomController');

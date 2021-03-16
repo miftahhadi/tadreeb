@@ -1,20 +1,46 @@
 @extends('admin.main')
 
 @section('content')
-    <div id="app">
 
-        @include('admin._item-header')
+    @include('admin._item-header')
 
-        <kelas-index
-            :kelas="{{ $kelas }}"
-            :lesson-data="{{ json_encode($service->lessons) }}"
-            :exam-data="{{ json_encode($service->exams) }}"
-            :user-data="{{ json_encode($service->users) }}"
-            tz-name="{{ settings('tzName') }}"
-        ></kelas-index>
+    <div class="mt-4">
+        <ul class="nav nav-tabs">
+            
+            <li class="nav-item">
+                <a href="{{ $kelasUrl }}" 
+                    class="nav-link @if (!$page) active @endif"
+                >Ikhtisar</a>
+            </li>
+            
+            @foreach ($service->navMenu as $nav)
+                <li class="nav-item">
+                    <a href="{{ $kelasUrl . '?page=' . strtolower($nav) }}" 
+                        class="nav-link @if ($page == strtolower($nav)) active @endif"
+                    >{{ $nav }}</a>
+                </li>
+            @endforeach
+            
+        </ul>
 
-        
+        <div class="content-tab mt-4" id="app">
+            <div class="tab-pane">
+                
+                @if (!$page)
+                    <span>Ikhtisar</span>                
+                @elseif ($page == 'pengaturan')
+                    pengaturan
+                @else 
+                    <kelas-item
+                        :item-data="{{ json_encode($service->itemData) }}"
+                        item="ujian"
+                    ></kelas-item>
+                @endif
+
+            </div>
+        </div>
     </div>
+    
 @endsection
 
 @push('js')

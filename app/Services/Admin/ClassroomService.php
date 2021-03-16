@@ -12,11 +12,9 @@ class ClassroomService
 
     protected $kelas;
 
-    protected $navMenu = ['Ikhtisar', 'Pelajaran', 'Ujian', 'Anggota', 'Pengaturan'];
+    public $navMenu = ['Pelajaran', 'Ujian', 'Anggota', 'Pengaturan'];
 
-    public $lessons = [];
-    public $exams = [];
-    public $users = [];
+    public $itemData = [];
 
     public function store($data, Group $grup)
     {
@@ -27,59 +25,45 @@ class ClassroomService
         ]);
     }
 
-    public function show(Classroom $kelas)
+    public function show(Classroom $kelas, $page = null)
     {
         $this->kelas = $kelas;
 
-        $this->lessons = $this->itemData('pelajaran');
-        $this->lessons['assigned'] = $this->lessons();
-
-        $this->exams = $this->itemData('ujian');
-        $this->exams['assigned'] = $this->exams(); 
-
-        $this->users = $this->itemData('user');
-        $this->users['assigned'] = $this->users();
-
+        if ($page != null && $page != 'pengaturan') {
+            $this->setItemData($page);
+        }
+        
         return $this;
     }
 
-    public function getNavMenu()
+    public function getItemName($page, $mode = 'singular')
     {
-        return $this->navMenu;
+        $itemNames = [
+            'pelajaran' => 'lesson',
+            'ujian' => 'exam',
+            'anggota' => 'user'
+        ];
+
+        return ($mode == 'plural') ? $itemNames[$page] . 's' : $itemNames[$page];
+
     }
 
-    public function itemData($item)
+    public function setItemData($item)
     {
-        $param = ($item == 'user') ? $item : 'default'; 
+        $param = ($item == 'anggota') ? 'user' : 'default'; 
+
+        $itemName = $this->getItemName($item, 'plural');
+        $itemId = $this->getItemName($item, 'plural') . '.id';
 
         $data =  [
             'heading' => DataTable::heading($param),
             'props' => DataTable::props($param),
-            'fetchUrl' => '/api/kelas/' . $this->kelas->id . '/' . $item 
+            'fetchUrl' => '/api/kelas/' . $this->kelas->id . '/' . $item,
+            'assigned' => $this->kelas->$itemName()->pluck($itemId)->all()
         ];
 
-        return $data;
+        $this->itemData = $data;
     }
 
-    private function lessons()
-    {
-        return $this->kelas->lessons()
-                            ->pluck('lesson_id')
-                            ->all();
-    }
-
-    private function exams()
-    {
-        return $this->kelas->exams()
-                            ->pluck('exam_id')
-                            ->all();
-    }
-
-    private function users()
-    {
-        return $this->kelas->users()
-                            ->pluck('user_id')
-                            ->all();
-    }
 
 }

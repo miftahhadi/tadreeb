@@ -52,8 +52,6 @@ class ClassroomController extends Controller
     {
         $title = $kelas->nama . ' - ' . $grup->nama;
 
-        $service = $this->classroomService->show($kelas);
-
         $breadcrumbs = [
             [
                 'name' => 'Grup & Kelas',
@@ -68,8 +66,19 @@ class ClassroomController extends Controller
         $itemName = $kelas->nama;
         $itemDescription = $kelas->deskripsi;
 
+        $kelasNavs = [
+            'Pelajaran', 'Ujian', 'Anggota', 'Pengaturan'
+        ];
+
+        $page = $request['page'];
+        $kelasUrl = route('admin.grup.kelas.show', ['grup' => $grup->id, 'kelas' => $kelas->id]);
+
+        $service = $this->classroomService->show($kelas, $page);
+
         return view('admin.classroom.show', compact(
-            'title', 'grup', 'kelas', 'service', 'breadcrumbs', 'itemName', 'itemDescription'
+            'title', 'grup', 'kelas', 'service', 'page',
+            'breadcrumbs', 'itemName', 'itemDescription',
+            'kelasUrl', 'kelasNavs'
         ));
     }
 
@@ -125,6 +134,5 @@ class ClassroomController extends Controller
             'data' => $data 
         ]);
     }
-
 
 }
