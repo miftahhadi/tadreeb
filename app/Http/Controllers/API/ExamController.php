@@ -142,4 +142,27 @@ class ExamController extends Controller
     {
         return response()->json($ujian->classrooms()->paginate(20));
     }
+
+    public function unassignQuestion(Request $request)
+    {
+        $ujian = Exam::find($request['examId'])->load('questions');
+
+        if ($ujian) {
+            $soal = $ujian->questions()->find($request['soalId']);
+
+            // Semua soal yang urutannya lebih besar dari soal ini, kurangi urutannya
+
+            foreach ($ujian->questions as $question) {
+                if ($question->pivot->urutan > $soal->pivot->urutan) {
+                    $urutan = $question->pivot->urutan -= 1;
+                    $ujian->questions()->updateExistingPivot($question, ['urutan' => $urutan]);
+                }
+            }
+
+            // Hapus dari daftar soal
+            $ujian->questions()->detach($soal->id);
+
+            return;
+        }
+    }
 }

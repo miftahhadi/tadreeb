@@ -1,74 +1,55 @@
 @extends('admin.exam.main')
 
 @section('examContent')
-    <div class="row mb-2">
-        <div class="col-auto">
-            <h2>Daftar Soal</h2>
-        </div>    
-        <div class="col-auto ml-auto">
-
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahSoal">
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>    
-                </span> 
-                Buat Soal Baru
-            </button>  
-
-        </div>
+    <div id="app">
+        <exam-question
+            :exam-id="{{ $ujian->id }}"
+            :questions-array="{{ $questions }}"
+        ></exam-question>
     </div>
 
-    <div class="box">
-        <div class="card">
-        <div class="table-responsive">
+    {{-- <div class="box">
+            <div class="card">
+            <div class="table-responsive">
 
-            <table class="table table-vcenter table-hover card-table">
+                <table class="table table-vcenter table-hover card-table">
 
-            <thead>
-                <tr>
-                    <th class="w-1">No</th>
-                    <th width="50%">Soal</th>
-                    <th>Tipe</th>
-                    <th class="w-2"></th>
-                </tr>
-            </thead>
+                    <thead>
+                        <tr>
+                            <th class="w-1">No</th>
+                            <th width="50%">Soal</th>
+                            <th>Tipe</th>
+                            <th class="w-2"></th>
+                        </tr>
+                    </thead>
 
-            <tbody>
+                    <tbody>
 
-                @forelse ($ujian->questions as $key => $question)
-                    <tr>
-                        <td>{{ ++$key }}</td>
-                        <td>{!! $question->konten !!}</td>
-                        <td>{{ $question->tipe }}</td>
-                        <td class="text-right">
-                            <div class="btn-list flex-nowrap">
-                                {{-- <show-question-button soal-id="{{ $question->id }}" exam-id="{{ $ujian->id }}"></show-question-button> --}}
-                                <a href="{{ route('admin.ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light btn-sm">Edit</a>
+                        @forelse ($ujian->questions as $question)
+                            <tr>
+                                <td class="w-1">{{ $question->pivot->urutan }}</td>
+                                <td width="70%">{!! $question->konten !!}</td>
+                                <td>{{ $question->tipe }}</td>
+                                <td class="w-1">
+                                    <div class="btn-list flex-nowrap">
+                                        <a href="{{ route('admin.ujian.soal.edit', ['ujian' => $ujian->slug, 'soal' => $question->id]) }}" class="btn btn-light btn-sm">Edit</a>
+                                        <button class="btn btn-danger btn-sm">Buang</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4">Belum ada soal</td>
+                            </tr>
+                        @endforelse
 
-                                {{-- <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#unlinkSoal" data-soal="{{ $question->id }}">Buang</a> --}}
+                    </tbody>
 
-                                <form action="{{ route('admin.ujian.soal.unassign', ['ujian' => $ujian->slug]) }} " method="post">
-                                    @csrf
+                </table>
 
-                                    <input type="hidden" name="soal" value="{{ $question->id }}">
-                                    <input type="submit" class="btn btn-danger btn-sm" value="Hapus">
-                                </form>
-
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                <tr>
-                    <td colspan="4">Belum ada soal</td>
-                </tr>
-                @endforelse
-
-            </tbody>
-
-            </table>
-
+            </div>
         </div>
-        </div>
-    </div>    
+    </div>     --}}
 @endsection    
 
 @section('newQuestion')
@@ -85,3 +66,7 @@
         }
     </script>
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush

@@ -27,6 +27,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
     // Exams
     Route::get('ujian/search/{search}', 'ExamController@search');
+    Route::post('ujian/unassign-soal', 'ExamController@unassignQuestion');
     Route::resource('ujian', 'ExamController');
 
     Route::group(['prefix' => 'ujian/{ujian}'], function() {

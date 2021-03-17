@@ -16,7 +16,9 @@
             <tbody>
 
                 <tr v-for="(item, index) in itemData" :key="item.id">
-                    <td v-for="$prop in properties" :key="$prop">{{ printItem(index,$prop) }}</td>
+                    <td v-for="$prop in properties" :key="$prop">
+                        <span v-html="printItem(index,$prop)"></span>
+                    </td>
 
                     <td v-if="action">
                         <slot name="action" :item="item" :index="index">

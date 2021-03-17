@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\UpdateExamRequest;
 use App\Services\Admin\ExamService;
 use App\Http\Requests\Admin\StoreExamRequest;
-use App\Models\Classroom;
-use App\Models\ClassroomExam;
 use App\Models\Exam;
-use Illuminate\Database\Eloquent\Builder;
 
 class ExamController extends Controller
 {
@@ -78,10 +75,21 @@ class ExamController extends Controller
 
         $itemName = $ujian->judul;
         $itemDescription = $ujian->deskripsi;
+        
+        $questions = $ujian->questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'urutan' => $question->pivot->urutan,
+                'konten' => $question->konten,
+                'tipe' => $question->tipe,
+                'answers' => $question->answers
+            ];
+        });
 
         return view('admin.exam.show', [
             'title' => $ujian->judul . ' - Ujian ',
             'ujian' => $ujian,
+            'questions' => $questions,
             'questionTypes' => $this->service->questionTypes,
             'answerIcons' => $this->service->answerIcons,
             'breadcrumbs' => $breadcrumbs,

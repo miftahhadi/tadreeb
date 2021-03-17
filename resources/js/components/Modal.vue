@@ -23,6 +23,8 @@
                         <div class="modal-body">
                             <slot name="body"></slot>
                         </div>
+
+                        <slot name="extended-body"></slot>
                         
                         <div class="modal-footer">
                             <slot name="footer">

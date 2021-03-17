@@ -6,7 +6,7 @@
         aria-hidden="true"
     >
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-        <form action="{{ route('admin.ujian.soal.create', ['ujian' => $ujian->slug]) }}" method="get">
+        <form action="{{ route('admin.ujian.soal.create', ['ujian' => $ujian->id]) }}" method="get">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Tambah Soal Baru</h5>

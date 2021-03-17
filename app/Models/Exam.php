@@ -16,7 +16,7 @@ class Exam extends Model
     public function questions()
     {
         return $this->belongsToMany(Question::class)
-                    ->withPivot('urutan')
+                    ->withPivot(['urutan'])
                     ->orderBy('urutan', 'asc');
     }
 

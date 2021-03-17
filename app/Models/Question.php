@@ -8,6 +8,8 @@ class Question extends Model
 {
     protected $guarded = [];
 
+    protected $with = ['answers'];
+
     public function exam()
     {
         return $this->belongsToMany(Exam::class);
