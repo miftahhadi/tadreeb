@@ -44,6 +44,9 @@
       <link href="{{ asset('dist/css/custom.css') }}" rel="stylesheet"/>
     @show
 
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/c62b0f450b.js" crossorigin="anonymous"></script>
+
     <style>
       body {
       	display: none;
