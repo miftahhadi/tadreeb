@@ -25,11 +25,28 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, Exam $ujian)
+    public function create(Exam $ujian, Request $request)
     {
+        $breadcrumbs = [
+            [
+                'name' => 'Ujian',
+                'href' => route('admin.ujian.index')
+            ],
+            [
+                'name' => $ujian->judul,
+                'href' => route('admin.ujian.show', $ujian->id)
+            ]
+        ];
+
+        $itemName = $ujian->judul;
+        $itemDescription = null;
+
         $questionForm = $this->questionService->createQuestionForm($request);
 
         return view('admin.question.create', [
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription,
             'title' => 'Soal Baru ' . ' - ' . $ujian->judul,
             'ujian' => $ujian,
             'choices' => $questionForm['choices'],

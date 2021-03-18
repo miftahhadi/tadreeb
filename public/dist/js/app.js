@@ -4261,6 +4261,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -4363,6 +4365,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-question',
   props: {
@@ -4377,7 +4388,7 @@ __webpack_require__.r(__webpack_exports__);
         name: 'No'
       }, {
         id: 1,
-        width: '65%',
+        width: '60%',
         name: 'Soal'
       }, {
         id: 2,
@@ -4410,6 +4421,11 @@ __webpack_require__.r(__webpack_exports__);
             question.urutan -= 1;
           }
         });
+
+        sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
+          title: "Data berhasil dihapus",
+          icon: "success"
+        });
       })["catch"](function (errors) {
         console.log(errors);
       });
@@ -4418,6 +4434,25 @@ __webpack_require__.r(__webpack_exports__);
       this.toView = item;
     }
   }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'question-create'
 });
 
 /***/ }),
@@ -7501,7 +7536,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "p {\n  margin-bottom: 0rem;\n}\r\n", ""]);
+exports.push([module.i, "p {\n  margin-bottom: 0rem;\n}\n", ""]);
 
 // exports
 
@@ -45775,12 +45810,14 @@ var render = function() {
                   _vm._v(" "),
                   _vm._t("extended-body"),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "modal-footer" },
-                    [_vm._t("footer")],
-                    2
-                  )
+                  _vm.$slots.footer
+                    ? _c(
+                        "div",
+                        { staticClass: "modal-footer" },
+                        [_vm._t("footer")],
+                        2
+                      )
+                    : _vm._e()
                 ],
                 2
               )
@@ -46079,7 +46116,8 @@ var render = function() {
                               _vm.examId +
                               "/soal/" +
                               slotProp.item.id +
-                              "/edit"
+                              "/edit",
+                            target: "_blank"
                           }
                         },
                         [_vm._v("Edit")]
@@ -46175,13 +46213,49 @@ var render = function() {
         },
         scopedSlots: _vm._u(
           [
-            {
-              key: "header",
-              fn: function() {
-                return [_vm._v("Tes header")]
-              },
-              proxy: true
-            },
+            _vm.toView
+              ? {
+                  key: "header",
+                  fn: function() {
+                    return [
+                      _c("span", [
+                        _vm._v(
+                          "\n                ID Soal: " +
+                            _vm._s(_vm.toView.id) +
+                            "\n            "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn",
+                          attrs: {
+                            href:
+                              "/admin/ujian/" +
+                              _vm.examId +
+                              "/soal/" +
+                              _vm.toView.id +
+                              "/edit",
+                            target: "_blank"
+                          }
+                        },
+                        [_vm._v("Edit")]
+                      ),
+                      _vm._v(" "),
+                      _c("button", {
+                        staticClass: "btn-close",
+                        attrs: {
+                          type: "button",
+                          "data-dismiss": "modal",
+                          "aria-label": "Close"
+                        }
+                      })
+                    ]
+                  },
+                  proxy: true
+                }
+              : null,
             {
               key: "body",
               fn: function() {
@@ -46199,102 +46273,60 @@ var render = function() {
               ? {
                   key: "extended-body",
                   fn: function() {
-                    return _vm._l(_vm.toView.answers, function(answer) {
-                      return _c(
+                    return [
+                      _c(
                         "div",
-                        { key: answer.id, staticClass: "modal-body py-2" },
+                        { staticClass: "table-responsive border-top" },
                         [
-                          _c("div", { staticClass: "row" }, [
-                            answer.benar == 1
-                              ? _c(
-                                  "div",
-                                  { staticClass: "col-auto text-success" },
-                                  [
+                          _c(
+                            "table",
+                            { staticClass: "table card-table table-vcenter" },
+                            [
+                              _c(
+                                "tbody",
+                                _vm._l(_vm.toView.answers, function(answer) {
+                                  return _c("tr", { key: answer.id }, [
                                     _c(
-                                      "svg",
+                                      "td",
                                       {
-                                        staticClass: "icon",
-                                        attrs: {
-                                          xmlns: "http://www.w3.org/2000/svg",
-                                          width: "24",
-                                          height: "24",
-                                          viewBox: "0 0 24 24",
-                                          "stroke-width": "2",
-                                          stroke: "currentColor",
-                                          fill: "none",
-                                          "stroke-linecap": "round",
-                                          "stroke-linejoin": "round"
-                                        }
+                                        staticClass: "w-1 text-success",
+                                        class:
+                                          answer.benar == 1
+                                            ? "text-success"
+                                            : "text-danger"
                                       },
                                       [
-                                        _c("path", {
-                                          attrs: {
-                                            stroke: "none",
-                                            d: "M0 0h24v24H0z",
-                                            fill: "none"
-                                          }
-                                        }),
-                                        _c("circle", {
-                                          attrs: { cx: "12", cy: "12", r: "9" }
-                                        }),
-                                        _c("path", {
-                                          attrs: { d: "M9 12l2 2l4 -4" }
-                                        })
+                                        answer.benar == 1
+                                          ? _c("i", {
+                                              staticClass:
+                                                "fas fa-check-circle fa-lg"
+                                            })
+                                          : _c("i", {
+                                              staticClass:
+                                                "fas fa-times-circle fa-lg"
+                                            })
                                       ]
-                                    )
-                                  ]
-                                )
-                              : _c(
-                                  "div",
-                                  { staticClass: "col-auto text-danger" },
-                                  [
-                                    _c(
-                                      "svg",
-                                      {
-                                        staticClass: "icon",
-                                        attrs: {
-                                          xmlns: "http://www.w3.org/2000/svg",
-                                          width: "24",
-                                          height: "24",
-                                          viewBox: "0 0 24 24",
-                                          "stroke-width": "2",
-                                          stroke: "currentColor",
-                                          fill: "none",
-                                          "stroke-linecap": "round",
-                                          "stroke-linejoin": "round"
-                                        }
-                                      },
-                                      [
-                                        _c("path", {
-                                          attrs: {
-                                            stroke: "none",
-                                            d: "M0 0h24v24H0z",
-                                            fill: "none"
-                                          }
-                                        }),
-                                        _c("circle", {
-                                          attrs: { cx: "12", cy: "12", r: "9" }
-                                        }),
-                                        _c("path", {
-                                          attrs: { d: "M10 10l4 4m0 -4l-4 4" }
-                                        })
-                                      ]
-                                    )
-                                  ]
-                                ),
-                            _vm._v(" "),
-                            _c("div", {
-                              staticClass: "col-auto",
-                              domProps: { innerHTML: _vm._s(answer.redaksi) }
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col" }, [
-                              _vm._v("Nilai: " + _vm._s(answer.nilai))
-                            ])
-                          ])
+                                    ),
+                                    _vm._v(" "),
+                                    _c("td", {
+                                      domProps: {
+                                        innerHTML: _vm._s(answer.redaksi)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("td", { attrs: { width: "20%" } }, [
+                                      _c("b", [_vm._v("Nilai:")]),
+                                      _vm._v(" " + _vm._s(answer.nilai))
+                                    ])
+                                  ])
+                                }),
+                                0
+                              )
+                            ]
+                          )
                         ]
                       )
-                    })
+                    ]
                   },
                   proxy: true
                 }
@@ -46318,6 +46350,30 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -63257,17 +63313,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-var render, staticRenderFns
-var script = {}
+/* harmony import */ var _QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuestionCreate.vue?vue&type=template&id=459c19a6& */ "./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&");
+/* harmony import */ var _QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuestionCreate.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
-  script,
-  render,
-  staticRenderFns,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -63275,8 +63334,42 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   
 )
 
+/* hot reload */
+if (false) { var api; }
 component.options.__file = "resources/js/components/admin/QuestionCreate.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionCreate.vue?vue&type=template&id=459c19a6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -64667,8 +64760,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })

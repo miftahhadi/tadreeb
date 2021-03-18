@@ -32,7 +32,7 @@
                             @click="callView(slotProp.item)"
                         >Lihat</button>
 
-                        <a :href="'/admin/ujian/' + examId + '/soal/' + slotProp.item.id + '/edit' " class="btn btn-light btn-sm">Edit</a>
+                        <a :href="'/admin/ujian/' + examId + '/soal/' + slotProp.item.id + '/edit' " class="btn btn-light btn-sm" target="_blank">Edit</a>
                         
                         <button 
                             class="btn btn-danger btn-sm"
@@ -74,24 +74,32 @@
             id="viewQuestionModal"
             :classes="['modal-dialog-centered', 'modal-lg']"
         >
-            <template #header>Tes header</template>
+            <template #header v-if="toView">
+                <span>
+                    ID Soal: {{ toView.id }}
+                </span>
+                <a :href="'/admin/ujian/' + examId + '/soal/' + toView.id + '/edit' " class="btn" target="_blank">Edit</a>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </template>
 
             <template #body>
                 <span v-html="toView.konten" v-if="toView != null"></span>
             </template>
 
             <template #extended-body v-if="toView != null">
-                <div class="modal-body py-2"  v-for="answer in toView.answers" :key="answer.id">
-                    <div class="row">
-                        <div class="col-auto text-success" v-if="answer.benar == 1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
-                        </div>
-                        <div class="col-auto text-danger" v-else>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9" /><path d="M10 10l4 4m0 -4l-4 4" /></svg>
-                        </div>
-                        <div class="col-auto" v-html="answer.redaksi"></div>
-                        <div class="col">Nilai: {{ answer.nilai }}</div>
-                    </div>
+                <div class="table-responsive border-top">
+                    <table class="table card-table table-vcenter">
+                        <tbody>
+                            <tr v-for="answer in toView.answers" :key="answer.id">
+                                <td class="w-1 text-success" :class="(answer.benar == 1) ? 'text-success' : 'text-danger'">
+                                    <i class="fas fa-check-circle fa-lg" v-if="answer.benar == 1"></i>
+                                    <i class="fas fa-times-circle fa-lg" v-else></i>
+                                </td>
+                                <td v-html="answer.redaksi"></td>
+                                <td width="20%"><b>Nilai:</b> {{ answer.nilai }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </template>
 
@@ -101,6 +109,8 @@
 </template>
 
 <script>
+import swal from "sweetalert";
+
 export default {
     name: 'exam-question',
 
@@ -119,7 +129,7 @@ export default {
                 },
                 {
                     id: 1,
-                    width: '65%',
+                    width: '60%',
                     name: 'Soal'
                 },
                 {
@@ -158,6 +168,11 @@ export default {
                         question.urutan -= 1
                     }
                 })
+
+                swal({
+                    title: "Data berhasil dihapus",
+                    icon: "success",
+                });
             }).catch(errors => {
                 console.log(errors)
             })

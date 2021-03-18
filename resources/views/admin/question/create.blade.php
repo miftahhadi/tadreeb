@@ -7,20 +7,10 @@
 @endsection
 
 @section('content')
-    <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
-        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.ujian.index') }}">Ujian</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('admin.ujian.show', $ujian->slug) }}">{{ $ujian->judul }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="#">Buat Soal Baru</a></li>
-    </ol>
+    @include('admin._item-header')
 
     <form action="{{ route('admin.ujian.soal.store', ['ujian' => $ujian->slug]) }}" method="post">
         @csrf
-
-
-        <div class="mt-2 mb-4">
-            <h2 class="h1 font-weight-bold">{{ $ujian->judul }}</h2>
-        </div>
 
         <div class="row my-2">
             <div class="col-auto">

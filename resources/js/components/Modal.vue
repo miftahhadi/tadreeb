@@ -26,7 +26,7 @@
 
                         <slot name="extended-body"></slot>
                         
-                        <div class="modal-footer">
+                        <div class="modal-footer" v-if="$slots.footer">
                             <slot name="footer">
 
                             </slot>
