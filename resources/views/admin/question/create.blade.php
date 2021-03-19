@@ -1,10 +1,10 @@
 @extends('admin.main')
 
-@section('head-script')
+{{-- @section('head-script')
     @parent
     <!-- CKEditor -->
     <script src="/dist/vendor/ckeditor/ckeditor.js"></script>
-@endsection
+@endsection --}}
 
 @section('content')
     @include('admin._item-header')
@@ -176,8 +176,4 @@
 
 @push('js')
     <script type="text/javascript" src="/dist/js/app.js"></script>    
-    <!-- CKEditor -->
-    <script>
-        CKEDITOR.replaceAll();
-    </script>
 @endpush

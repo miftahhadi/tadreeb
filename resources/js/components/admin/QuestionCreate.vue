@@ -1,13 +1,24 @@
 <template>
     <div>
         <div class="row my-2">
-            <div class="col-auto">
-                <h2>Buat soal baru</h2>
-            </div>
+            
             
         </div>
         
         <div class="card mb-3">
+            <div class="card-header">
+                <div class="col-auto">
+                    <span class="card-title">
+                        Buat soal baru
+                    </span>
+                </div>
+
+                <div class="col-auto ml-auto">
+                    <input type="submit" value="Simpan" class="btn btn-success">
+                    <a href="#" class="btn btn-white">Batal</a>
+                </div>
+
+            </div>
             <div class="card-body form-group row">
                 <label class="form-label col-auto col-form-label">Tipe soal:</label>
                 <div class="col-auto">
@@ -16,9 +27,9 @@
                     </select>
                 </div>
 
-                <div class="col-auto ml-auto">
-                    <input type="submit" value="Simpan" class="btn btn-success">
-                    <a href="#" class="btn btn-white">Batal</a>
+                <label class="form-label col-auto col-form-label">Kode soal:</label>
+                <div class="col-auto">
+                    <input type="text" class="form-control" v-model="kodeSoal">
                 </div>
 
             </div>
@@ -32,7 +43,10 @@
         
                 <small class="text-danger">Soal belum diisi</small>
         
-                <textarea class="form-control" name="soal[konten]" id="redaksi" placeholder="Tuliskan soal..."></textarea>
+                <!-- <textarea class="form-control" name="soal[konten]" id="redaksi" placeholder="Tuliskan soal..." v-model="redaksiSoal"></textarea> -->
+
+                <ckeditor v-model="redaksiSoal" :editor-url="editorUrl"></ckeditor>
+
             </div>
         </div>
 
@@ -156,6 +170,8 @@
 </template>
 
 <script>
+// import { editorConfig } from '../../ckeditor-config';
+
 export default {
     name: 'question-create',
 
@@ -165,7 +181,12 @@ export default {
 
     data() {
         return {
+            // editorConfig: editorConfig,
+            editorUrl: '/dist/vendor/ckeditor/ckeditor.js',
+
             tipe: 'pilihan-ganda',
+            kodeSoal: null,
+            redaksiSoal: null,
             typeOptions: [
                 {
                     text: 'Pilihan Ganda',
@@ -258,6 +279,6 @@ export default {
         inputType() {
             return (this.tipe == 'jawaban-ganda') ? 'checkbox' : 'radio'
         }
-    }
+    },
 }
 </script>

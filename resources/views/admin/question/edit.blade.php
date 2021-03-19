@@ -1,10 +1,10 @@
 @extends('admin.main')
 
-@section('head-script')
+{{-- @section('head-script')
     @parent
     <!-- CKEditor -->
     <script src="/dist/vendor/ckeditor/ckeditor.js"></script>
-@endsection
+@endsection --}}
 
 @section('content')
     <ol class="breadcrumb" aria-label="breadcrumbs">
