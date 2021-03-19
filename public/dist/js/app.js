@@ -4451,8 +4451,231 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'question-create'
+  name: 'question-create',
+  props: {},
+  data: function data() {
+    return {
+      tipe: 'pilihan-ganda',
+      typeOptions: [{
+        text: 'Pilihan Ganda',
+        value: 'pilihan-ganda'
+      }, {
+        text: 'Jawaban Ganda',
+        value: 'jawaban-ganda'
+      }, {
+        text: 'Benar-Salah',
+        value: 'benar-salah'
+      }, {
+        text: 'Benar-Salah (Arabic)',
+        value: 'benar-salah-arabic'
+      }],
+      benarSalahOptions: {
+        reguler: {
+          benar: 'Benar',
+          salah: 'Salah'
+        },
+        arabic: {
+          benar: 'صحيح',
+          salah: 'خطأ'
+        }
+      },
+      answersNum: 2,
+      answers: [{
+        redaksi: '',
+        benar: null,
+        nilai: 0
+      }, {
+        redaksi: '',
+        benar: null,
+        nilai: 0
+      }]
+    };
+  },
+  watch: {
+    tipe: function tipe(newTipe, oldTipe) {
+      if (newTipe == 'benar-salah') {
+        this.answersNum = 2;
+        this.answers = [{
+          redaksi: this.benarSalahOptions.reguler.benar,
+          benar: null,
+          nilai: 0
+        }, {
+          redaksi: this.benarSalahOptions.reguler.salah,
+          benar: null,
+          nilai: 0
+        }];
+      } else if (newTipe == 'benar-salah-arabic') {
+        this.answers = [{
+          redaksi: this.benarSalahOptions.arabic.benar,
+          benar: null,
+          nilai: 0
+        }, {
+          redaksi: this.benarSalahOptions.arabic.salah,
+          benar: null,
+          nilai: 0
+        }];
+      }
+    }
+  },
+  computed: {
+    inputType: function inputType() {
+      return this.tipe == 'jawaban-ganda' ? 'checkbox' : 'radio';
+    }
+  }
 });
 
 /***/ }),
@@ -46371,9 +46594,401 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c(
+    "div",
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "card mb-3" }, [
+        _c("div", { staticClass: "card-body form-group row" }, [
+          _c("label", { staticClass: "form-label col-auto col-form-label" }, [
+            _vm._v("Tipe soal:")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-auto" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.tipe,
+                    expression: "tipe"
+                  }
+                ],
+                staticClass: "form-select",
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.tipe = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              _vm._l(_vm.typeOptions, function(opsi) {
+                return _c(
+                  "option",
+                  { key: opsi.id, domProps: { value: opsi.value } },
+                  [_vm._v(_vm._s(opsi.text))]
+                )
+              }),
+              0
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(1)
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(2),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("h3", [_vm._v("Pilihan Jawaban")]),
+      _vm._v(" "),
+      _vm._l(_vm.answersNum, function(i, index) {
+        return _c("div", { key: index, staticClass: "card mb-4" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n            Pilihan " + _vm._s(i) + "\n        ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body", attrs: { id: "cardSoal" } }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.answers[index].redaksi,
+                  expression: "answers[index].redaksi"
+                }
+              ],
+              attrs: { name: "jawaban[][redaksi]" },
+              domProps: { value: _vm.answers[index].redaksi },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.answers[index], "redaksi", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-2" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("div", { staticClass: "form-label" }, [
+                    _vm._v("Pilihan Benar")
+                  ]),
+                  _vm._v(" "),
+                  _c("label", { staticClass: "form-check" }, [
+                    _vm.inputType === "checkbox"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.answers[index].benar,
+                              expression: "answers[index].benar"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: {
+                            name: "jawaban[][benar]",
+                            value: "1",
+                            type: "checkbox"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.answers[index].benar)
+                              ? _vm._i(_vm.answers[index].benar, "1") > -1
+                              : _vm.answers[index].benar
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.answers[index].benar,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "1",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.answers[index],
+                                      "benar",
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.answers[index],
+                                      "benar",
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
+                              } else {
+                                _vm.$set(_vm.answers[index], "benar", $$c)
+                              }
+                            }
+                          }
+                        })
+                      : _vm.inputType === "radio"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.answers[index].benar,
+                              expression: "answers[index].benar"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: {
+                            name: "jawaban[][benar]",
+                            value: "1",
+                            type: "radio"
+                          },
+                          domProps: {
+                            checked: _vm._q(_vm.answers[index].benar, "1")
+                          },
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(_vm.answers[index], "benar", "1")
+                            }
+                          }
+                        })
+                      : _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.answers[index].benar,
+                              expression: "answers[index].benar"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: {
+                            name: "jawaban[][benar]",
+                            value: "1",
+                            type: _vm.inputType
+                          },
+                          domProps: { value: _vm.answers[index].benar },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.answers[index],
+                                "benar",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-check-label" }, [
+                      _vm._v("Benar")
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { staticClass: "form-label" }, [_vm._v("Nilai")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.answers[index].nilai,
+                        expression: "answers[index].nilai"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      name: "jawaban[][nilai]",
+                      placeholder: "Nilai",
+                      value: "0"
+                    },
+                    domProps: { value: _vm.answers[index].nilai },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.answers[index],
+                          "nilai",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ])
+            ])
+          ])
+        ])
+      }),
+      _vm._v(" "),
+      _vm._m(3)
+    ],
+    2
+  )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row my-2" }, [
+      _c("div", { staticClass: "col-auto" }, [
+        _c("h2", [_vm._v("Buat soal baru")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-auto ml-auto" }, [
+      _c("input", {
+        staticClass: "btn btn-success",
+        attrs: { type: "submit", value: "Simpan" }
+      }),
+      _vm._v(" "),
+      _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
+        _vm._v("Batal")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _vm._v("\n            Redaksi Soal\n        ")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body" }, [
+        _c("small", { staticClass: "text-danger" }, [
+          _vm._v("Soal belum diisi")
+        ]),
+        _vm._v(" "),
+        _c("textarea", {
+          staticClass: "form-control",
+          attrs: {
+            name: "soal[konten]",
+            id: "redaksi",
+            placeholder: "Tuliskan soal..."
+          }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("label", { staticClass: "form-check" }, [
+              _c("input", {
+                staticClass: "form-check-input",
+                attrs: { type: "radio", name: "jawaban[1][benar]", value: "1" }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                attrs: {
+                  type: "hidden",
+                  name: "jawaban[1][redaksi]",
+                  value: ""
+                }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-check-label" }, [_vm._v("Benar")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { staticClass: "form-label" }, [_vm._v("Nilai")]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  placeholder: "Nilai",
+                  value: "0",
+                  name: "jawaban[1][nilai]"
+                }
+              })
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c("label", { staticClass: "form-check" }, [
+              _c("input", {
+                staticClass: "form-check-input",
+                attrs: { type: "radio", name: "jawaban[2][benar]", value: "1" }
+              }),
+              _vm._v(" "),
+              _c("input", {
+                attrs: {
+                  type: "hidden",
+                  name: "jawaban[2][redaksi]",
+                  value: ""
+                }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-check-label" }, [_vm._v("Salah")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { staticClass: "form-label" }, [_vm._v("Nilai")]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  placeholder: "Nilai",
+                  value: "0",
+                  name: "jawaban[2][nilai]"
+                }
+              })
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
