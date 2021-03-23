@@ -1,19 +1,18 @@
 @extends('admin.main')
 
-{{-- @section('head-script')
-    @parent
-    <!-- CKEditor -->
-    <script src="/dist/vendor/ckeditor/ckeditor.js"></script>
-@endsection --}}
-
 @section('content')
     @include('admin._item-header')
 
     <div id="app">
-        <form action="{{ route('admin.ujian.soal.store', ['ujian' => $ujian->slug]) }}" method="post">
-            @csrf
     
-            <question-create></question-create>
+            <question-create
+                :exam-id="{{ $ujian->id }}"
+            >
+                <template #csrf>
+                    @csrf
+                </template>
+
+            </question-create>
     
             {{-- <div class="row my-2">
                 <div class="col-auto">
@@ -170,7 +169,7 @@
                 <input type="hidden" name="soal[tipe]" value="4">
             @endif --}}
     
-        </form>
+        
     </div>
 @endsection
 

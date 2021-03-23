@@ -52,7 +52,7 @@ class QuestionService
         $soal = new Question($data->soal);
 
         // Save the question
-        $exam->questions()->save($soal, ['urutan' => $this->urutan($exam)]);
+        $exam->questions()->save($soal, ['urutan' => $this->getUrutan($exam)]);
 
         
         // Create an answers array
@@ -82,7 +82,7 @@ class QuestionService
         }
     }
 
-    public function urutan(Exam $exam)
+    public function getUrutan(Exam $exam)
     {
         // Cek urutan
         $max = $exam->questions()->max('urutan');

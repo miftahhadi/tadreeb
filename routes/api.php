@@ -39,6 +39,9 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
         Route::post('submit-ujian', 'ExamController@submitExam');
     });
 
+    // Question
+    Route::post('soal', 'QuestionController@store');
+
     Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
 
     // Setting

@@ -4331,6 +4331,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -4450,69 +4452,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// import { editorConfig } from '../../ckeditor-config';
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'question-create',
-  props: {},
+  props: {
+    examId: Number,
+    questionModel: Object
+  },
   data: function data() {
     return {
-      // editorConfig: editorConfig,
+      question: {
+        id: null,
+        kode: null,
+        tipe: 'pilihan-ganda',
+        konten: null
+      },
       editorUrl: '/dist/vendor/ckeditor/ckeditor.js',
-      tipe: 'pilihan-ganda',
-      kodeSoal: null,
-      redaksiSoal: null,
       typeOptions: [{
         text: 'Pilihan Ganda',
         value: 'pilihan-ganda'
@@ -4539,11 +4494,9 @@ __webpack_require__.r(__webpack_exports__);
       answersNum: 2,
       answers: [{
         redaksi: '',
-        benar: null,
         nilai: 0
       }, {
         redaksi: '',
-        benar: null,
         nilai: 0
       }],
       jawabanBenar: null
@@ -4555,29 +4508,111 @@ __webpack_require__.r(__webpack_exports__);
         this.answersNum = 2;
         this.answers = [{
           redaksi: this.benarSalahOptions.reguler.benar,
-          benar: null,
           nilai: 0
         }, {
           redaksi: this.benarSalahOptions.reguler.salah,
-          benar: null,
           nilai: 0
         }];
       } else if (newTipe == 'benar-salah-arabic') {
+        this.answersNum = 2;
         this.answers = [{
-          redaksi: this.benarSalahOptions.arabic.benar,
-          benar: null,
+          redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.benar + '</span>',
           nilai: 0
         }, {
-          redaksi: this.benarSalahOptions.arabic.salah,
-          benar: null,
+          redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.salah + '</span>',
           nilai: 0
         }];
+      } else if (newTipe == 'jawaban-ganda') {
+        this.jawabanBenar = [];
+      }
+    }
+  },
+  methods: {
+    addAnswer: function addAnswer() {
+      this.answersNum += 1;
+      var answer = {
+        redaksi: '',
+        nilai: 0
+      };
+      this.answers.push(answer);
+    },
+    deleteAnswer: function deleteAnswer(index) {
+      this.answersNum -= 1;
+      this.answers.splice(index, 1);
+
+      if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(index)) {
+        this.jawabanBenar.splice(index, 1);
+      } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == index) {
+        this.jawabanBenar = null;
+      }
+    },
+    save: function save() {
+      var _this = this;
+
+      for (var i = 0; i < this.answers.length; i++) {
+        if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
+          this.answers[i].benar = 1;
+        } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
+          this.answers[i].benar = 1;
+        } else {
+          this.answers[i].benar = 0;
+        }
+      }
+
+      var question = this.question;
+
+      switch (question.tipe) {
+        case 'pilihan-ganda':
+          question.tipe = 1;
+          break;
+
+        case 'jawaban-ganda':
+          question.tipe = 2;
+          break;
+
+        case ('benar-salah', 'benar-salah-arabic'):
+          question.tipe = 3;
+          break;
+      }
+
+      axios.post('/api/soal', {
+        examId: this.examId,
+        question: question,
+        answers: this.answers
+      }).then(function (response) {
+        sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
+
+        _this.processData(response.data);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+    },
+    processData: function processData(data) {
+      this.question = data.question;
+      var types = {
+        1: 'pilihan-ganda',
+        2: 'jawaban-ganda',
+        3: 'benar-salah'
+      };
+      this.question.tipe = types[data.question.tipe];
+      this.answers = data.answers;
+      this.answersNum = data.answers.length;
+
+      for (var i = 0; i < data.answers.length; i++) {
+        if (data.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
+          this.jawabanBenar.push(i);
+        } else if (data.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
+          this.jawabanBenar = i;
+        }
       }
     }
   },
   computed: {
     inputType: function inputType() {
-      return this.tipe == 'jawaban-ganda' ? 'checkbox' : 'radio';
+      return this.question.tipe == 'jawaban-ganda' ? 'checkbox' : 'radio';
+    },
+    submitUrl: function submitUrl() {
+      return '/admin/ujian/' + this.examId + '/soal';
     }
   }
 });
@@ -7685,7 +7720,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "p {\n  margin-bottom: 0rem;\n}\r\n", ""]);
+exports.push([module.i, "p {\n  margin-bottom: 0rem;\n}\n", ""]);
 
 // exports
 
@@ -46412,82 +46447,151 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "row my-2" }),
+      _vm._t("csrf"),
       _vm._v(" "),
       _c("div", { staticClass: "card mb-3" }, [
-        _vm._m(0),
+        _c("div", { staticClass: "card-header" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-auto ml-auto" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                on: {
+                  click: function($event) {
+                    return _vm.save()
+                  }
+                }
+              },
+              [_vm._v("Simpan")]
+            ),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "btn btn-white",
+                attrs: { href: "/admin/ujian/" + _vm.examId }
+              },
+              [_vm._v("Kembali")]
+            )
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body form-group row" }, [
-          _c("label", { staticClass: "form-label col-auto col-form-label" }, [
-            _vm._v("Tipe soal:")
+          _c("div", { staticClass: "col-md-4 row" }, [
+            _c("label", { staticClass: "form-label col-auto col-form-label" }, [
+              _vm._v("Tipe soal:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-auto" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.question.tipe,
+                      expression: "question.tipe"
+                    }
+                  ],
+                  staticClass: "form-select",
+                  attrs: { name: "tipe" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.question,
+                        "tipe",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.typeOptions, function(opsi) {
+                  return _c(
+                    "option",
+                    { key: opsi.id, domProps: { value: opsi.value } },
+                    [_vm._v(_vm._s(opsi.text))]
+                  )
+                }),
+                0
+              )
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-auto" }, [
-            _c(
-              "select",
-              {
+          _c("div", { staticClass: "col-md-4 row" }, [
+            _c("label", { staticClass: "form-label col-auto col-form-label" }, [
+              _vm._v("Kode soal (opsional):")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-auto" }, [
+              _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.tipe,
-                    expression: "tipe"
+                    value: _vm.question.kode,
+                    expression: "question.kode"
                   }
                 ],
-                staticClass: "form-select",
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  placeholder: "misal: nhw21a",
+                  name: "kode"
+                },
+                domProps: { value: _vm.question.kode },
                 on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.tipe = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.question, "kode", $event.target.value)
                   }
                 }
-              },
-              _vm._l(_vm.typeOptions, function(opsi) {
-                return _c(
-                  "option",
-                  { key: opsi.id, domProps: { value: opsi.value } },
-                  [_vm._v(_vm._s(opsi.text))]
-                )
-              }),
-              0
-            )
+              })
+            ])
           ]),
           _vm._v(" "),
-          _c("label", { staticClass: "form-label col-auto col-form-label" }, [
-            _vm._v("Kode soal:")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-auto" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.kodeSoal,
-                  expression: "kodeSoal"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text" },
-              domProps: { value: _vm.kodeSoal },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+          _c("div", { staticClass: "col-md-4 row" }, [
+            _c("label", { staticClass: "form-label col-auto col-form-label" }, [
+              _vm._v("ID soal:")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-auto" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.question.id,
+                    expression: "question.id"
                   }
-                  _vm.kodeSoal = $event.target.value
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", name: "kode", disabled: "" },
+                domProps: { value: _vm.question.id },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.question, "id", $event.target.value)
+                  }
                 }
-              }
-            })
+              })
+            ])
           ])
         ])
       ]),
@@ -46506,13 +46610,13 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("ckeditor", {
-              attrs: { "editor-url": _vm.editorUrl },
+              attrs: { "editor-url": _vm.editorUrl, name: "redaksiSoal" },
               model: {
-                value: _vm.redaksiSoal,
+                value: _vm.question.konten,
                 callback: function($$v) {
-                  _vm.redaksiSoal = $$v
+                  _vm.$set(_vm.question, "konten", $$v)
                 },
-                expression: "redaksiSoal"
+                expression: "question.konten"
               }
             })
           ],
@@ -46527,31 +46631,48 @@ var render = function() {
       _vm._l(_vm.answersNum, function(i, index) {
         return _c("div", { key: index, staticClass: "card mb-4" }, [
           _c("div", { staticClass: "card-header" }, [
-            _vm._v("\n            Pilihan " + _vm._s(i) + "\n        ")
+            _c("div", { staticClass: "col-auto" }, [
+              _vm._v(
+                "\n                Pilihan " + _vm._s(i) + "\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-auto ml-auto" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-sm text-danger",
+                  on: {
+                    click: function($event) {
+                      return _vm.deleteAnswer(index)
+                    }
+                  }
+                },
+                [_vm._v("Hapus")]
+              )
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body", attrs: { id: "cardSoal" } }, [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
+          _c(
+            "div",
+            { staticClass: "card-body", attrs: { id: "cardSoal" } },
+            [
+              _c("ckeditor", {
+                attrs: {
+                  "editor-url": _vm.editorUrl,
+                  name: "jawaban[" + index + "][benar]"
+                },
+                model: {
                   value: _vm.answers[index].redaksi,
+                  callback: function($$v) {
+                    _vm.$set(_vm.answers[index], "redaksi", $$v)
+                  },
                   expression: "answers[index].redaksi"
                 }
-              ],
-              attrs: { name: "jawaban[][redaksi]" },
-              domProps: { value: _vm.answers[index].redaksi },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.answers[index], "redaksi", $event.target.value)
-                }
-              }
-            })
-          ]),
+              })
+            ],
+            1
+          ),
           _vm._v(" "),
           _c("div", { staticClass: "card-footer" }, [
             _c("div", { staticClass: "row" }, [
@@ -46562,14 +46683,99 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("label", { staticClass: "form-check" }, [
-                    _c("input", {
-                      staticClass: "form-check-input",
-                      attrs: {
-                        type: _vm.inputType,
-                        name: "jawaban[][benar]",
-                        value: "1"
-                      }
-                    }),
+                    _vm.inputType === "checkbox"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.jawabanBenar,
+                              expression: "jawabanBenar"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: {
+                            name: "jawaban[" + index + "][benar]",
+                            type: "checkbox"
+                          },
+                          domProps: {
+                            value: index,
+                            checked: Array.isArray(_vm.jawabanBenar)
+                              ? _vm._i(_vm.jawabanBenar, index) > -1
+                              : _vm.jawabanBenar
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.jawabanBenar,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = index,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.jawabanBenar = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.jawabanBenar = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.jawabanBenar = $$c
+                              }
+                            }
+                          }
+                        })
+                      : _vm.inputType === "radio"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.jawabanBenar,
+                              expression: "jawabanBenar"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: {
+                            name: "jawaban[" + index + "][benar]",
+                            type: "radio"
+                          },
+                          domProps: {
+                            value: index,
+                            checked: _vm._q(_vm.jawabanBenar, index)
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.jawabanBenar = index
+                            }
+                          }
+                        })
+                      : _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.jawabanBenar,
+                              expression: "jawabanBenar"
+                            }
+                          ],
+                          staticClass: "form-check-input",
+                          attrs: {
+                            name: "jawaban[" + index + "][benar]",
+                            type: _vm.inputType
+                          },
+                          domProps: { value: index, value: _vm.jawabanBenar },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.jawabanBenar = $event.target.value
+                            }
+                          }
+                        }),
                     _vm._v(" "),
                     _c("span", { staticClass: "form-check-label" }, [
                       _vm._v("Benar")
@@ -46619,7 +46825,47 @@ var render = function() {
         ])
       }),
       _vm._v(" "),
-      _vm._m(1)
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-square",
+          on: {
+            click: function($event) {
+              return _vm.addAnswer()
+            }
+          }
+        },
+        [
+          _c(
+            "svg",
+            {
+              staticClass: "icon",
+              attrs: {
+                xmlns: "http://www.w3.org/2000/svg",
+                width: "24",
+                height: "24",
+                viewBox: "0 0 24 24",
+                "stroke-width": "2",
+                stroke: "currentColor",
+                fill: "none",
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round"
+              }
+            },
+            [
+              _c("path", {
+                attrs: { stroke: "none", d: "M0 0h24v24H0z", fill: "none" }
+              }),
+              _c("rect", {
+                attrs: { x: "4", y: "4", width: "16", height: "16", rx: "2" }
+              }),
+              _c("line", { attrs: { x1: "9", y1: "12", x2: "15", y2: "12" } }),
+              _c("line", { attrs: { x1: "12", y1: "9", x2: "12", y2: "15" } })
+            ]
+          ),
+          _vm._v("\n        Tambah jawaban\n    ")
+        ]
+      )
     ],
     2
   )
@@ -46629,106 +46875,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("div", { staticClass: "col-auto" }, [
-        _c("span", { staticClass: "card-title" }, [
-          _vm._v("\n                    Buat soal baru\n                ")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-auto ml-auto" }, [
-        _c("input", {
-          staticClass: "btn btn-success",
-          attrs: { type: "submit", value: "Simpan" }
-        }),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-white", attrs: { href: "#" } }, [
-          _vm._v("Batal")
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("label", { staticClass: "form-check" }, [
-              _c("input", {
-                staticClass: "form-check-input",
-                attrs: { type: "radio", name: "jawaban[1][benar]", value: "1" }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                attrs: {
-                  type: "hidden",
-                  name: "jawaban[1][redaksi]",
-                  value: ""
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-check-label" }, [_vm._v("Benar")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-footer" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { staticClass: "form-label" }, [_vm._v("Nilai")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  placeholder: "Nilai",
-                  value: "0",
-                  name: "jawaban[1][nilai]"
-                }
-              })
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("label", { staticClass: "form-check" }, [
-              _c("input", {
-                staticClass: "form-check-input",
-                attrs: { type: "radio", name: "jawaban[2][benar]", value: "1" }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                attrs: {
-                  type: "hidden",
-                  name: "jawaban[2][redaksi]",
-                  value: ""
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-check-label" }, [_vm._v("Salah")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-footer" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { staticClass: "form-label" }, [_vm._v("Nilai")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  placeholder: "Nilai",
-                  value: "0",
-                  name: "jawaban[2][nilai]"
-                }
-              })
-            ])
-          ])
-        ])
+    return _c("div", { staticClass: "col-auto" }, [
+      _c("span", { staticClass: "card-title" }, [
+        _vm._v("\n                    Buat soal baru\n                ")
       ])
     ])
   }
@@ -65123,8 +65272,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })

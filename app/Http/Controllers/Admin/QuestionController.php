@@ -61,12 +61,12 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreQuestionRequest $request, Exam $ujian)
+    public function store(Request $request, Exam $ujian)
     {
+        dd($request->all());
+        // $this->questionService->simpanSoal($request, $ujian);
 
-        $this->questionService->simpanSoal($request, $ujian);
-
-        return redirect(route('admin.ujian.show', $ujian->slug));
+        // return redirect(route('admin.ujian.show', $ujian->slug));
     }
 
     /**
