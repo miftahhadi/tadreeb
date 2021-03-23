@@ -32,4 +32,9 @@ class QuestionController extends Controller
             'answers' => $question->answers
         ];
     }
+
+    public function update(Request $request)
+    {
+        
+    }
 }

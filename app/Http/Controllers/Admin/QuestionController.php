@@ -88,11 +88,27 @@ class QuestionController extends Controller
      */
     public function edit(Exam $ujian, Question $soal)
     {
+        $breadcrumbs = [
+            [
+                'name' => 'Ujian',
+                'href' => route('admin.ujian.index')
+            ],
+            [
+                'name' => $ujian->judul,
+                'href' => route('admin.ujian.show', $ujian->id)
+            ]
+        ];
+
+        $itemName = $ujian->judul;
+        $itemDescription = null;
+
         return view('admin.question.edit',[
             'title' => 'Edit Soal ' . ' - ' .  $ujian->judul,
             'ujian' => $ujian,
             'soal' => $soal,
-            'option' => $this->questionService->option($soal)
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription,
+            'breadcrumbs' => $breadcrumbs
         ]);
     }
 

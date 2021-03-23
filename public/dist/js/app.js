@@ -4257,6 +4257,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-question',
@@ -4563,15 +4565,15 @@ __webpack_require__.r(__webpack_exports__);
 
       switch (question.tipe) {
         case 'pilihan-ganda':
-          question.tipe = 1;
+          question.tipe = 'Pilihan Ganda';
           break;
 
         case 'jawaban-ganda':
-          question.tipe = 2;
+          question.tipe = 'Jawaban Ganda';
           break;
 
         case ('benar-salah', 'benar-salah-arabic'):
-          question.tipe = 3;
+          question.tipe = 'Benar/Salah';
           break;
       }
 
@@ -4582,26 +4584,26 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
 
-        _this.processData(response.data);
+        _this.processData(response.data.question);
       })["catch"](function (errors) {
         console.log(errors);
       });
     },
-    processData: function processData(data) {
-      this.question = data.question;
+    processData: function processData(question) {
+      this.question = question;
       var types = {
-        1: 'pilihan-ganda',
-        2: 'jawaban-ganda',
-        3: 'benar-salah'
+        'Pilihan Ganda': 'pilihan-ganda',
+        'Jawaban Ganda': 'jawaban-ganda',
+        'Benar/Salah': 'benar-salah'
       };
-      this.question.tipe = types[data.question.tipe];
-      this.answers = data.answers;
-      this.answersNum = data.answers.length;
+      this.question.tipe = types[question.tipe];
+      this.answers = question.answers;
+      this.answersNum = question.answers.length;
 
-      for (var i = 0; i < data.answers.length; i++) {
-        if (data.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
+      for (var i = 0; i < question.answers.length; i++) {
+        if (question.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
           this.jawabanBenar.push(i);
-        } else if (data.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
+        } else if (question.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
           this.jawabanBenar = i;
         }
       }
@@ -4613,6 +4615,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     submitUrl: function submitUrl() {
       return '/admin/ujian/' + this.examId + '/soal';
+    }
+  },
+  mounted: function mounted() {
+    console.log(this.questionModel);
+
+    if (this.questionModel != null) {
+      this.processData(this.questionModel);
     }
   }
 });
@@ -7720,7 +7729,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "p {\n  margin-bottom: 0rem;\n}\n", ""]);
+exports.push([module.i, "p {\n  margin-bottom: 0rem;\n}\r\n", ""]);
 
 // exports
 
@@ -46095,52 +46104,12 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "col-auto ml-auto" }, [
           _c(
-            "button",
+            "a",
             {
               staticClass: "btn btn-primary",
-              attrs: {
-                type: "button",
-                "data-toggle": "modal",
-                "data-target": "#tambahSoal"
-              }
+              attrs: { href: "/admin/ujian/" + _vm.examId + "/soal/create" }
             },
-            [
-              _c("span", [
-                _c(
-                  "svg",
-                  {
-                    staticClass: "icon",
-                    attrs: {
-                      xmlns: "http://www.w3.org/2000/svg",
-                      width: "24",
-                      height: "24",
-                      viewBox: "0 0 24 24",
-                      "stroke-width": "2",
-                      stroke: "currentColor",
-                      fill: "none",
-                      "stroke-linecap": "round",
-                      "stroke-linejoin": "round"
-                    }
-                  },
-                  [
-                    _c("path", {
-                      attrs: {
-                        stroke: "none",
-                        d: "M0 0h24v24H0z",
-                        fill: "none"
-                      }
-                    }),
-                    _c("line", {
-                      attrs: { x1: "12", y1: "5", x2: "12", y2: "19" }
-                    }),
-                    _c("line", {
-                      attrs: { x1: "5", y1: "12", x2: "19", y2: "12" }
-                    })
-                  ]
-                )
-              ]),
-              _vm._v(" \n                Buat Soal Baru\n            ")
-            ]
+            [_vm._v("Buat Soal Baru")]
           )
         ])
       ]),
@@ -46479,12 +46448,14 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body form-group row" }, [
-          _c("div", { staticClass: "col-md-4 row" }, [
-            _c("label", { staticClass: "form-label col-auto col-form-label" }, [
-              _vm._v("Tipe soal:")
-            ]),
+          _c("div", { staticClass: "col-md-4 col-lg-4 col-xl-4 row" }, [
+            _c(
+              "label",
+              { staticClass: "form-label col-auto col-lg-4 col-form-label" },
+              [_vm._v("Tipe soal:")]
+            ),
             _vm._v(" "),
-            _c("div", { staticClass: "col-auto" }, [
+            _c("div", { staticClass: "col-auto col-lg-8" }, [
               _c(
                 "select",
                 {
@@ -46530,12 +46501,14 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-4 row" }, [
-            _c("label", { staticClass: "form-label col-auto col-form-label" }, [
-              _vm._v("Kode soal (opsional):")
-            ]),
+          _c("div", { staticClass: "col-md-4 col-lg-5 col-xl-5 row" }, [
+            _c(
+              "label",
+              { staticClass: "form-label col-auto col-lg-5 col-form-label" },
+              [_vm._v("Kode soal (opsional):")]
+            ),
             _vm._v(" "),
-            _c("div", { staticClass: "col-auto" }, [
+            _c("div", { staticClass: "col-auto col-lg-7" }, [
               _c("input", {
                 directives: [
                   {
@@ -46564,12 +46537,14 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-4 row" }, [
-            _c("label", { staticClass: "form-label col-auto col-form-label" }, [
-              _vm._v("ID soal:")
-            ]),
+          _c("div", { staticClass: "col-md-4 col-lg-3 col-xl-3 row" }, [
+            _c(
+              "label",
+              { staticClass: "form-label col-auto col-lg-4 col-form-label" },
+              [_vm._v("ID soal:")]
+            ),
             _vm._v(" "),
-            _c("div", { staticClass: "col-auto" }, [
+            _c("div", { staticClass: "col-auto col-lg-8" }, [
               _c("input", {
                 directives: [
                   {
@@ -65272,8 +65247,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

@@ -18,25 +18,25 @@
 
             </div>
             <div class="card-body form-group row">
-                <div class="col-md-4 row">
-                    <label class="form-label col-auto col-form-label">Tipe soal:</label>
-                    <div class="col-auto">
+                <div class="col-md-4 col-lg-4 col-xl-4 row">
+                    <label class="form-label col-auto col-lg-4 col-form-label">Tipe soal:</label>
+                    <div class="col-auto col-lg-8">
                         <select class="form-select" v-model="question.tipe" name="tipe">
                             <option v-for="opsi in typeOptions" :key="opsi.id" :value="opsi.value">{{ opsi.text }}</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="col-md-4 row">
-                    <label class="form-label col-auto col-form-label">Kode soal (opsional):</label>
-                    <div class="col-auto">
+                <div class="col-md-4 col-lg-5 col-xl-5 row">
+                    <label class="form-label col-auto col-lg-5 col-form-label">Kode soal (opsional):</label>
+                    <div class="col-auto col-lg-7">
                         <input type="text" class="form-control" v-model="question.kode" placeholder="misal: nhw21a" name="kode">
                     </div>
                 </div>
 
-                <div class="col-md-4 row">
-                    <label class="form-label col-auto col-form-label">ID soal:</label>
-                    <div class="col-auto">
+                <div class="col-md-4 col-lg-3 col-xl-3 row">
+                    <label class="form-label col-auto col-lg-4 col-form-label">ID soal:</label>
+                    <div class="col-auto col-lg-8">
                         <input type="text" class="form-control" v-model="question.id" name="kode" disabled>
                     </div>
                 </div>
@@ -263,15 +263,15 @@ export default {
 
             switch (question.tipe) {
                 case 'pilihan-ganda':
-                    question.tipe = 1;
+                    question.tipe = 'Pilihan Ganda';
                     break;
 
                 case 'jawaban-ganda':
-                    question.tipe = 2;
+                    question.tipe = 'Jawaban Ganda';
                     break;
                 
                 case 'benar-salah', 'benar-salah-arabic':
-                    question.tipe = 3;
+                    question.tipe = 'Benar/Salah';
                     break;
             }
 
@@ -282,30 +282,30 @@ export default {
             }).then(response => {
                 swal("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success")
 
-                this.processData(response.data)
+                this.processData(response.data.question)
             }).catch(errors => {
                 console.log(errors)
             })
         },
 
-        processData(data) {
-            this.question = data.question;
+        processData(question) {
+            this.question = question;
             const types = {
-                1: 'pilihan-ganda',
-                2: 'jawaban-ganda',
-                3: 'benar-salah'
+                'Pilihan Ganda': 'pilihan-ganda',
+                'Jawaban Ganda': 'jawaban-ganda',
+                'Benar/Salah': 'benar-salah'
             }
             
-            this.question.tipe = types[data.question.tipe];
+            this.question.tipe = types[question.tipe];
 
-            this.answers = data.answers
+            this.answers = question.answers
 
-            this.answersNum = data.answers.length
+            this.answersNum = question.answers.length
 
-            for (let i = 0; i < data.answers.length; i++) {
-                if (data.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
+            for (let i = 0; i < question.answers.length; i++) {
+                if (question.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
                     this.jawabanBenar.push(i);
-                } else if (data.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
+                } else if (question.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
                     this.jawabanBenar = i;
                 }
             }
@@ -322,5 +322,12 @@ export default {
             return '/admin/ujian/' + this.examId + '/soal';
         }
     },
+
+    mounted() {
+        console.log(this.questionModel)
+        if (this.questionModel != null) {
+            this.processData(this.questionModel)
+        }
+    }
 }
 </script>
