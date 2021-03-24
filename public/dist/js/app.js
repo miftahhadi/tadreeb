@@ -4452,8 +4452,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
+
+/* TODO: 
+- Validasi jawaban */
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'question-create',
@@ -4501,7 +4502,10 @@ __webpack_require__.r(__webpack_exports__);
         redaksi: '',
         nilai: 0
       }],
-      jawabanBenar: null
+      jawabanBenar: null,
+      errors: {
+        question: null
+      }
     };
   },
   watch: {
@@ -4527,6 +4531,11 @@ __webpack_require__.r(__webpack_exports__);
       } else if (newTipe == 'jawaban-ganda') {
         this.jawabanBenar = [];
       }
+    },
+    'question.konten': function questionKonten(newKonten, oldKonten) {
+      if (newKonten != '') {
+        this.errors.question = '';
+      }
     }
   },
   methods: {
@@ -4551,10 +4560,17 @@ __webpack_require__.r(__webpack_exports__);
     save: function save() {
       var _this = this;
 
+      if (this.question.konten == '') {
+        this.errors.question = 'Soal tidak boleh kosong';
+        return;
+      }
+
       for (var i = 0; i < this.answers.length; i++) {
         if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
           this.answers[i].benar = 1;
         } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
+          this.answers[i].benar = 1;
+        } else if (parseInt(this.answers[i].nilai) > 0) {
           this.answers[i].benar = 1;
         } else {
           this.answers[i].benar = 0;
@@ -4577,11 +4593,16 @@ __webpack_require__.r(__webpack_exports__);
           break;
       }
 
-      axios.post('/api/soal', {
-        examId: this.examId,
-        question: question,
-        answers: this.answers
-      }).then(function (response) {
+      var axiosConfig = {
+        url: this.question.id != null ? '/api/soal/' + this.question.id : '/api/soal',
+        method: this.question.id != null ? 'put' : 'post',
+        data: {
+          examId: this.examId,
+          question: question,
+          answers: this.answers
+        }
+      };
+      axios(axiosConfig).then(function (response) {
         sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
 
         _this.processData(response.data.question);
@@ -4615,11 +4636,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     submitUrl: function submitUrl() {
       return '/admin/ujian/' + this.examId + '/soal';
+    },
+    questionIsEmpty: function questionIsEmpty() {
+      return this.question.konten == '';
     }
   },
   mounted: function mounted() {
-    console.log(this.questionModel);
-
     if (this.questionModel != null) {
       this.processData(this.questionModel);
     }
@@ -46580,9 +46602,21 @@ var render = function() {
           "div",
           { staticClass: "card-body" },
           [
-            _c("small", { staticClass: "text-danger" }, [
-              _vm._v("Soal belum diisi")
-            ]),
+            _c(
+              "small",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.errors.question,
+                    expression: "errors.question"
+                  }
+                ],
+                staticClass: "text-danger mb-2"
+              },
+              [_vm._v(_vm._s(_vm.errors.question))]
+            ),
             _vm._v(" "),
             _c("ckeditor", {
               attrs: { "editor-url": _vm.editorUrl, name: "redaksiSoal" },

@@ -33,8 +33,30 @@ class QuestionController extends Controller
         ];
     }
 
-    public function update(Request $request)
+    public function update(Question $soal, Request $request)
     {
+        $soalKeys = ['kode', 'tipe', 'konten']; 
+        $answerKeys = ['redaksi', 'benar', 'nilai'];
+
+        foreach ($soalKeys as $key) {
+            $soal->$key = $request['question'][$key];
+        }
+
+        $soal->save();
         
-    }
+        $i = 0;
+        foreach ($soal->answers as $answer) {            
+            foreach ($answerKeys as $key) {
+                $answer->$key = $request['answers'][$i][$key];
+            }
+            
+            $answer->save();
+            $i++;
+        }
+
+        return [
+            'question' => $soal,
+            'answers' => $soal->answers
+        ];
+    }   
 }

@@ -12,7 +12,6 @@
 
                 <div class="col-auto ml-auto">
                     <button class="btn btn-success" @click="save()">Simpan</button>
-                    <!-- <input type="submit" value="Simpan" class="btn btn-success"> -->
                     <a :href="'/admin/ujian/' + examId " class="btn btn-white">Kembali</a>
                 </div>
 
@@ -50,7 +49,7 @@
             </div>
             <div class="card-body">
         
-                <small class="text-danger">Soal belum diisi</small>
+                <small class="text-danger mb-2" v-show="errors.question">{{ errors.question }}</small>
         
                 <ckeditor v-model="question.konten" :editor-url="editorUrl" name="redaksiSoal"></ckeditor>
 
@@ -73,7 +72,6 @@
 
             <div class="card-body" id="cardSoal">
                 <ckeditor v-model="answers[index].redaksi" :editor-url="editorUrl" :name="'jawaban[' + index + '][benar]'"></ckeditor>
-                <!-- <textarea name="jawaban[][redaksi]" v-model="answers[index].redaksi"></textarea> -->
             </div> 
             
             <div class="card-footer">
@@ -119,6 +117,9 @@
 
 <script>
 import swal from "sweetalert";
+
+/* TODO: 
+- Validasi jawaban */
 
 export default {
     name: 'question-create',
@@ -187,6 +188,10 @@ export default {
 
             jawabanBenar: null,
 
+            errors: {
+                question: null
+            }
+
         }
     },
 
@@ -222,6 +227,12 @@ export default {
                 this.jawabanBenar = [];
             }
         },
+
+        'question.konten': function (newKonten, oldKonten) {
+            if (newKonten != '') {
+                this.errors.question = ''
+            }
+        }
     },
 
     methods: {
@@ -249,10 +260,18 @@ export default {
         },
 
         save() {
+            if (this.question.konten == '') {
+                this.errors.question = 'Soal tidak boleh kosong'
+
+                return 
+            }
+
             for (let i = 0; i < this.answers.length; i++) {
                 if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
                     this.answers[i].benar = 1
                 } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
+                    this.answers[i].benar = 1
+                } else if (parseInt(this.answers[i].nilai) > 0) {
                     this.answers[i].benar = 1
                 } else {
                     this.answers[i].benar = 0
@@ -275,17 +294,26 @@ export default {
                     break;
             }
 
-            axios.post('/api/soal', {
-                examId: this.examId,
-                question: question, 
-                answers: this.answers,
-            }).then(response => {
+            let axiosConfig = {
+                url: (this.question.id != null) ? '/api/soal/' + this.question.id : '/api/soal',
+
+                method: (this.question.id != null) ? 'put' : 'post',
+
+                data: {
+                        examId: this.examId,
+                        question: question,
+                        answers: this.answers
+                    }
+            }
+
+            axios(axiosConfig).then(response => {
                 swal("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success")
 
                 this.processData(response.data.question)
             }).catch(errors => {
                 console.log(errors)
             })
+            
         },
 
         processData(question) {
@@ -320,11 +348,14 @@ export default {
 
         submitUrl() {
             return '/admin/ujian/' + this.examId + '/soal';
+        },
+
+        questionIsEmpty() {
+            return this.question.konten == ''
         }
     },
 
     mounted() {
-        console.log(this.questionModel)
         if (this.questionModel != null) {
             this.processData(this.questionModel)
         }
