@@ -189,7 +189,8 @@ export default {
             jawabanBenar: null,
 
             errors: {
-                question: null
+                question: null,
+                answers: null,
             }
 
         }
@@ -266,6 +267,21 @@ export default {
                 return 
             }
 
+            this.errors.answers[i] = null
+            let answerErrors = 0
+
+            for (let i = 0; i < this.answers.length; i++) {
+                if (this.answers[i].redaksi == '') {
+                    this.errors.answers[i] = 'Redaksi jawaban tidak boleh kosong'
+
+                    answerErrors += 1;
+                }                
+            }
+
+            if (answerErrors > 0) {
+                return 
+            }
+
             for (let i = 0; i < this.answers.length; i++) {
                 if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
                     this.answers[i].benar = 1
@@ -338,6 +354,12 @@ export default {
                 }
             }
 
+        },
+
+        validateAnswer(index) {
+            if (this.errors.answers[i]) {
+                
+            }
         }
     },
 

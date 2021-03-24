@@ -4504,7 +4504,8 @@ __webpack_require__.r(__webpack_exports__);
       }],
       jawabanBenar: null,
       errors: {
-        question: null
+        question: null,
+        answers: null
       }
     };
   },
@@ -4565,15 +4566,29 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      for (var i = 0; i < this.answers.length; i++) {
-        if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
-          this.answers[i].benar = 1;
-        } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
-          this.answers[i].benar = 1;
-        } else if (parseInt(this.answers[i].nilai) > 0) {
-          this.answers[i].benar = 1;
+      this.errors.answers[i] = null;
+      var answerErrors = 0;
+
+      for (var _i = 0; _i < this.answers.length; _i++) {
+        if (this.answers[_i].redaksi == '') {
+          this.errors.answers[_i] = 'Redaksi jawaban tidak boleh kosong';
+          answerErrors += 1;
+        }
+      }
+
+      if (answerErrors > 0) {
+        return;
+      }
+
+      for (var _i2 = 0; _i2 < this.answers.length; _i2++) {
+        if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(_i2)) {
+          this.answers[_i2].benar = 1;
+        } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == _i2) {
+          this.answers[_i2].benar = 1;
+        } else if (parseInt(this.answers[_i2].nilai) > 0) {
+          this.answers[_i2].benar = 1;
         } else {
-          this.answers[i].benar = 0;
+          this.answers[_i2].benar = 0;
         }
       }
 
@@ -4621,13 +4636,16 @@ __webpack_require__.r(__webpack_exports__);
       this.answers = question.answers;
       this.answersNum = question.answers.length;
 
-      for (var i = 0; i < question.answers.length; i++) {
-        if (question.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
-          this.jawabanBenar.push(i);
-        } else if (question.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
-          this.jawabanBenar = i;
+      for (var _i3 = 0; _i3 < question.answers.length; _i3++) {
+        if (question.answers[_i3].benar == 1 && this.question.tipe == 'jawaban-ganda') {
+          this.jawabanBenar.push(_i3);
+        } else if (question.answers[_i3].benar == 1 && this.question.tipe != 'jawaban-ganda') {
+          this.jawabanBenar = _i3;
         }
       }
+    },
+    validateAnswer: function validateAnswer(index) {
+      if (this.errors.answers[i]) {}
     }
   },
   computed: {
