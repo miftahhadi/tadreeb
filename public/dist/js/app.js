@@ -4452,6 +4452,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* TODO: 
 - Validasi jawaban */
@@ -4471,6 +4478,7 @@ __webpack_require__.r(__webpack_exports__);
         konten: null
       },
       editorUrl: '/dist/vendor/ckeditor/ckeditor.js',
+      saveLoading: false,
       typeOptions: [{
         text: 'Pilihan Ganda',
         value: 'pilihan-ganda'
@@ -4505,7 +4513,7 @@ __webpack_require__.r(__webpack_exports__);
       jawabanBenar: null,
       errors: {
         question: null,
-        answers: null
+        answers: []
       }
     };
   },
@@ -4558,37 +4566,47 @@ __webpack_require__.r(__webpack_exports__);
         this.jawabanBenar = null;
       }
     },
-    save: function save() {
-      var _this = this;
+    validate: function validate() {
+      var errors = 0;
 
       if (this.question.konten == '') {
         this.errors.question = 'Soal tidak boleh kosong';
-        return;
+        errors += 1;
       }
 
+      var i = 0;
       this.errors.answers[i] = null;
-      var answerErrors = 0;
 
-      for (var _i = 0; _i < this.answers.length; _i++) {
-        if (this.answers[_i].redaksi == '') {
-          this.errors.answers[_i] = 'Redaksi jawaban tidak boleh kosong';
-          answerErrors += 1;
+      for (i; i < this.answers.length; i++) {
+        if (this.answers[i].redaksi == '') {
+          this.errors.answers[i] = 'Redaksi jawaban tidak boleh kosong';
+          errors += 1;
         }
       }
 
-      if (answerErrors > 0) {
+      return errors;
+    },
+    save: function save() {
+      var _this = this;
+
+      this.saveLoading = true;
+      var errors = this.validate();
+
+      if (errors > 0) {
+        this.saveLoading = false;
+        sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Terjadi kesalahan!", "Mohon periksa data yang Anda masukkan, pastikan redaksi soal dan jawaban tidak ada yang kosong", "error");
         return;
       }
 
-      for (var _i2 = 0; _i2 < this.answers.length; _i2++) {
-        if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(_i2)) {
-          this.answers[_i2].benar = 1;
-        } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == _i2) {
-          this.answers[_i2].benar = 1;
-        } else if (parseInt(this.answers[_i2].nilai) > 0) {
-          this.answers[_i2].benar = 1;
+      for (var i = 0; i < this.answers.length; i++) {
+        if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
+          this.answers[i].benar = 1;
+        } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
+          this.answers[i].benar = 1;
+        } else if (parseInt(this.answers[i].nilai) > 0) {
+          this.answers[i].benar = 1;
         } else {
-          this.answers[_i2].benar = 0;
+          this.answers[i].benar = 0;
         }
       }
 
@@ -4603,11 +4621,13 @@ __webpack_require__.r(__webpack_exports__);
           question.tipe = 'Jawaban Ganda';
           break;
 
-        case ('benar-salah', 'benar-salah-arabic'):
+        case 'benar-salah':
+        case 'benar-salah-arabic':
           question.tipe = 'Benar/Salah';
           break;
       }
 
+      console.log(question);
       var axiosConfig = {
         url: this.question.id != null ? '/api/soal/' + this.question.id : '/api/soal',
         method: this.question.id != null ? 'put' : 'post',
@@ -4617,8 +4637,11 @@ __webpack_require__.r(__webpack_exports__);
           answers: this.answers
         }
       };
+      console.log(axiosConfig);
       axios(axiosConfig).then(function (response) {
+        console.log(response.data);
         sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
+        _this.saveLoading = false;
 
         _this.processData(response.data.question);
       })["catch"](function (errors) {
@@ -4636,16 +4659,18 @@ __webpack_require__.r(__webpack_exports__);
       this.answers = question.answers;
       this.answersNum = question.answers.length;
 
-      for (var _i3 = 0; _i3 < question.answers.length; _i3++) {
-        if (question.answers[_i3].benar == 1 && this.question.tipe == 'jawaban-ganda') {
-          this.jawabanBenar.push(_i3);
-        } else if (question.answers[_i3].benar == 1 && this.question.tipe != 'jawaban-ganda') {
-          this.jawabanBenar = _i3;
+      for (var i = 0; i < question.answers.length; i++) {
+        if (question.answers[i].benar == 1 && this.question.tipe == 'jawaban-ganda') {
+          this.jawabanBenar.push(i);
+        } else if (question.answers[i].benar == 1 && this.question.tipe != 'jawaban-ganda') {
+          this.jawabanBenar = i;
         }
       }
     },
-    validateAnswer: function validateAnswer(index) {
-      if (this.errors.answers[i]) {}
+    isAnswerEmpty: function isAnswerEmpty(index) {
+      if (this.answers[index] != '') {
+        this.errors.answers[index] = '';
+      }
     }
   },
   computed: {
@@ -4657,11 +4682,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     questionIsEmpty: function questionIsEmpty() {
       return this.question.konten == '';
+    },
+    saving: function saving() {
+      return this.saveLoading ? 'btn-loading' : '';
     }
   },
   mounted: function mounted() {
     if (this.questionModel != null) {
       this.processData(this.questionModel);
+    }
+
+    for (var i = 0; i < this.answersNum; i++) {
+      this.errors.answers[i] = null;
     }
   }
 });
@@ -46467,6 +46499,7 @@ var render = function() {
               "button",
               {
                 staticClass: "btn btn-success",
+                class: _vm.saving,
                 on: {
                   click: function($event) {
                     return _vm.save()
@@ -46682,12 +46715,33 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "card-body", attrs: { id: "cardSoal" } },
+            { staticClass: "card-body" },
             [
+              _c(
+                "small",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.errors.answers[index],
+                      expression: "errors.answers[index]"
+                    }
+                  ],
+                  staticClass: "text-danger mb-2"
+                },
+                [_vm._v(_vm._s(_vm.errors.answers[index]))]
+              ),
+              _vm._v(" "),
               _c("ckeditor", {
                 attrs: {
                   "editor-url": _vm.editorUrl,
                   name: "jawaban[" + index + "][benar]"
+                },
+                on: {
+                  input: function($event) {
+                    return _vm.isAnswerEmpty(index)
+                  }
                 },
                 model: {
                   value: _vm.answers[index].redaksi,

@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="col-auto ml-auto">
-                    <button class="btn btn-success" @click="save()">Simpan</button>
+                    <button class="btn btn-success" :class="saving" @click="save()">Simpan</button>
                     <a :href="'/admin/ujian/' + examId " class="btn btn-white">Kembali</a>
                 </div>
 
@@ -70,8 +70,15 @@
                 </div>
             </div>
 
-            <div class="card-body" id="cardSoal">
-                <ckeditor v-model="answers[index].redaksi" :editor-url="editorUrl" :name="'jawaban[' + index + '][benar]'"></ckeditor>
+            <div class="card-body">
+                <small class="text-danger mb-2" v-show="errors.answers[index]">{{ errors.answers[index] }}</small>
+
+                <ckeditor 
+                    v-model="answers[index].redaksi" 
+                    :editor-url="editorUrl" 
+                    :name="'jawaban[' + index + '][benar]'"
+                    @input="isAnswerEmpty(index)"
+                ></ckeditor>
             </div> 
             
             <div class="card-footer">
@@ -139,6 +146,8 @@ export default {
             },
             editorUrl: '/dist/vendor/ckeditor/ckeditor.js',
 
+            saveLoading: false,
+
             typeOptions: [
                 {
                     text: 'Pilihan Ganda',
@@ -190,7 +199,7 @@ export default {
 
             errors: {
                 question: null,
-                answers: null,
+                answers: [],
             }
 
         }
@@ -260,25 +269,38 @@ export default {
             }
         },
 
-        save() {
+        validate() {
+            let errors = 0
+
             if (this.question.konten == '') {
                 this.errors.question = 'Soal tidak boleh kosong'
 
-                return 
+                errors += 1
             }
 
+            let i = 0;
             this.errors.answers[i] = null
-            let answerErrors = 0
 
-            for (let i = 0; i < this.answers.length; i++) {
+            for (i; i < this.answers.length; i++) {
                 if (this.answers[i].redaksi == '') {
                     this.errors.answers[i] = 'Redaksi jawaban tidak boleh kosong'
 
-                    answerErrors += 1;
+                    errors += 1;
                 }                
             }
 
-            if (answerErrors > 0) {
+            return errors
+        },
+
+        save() {
+            this.saveLoading = true 
+
+            const errors = this.validate()
+
+            if (errors > 0) {
+                this.saveLoading = false
+
+                swal("Terjadi kesalahan!", "Mohon periksa data yang Anda masukkan, pastikan redaksi soal dan jawaban tidak ada yang kosong", "error")
                 return 
             }
 
@@ -294,7 +316,7 @@ export default {
                 }
             }
 
-            const question = this.question;
+            let question = this.question;
 
             switch (question.tipe) {
                 case 'pilihan-ganda':
@@ -305,12 +327,15 @@ export default {
                     question.tipe = 'Jawaban Ganda';
                     break;
                 
-                case 'benar-salah', 'benar-salah-arabic':
+                case 'benar-salah':
+                case 'benar-salah-arabic':
                     question.tipe = 'Benar/Salah';
                     break;
             }
 
-            let axiosConfig = {
+            console.log(question)
+
+            const axiosConfig = {
                 url: (this.question.id != null) ? '/api/soal/' + this.question.id : '/api/soal',
 
                 method: (this.question.id != null) ? 'put' : 'post',
@@ -322,14 +347,18 @@ export default {
                     }
             }
 
+            console.log(axiosConfig)
+
             axios(axiosConfig).then(response => {
+                console.log(response.data)
                 swal("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success")
 
+                this.saveLoading = false
                 this.processData(response.data.question)
             }).catch(errors => {
                 console.log(errors)
             })
-            
+           
         },
 
         processData(question) {
@@ -356,9 +385,9 @@ export default {
 
         },
 
-        validateAnswer(index) {
-            if (this.errors.answers[i]) {
-                
+        isAnswerEmpty(index) {
+            if (this.answers[index] != '') {
+                this.errors.answers[index] = ''
             }
         }
     },
@@ -374,12 +403,20 @@ export default {
 
         questionIsEmpty() {
             return this.question.konten == ''
+        },
+
+        saving() {
+            return (this.saveLoading) ? 'btn-loading' : ''
         }
     },
 
     mounted() {
         if (this.questionModel != null) {
             this.processData(this.questionModel)
+        }
+
+        for (let i = 0; i < this.answersNum; i++) {
+            this.errors.answers[i] = null;
         }
     }
 }

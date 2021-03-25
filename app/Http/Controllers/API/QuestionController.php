@@ -19,17 +19,17 @@ class QuestionController extends Controller
     {
         $exam = Exam::find($request['examId']);
 
-        $question = Question::create($request['question']);
+        $soal = Question::create($request['question']);
 
         $exam->questions()->syncWithoutDetaching([
-            $question->id => ['urutan' => $this->service->getUrutan($exam)]
+            $soal->id => ['urutan' => $this->service->getUrutan($exam)]
         ]);
 
-        $question->answers()->createMany($request['answers']);
+        $soal->answers()->createMany($request['answers']);
 
         return [
-            'question' => $question,
-            'answers' => $question->answers
+            'question' => $soal,
+            'answers' => $soal->answers
         ];
     }
 
@@ -45,12 +45,17 @@ class QuestionController extends Controller
         $soal->save();
         
         $i = 0;
-        foreach ($soal->answers as $answer) {            
-            foreach ($answerKeys as $key) {
-                $answer->$key = $request['answers'][$i][$key];
+        foreach ($soal->answers as $answer) {
+            if (array_key_exists('id',$request['answers'][$i])) {
+                foreach ($answerKeys as $key) {
+                    $answer->$key = $request['answers'][$i][$key];
+                }
+                
+                $answer->save();
+            } else {
+                $soal->answers()->create($request['answers'][$i]);
             }
-            
-            $answer->save();
+
             $i++;
         }
 
