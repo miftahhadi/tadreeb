@@ -44,9 +44,23 @@ class QuestionController extends Controller
 
         $soal->save();
         
-        $i = 0;
+        for ($i=0; $i < count($request['answers']); $i++) { 
+            if (array_key_exists('id', $request['answers'][$i])) {
+                $answer = $soal->answers->filter( function ($answer) use ($request, $i) {
+                    return $answer->id == $request['answers'][$i]['id'];
+                });
+
+                foreach ($answerKeys as $key) {
+                    $answer->$key = $request['answers'][$i][$key];
+                }
+            } else {
+                $soal->answers()->create($request['answers'][$i]);
+            }
+        }
+
+        /* $i = 0;
         foreach ($soal->answers as $answer) {
-            if (array_key_exists('id',$request['answers'][$i])) {
+            if (array_key_exists('id', $request['answers'][$i])) {
                 foreach ($answerKeys as $key) {
                     $answer->$key = $request['answers'][$i][$key];
                 }
@@ -57,7 +71,7 @@ class QuestionController extends Controller
             }
 
             $i++;
-        }
+        } */
 
         return [
             'question' => $soal,

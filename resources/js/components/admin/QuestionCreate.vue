@@ -305,11 +305,10 @@ export default {
             }
 
             for (let i = 0; i < this.answers.length; i++) {
-                if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
-                    this.answers[i].benar = 1
-                } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
-                    this.answers[i].benar = 1
-                } else if (parseInt(this.answers[i].nilai) > 0) {
+                let checkFirst = this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)
+                let checkSecond = this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i
+
+                if (checkFirst || checkSecond) {
                     this.answers[i].benar = 1
                 } else {
                     this.answers[i].benar = 0
@@ -332,9 +331,7 @@ export default {
                     question.tipe = 'Benar/Salah';
                     break;
             }
-
-            console.log(question)
-
+            
             const axiosConfig = {
                 url: (this.question.id != null) ? '/api/soal/' + this.question.id : '/api/soal',
 
@@ -350,7 +347,6 @@ export default {
             console.log(axiosConfig)
 
             axios(axiosConfig).then(response => {
-                console.log(response.data)
                 swal("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success")
 
                 this.saveLoading = false

@@ -4599,11 +4599,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       for (var i = 0; i < this.answers.length; i++) {
-        if (this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i)) {
-          this.answers[i].benar = 1;
-        } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i) {
-          this.answers[i].benar = 1;
-        } else if (parseInt(this.answers[i].nilai) > 0) {
+        var checkFirst = this.question.tipe == 'jawaban-ganda' && this.jawabanBenar.includes(i);
+        var checkSecond = this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == i;
+
+        if (checkFirst || checkSecond) {
           this.answers[i].benar = 1;
         } else {
           this.answers[i].benar = 0;
@@ -4627,7 +4626,6 @@ __webpack_require__.r(__webpack_exports__);
           break;
       }
 
-      console.log(question);
       var axiosConfig = {
         url: this.question.id != null ? '/api/soal/' + this.question.id : '/api/soal',
         method: this.question.id != null ? 'put' : 'post',
@@ -4639,7 +4637,6 @@ __webpack_require__.r(__webpack_exports__);
       };
       console.log(axiosConfig);
       axios(axiosConfig).then(function (response) {
-        console.log(response.data);
         sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
         _this.saveLoading = false;
 
