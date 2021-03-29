@@ -23,13 +23,9 @@
             ></item-index>
         </tab-details>
 
-        <tab-details name="Item Bersama">
-            ** Coming Soon **
-        </tab-details>
-
-        <tab-details name="Pengaturan">
+        {{-- <tab-details name="Pengaturan">
             ** Coming Soon ** 
-        </tab-details>
+        </tab-details> --}}
     </item-tab>
 
 </div>

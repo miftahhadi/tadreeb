@@ -12,8 +12,3 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/dist/js')
-    .postCss('resources/css/app.css', 'public/dist/css', [
-        require('postcss-import'),
-        require('tailwindcss'),
-    ])
-    .webpackConfig(require('./webpack.config'));
