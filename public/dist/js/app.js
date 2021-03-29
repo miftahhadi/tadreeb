@@ -4459,9 +4459,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-/* TODO: 
-- Validasi jawaban */
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'question-create',
@@ -4510,6 +4537,7 @@ __webpack_require__.r(__webpack_exports__);
         redaksi: '',
         nilai: 0
       }],
+      answerToDelete: null,
       jawabanBenar: null,
       errors: {
         question: null,
@@ -4518,29 +4546,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   watch: {
-    tipe: function tipe(newTipe, oldTipe) {
-      if (newTipe == 'benar-salah') {
-        this.answersNum = 2;
-        this.answers = [{
-          redaksi: this.benarSalahOptions.reguler.benar,
-          nilai: 0
-        }, {
-          redaksi: this.benarSalahOptions.reguler.salah,
-          nilai: 0
-        }];
-      } else if (newTipe == 'benar-salah-arabic') {
-        this.answersNum = 2;
-        this.answers = [{
-          redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.benar + '</span>',
-          nilai: 0
-        }, {
-          redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.salah + '</span>',
-          nilai: 0
-        }];
-      } else if (newTipe == 'jawaban-ganda') {
-        this.jawabanBenar = [];
-      }
-    },
+    tipe: function tipe(newTipe, oldTipe) {},
     'question.konten': function questionKonten(newKonten, oldKonten) {
       if (newKonten != '') {
         this.errors.question = '';
@@ -4556,7 +4562,16 @@ __webpack_require__.r(__webpack_exports__);
       };
       this.answers.push(answer);
     },
-    deleteAnswer: function deleteAnswer(index) {
+    callDeleteAnswer: function callDeleteAnswer(index) {
+      this.answerToDelete = index;
+    },
+    deleteAnswer: function deleteAnswer() {
+      var index = this.answerToDelete;
+
+      if (this.answers[index].hasOwnProperty('id')) {
+        axios["delete"]('/api/soal/' + this.question.id + '/jawaban/' + this.answers[index].id);
+      }
+
       this.answersNum -= 1;
       this.answers.splice(index, 1);
 
@@ -4565,6 +4580,9 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == index) {
         this.jawabanBenar = null;
       }
+
+      this.answerToDelete = null;
+      sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Berhasil!", "Jawaban berhasil dihapus", "success");
     },
     validate: function validate() {
       var errors = 0;
@@ -4626,6 +4644,7 @@ __webpack_require__.r(__webpack_exports__);
           break;
       }
 
+      console.log(this.answers);
       var axiosConfig = {
         url: this.question.id != null ? '/api/soal/' + this.question.id : '/api/soal',
         method: this.question.id != null ? 'put' : 'post',
@@ -4635,10 +4654,9 @@ __webpack_require__.r(__webpack_exports__);
           answers: this.answers
         }
       };
-      console.log(axiosConfig);
       axios(axiosConfig).then(function (response) {
         sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
-        _this.saveLoading = false;
+        _this.saveLoading = false; // console.log(response.data)
 
         _this.processData(response.data.question);
       })["catch"](function (errors) {
@@ -4667,6 +4685,33 @@ __webpack_require__.r(__webpack_exports__);
     isAnswerEmpty: function isAnswerEmpty(index) {
       if (this.answers[index] != '') {
         this.errors.answers[index] = '';
+      }
+    },
+    changeQuestionType: function changeQuestionType() {
+      if (this.question.tipe == 'benar-salah') {
+        this.answersNum = 2;
+        this.answers = [{
+          redaksi: this.benarSalahOptions.reguler.benar,
+          nilai: 0
+        }, {
+          redaksi: this.benarSalahOptions.reguler.salah,
+          nilai: 0
+        }];
+      } else if (this.question.tipe == 'benar-salah-arabic') {
+        this.answersNum = 2;
+        this.answers = [{
+          redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.benar + '</span>',
+          nilai: 0
+        }, {
+          redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.salah + '</span>',
+          nilai: 0
+        }];
+      }
+
+      if (this.question.tipe == 'jawaban-ganda') {
+        this.jawabanBenar = [];
+      } else {
+        this.jawabanBenar = null;
       }
     }
   },
@@ -46387,7 +46432,7 @@ var render = function() {
                     return [
                       _c(
                         "div",
-                        { staticClass: "table-responsive border-top" },
+                        { staticClass: "table-responsive border-top p-3" },
                         [
                           _c(
                             "table",
@@ -46540,23 +46585,28 @@ var render = function() {
                   staticClass: "form-select",
                   attrs: { name: "tipe" },
                   on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.question,
-                        "tipe",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.question,
+                          "tipe",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      },
+                      function($event) {
+                        return _vm.changeQuestionType()
+                      }
+                    ]
                   }
                 },
                 _vm._l(_vm.typeOptions, function(opsi) {
@@ -46699,9 +46749,13 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-sm text-danger",
+                  attrs: {
+                    "data-toggle": "modal",
+                    "data-target": "#deleteAnswerModal"
+                  },
                   on: {
                     click: function($event) {
-                      return _vm.deleteAnswer(index)
+                      return _vm.callDeleteAnswer(index)
                     }
                   }
                 },
@@ -46943,7 +46997,61 @@ var render = function() {
           ),
           _vm._v("\n        Tambah jawaban\n    ")
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("modal", {
+        attrs: { id: "deleteAnswerModal", classes: ["modal-dialog-centered"] },
+        scopedSlots: _vm._u([
+          {
+            key: "header",
+            fn: function() {
+              return [_vm._v("\n            Hapus jawaban\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "body",
+            fn: function() {
+              return [
+                _vm._v(
+                  "\n            Apakah Anda yakin menghapus jawaban ini?\n        "
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-link link-secondary mr-auto",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Batal")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteAnswer()
+                      }
+                    }
+                  },
+                  [_vm._v("Ya, hapus")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
     ],
     2
   )

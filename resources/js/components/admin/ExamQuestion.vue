@@ -89,7 +89,7 @@
             </template>
 
             <template #extended-body v-if="toView != null">
-                <div class="table-responsive border-top">
+                <div class="table-responsive border-top p-3">
                     <table class="table card-table table-vcenter">
                         <tbody>
                             <tr v-for="answer in toView.answers" :key="answer.id">

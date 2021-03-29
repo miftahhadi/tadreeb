@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     });
 
     // Question
+    Route::delete('soal/{soal}/jawaban/{jawaban}', 'QuestionController@deleteAnswer');
     Route::post('soal', 'QuestionController@store');
     Route::put('soal/{soal}', 'QuestionController@update');
 

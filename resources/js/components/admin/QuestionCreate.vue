@@ -20,7 +20,7 @@
                 <div class="col-md-4 col-lg-4 col-xl-4 row">
                     <label class="form-label col-auto col-lg-4 col-form-label">Tipe soal:</label>
                     <div class="col-auto col-lg-8">
-                        <select class="form-select" v-model="question.tipe" name="tipe">
+                        <select class="form-select" v-model="question.tipe" name="tipe" @change="changeQuestionType()">
                             <option v-for="opsi in typeOptions" :key="opsi.id" :value="opsi.value">{{ opsi.text }}</option>
                         </select>
                     </div>
@@ -66,7 +66,12 @@
                     Pilihan {{ i }}
                 </div>
                 <div class="col-auto ml-auto">
-                    <button class="btn btn-sm text-danger" @click="deleteAnswer(index)">Hapus</button>
+                    <button 
+                        class="btn btn-sm text-danger" 
+                        data-toggle="modal"
+                        data-target="#deleteAnswerModal"
+                        @click="callDeleteAnswer(index)"
+                    >Hapus</button>
                 </div>
             </div>
 
@@ -119,14 +124,36 @@
             Tambah jawaban
         </button>
 
+        <modal
+            id="deleteAnswerModal"
+            :classes="['modal-dialog-centered']"
+        >
+            <template #header>
+                Hapus jawaban
+            </template>
+
+            <template #body>
+                Apakah Anda yakin menghapus jawaban ini?
+            </template>
+
+            <template #footer>
+                <button type="button" class="btn btn-link link-secondary mr-auto" data-dismiss="modal">Batal</button>
+                
+                <button 
+                    type="button" 
+                    class="btn btn-danger" 
+                    data-dismiss="modal"
+                    @click="deleteAnswer()"
+                >Ya, hapus</button>
+            </template>
+
+        </modal>
+
     </div>
 </template>
 
 <script>
 import swal from "sweetalert";
-
-/* TODO: 
-- Validasi jawaban */
 
 export default {
     name: 'question-create',
@@ -195,6 +222,8 @@ export default {
                 }
             ],
 
+            answerToDelete: null,
+
             jawabanBenar: null,
 
             errors: {
@@ -207,35 +236,7 @@ export default {
 
     watch: {
         tipe: function (newTipe, oldTipe) {
-            if (newTipe == 'benar-salah') {
-                this.answersNum = 2
-
-                this.answers = [
-                    {
-                        redaksi: this.benarSalahOptions.reguler.benar,
-                        nilai: 0
-                    },
-                    {
-                        redaksi: this.benarSalahOptions.reguler.salah,
-                        nilai: 0
-                    }
-                ]
-            } else if (newTipe == 'benar-salah-arabic') {
-                this.answersNum = 2
-
-                this.answers = [
-                        {
-                            redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.benar + '</span>',
-                            nilai: 0
-                        },
-                        {
-                            redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.salah + '</span>',
-                            nilai: 0
-                        }
-                    ]   
-            } else if (newTipe == 'jawaban-ganda') {
-                this.jawabanBenar = [];
-            }
+            
         },
 
         'question.konten': function (newKonten, oldKonten) {
@@ -257,7 +258,16 @@ export default {
             this.answers.push(answer)
         },
 
-        deleteAnswer(index) {
+        callDeleteAnswer(index) {
+            this.answerToDelete = index
+        },
+
+        deleteAnswer() {
+            const index = this.answerToDelete
+
+            if (this.answers[index].hasOwnProperty('id')) {
+                axios.delete('/api/soal/' + this.question.id + '/jawaban/' + this.answers[index].id) 
+            }
             this.answersNum -= 1
 
             this.answers.splice(index, 1)
@@ -267,6 +277,10 @@ export default {
             } else if (this.question.tipe != 'jawaban-ganda' && this.jawabanBenar == index) {
                 this.jawabanBenar = null
             }
+
+            this.answerToDelete = null
+            swal("Berhasil!", "Jawaban berhasil dihapus", "success")
+
         },
 
         validate() {
@@ -332,6 +346,8 @@ export default {
                     break;
             }
             
+            console.log(this.answers)
+
             const axiosConfig = {
                 url: (this.question.id != null) ? '/api/soal/' + this.question.id : '/api/soal',
 
@@ -344,12 +360,11 @@ export default {
                     }
             }
 
-            console.log(axiosConfig)
-
             axios(axiosConfig).then(response => {
                 swal("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success")
 
                 this.saveLoading = false
+                // console.log(response.data)
                 this.processData(response.data.question)
             }).catch(errors => {
                 console.log(errors)
@@ -384,6 +399,42 @@ export default {
         isAnswerEmpty(index) {
             if (this.answers[index] != '') {
                 this.errors.answers[index] = ''
+            }
+        },
+
+        changeQuestionType() {
+            if (this.question.tipe == 'benar-salah') {
+                this.answersNum = 2
+
+                this.answers = [
+                    {
+                        redaksi: this.benarSalahOptions.reguler.benar,
+                        nilai: 0
+                    },
+                    {
+                        redaksi: this.benarSalahOptions.reguler.salah,
+                        nilai: 0
+                    }
+                ]
+            } else if (this.question.tipe == 'benar-salah-arabic') {
+                this.answersNum = 2
+
+                this.answers = [
+                        {
+                            redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.benar + '</span>',
+                            nilai: 0
+                        },
+                        {
+                            redaksi: '<span dir="rtl" lang="ar" style="font-family:Scheherazade;font-size:24px">' + this.benarSalahOptions.arabic.salah + '</span>',
+                            nilai: 0
+                        }
+                    ]   
+            }
+            
+            if (this.question.tipe == 'jawaban-ganda') {
+                this.jawabanBenar = [];
+            } else {
+                this.jawabanBenar = null
             }
         }
     },

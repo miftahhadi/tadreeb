@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Answer;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Services\Admin\QuestionService;
@@ -43,39 +44,39 @@ class QuestionController extends Controller
         }
 
         $soal->save();
+
+        if ($request['question']['tipe'] == 'Benar/Salah') {
+            $soal->answers()->delete();
+        }
         
         for ($i=0; $i < count($request['answers']); $i++) { 
             if (array_key_exists('id', $request['answers'][$i])) {
-                $answer = $soal->answers->filter( function ($answer) use ($request, $i) {
-                    return $answer->id == $request['answers'][$i]['id'];
-                });
+                $answer = $soal->answers()->find($request['answers'][$i]['id']);
+
+                if (!$answer) {
+                    continue;
+                }
 
                 foreach ($answerKeys as $key) {
                     $answer->$key = $request['answers'][$i][$key];
                 }
+
+                $answer->save();
             } else {
                 $soal->answers()->create($request['answers'][$i]);
             }
         }
 
-        /* $i = 0;
-        foreach ($soal->answers as $answer) {
-            if (array_key_exists('id', $request['answers'][$i])) {
-                foreach ($answerKeys as $key) {
-                    $answer->$key = $request['answers'][$i][$key];
-                }
-                
-                $answer->save();
-            } else {
-                $soal->answers()->create($request['answers'][$i]);
-            }
-
-            $i++;
-        } */
+        $soal->refresh();
 
         return [
             'question' => $soal,
-            'answers' => $soal->answers
+            'answers' => $soal->answers,
         ];
-    }   
+    }
+
+    public function deleteAnswer(Question $soal, $jawaban)
+    {
+        return $soal->answers()->where('id', $jawaban)->delete();
+    }
 }
