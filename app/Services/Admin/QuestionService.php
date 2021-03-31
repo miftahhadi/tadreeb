@@ -4,7 +4,6 @@ namespace App\Services\Admin;
 
 use App\Models\Exam;
 use App\Models\Question;
-use App\Models\Answer;
 
 class QuestionService
 {

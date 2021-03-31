@@ -6,10 +6,8 @@ use App\Models\Answer;
 use App\Models\ClassExamUser;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\ClassroomExam;
 use App\Models\Question;
-use Carbon\Carbon;
+use App\Services\Admin\QuestionService;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
@@ -141,6 +139,21 @@ class ExamController extends Controller
     public function getClassrooms(Exam $ujian, Request $request)
     {
         return response()->json($ujian->classrooms()->paginate(20));
+    }
+
+    public function assignQuestion(Exam $ujian, Request $request)
+    {
+        $questionService = new QuestionService();
+        $soal = Question::find($request['itemId']);
+        $urutan = $questionService->getUrutan($ujian);
+
+        $ujian->questions()->syncWithoutDetaching([
+            $soal->id => ['urutan' => $urutan]
+        ]);
+
+        $soal->urutan = $urutan;
+
+        return $soal;
     }
 
     public function unassignQuestion(Request $request)

@@ -2307,6 +2307,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-question',
@@ -2321,21 +2346,47 @@ __webpack_require__.r(__webpack_exports__);
         width: '5%',
         name: 'No'
       }, {
-        id: 1,
+        id: 2,
+        width: null,
+        name: 'Kode'
+      }, {
+        id: 3,
         width: '60%',
         name: 'Soal'
       }, {
-        id: 2,
+        id: 4,
         width: null,
         name: 'Tipe'
       }],
-      properties: ['urutan', 'konten', 'tipe'],
+      properties: ['urutan', 'kode', 'konten', 'tipe'],
       toUnassign: null,
       toView: null,
-      questions: this.questionsArray
+      questions: this.questionsArray,
+      questionIds: [],
+      assignModal: {
+        headings: [{
+          id: 0,
+          width: null,
+          name: 'ID'
+        }, {
+          id: 1,
+          width: null,
+          name: 'Kode'
+        }, {
+          id: 2,
+          width: '60%',
+          name: 'Soal'
+        }],
+        properties: ['id', 'kode', 'konten'],
+        listKey: 0
+      }
     };
   },
   methods: {
+    assign: function assign(data) {
+      this.questions.push(data);
+      this.questionIds.push(data.id);
+    },
     callUnassign: function callUnassign(item) {
       this.toUnassign = item;
     },
@@ -2349,6 +2400,10 @@ __webpack_require__.r(__webpack_exports__);
         soalId: this.toUnassign.id
       }).then(function (response) {
         _this.questions.splice(id, 1);
+
+        _this.questionIds.splice(id, 1);
+
+        _this.listKey += 1;
 
         _this.questions.map(function (question) {
           if (question.urutan > urutan) {
@@ -2367,6 +2422,16 @@ __webpack_require__.r(__webpack_exports__);
     callView: function callView(item) {
       this.toView = item;
     }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    this.questionsArray.forEach(function (question) {
+      _this2.questionIds.push(question.id);
+    });
+    EventBus.$on('item:assigned', function (response) {
+      _this2.assign(response.data);
+    });
   }
 });
 
@@ -3227,7 +3292,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         _this.status = !_this.status;
         _this.loading = false;
-        EventBus.$emit('item:assigned');
+        EventBus.$emit('item:assigned', response);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -4004,6 +4069,10 @@ __webpack_require__.r(__webpack_exports__);
       if (this.itemData.item != 'anggota') {
         return this.itemData.item + 'SettingModal';
       }
+    },
+    itemToAssignUrl: function itemToAssignUrl() {
+      var item = this.itemData.item == 'anggota' ? 'user' : this.itemData.item;
+      return '/api/' + item;
     }
   },
   created: function created() {
@@ -44272,6 +44341,18 @@ var render = function() {
               attrs: { href: "/admin/ujian/" + _vm.examId + "/soal/create" }
             },
             [_vm._v("Buat Soal Baru")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn",
+              attrs: {
+                "data-toggle": "modal",
+                "data-target": "#assignQuestionModal"
+              }
+            },
+            [_vm._v("Impor dari database")]
           )
         ])
       ]),
@@ -44352,6 +44433,61 @@ var render = function() {
         ],
         1
       ),
+      _vm._v(" "),
+      _c("modal", {
+        attrs: {
+          id: "assignQuestionModal",
+          classes: ["modal-dialog-centered", "modal-lg"]
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "header",
+            fn: function() {
+              return [
+                _vm._v("\n            Impor soal dari database\n        ")
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "body",
+            fn: function() {
+              return [
+                _c("item-list", {
+                  key: _vm.listKey,
+                  attrs: {
+                    "table-heading": _vm.assignModal.headings,
+                    "item-properties": _vm.assignModal.properties,
+                    "fetch-url": "/api/soal",
+                    search: true
+                  },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "action",
+                      fn: function(actionProp) {
+                        return [
+                          _c("item-assign", {
+                            attrs: {
+                              "item-type": "question",
+                              "item-id": actionProp.item.id,
+                              "assign-url":
+                                "/api/ujian/" + _vm.examId + "/assign-soal",
+                              assigned: _vm.questionIds.includes(
+                                actionProp.item.id
+                              )
+                            }
+                          })
+                        ]
+                      }
+                    }
+                  ])
+                })
+              ]
+            },
+            proxy: true
+          }
+        ])
+      }),
       _vm._v(" "),
       _c("modal", {
         attrs: {
@@ -46285,7 +46421,19 @@ var render = function() {
           _c("h2", [_vm._v(_vm._s(_vm.title))])
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _c("div", { staticClass: "col-auto ml-auto" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: {
+                "data-toggle": "modal",
+                "data-target": "#assign" + _vm.title + "Modal"
+              }
+            },
+            [_vm._v("Tambah " + _vm._s(_vm.title))]
+          )
+        ])
       ]),
       _vm._v(" "),
       _c("item-list", {
@@ -46361,7 +46509,7 @@ var render = function() {
           kelas: _vm.kelas.nama,
           headings: _vm.itemData.heading,
           "item-properties": _vm.itemData.props,
-          "fetch-url": "/api/" + _vm.itemData.item,
+          "fetch-url": _vm.itemToAssignUrl,
           "assign-url": _vm.assignUrl,
           assigned: _vm.itemData.assigned
         }
@@ -46434,23 +46582,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-auto ml-auto" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          attrs: { "data-toggle": "modal", "data-target": "#assignUjianModal" }
-        },
-        [_vm._v("Tambah Ujian")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

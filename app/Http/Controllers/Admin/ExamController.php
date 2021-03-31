@@ -79,6 +79,7 @@ class ExamController extends Controller
         $questions = $ujian->questions->map(function ($question) {
             return [
                 'id' => $question->id,
+                'kode' => $question->kode,
                 'urutan' => $question->pivot->urutan,
                 'konten' => $question->konten,
                 'tipe' => $question->tipe,

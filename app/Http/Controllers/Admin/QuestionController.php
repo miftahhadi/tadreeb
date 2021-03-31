@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\QuestionService;
@@ -19,6 +20,42 @@ class QuestionController extends Controller
         $this->questionService = $questionService;
     }
 
+    public function index()
+    {
+        $breadcrumbs = [];
+
+        $heading = [
+            [
+                'name' => 'ID',
+                'width' => '5%'
+            ],
+            [
+                'name' => 'Kode',
+                'width' => '10%'
+            ], 
+            
+            [
+                'name' => 'Konten',
+                'width' => null
+            ]
+        ];
+
+        $properties = ['id', 'kode', 'konten'];
+
+        $title = 'Bank Soal';
+        $fetchUrl = '/api/soal';
+        $item = 'soal';
+        $judul = 'Judul soal';
+        $tableHeading = json_encode($heading);
+        $itemProperties = json_encode($properties);
+        $nameShownAs = 'judul';
+
+        return view('admin.general.item-index', compact(
+            'breadcrumbs','title', 'fetchUrl', 'item', 'judul',
+            'tableHeading', 'itemProperties',
+            'nameShownAs' 
+        ));
+    }
 
     /**
      * Show the form for creating a new resource.

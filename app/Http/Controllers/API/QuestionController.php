@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Answer;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Services\Admin\QuestionService;
@@ -16,21 +15,34 @@ class QuestionController extends Controller
         $this->service = $questionService;
     }
 
+    public function index() 
+    {
+        return response()->json(Question::orderBy('created_at', 'desc')->paginate(15));
+    }
+
+    public function search($search)
+    {
+        return response()->json(Question::where('konten', 'like', '%' . $search . '%')
+                                        ->orWhere('kode', 'like', '%' .  $search . '%')
+                                        ->orderBy('created_at', 'desc')
+                                        ->paginate(10)
+                                );
+    }
+
     public function store(Request $request)
     {
-        $exam = Exam::find($request['examId']);
-
         $soal = Question::create($request['question']);
-
-        $exam->questions()->syncWithoutDetaching([
-            $soal->id => ['urutan' => $this->service->getUrutan($exam)]
-        ]);
-
         $soal->answers()->createMany($request['answers']);
+
+        if ($request['examId']) {
+            $exam = Exam::find($request['examId']);
+            $exam->questions()->syncWithoutDetaching([
+                $soal->id => ['urutan' => $this->service->getUrutan($exam)]
+            ]);    
+        }
 
         return [
             'question' => $soal,
-            'answers' => $soal->answers
         ];
     }
 

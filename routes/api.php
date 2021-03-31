@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     Route::resource('pelajaran', 'LessonController');
 
     // Exams
+    Route::post('ujian/{ujian}/assign-soal', 'ExamController@assignQuestion');
     Route::post('ujian/unassign-soal', 'ExamController@unassignQuestion');
     Route::resource('ujian', 'ExamController');
 
