@@ -67,6 +67,9 @@ Route::name('admin.')->group(function () {
         Route::resource('pelajaran', 'LessonController');
         
         // Questions
+        Route::resource('soal', 'QuestionController');
+
+        // Question-Exam
         Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
         Route::resource('ujian.soal', 'QuestionController')->except('index');
 
@@ -79,16 +82,7 @@ Route::name('admin.')->group(function () {
         // Classrooms
         // Kalau pakai resource, entah kenapa parameternya jadi {kela}
         Route::name('grup.kelas.')->group(function() {
-            Route::group(['prefix' => 'grup/{grup}/'], function () { 
-
-                // Classroom's subpages
-                Route::group(['prefix' => 'kelas/{kelas}/'], function () {
-                    Route::get('pelajaran', 'ClassroomController@showLessons')->name('pelajaran');
-                    Route::get('ujian', 'ClassroomController@showExams')->name('ujian');
-                    Route::get('anggota', 'ClassroomController@showMembers')->name('anggota');
-                    Route::get('setting', 'ClassroomController@showSettings')->name('setting');
-                });
-
+            Route::group(['prefix' => 'grup/{grup}/'], function () {               
                 Route::get('kelas/{kelas}', 'ClassroomController@show')->name('show');
                 
                 Route::post('kelas', 'ClassroomController@store')->name('store');
