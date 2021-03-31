@@ -9,8 +9,8 @@
             <div class="col-auto ml-auto">
                 <button class="btn btn-primary" 
                         data-toggle="modal" 
-                        data-target="#assignUjianModal"
-                >Tambah Ujian</button>
+                        :data-target="'#assign' + title + 'Modal'"
+                >Tambah {{ title }}</button>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
             :kelas="kelas.nama"
             :headings="itemData.heading"
             :item-properties="itemData.props"
-            :fetch-url="'/api/' + itemData.item"
+            :fetch-url="itemToAssignUrl"
             :assign-url="assignUrl"
             :assigned="itemData.assigned"
         ></kelas-assign-modal>
@@ -194,6 +194,12 @@
                 if (this.itemData.item != 'anggota') {
                     return this.itemData.item + 'SettingModal';                
                 }
+            },
+
+            itemToAssignUrl() {
+                const item = (this.itemData.item == 'anggota') ? 'user' : this.itemData.item
+
+                return '/api/' + item
             }
         },
 

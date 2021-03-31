@@ -2,7 +2,7 @@
 
     <div>
         <form @submit.prevent="massAssign">
-            <modal :id="'assign' + title+ 'Modal'" 
+            <modal :id="'assign' + title + 'Modal'" 
                 :classes="['modal-lg', 'modal-dialog-centered']"
             >
 
