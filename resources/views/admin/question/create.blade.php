@@ -4,11 +4,17 @@
     @include('admin._item-header')
 
     <div id="app">
-    
-            <question-create
-                :exam-id="{{ $ujian->id }}"
-            >
-            </question-create>
+
+            @if ($ujianId != null)
+                <question-form
+                    :exam-id="{{ $ujianId }}"
+                >
+                </question-form>                
+            @else 
+                <question-form>
+                </question-form>
+            @endif
+
          
     </div>
 @endsection

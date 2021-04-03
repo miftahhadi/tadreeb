@@ -104,7 +104,7 @@ export default {
     methods: {
         getResults(page = null) {
             this.loading = true;
-            let getUri = (page == null) ? this.fetchUrl : this.uri + page;
+            let getUri = (page == null) ? this.uri : this.uri + page;
             
             axios.get(getUri)
                     .then(response => {

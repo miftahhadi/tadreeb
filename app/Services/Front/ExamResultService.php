@@ -46,17 +46,17 @@ class ExamResultService
         return $this;
     }
 
-    public function getHistory($user = 0, int $classexamid)
-    {
-        $this->getUser($user);
+    // public function getHistory($user = 0, int $classexamid)
+    // {
+    //     $this->getUser($user);
 
-        return ClassExamUser::where([
-                    ['classroom_exam_id', $classexamid],
-                    ['user_id', $this->user->id]
-                ])
-                ->orderBy('attempt', 'desc')
-                ->get();
-    }
+    //     return ClassExamUser::where([
+    //                 ['classroom_exam_id', $classexamid],
+    //                 ['user_id', $this->user->id]
+    //             ])
+    //             ->orderBy('attempt', 'desc')
+    //             ->get();
+    // }
 
     public function getAllResult(ClassroomExam $classExam)
     {

@@ -3,7 +3,6 @@
         <slot name="header"></slot>
 
         <item-list 
-            :item="item"
             :fetchUrl="fetchUrl"
             :tableHeading="tableHeading" 
             :itemProperties="itemProperties" 
@@ -18,14 +17,23 @@
                         class="btn" 
                         data-toggle="modal" 
                         data-target="#edit"
+                        v-if="item != 'soal'"
                     >
 
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                         </span>
-                        <span>Tambah Baru</span>
+                        <span>{{ title }} Baru</span>
                     
                     </button>
+
+                    <a href="/admin/soal/create" class="btn" v-else>
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        </span>
+
+                        <span>{{ title }} Baru</span>
+                    </a>
 
                     <a href="/admin/user/import-csv" class="btn btn-success" v-if="item == 'user'">Impor dari .CSV</a>
 
@@ -34,14 +42,14 @@
 
             <template v-slot:action="actionProps">
                 <div class="btn-list flex-nowrap">
-                    <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-text="(item == 'user') ? 'Lihat Profil' : 'Buka'">Lihat Profil</a>
+                    <a :href="openUrl(actionProps.item)" class="btn btn-sm" v-text="(item == 'user') ? 'Lihat Profil' : 'Buka'" v-if="item != 'soal'">Lihat Profil</a>
 
-                    <!-- <button 
-                        class="btn btn-sm"                                     
-                        data-toggle="modal" 
-                        data-target="#edit"
-                        @click="callEdit(actionProps.item)"
-                    >Edit</button> -->
+                    <button v-else
+                        class="btn btn-light btn-sm"
+                        data-toggle="modal"
+                        data-target="#viewQuestionModal"
+                        @click="callView(actionProps.item)"
+                    >Lihat</button>
 
                     <a :href="editUrl(actionProps.item)" class="btn btn-sm">Edit</a>
                     
@@ -50,7 +58,7 @@
                         data-toggle="modal" 
                         data-target="#deleteItemModal" 
                         @click="callDelete(actionProps.item)"
-                        :disabled="cantBeDeleted(actionProps.item)"
+                        v-if="!cantBeDeleted(actionProps.item)"
                     >Hapus</button>
                 </div>
             </template>
@@ -98,6 +106,11 @@
             </template>
             <template #footer></template>
         </modal>
+
+        <question-viewer
+            ref="viewQuestionModal"
+            v-if="item == 'soal'"    
+        ></question-viewer>
 
     </div>    
 </template>
@@ -159,7 +172,6 @@
                                 icon: "success",
                             });
 
-                            console.log(response)
                         })
                         .catch(error => {
                             console.log(error);
@@ -192,13 +204,21 @@
                 if (this.item == 'user') {
                     return (data.role == 'admin' || data.role == 'superadmin')
                 }
+            },
+
+            callView(item) {
+                this.$refs.viewQuestionModal.toView = item
             }
         },
 
         computed: {
             slugName() {
                 return (this.item != 'grup' && this.item != 'kelas') ? 'Slug' : null
-            }
+            },
+
+            title() {
+                return this.item.charAt(0).toUpperCase() + this.item.slice(1);
+            },
         }
     }
 </script>

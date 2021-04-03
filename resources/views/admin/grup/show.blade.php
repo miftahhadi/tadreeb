@@ -17,8 +17,8 @@
                 :item-properties="{{ $itemProperties }}" 
                 item-identifier="{{ $identifier ?? null }}" 
                 name-shown-as="Nama"
-                store-url="{{ '/api/grup/' . $grup->id . '/kelas' }}"
-                delete-url="{{ '/api/grup/' . $grup->id . '/kelas'}}"
+                store-url="{{ '/api/kelas' }}"
+                delete-url="{{ '/api/kelas'}}"
                 base-url="/admin/grup/{{ $grup->id }}/kelas/"
             ></item-index>
         </tab-details>

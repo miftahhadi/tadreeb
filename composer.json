@@ -19,6 +19,7 @@
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "owenvoke/blade-fontawesome": "^1.8",
         "spatie/valuestore": "^1.2"
     },
     "require-dev": {

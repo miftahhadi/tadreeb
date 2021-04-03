@@ -62,21 +62,37 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Exam $ujian, Request $request)
+    public function create(Request $request)
     {
-        $breadcrumbs = [
-            [
-                'name' => 'Ujian',
-                'href' => route('admin.ujian.index')
-            ],
-            [
-                'name' => $ujian->judul,
-                'href' => route('admin.ujian.show', $ujian->id)
-            ]
-        ];
+        $breadcrumbs = [];
 
-        $itemName = $ujian->judul;
+        $itemName = null;
         $itemDescription = null;
+
+        $title = 'Soal Baru';
+
+        $ujianId = null;
+
+        if ($request['ujian']) {
+            $ujian = Exam::find($request['ujian']);
+
+            $breadcrumbs = [
+                [
+                    'name' => 'Ujian',
+                    'href' => route('admin.ujian.index')
+                ],
+                [
+                    'name' => $ujian->judul,
+                    'href' => route('admin.ujian.show', $ujian->id)
+                ]
+            ];
+            
+            $itemName = $ujian->judul;
+
+            $title = $title . ' - ' . $ujian->judul;
+        
+            $ujianId = $ujian->id;
+        }
 
         $questionForm = $this->questionService->createQuestionForm($request);
 
@@ -84,8 +100,8 @@ class QuestionController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'itemName' => $itemName,
             'itemDescription' => $itemDescription,
-            'title' => 'Soal Baru ' . ' - ' . $ujian->judul,
-            'ujian' => $ujian,
+            'title' => $title,
+            'ujianId' => $ujianId,
             'choices' => $questionForm['choices'],
             'value' => $questionForm['value'] ?? '',
             'option' => $questionForm['option']
@@ -123,25 +139,41 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Exam $ujian, Question $soal)
+    public function edit(Question $soal, Request $request)
     {
-        $breadcrumbs = [
-            [
-                'name' => 'Ujian',
-                'href' => route('admin.ujian.index')
-            ],
-            [
-                'name' => $ujian->judul,
-                'href' => route('admin.ujian.show', $ujian->id)
-            ]
-        ];
+        $breadcrumbs = [];
 
-        $itemName = $ujian->judul;
+        $itemName = null;
         $itemDescription = null;
 
+        $title = 'Edit Soal';
+
+        $ujianId = null;
+
+        if ($request['ujian']) {
+            $ujian = Exam::find($request['ujian']);
+
+            $breadcrumbs = [
+                [
+                    'name' => 'Ujian',
+                    'href' => route('admin.ujian.index')
+                ],
+                [
+                    'name' => $ujian->judul,
+                    'href' => route('admin.ujian.show', $ujian->id)
+                ]
+            ];
+            
+            $itemName = $ujian->judul;
+
+            $title = $title . ' - ' . $ujian->judul;
+        
+            $ujianId = $ujian->id;
+        }
+
         return view('admin.question.edit',[
-            'title' => 'Edit Soal ' . ' - ' .  $ujian->judul,
-            'ujian' => $ujian,
+            'title' => $title,
+            'ujianId' => $ujianId,
             'soal' => $soal,
             'itemName' => $itemName,
             'itemDescription' => $itemDescription,

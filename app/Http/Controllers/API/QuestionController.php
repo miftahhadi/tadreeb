@@ -40,10 +40,8 @@ class QuestionController extends Controller
                 $soal->id => ['urutan' => $this->service->getUrutan($exam)]
             ]);    
         }
-
-        return [
-            'question' => $soal,
-        ];
+        
+        return $soal;
     }
 
     public function update(Question $soal, Request $request)
@@ -81,14 +79,16 @@ class QuestionController extends Controller
 
         $soal->refresh();
 
-        return [
-            'question' => $soal,
-            'answers' => $soal->answers,
-        ];
+        return $soal;
     }
 
     public function deleteAnswer(Question $soal, $jawaban)
     {
         return $soal->answers()->where('id', $jawaban)->delete();
+    }
+
+    public function destroy(Question $soal)
+    {
+        return $soal->delete();
     }
 }

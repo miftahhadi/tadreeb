@@ -2300,38 +2300,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-question',
@@ -2360,7 +2328,6 @@ __webpack_require__.r(__webpack_exports__);
       }],
       properties: ['urutan', 'kode', 'konten', 'tipe'],
       toUnassign: null,
-      toView: null,
       questions: this.questionsArray,
       questionIds: [],
       assignModal: {
@@ -2378,7 +2345,7 @@ __webpack_require__.r(__webpack_exports__);
           name: 'Soal'
         }],
         properties: ['id', 'kode', 'konten'],
-        listKey: 0
+        key: 0
       }
     };
   },
@@ -2403,7 +2370,7 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.questionIds.splice(id, 1);
 
-        _this.listKey += 1;
+        _this.assignModal.key += 1;
 
         _this.questions.map(function (question) {
           if (question.urutan > urutan) {
@@ -2420,7 +2387,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     callView: function callView(item) {
-      this.toView = item;
+      this.$refs.viewQuestionModal.toView = item;
+      this.$refs.viewQuestionModal.examId = this.examId;
     }
   },
   created: function created() {
@@ -2437,10 +2405,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionForm.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionForm.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2604,7 +2572,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'question-create',
+  name: 'question-form',
   props: {
     examId: Number,
     questionModel: Object
@@ -2659,7 +2627,6 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   watch: {
-    tipe: function tipe(newTipe, oldTipe) {},
     'question.konten': function questionKonten(newKonten, oldKonten) {
       if (newKonten != '') {
         this.errors.question = '';
@@ -2757,7 +2724,6 @@ __webpack_require__.r(__webpack_exports__);
           break;
       }
 
-      console.log(this.answers);
       var axiosConfig = {
         url: this.question.id != null ? '/api/soal/' + this.question.id : '/api/soal',
         method: this.question.id != null ? 'put' : 'post',
@@ -2771,7 +2737,7 @@ __webpack_require__.r(__webpack_exports__);
         sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Data berhasil disimpan!", "Anda bisa kembali ke halaman sebelumnya atau tetap di sini untuk mengedit soal", "success");
         _this.saveLoading = false; // console.log(response.data)
 
-        _this.processData(response.data.question);
+        _this.processData(response.data);
       })["catch"](function (errors) {
         console.log(errors);
       });
@@ -2832,8 +2798,8 @@ __webpack_require__.r(__webpack_exports__);
     inputType: function inputType() {
       return this.question.tipe == 'jawaban-ganda' ? 'checkbox' : 'radio';
     },
-    submitUrl: function submitUrl() {
-      return '/admin/ujian/' + this.examId + '/soal';
+    backUrl: function backUrl() {
+      return this.examId != null ? '/admin/ujian/' + this.examId : '/admin/soal';
     },
     questionIsEmpty: function questionIsEmpty() {
       return this.question.konten == '';
@@ -2849,6 +2815,76 @@ __webpack_require__.r(__webpack_exports__);
 
     for (var i = 0; i < this.answersNum; i++) {
       this.errors.answers[i] = null;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionViewer.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionViewer.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'question-viewer',
+  data: function data() {
+    return {
+      toView: {
+        id: null,
+        konten: null,
+        answers: []
+      },
+      examId: null
+    };
+  },
+  computed: {
+    editUrl: function editUrl() {
+      var baseUrl = '/admin/soal/' + this.toView.id;
+      return this.examId != null ? baseUrl + '?ujian=' + this.examId : baseUrl;
     }
   }
 });
@@ -3493,6 +3529,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'item-index',
@@ -3546,7 +3595,6 @@ __webpack_require__.r(__webpack_exports__);
           title: "Data berhasil dihapus",
           icon: "success"
         });
-        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -3572,11 +3620,17 @@ __webpack_require__.r(__webpack_exports__);
       if (this.item == 'user') {
         return data.role == 'admin' || data.role == 'superadmin';
       }
+    },
+    callView: function callView(item) {
+      this.$refs.viewQuestionModal.toView = item;
     }
   },
   computed: {
     slugName: function slugName() {
       return this.item != 'grup' && this.item != 'kelas' ? 'Slug' : null;
+    },
+    title: function title() {
+      return this.item.charAt(0).toUpperCase() + this.item.slice(1);
     }
   }
 });
@@ -3697,7 +3751,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       this.loading = true;
-      var getUri = page == null ? this.fetchUrl : this.uri + page;
+      var getUri = page == null ? this.uri : this.uri + page;
       axios.get(getUri).then(function (response) {
         _this.loading = false;
         _this.laravelData = response.data;
@@ -5960,7 +6014,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\np {\r\n    margin-bottom: 0rem;\n}\r\n", ""]);
+exports.push([module.i, "\np {\n    margin-bottom: 0rem;\n}\n", ""]);
 
 // exports
 
@@ -44338,7 +44392,7 @@ var render = function() {
             "a",
             {
               staticClass: "btn btn-primary",
-              attrs: { href: "/admin/ujian/" + _vm.examId + "/soal/create" }
+              attrs: { href: "/admin/soal/create?ujian=" + _vm.examId }
             },
             [_vm._v("Buat Soal Baru")]
           ),
@@ -44397,11 +44451,10 @@ var render = function() {
                           staticClass: "btn btn-light btn-sm",
                           attrs: {
                             href:
-                              "/admin/ujian/" +
-                              _vm.examId +
-                              "/soal/" +
+                              "/admin/soal/" +
                               slotProp.item.id +
-                              "/edit",
+                              "/edit?ujian=" +
+                              _vm.examId,
                             target: "_blank"
                           }
                         },
@@ -44435,6 +44488,7 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("modal", {
+        key: _vm.assignModal.key,
         attrs: {
           id: "assignQuestionModal",
           classes: ["modal-dialog-centered", "modal-lg"]
@@ -44454,7 +44508,6 @@ var render = function() {
             fn: function() {
               return [
                 _c("item-list", {
-                  key: _vm.listKey,
                   attrs: {
                     "table-heading": _vm.assignModal.headings,
                     "item-properties": _vm.assignModal.properties,
@@ -44546,136 +44599,7 @@ var render = function() {
         ])
       }),
       _vm._v(" "),
-      _c("modal", {
-        attrs: {
-          id: "viewQuestionModal",
-          classes: ["modal-dialog-centered", "modal-lg"]
-        },
-        scopedSlots: _vm._u(
-          [
-            _vm.toView
-              ? {
-                  key: "header",
-                  fn: function() {
-                    return [
-                      _c("span", [
-                        _vm._v(
-                          "\n                ID Soal: " +
-                            _vm._s(_vm.toView.id) +
-                            "\n            "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "btn",
-                          attrs: {
-                            href:
-                              "/admin/ujian/" +
-                              _vm.examId +
-                              "/soal/" +
-                              _vm.toView.id +
-                              "/edit",
-                            target: "_blank"
-                          }
-                        },
-                        [_vm._v("Edit")]
-                      ),
-                      _vm._v(" "),
-                      _c("button", {
-                        staticClass: "btn-close",
-                        attrs: {
-                          type: "button",
-                          "data-dismiss": "modal",
-                          "aria-label": "Close"
-                        }
-                      })
-                    ]
-                  },
-                  proxy: true
-                }
-              : null,
-            {
-              key: "body",
-              fn: function() {
-                return [
-                  _vm.toView != null
-                    ? _c("span", {
-                        domProps: { innerHTML: _vm._s(_vm.toView.konten) }
-                      })
-                    : _vm._e()
-                ]
-              },
-              proxy: true
-            },
-            _vm.toView != null
-              ? {
-                  key: "extended-body",
-                  fn: function() {
-                    return [
-                      _c(
-                        "div",
-                        { staticClass: "table-responsive border-top p-3" },
-                        [
-                          _c(
-                            "table",
-                            { staticClass: "table card-table table-vcenter" },
-                            [
-                              _c(
-                                "tbody",
-                                _vm._l(_vm.toView.answers, function(answer) {
-                                  return _c("tr", { key: answer.id }, [
-                                    _c(
-                                      "td",
-                                      {
-                                        staticClass: "w-1 text-success",
-                                        class:
-                                          answer.benar == 1
-                                            ? "text-success"
-                                            : "text-danger"
-                                      },
-                                      [
-                                        answer.benar == 1
-                                          ? _c("i", {
-                                              staticClass:
-                                                "fas fa-check-circle fa-lg"
-                                            })
-                                          : _c("i", {
-                                              staticClass:
-                                                "fas fa-times-circle fa-lg"
-                                            })
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("td", {
-                                      domProps: {
-                                        innerHTML: _vm._s(answer.redaksi)
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("td", { attrs: { width: "20%" } }, [
-                                      _c("b", [_vm._v("Nilai:")]),
-                                      _vm._v(" " + _vm._s(answer.nilai))
-                                    ])
-                                  ])
-                                }),
-                                0
-                              )
-                            ]
-                          )
-                        ]
-                      )
-                    ]
-                  },
-                  proxy: true
-                }
-              : null
-          ],
-          null,
-          true
-        )
-      })
+      _c("question-viewer", { ref: "viewQuestionModal" })
     ],
     1
   )
@@ -44696,10 +44620,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&":
-/*!***********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6& ***!
-  \***********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionForm.vue?vue&type=template&id=f3546596&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionForm.vue?vue&type=template&id=f3546596& ***!
+  \*********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -44737,10 +44661,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "a",
-              {
-                staticClass: "btn btn-white",
-                attrs: { href: "/admin/ujian/" + _vm.examId }
-              },
+              { staticClass: "btn btn-white", attrs: { href: _vm.backUrl } },
               [_vm._v("Kembali")]
             )
           ])
@@ -45252,6 +45173,157 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionViewer.vue?vue&type=template&id=3b250943&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/QuestionViewer.vue?vue&type=template&id=3b250943& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("modal", {
+        attrs: {
+          id: "viewQuestionModal",
+          classes: ["modal-dialog-centered", "modal-lg"]
+        },
+        scopedSlots: _vm._u(
+          [
+            _vm.toView
+              ? {
+                  key: "header",
+                  fn: function() {
+                    return [
+                      _c("span", [
+                        _vm._v(
+                          "\n                ID Soal: " +
+                            _vm._s(_vm.toView.id) +
+                            "\n            "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn",
+                          attrs: { href: _vm.editUrl, target: "_blank" }
+                        },
+                        [_vm._v("Edit")]
+                      ),
+                      _vm._v(" "),
+                      _c("button", {
+                        staticClass: "btn-close",
+                        attrs: {
+                          type: "button",
+                          "data-dismiss": "modal",
+                          "aria-label": "Close"
+                        }
+                      })
+                    ]
+                  },
+                  proxy: true
+                }
+              : null,
+            {
+              key: "body",
+              fn: function() {
+                return [
+                  _vm.toView != null
+                    ? _c("span", {
+                        domProps: { innerHTML: _vm._s(_vm.toView.konten) }
+                      })
+                    : _vm._e()
+                ]
+              },
+              proxy: true
+            },
+            _vm.toView != null
+              ? {
+                  key: "extended-body",
+                  fn: function() {
+                    return [
+                      _c(
+                        "div",
+                        { staticClass: "table-responsive border-top p-3" },
+                        [
+                          _c(
+                            "table",
+                            { staticClass: "table card-table table-vcenter" },
+                            [
+                              _c(
+                                "tbody",
+                                _vm._l(_vm.toView.answers, function(answer) {
+                                  return _c("tr", { key: answer.id }, [
+                                    _c(
+                                      "td",
+                                      {
+                                        staticClass: "w-1 text-success",
+                                        class:
+                                          answer.benar == 1
+                                            ? "text-success"
+                                            : "text-danger"
+                                      },
+                                      [
+                                        answer.benar == 1
+                                          ? _c("i", {
+                                              staticClass:
+                                                "fas fa-check-circle fa-lg"
+                                            })
+                                          : _c("i", {
+                                              staticClass:
+                                                "fas fa-times-circle fa-lg"
+                                            })
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("td", {
+                                      domProps: {
+                                        innerHTML: _vm._s(answer.redaksi)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("td", { attrs: { width: "20%" } }, [
+                                      _c("b", [_vm._v("Nilai:")]),
+                                      _vm._v(" " + _vm._s(answer.nilai))
+                                    ])
+                                  ])
+                                }),
+                                0
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  },
+                  proxy: true
+                }
+              : null
+          ],
+          null,
+          true
+        )
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -45829,7 +45901,6 @@ var render = function() {
       _c("item-list", {
         ref: "list",
         attrs: {
-          item: _vm.item,
           fetchUrl: _vm.fetchUrl,
           tableHeading: _vm.tableHeading,
           itemProperties: _vm.itemProperties,
@@ -45842,55 +45913,121 @@ var render = function() {
             fn: function() {
               return [
                 _c("div", { staticClass: "btn-list" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn",
-                      attrs: {
-                        type: "button",
-                        "data-toggle": "modal",
-                        "data-target": "#edit"
-                      }
-                    },
-                    [
-                      _c("span", [
-                        _c(
-                          "svg",
-                          {
-                            staticClass: "icon",
-                            attrs: {
-                              xmlns: "http://www.w3.org/2000/svg",
-                              width: "24",
-                              height: "24",
-                              viewBox: "0 0 24 24",
-                              "stroke-width": "2",
-                              stroke: "currentColor",
-                              fill: "none",
-                              "stroke-linecap": "round",
-                              "stroke-linejoin": "round"
-                            }
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                stroke: "none",
-                                d: "M0 0h24v24H0z",
-                                fill: "none"
-                              }
-                            }),
-                            _c("line", {
-                              attrs: { x1: "12", y1: "5", x2: "12", y2: "19" }
-                            }),
-                            _c("line", {
-                              attrs: { x1: "5", y1: "12", x2: "19", y2: "12" }
-                            })
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("Tambah Baru")])
-                    ]
-                  ),
+                  _vm.item != "soal"
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn",
+                          attrs: {
+                            type: "button",
+                            "data-toggle": "modal",
+                            "data-target": "#edit"
+                          }
+                        },
+                        [
+                          _c("span", [
+                            _c(
+                              "svg",
+                              {
+                                staticClass: "icon",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "24",
+                                  height: "24",
+                                  viewBox: "0 0 24 24",
+                                  "stroke-width": "2",
+                                  stroke: "currentColor",
+                                  fill: "none",
+                                  "stroke-linecap": "round",
+                                  "stroke-linejoin": "round"
+                                }
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    stroke: "none",
+                                    d: "M0 0h24v24H0z",
+                                    fill: "none"
+                                  }
+                                }),
+                                _c("line", {
+                                  attrs: {
+                                    x1: "12",
+                                    y1: "5",
+                                    x2: "12",
+                                    y2: "19"
+                                  }
+                                }),
+                                _c("line", {
+                                  attrs: {
+                                    x1: "5",
+                                    y1: "12",
+                                    x2: "19",
+                                    y2: "12"
+                                  }
+                                })
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("span", [_vm._v(_vm._s(_vm.title) + " Baru")])
+                        ]
+                      )
+                    : _c(
+                        "a",
+                        {
+                          staticClass: "btn",
+                          attrs: { href: "/admin/soal/create" }
+                        },
+                        [
+                          _c("span", [
+                            _c(
+                              "svg",
+                              {
+                                staticClass: "icon",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "24",
+                                  height: "24",
+                                  viewBox: "0 0 24 24",
+                                  "stroke-width": "2",
+                                  stroke: "currentColor",
+                                  fill: "none",
+                                  "stroke-linecap": "round",
+                                  "stroke-linejoin": "round"
+                                }
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    stroke: "none",
+                                    d: "M0 0h24v24H0z",
+                                    fill: "none"
+                                  }
+                                }),
+                                _c("line", {
+                                  attrs: {
+                                    x1: "12",
+                                    y1: "5",
+                                    x2: "12",
+                                    y2: "19"
+                                  }
+                                }),
+                                _c("line", {
+                                  attrs: {
+                                    x1: "5",
+                                    y1: "12",
+                                    x2: "19",
+                                    y2: "12"
+                                  }
+                                })
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("span", [_vm._v(_vm._s(_vm.title) + " Baru")])
+                        ]
+                      ),
                   _vm._v(" "),
                   _vm.item == "user"
                     ? _c(
@@ -45912,19 +46049,36 @@ var render = function() {
             fn: function(actionProps) {
               return [
                 _c("div", { staticClass: "btn-list flex-nowrap" }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "btn btn-sm",
-                      attrs: { href: _vm.openUrl(actionProps.item) },
-                      domProps: {
-                        textContent: _vm._s(
-                          _vm.item == "user" ? "Lihat Profil" : "Buka"
-                        )
-                      }
-                    },
-                    [_vm._v("Lihat Profil")]
-                  ),
+                  _vm.item != "soal"
+                    ? _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-sm",
+                          attrs: { href: _vm.openUrl(actionProps.item) },
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.item == "user" ? "Lihat Profil" : "Buka"
+                            )
+                          }
+                        },
+                        [_vm._v("Lihat Profil")]
+                      )
+                    : _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-light btn-sm",
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#viewQuestionModal"
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.callView(actionProps.item)
+                            }
+                          }
+                        },
+                        [_vm._v("Lihat")]
+                      ),
                   _vm._v(" "),
                   _c(
                     "a",
@@ -45935,23 +46089,24 @@ var render = function() {
                     [_vm._v("Edit")]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-sm btn-danger",
-                      attrs: {
-                        "data-toggle": "modal",
-                        "data-target": "#deleteItemModal",
-                        disabled: _vm.cantBeDeleted(actionProps.item)
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.callDelete(actionProps.item)
-                        }
-                      }
-                    },
-                    [_vm._v("Hapus")]
-                  )
+                  !_vm.cantBeDeleted(actionProps.item)
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-sm btn-danger",
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#deleteItemModal"
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.callDelete(actionProps.item)
+                            }
+                          }
+                        },
+                        [_vm._v("Hapus")]
+                      )
+                    : _vm._e()
                 ])
               ]
             }
@@ -46073,7 +46228,11 @@ var render = function() {
             proxy: true
           }
         ])
-      })
+      }),
+      _vm._v(" "),
+      _vm.item == "soal"
+        ? _c("question-viewer", { ref: "viewQuestionModal" })
+        : _vm._e()
     ],
     2
   )
@@ -61725,7 +61884,8 @@ var map = {
 	"./components/VTable.vue": "./resources/js/components/VTable.vue",
 	"./components/admin/ExamKelas.vue": "./resources/js/components/admin/ExamKelas.vue",
 	"./components/admin/ExamQuestion.vue": "./resources/js/components/admin/ExamQuestion.vue",
-	"./components/admin/QuestionCreate.vue": "./resources/js/components/admin/QuestionCreate.vue",
+	"./components/admin/QuestionForm.vue": "./resources/js/components/admin/QuestionForm.vue",
+	"./components/admin/QuestionViewer.vue": "./resources/js/components/admin/QuestionViewer.vue",
 	"./components/admin/general/ItemEditForm.vue": "./resources/js/components/admin/general/ItemEditForm.vue",
 	"./components/admin/item-index/ItemAction.vue": "./resources/js/components/admin/item-index/ItemAction.vue",
 	"./components/admin/item-index/ItemAssign.vue": "./resources/js/components/admin/item-index/ItemAssign.vue",
@@ -62169,17 +62329,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/QuestionCreate.vue":
-/*!**********************************************************!*\
-  !*** ./resources/js/components/admin/QuestionCreate.vue ***!
-  \**********************************************************/
+/***/ "./resources/js/components/admin/QuestionForm.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/admin/QuestionForm.vue ***!
+  \********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuestionCreate.vue?vue&type=template&id=459c19a6& */ "./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&");
-/* harmony import */ var _QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuestionCreate.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&");
+/* harmony import */ var _QuestionForm_vue_vue_type_template_id_f3546596___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuestionForm.vue?vue&type=template&id=f3546596& */ "./resources/js/components/admin/QuestionForm.vue?vue&type=template&id=f3546596&");
+/* harmony import */ var _QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuestionForm.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/QuestionForm.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -62189,9 +62349,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _QuestionForm_vue_vue_type_template_id_f3546596___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _QuestionForm_vue_vue_type_template_id_f3546596___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -62201,38 +62361,107 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/admin/QuestionCreate.vue"
+component.options.__file = "resources/js/components/admin/QuestionForm.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/admin/QuestionForm.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/admin/QuestionForm.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/QuestionForm.vue?vue&type=template&id=f3546596&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/admin/QuestionForm.vue?vue&type=template&id=f3546596& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionForm_vue_vue_type_template_id_f3546596___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionForm.vue?vue&type=template&id=f3546596& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionForm.vue?vue&type=template&id=f3546596&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionForm_vue_vue_type_template_id_f3546596___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionForm_vue_vue_type_template_id_f3546596___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/QuestionViewer.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/admin/QuestionViewer.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuestionViewer.vue?vue&type=template&id=3b250943& */ "./resources/js/components/admin/QuestionViewer.vue?vue&type=template&id=3b250943&");
+/* harmony import */ var _QuestionViewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuestionViewer.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/QuestionViewer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _QuestionViewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/QuestionViewer.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/QuestionViewer.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************!*\
-  !*** ./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/admin/QuestionViewer.vue?vue&type=script&lang=js& ***!
   \***********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionViewer.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionViewer.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&":
+/***/ "./resources/js/components/admin/QuestionViewer.vue?vue&type=template&id=3b250943&":
 /*!*****************************************************************************************!*\
-  !*** ./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6& ***!
+  !*** ./resources/js/components/admin/QuestionViewer.vue?vue&type=template&id=3b250943& ***!
   \*****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionCreate.vue?vue&type=template&id=459c19a6& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionCreate.vue?vue&type=template&id=459c19a6&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./QuestionViewer.vue?vue&type=template&id=3b250943& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/QuestionViewer.vue?vue&type=template&id=3b250943&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionCreate_vue_vue_type_template_id_459c19a6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -63625,7 +63854,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

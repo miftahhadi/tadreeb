@@ -5,7 +5,7 @@
                 <h2>Daftar Soal</h2>
             </div>    
             <div class="col-auto ml-auto">               
-                <a :href="'/admin/ujian/' + examId + '/soal/create'" class="btn btn-primary">Buat Soal Baru</a>
+                <a :href="'/admin/soal/create?ujian=' + examId" class="btn btn-primary">Buat Soal Baru</a>
                 <button 
                     class="btn"
                     data-toggle="modal" 
@@ -30,7 +30,7 @@
                             @click="callView(slotProp.item)"
                         >Lihat</button>
 
-                        <a :href="'/admin/ujian/' + examId + '/soal/' + slotProp.item.id + '/edit' " class="btn btn-light btn-sm" target="_blank">Edit</a>
+                        <a :href="'/admin/soal/' + slotProp.item.id + '/edit?ujian=' + examId " class="btn btn-light btn-sm" target="_blank">Edit</a>
                         
                         <button 
                             class="btn btn-danger btn-sm"
@@ -46,6 +46,7 @@
         <modal
             id="assignQuestionModal"
             :classes="['modal-dialog-centered', 'modal-lg']"
+            :key="assignModal.key"
         >
             <template #header>
                 Impor soal dari database
@@ -57,7 +58,6 @@
                     :item-properties="assignModal.properties"
                     fetch-url="/api/soal"
                     :search="true"
-                    :key="listKey"
                 >
                     <template v-slot:action="actionProp">
                         <item-assign
@@ -97,41 +97,9 @@
 
         </modal>
 
-        <modal
-            id="viewQuestionModal"
-            :classes="['modal-dialog-centered', 'modal-lg']"
-        >
-            <template #header v-if="toView">
-                <span>
-                    ID Soal: {{ toView.id }}
-                </span>
-                <a :href="'/admin/ujian/' + examId + '/soal/' + toView.id + '/edit' " class="btn" target="_blank">Edit</a>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </template>
-
-            <template #body>
-                <span v-html="toView.konten" v-if="toView != null"></span>
-            </template>
-
-            <template #extended-body v-if="toView != null">
-                <div class="table-responsive border-top p-3">
-                    <table class="table card-table table-vcenter">
-                        <tbody>
-                            <tr v-for="answer in toView.answers" :key="answer.id">
-                                <td class="w-1 text-success" :class="(answer.benar == 1) ? 'text-success' : 'text-danger'">
-                                    <i class="fas fa-check-circle fa-lg" v-if="answer.benar == 1"></i>
-                                    <i class="fas fa-times-circle fa-lg" v-else></i>
-                                </td>
-                                <td v-html="answer.redaksi"></td>
-                                <td width="20%"><b>Nilai:</b> {{ answer.nilai }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </template>
-
-        </modal>
-
+        <question-viewer
+            ref="viewQuestionModal"    
+        ></question-viewer>
     </div>
 </template>
 
@@ -174,7 +142,6 @@ export default {
             properties: ['urutan', 'kode', 'konten', 'tipe'],
 
             toUnassign: null,
-            toView: null,
 
             questions: this.questionsArray,
             questionIds: [],
@@ -200,7 +167,8 @@ export default {
 
                 properties: ['id', 'kode', 'konten'],
 
-                listKey: 0,
+                key: 0
+
             }
         }
     },
@@ -226,7 +194,7 @@ export default {
                 this.questions.splice(id, 1)
                 this.questionIds.splice(id, 1)
 
-                this.listKey += 1
+                this.assignModal.key += 1
 
                 this.questions.map(question => {
                     if (question.urutan > urutan) {
@@ -244,7 +212,8 @@ export default {
         },
 
         callView(item) {
-            this.toView = item
+            this.$refs.viewQuestionModal.toView = item
+            this.$refs.viewQuestionModal.examId = this.examId
         }
     },
 

@@ -71,7 +71,7 @@ Route::name('admin.')->group(function () {
 
         // Question-Exam
         Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
-        Route::resource('ujian.soal', 'QuestionController')->except('index');
+        // Route::resource('ujian.soal', 'QuestionController')->except('index');
 
         // Exam
         Route::get('ujian/{ujian}/hasil', 'ExamController@showResult')->name('ujian.hasil');

@@ -12,7 +12,7 @@
 
                 <div class="col-auto ml-auto">
                     <button class="btn btn-success" :class="saving" @click="save()">Simpan</button>
-                    <a :href="'/admin/ujian/' + examId " class="btn btn-white">Kembali</a>
+                    <a :href="backUrl" class="btn btn-white">Kembali</a>
                 </div>
 
             </div>
@@ -156,7 +156,7 @@
 import swal from "sweetalert";
 
 export default {
-    name: 'question-create',
+    name: 'question-form',
 
     props: {
         examId: Number,
@@ -235,10 +235,6 @@ export default {
     },
 
     watch: {
-        tipe: function (newTipe, oldTipe) {
-            
-        },
-
         'question.konten': function (newKonten, oldKonten) {
             if (newKonten != '') {
                 this.errors.question = ''
@@ -345,8 +341,6 @@ export default {
                     question.tipe = 'Benar/Salah';
                     break;
             }
-            
-            console.log(this.answers)
 
             const axiosConfig = {
                 url: (this.question.id != null) ? '/api/soal/' + this.question.id : '/api/soal',
@@ -365,7 +359,7 @@ export default {
 
                 this.saveLoading = false
                 // console.log(response.data)
-                this.processData(response.data.question)
+                this.processData(response.data)
             }).catch(errors => {
                 console.log(errors)
             })
@@ -444,8 +438,8 @@ export default {
             return (this.question.tipe == 'jawaban-ganda') ? 'checkbox' : 'radio'
         },
 
-        submitUrl() {
-            return '/admin/ujian/' + this.examId + '/soal';
+        backUrl() {
+            return (this.examId != null) ? '/admin/ujian/' + this.examId : '/admin/soal'
         },
 
         questionIsEmpty() {

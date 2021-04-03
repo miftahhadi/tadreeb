@@ -26,8 +26,11 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     Route::resource('pelajaran', 'LessonController');
 
     // Exams
+    Route::get('ujian/search/{search}', 'ExamController@search');
+
     Route::post('ujian/{ujian}/assign-soal', 'ExamController@assignQuestion');
     Route::post('ujian/unassign-soal', 'ExamController@unassignQuestion');
+
     Route::resource('ujian', 'ExamController');
 
     Route::group(['prefix' => 'ujian/{ujian}'], function() {
@@ -46,6 +49,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     Route::delete('soal/{soal}/jawaban/{jawaban}', 'QuestionController@deleteAnswer');
     Route::post('soal', 'QuestionController@store');
     Route::put('soal/{soal}', 'QuestionController@update');
+    Route::delete('soal/{soal}', 'QuestionController@destroy');
 
     Route::post('section/{section}/ujian/assign', 'SectionController@assignExam');
 
