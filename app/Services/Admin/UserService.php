@@ -12,7 +12,7 @@ use Throwable;
 class UserService 
 {
     public $userField = [
-        'nama', 'email', 'username', 'password', 'role_id', 'gender', 'tanggal_lahir', 'kelas_id'
+        'nama', 'email', 'username', 'password', 'role_id', 'gender', 'tanggal_lahir', 'kelas_id', 'whatsapp', 'telegram'
     ];
 
     public function store($request)
@@ -88,7 +88,7 @@ class UserService
                 try {
                     $user->classrooms()->attach($row[7]);
                     $updated++; 
-                } catch (Throwable $e) {
+                } catch (\Throwable $e) {
                     $error = 'Error untuk baris ' . $key . ': ' . report($e);
 
                     array_push($errors, $error);
@@ -98,13 +98,19 @@ class UserService
 
                 try {
                     $user = User::create([
-                        'nama' => $row[0],
+                        'name' => $row[0],
                         'email' => $row[1],
                         'username' => $row[2],
                         'password' => Hash::make($row[3]),
-                        'gender' => $row[5],
-                        'tanggal_lahir' => ($row[6] != '') ? Carbon::parse($row[6])->format('Y-m-d')
-                                                            : null
+                    ]);
+
+                    $user->profile()->create([
+                        'gender' => $row[5] ?? null,
+                        'tanggal_lahir' => ($row[6] != '') 
+                                                ? Carbon::parse($row[6])->format('Y-m-d')
+                                                : null,
+                        'whatsapp' => $row[8] ?? null,
+                        'telegram' => $row[9] ?? null
                     ]);
     
                     if ($row[4]) {
@@ -130,10 +136,8 @@ class UserService
 
         return [
             'imported' => $imported,
-
             'updated' => $updated,
-
-            'errors' => $errors
+            'errors' => $errors,
         ];
 
     }

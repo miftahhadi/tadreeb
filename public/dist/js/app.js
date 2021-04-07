@@ -3618,7 +3618,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     cantBeDeleted: function cantBeDeleted(data) {
       if (this.item == 'user') {
-        return data.role == 'admin' || data.role == 'superadmin';
+        return data.role_name == 'admin' || data.role_name == 'superadmin';
       }
     },
     callView: function callView(item) {
@@ -4819,7 +4819,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      axios.post('/admin/user/process-csv', {
+      axios.post('/api/user/process-csv', {
         id: this.id
       }).then(function (response) {
         _this.result = response.data;
@@ -47795,20 +47795,24 @@ var render = function() {
           _c("table", { staticClass: "table table-vcenter" }, [
             _c(
               "thead",
-              _vm._l(_vm.fields, function(field) {
-                return _c("th", { key: field.id }, [_vm._v(_vm._s(field))])
+              _vm._l(_vm.fields, function(field, index) {
+                return _c("th", { key: "field" + index }, [
+                  _vm._v(_vm._s(field))
+                ])
               }),
               0
             ),
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.dataToShow, function(row) {
+              _vm._l(_vm.dataToShow, function(row, index) {
                 return _c(
                   "tr",
-                  { key: row.id },
-                  _vm._l(row, function(value) {
-                    return _c("td", { key: value }, [_vm._v(_vm._s(value))])
+                  { key: "row" + index },
+                  _vm._l(row, function(value, index) {
+                    return _c("td", { key: "value" + index }, [
+                      _vm._v(_vm._s(value))
+                    ])
                   }),
                   0
                 )
@@ -47820,15 +47824,10 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "btn-list" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-secondary mr-1",
-          attrs: { href: "/admin/user" }
-        },
-        [_vm._v("Batal")]
-      ),
+    _c("div", { staticClass: "btn-list mt-2" }, [
+      _c("a", { staticClass: "btn mr-1", attrs: { href: "/admin/user" } }, [
+        _vm._v("Batal")
+      ]),
       _vm._v(" "),
       _c(
         "button",
@@ -47896,8 +47895,8 @@ var render = function() {
                             ),
                             _c(
                               "ul",
-                              _vm._l(_vm.result.errors, function(error) {
-                                return _c("li", { key: error }, [
+                              _vm._l(_vm.result.errors, function(error, index) {
+                                return _c("li", { key: "error" + index }, [
                                   _vm._v(" " + _vm._s(error))
                                 ])
                               }),

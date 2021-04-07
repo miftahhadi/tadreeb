@@ -202,7 +202,7 @@
 
             cantBeDeleted(data) {
                 if (this.item == 'user') {
-                    return (data.role == 'admin' || data.role == 'superadmin')
+                    return (data.role_name == 'admin' || data.role_name == 'superadmin')
                 }
             },
 

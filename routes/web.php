@@ -105,6 +105,7 @@ Route::name('admin.')->group(function () {
         
         Route::get('user/import-csv', 'UserController@getCsv')->name('user.getCsv');
         Route::post('user/parse-csv', 'UserController@parseCsv')->name('user.parseCsv');
+        Route::get('/user/preview-csv', 'UserController@previewCsvData')->name('user.previewCsv');
 
         Route::resource('user', 'UserController');
     

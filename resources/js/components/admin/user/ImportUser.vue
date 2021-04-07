@@ -11,15 +11,15 @@
 
                         <thead>
 
-                            <th v-for="field in fields" :key="field.id">{{ field }}</th>
+                            <th v-for="(field, index) in fields" :key="'field' + index">{{ field }}</th>
 
                         </thead>
 
                         <tbody>
 
-                            <tr v-for="row in dataToShow" :key="row.id">
+                            <tr v-for="(row, index) in dataToShow" :key="'row' + index">
 
-                                <td v-for="value in row" :key="value">{{ value }}</td>
+                                <td v-for="(value, index) in row" :key="'value' + index">{{ value }}</td>
 
                             </tr>
 
@@ -30,9 +30,9 @@
             </div>
         </div>
 
-        <div class="btn-list">
+        <div class="btn-list mt-2">
 
-            <a href="/admin/user" class="btn btn-secondary mr-1">Batal</a>
+            <a href="/admin/user" class="btn mr-1">Batal</a>
 
             <button type="button" 
                     class="btn btn-success" 
@@ -72,7 +72,7 @@
                                 <p v-if="result.errors && result.errors.length != 0">
                                     Terjadi kesalahan berikut:
                                     <ul>
-                                        <li v-for="error in result.errors" :key="error"> {{ error }}</li>
+                                        <li v-for="(error, index) in result.errors" :key="'error' + index"> {{ error }}</li>
                                     </ul>
                                 </p>
                             </div>
@@ -113,10 +113,11 @@
             submit() {
                 this.loading = true;
 
-                axios.post('/admin/user/process-csv', {
+                axios.post('/api/user/process-csv', {
                     id: this.id
                 })
                 .then(response => {
+
                     this.result = response.data;
                     this.loading = false;
                 })

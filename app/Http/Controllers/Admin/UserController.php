@@ -45,8 +45,20 @@ class UserController extends Controller
 
     public function getCsv()
     {
+        $breadcrumbs = [
+            [
+                'name' => 'User',
+                'href' => route('admin.user.index')
+            ]
+        ];
+
+        $itemName = 'Impor User dari File CSV';
+
         return view('admin.user.import-csv', [
             'title' => 'Impor User dari CSV',
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => null,
             'userField' => $this->service->userField
         ]);
     }
@@ -57,10 +69,28 @@ class UserController extends Controller
 
         $data = $this->service->parseCsv($validated);
 
+        return redirect(route('admin.user.previewCsv', ['csv' => $data->id]));
+    }
+
+    public function previewCsvData(Request $request)
+    {
+        $breadcrumbs = [
+            [
+                'name' => 'User',
+                'href' => route('admin.user.index')
+            ]
+        ];
+
+        $itemName = 'Pratinjau Data CSV';
+
+        $data = CsvUserData::find($request['csv']);
         $dataToShow = array_slice(json_decode($data->csv_data), 1, 3);
 
         return view('admin.user.preview-csv', [
             'title' => 'Pratinjau Data CSV',
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => null,
             'dataToShow' => json_encode($dataToShow),
             'csvDataFile' => $data,
             'fields' => json_encode($this->service->userField)
@@ -68,9 +98,7 @@ class UserController extends Controller
     }
 
     public function processCsv(Request $request)
-    {
-        // dd($request);
-        
+    {      
         return json_encode($this->service->processCsv($request->id));
     }
 
