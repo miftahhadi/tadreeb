@@ -104,9 +104,10 @@ class ClassroomController extends Controller
                             ->addSelect([
                                 'gender' => Profile::select('gender')
                                                     ->whereColumn('user_id', 'users.id'),
-                                'role' => Role::select('role')
-                                                ->join('role_user', 'roles.id', '=', 'role_user.role_id')
-                                                ->whereColumn('role_user.user_id', 'users.id')
+                                'role_name' => Role::select('name')
+                                                    ->whereColumn('id', 'users.role_id'),
+                                'role'      => Role::select('display_as')
+                                                    ->whereColumn('id', 'users.role_id')
                             ])
                             ->paginate(20)
                     );
