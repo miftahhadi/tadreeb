@@ -17,10 +17,10 @@ class Classroom extends Model
         return $this->belongsTo(Group::class);
     }
 
-    public function lessons()
+    /* public function lessons()
     {
         return $this->belongsToMany(Lesson::class);
-    }
+    } */
 
     public function exams()
     {
@@ -37,11 +37,6 @@ class Classroom extends Model
                             'durasi', 
                             'attempt'
                         ]);
-    }
-
-    public function classroomExam()
-    {
-        return $this->hasOne(ClassroomExam::class);
     }
 
     public function users()

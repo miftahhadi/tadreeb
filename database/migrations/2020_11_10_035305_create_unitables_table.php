@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSectionablesTable extends Migration
+class CreateUnitablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSectionablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sectionables', function (Blueprint $table) {
+        Schema::create('unitables', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('section_id')->constrained();
-            $table->morphs('sectionable');
+            $table->foreignId('unit_id')->constrained();
+            $table->morphs('unitable');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateSectionablesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sectionables');
+        Schema::dropIfExists('unitables');
     }
 }

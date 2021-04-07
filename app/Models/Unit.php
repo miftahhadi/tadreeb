@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Section extends Model
+class Unit extends Model
 {
     use HasFactory;
 
@@ -18,11 +18,11 @@ class Section extends Model
 
     public function exams()
     {
-        return $this->morphedByMany(Exam::class, 'sectionable');
+        return $this->morphedByMany(Exam::class, 'unitable');
     }
 
     public function contents()
     {
-        return $this->hasMany(SectionContent::class);
+        return $this->hasMany(UnitContent::class);
     }
 }

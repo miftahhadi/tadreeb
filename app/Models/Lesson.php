@@ -13,13 +13,13 @@ class Lesson extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function sections()
+    public function units()
     {
-        return $this->hasMany(Section::class);
+        return $this->hasMany(Unit::class);
     }
 
-    public function classrooms()
+    /* public function classrooms()
     {
         return $this->belongsToMany(Classroom::class);
-    }
+    } */
 }

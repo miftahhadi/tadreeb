@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,11 +27,11 @@ class UserSeeder extends Seeder
         $admin->profile()->create();
 
         // Assign role
-        $admin->roles()->attach(2);
-        
-        // Issue token
-        $admin->createToken('admin', ['system:basic']);
+        $admin->assignRole('admin');
 
+        $admin->save();
+        
+        // Superadmin
         $root = User::create([
             'name' => 'Root',
             'email' => 'root@admin.com',
@@ -42,10 +43,9 @@ class UserSeeder extends Seeder
         $root->profile()->create();
 
         // Assign role
-        $root->roles()->attach(1);
-        
-        // Issue token
-        $root->createToken('admin', ['system:all']);
+        $root->assignRole('superadmin');
 
+        $root->save();
+        
     }
 }

@@ -34,8 +34,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_recovery_codes',
-        'two_factor_secret',
     ];
 
     /**
@@ -53,26 +51,36 @@ class User extends Authenticatable
         return $this->hasOne(Profile::class);
     }
 
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
-    public function getFirstRole()
+    public function getRoleDisplayName()
     {
-        return $this->roles->pluck('role')->first();
+        return $this->role->display_as;
+    }
+
+    public function assignRole($role)
+    {
+        if (is_numeric($role)) {
+            $role = Role::find($role);
+        } else {
+            $role = Role::where('name', $role)->first();
+        }
+
+        if (!$role) {
+            return false;
+        }
+
+        return $this->role()->associate($role)->save();
     }
 
     public function canAccessAdmin()
     {
-        $access = 0;
-        $hasAccess = ['admin', 'superadmin'];
+        $hasAccess = collect(['admin', 'superadmin']);
 
-        foreach ($hasAccess as $role) {
-            $access += ($this->roles()->pluck('role')->contains($role)) ? 1 : 0;
-        }
-
-        return ($access > 0 );
+        return $hasAccess->contains($this->role->name);
     }
 
     public function exams()
