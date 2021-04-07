@@ -98,32 +98,32 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class);
     }
 
-    public function classroomExams()
-    {
-        return $this->belongsToMany(ClassroomExam::class, 'classroomexam_user', 'user_id', 'classroom_exam_id')
-                    ->using(ClassExamUser::class)
-                    ->withPivot([
-                        'attempt',
-                        'answers',
-                        'waktu_mulai',
-                        'waktu_selesai'
-                    ]);
-    }
+    // public function classroomExams()
+    // {
+    //     return $this->belongsToMany(ClassroomExam::class, 'classroomexam_user', 'user_id', 'classroom_exam_id')
+    //                 ->using(ClassExamUser::class)
+    //                 ->withPivot([
+    //                     'attempt',
+    //                     'answers',
+    //                     'waktu_mulai',
+    //                     'waktu_selesai'
+    //                 ]);
+    // }
 
-    public function classExamUsers()
-    {
-        return $this->hasMany(ClassExamUser::class);
-    }
+    // public function classExamUsers()
+    // {
+    //     return $this->hasMany(ClassExamUser::class);
+    // }
 
-    public function getExamScore($classExamId)
-    {
-        return $this->classroomExams()->where('classroom_exam_id', $classExamId)
-                                        ->first()
-                                        ->pivot->score();
-    }
+    // public function getExamScore($classExamId)
+    // {
+    //     return $this->classroomExams()->where('classroom_exam_id', $classExamId)
+    //                                     ->first()
+    //                                     ->pivot->score();
+    // }
 
-    public function hasDoneExam($classExamId)
-    {
-        return ($this->classroomExams()->where('classroom_exam_id', $classExamId)->get()->isNotEmpty()) ? true : false;
-    }
+    // public function hasDoneExam($classExamId)
+    // {
+    //     return ($this->classroomExams()->where('classroom_exam_id', $classExamId)->get()->isNotEmpty()) ? true : false;
+    // }
 }
