@@ -66,7 +66,8 @@ export default {
             itemType: {
                 pelajaran: 'lessons',
                 ujian: 'exams',
-                user: 'users'
+                user: 'users',
+                anggota: 'users'
             }
         }
     },
