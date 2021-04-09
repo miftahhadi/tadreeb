@@ -3911,7 +3911,8 @@ __webpack_require__.r(__webpack_exports__);
       itemType: {
         pelajaran: 'lessons',
         ujian: 'exams',
-        user: 'users'
+        user: 'users',
+        anggota: 'users'
       }
     };
   },
