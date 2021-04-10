@@ -98,17 +98,17 @@ class User extends Authenticatable
         return $this->belongsToMany(Classroom::class);
     }
 
-    // public function classroomExams()
-    // {
-    //     return $this->belongsToMany(ClassroomExam::class, 'classroomexam_user', 'user_id', 'classroom_exam_id')
-    //                 ->using(ClassExamUser::class)
-    //                 ->withPivot([
-    //                     'attempt',
-    //                     'answers',
-    //                     'waktu_mulai',
-    //                     'waktu_selesai'
-    //                 ]);
-    // }
+    public function examables()
+    {
+        return $this->belongsToMany(Examable::class, 'examable_user', 'user_id', 'examable_id')
+                    ->using(ExamableUser::class)
+                    ->withPivot([
+                        'attempt',
+                        'answers',
+                        'waktu_mulai',
+                        'waktu_selesai'
+                    ]);
+    }
 
     // public function classExamUsers()
     // {
@@ -122,8 +122,25 @@ class User extends Authenticatable
     //                                     ->pivot->score();
     // }
 
-    // public function hasDoneExam($classExamId)
-    // {
-    //     return ($this->classroomExams()->where('classroom_exam_id', $classExamId)->get()->isNotEmpty()) ? true : false;
-    // }
+    public function hasDoneExam($examableId)
+    {
+        return $this->examables()->where('classroom_exam_id', $examableId)->get()->isNotEmpty();
+    }
+
+    public function examStatus($examableId)
+    {
+        $examable = $this->examables()->find($examableId);
+
+        if (!$examable) {
+            return 'Belum mengerjakan';
+        }
+
+        $examableUser = $examable->pivot;
+
+        if ($examableUser->waktu_mulai && $examable->isClosed()) {
+            return 'Tidak selesai';
+        }
+
+        return ($examableUser->waktu_selesai) ? 'Sudah mengerjakan' : 'Sedang mengerjakan';
+    }
 }

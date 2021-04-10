@@ -40,8 +40,9 @@ class FrontController extends Controller
 
                                 return ($hidden == 0);
                             })
-                            ->map(function($exam) use ($now) {
+                            ->map(function($exam) use ($now, $user) {
                                 $toShow = [
+                                    'examable_id' => $exam->pivot->id,
                                     'id' => $exam->id,
                                     'judul' => $exam->judul,
                                     'slug' => $exam->slug
@@ -54,6 +55,7 @@ class FrontController extends Controller
                                 }
 
                                 $toShow['buka'] = $bukaAkses;
+                                $toShow['status'] = $user->examStatus($exam->pivot->id);
 
                                 return $toShow;
                             })
@@ -66,7 +68,6 @@ class FrontController extends Controller
             $partial['ujian'] = $exams;
             array_push($data, $partial);
         }
-
 
         return view('front.dashboard-user', [
             'title' => 'Halaman Depan',

@@ -16,8 +16,8 @@ class Examable extends MorphPivot
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'classroomexam_user', 'classroom_exam_id', 'user_id')
-                    ->using(ClassExamUser::class)
+        return $this->belongsToMany(User::class, 'examable_user', 'examable_id', 'user_id')
+                    ->using(ExamableUser::class)
                     ->withPivot([
                         'attempt', 
                         'answers',
@@ -72,6 +72,24 @@ class Examable extends MorphPivot
             'heading' => $heading,
             'row' => $users
         ];
+    }
+
+    public function isOpen()
+    {
+        $now = now();
+
+        if ($this->buka_otomatis) {
+            $open = $now->greaterThanOrEqualTo($this->buka_otomatis);
+        } else {
+            $open = $this->buka;
+        }
+
+        return $open;
+    }
+
+    public function isClosed()
+    {
+        return !$this->isOpen();
     }
 
 }
