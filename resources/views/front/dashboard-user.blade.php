@@ -27,8 +27,14 @@
                             <div class="card">
                                 <div class="card-status-top bg-primary"></div>
                                 <div class="card-body">
-                                    <div class="text-primary">Kelas: {{ $item['kelas_nama'] }}</div>
-                                    <div class="h1 mb-3">{{ $exam['judul'] }}</div>
+                                    <div class="text-primary">
+                                        Kelas: <a href="{{ route('kelas.home', ['kelas' => $item['kelas_kode']]) }}">{{ $item['kelas_nama'] }}</a>
+                                    </div>
+                                    <div class="h1 mb-3">
+                                        <a href="{{ route('kelas.exam.info', ['kelas' => $item['kelas_kode'], 'exam' => $exam['slug']]) }}">
+                                            {{ $exam['judul'] }}
+                                        </a>
+                                    </div>
                                     <div class="d-flex small">
                                         <div class="d-inline-flex flex-column align-items-center mr-2">
                                             <div>
