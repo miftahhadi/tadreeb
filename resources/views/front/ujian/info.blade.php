@@ -37,15 +37,15 @@
             <div class="text-center">
                 <a href="#" class="btn btn-white">Kembali</a>
 
-                @if ($service->hasDone())
+                {{-- @if ($service->hasDone())
                     <a href="#" 
                         class="btn btn-primary">
                         Lihat Hasil
                     </a>                    
-                @endif
+                @endif --}}
 
                 <a href="{{ route('kelas.exam.kerjakan', [ 
-                                    'classroom' => $service->classroom->kode, 
+                                    'kelas' => $service->classroom->kode, 
                                     'exam' => $service->exam->slug 
                                 ]) }}" 
                     class="btn btn-success">

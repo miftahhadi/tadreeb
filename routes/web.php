@@ -26,10 +26,10 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
 
     Route::group(['prefix' => 'k'], function () {
 
-        Route::redirect('/{classroom:kode}', '/k/{classroom:kode}/depan');
+        Route::redirect('/{kelas:kode}', '/k/{kelas:kode}/depan');
 
         // Classroom's subpage
-        Route::group(['prefix' => '/{classroom:kode}'], function () {
+        Route::group(['prefix' => '/{kelas:kode}'], function () {
             Route::get('/depan', 'ClassroomController@showHome')->name('kelas.home');
             Route::get('/pelajaran', 'ClassroomController@showLessons')->name('kelas.lessons');
             Route::get('/works', 'ClassroomController@showWorks')->name('kelas.works');
@@ -37,11 +37,11 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
         });
 
         // Exam's subpage
-        Route::group(['prefix' => '/{classroom:kode}/u/'], function () {
-            Route::get('{exam}', 'ClassroomExamController@showInfo')->name('kelas.exam.info');
-            Route::get('{exam}/kerjakan', 'ClassroomExamController@showExam')->name('kelas.exam.kerjakan');
-            Route::get('{exam}/riwayat', 'ExamResultController@showHistory')->name('kelas.exam.riwayat-user');
-            Route::get('{exam}/hasil', 'ExamResultController@showResult')->name('kelas.exam.hasil-user');
+        Route::group(['prefix' => '/{kelas:kode}/u/'], function () {
+            Route::get('{exam:slug}', 'ClassroomExamController@showInfo')->name('kelas.exam.info');
+            Route::get('{exam:slug}/kerjakan', 'ClassroomExamController@showExam')->name('kelas.exam.kerjakan');
+            Route::get('{exam:slug}/riwayat', 'ExamResultController@showHistory')->name('kelas.exam.riwayat-user');
+            Route::get('{exam:slug}/hasil', 'ExamResultController@showResult')->name('kelas.exam.hasil-user');
 
         });
 

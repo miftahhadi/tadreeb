@@ -4,8 +4,8 @@ namespace App\Services\Front;
 
 use App\Models\ClassExamUser;
 use App\Models\Classroom;
-use App\Models\ClassroomExam;
 use App\Models\Exam;
+use App\Models\Examable;
 use Carbon\Carbon;
 
 class ClassroomExamService
@@ -29,8 +29,8 @@ class ClassroomExamService
         $this->exam = $exam;
         $this->classroom = $classroom;
 
-        $this->classexam = ClassroomExam::where([
-                                ['classroom_id', $classroom->id],
+        $this->classexam = Examable::where([
+                                ['examable_id', $classroom->id],
                                 ['exam_id', $exam->id]
                             ])
                             ->first();

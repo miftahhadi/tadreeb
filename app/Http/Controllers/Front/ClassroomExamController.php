@@ -18,15 +18,15 @@ class ClassroomExamController extends Controller
         $this->service = $classroomExamService;
     }
 
-    public function showInfo(Classroom $classroom, Exam $exam)
+    public function showInfo(Classroom $kelas, Exam $exam)
     {
         $exam->loadCount('questions');
 
-        $this->service->info($exam, $classroom);
+        $this->service->info($exam, $kelas);
 
         return view('front.ujian.info', [
-            'title' => $exam->judul . ' - ' . $classroom->nama,
-            'kelas' => $classroom,
+            'title' => $exam->judul . ' - ' . $kelas->nama,
+            'kelas' => $kelas,
             'exam' => $exam,
             'service' => $this->service
         ]);

@@ -17,50 +17,50 @@ class ClassroomController extends Controller
         $this->service = $classroomService;
     }
 
-    public function showHome(Classroom $classroom)
+    public function showHome(Classroom $kelas)
     {
         // $cardImage = Image::make(public_path('images/dBhITZK.jpg'));
 
         // $cardImage->crop();
 
         return view('front.kelas.home', [
-            'title' => $classroom->nama,
-            'kelas' => $classroom,
+            'title' => $kelas->nama,
+            'kelas' => $kelas,
             'service' => $this->service
         ]);
     }
 
-    public function showPeople(Classroom $classroom)
+    public function showPeople(Classroom $kelas)
     {
-        $people = $classroom->users()->get();
+        $people = $kelas->users()->get();
 
         return view('front.kelas.people', [
-            'title' => 'Anggota - ' .  $classroom->nama,
-            'kelas' => $classroom,
+            'title' => 'Anggota - ' .  $kelas->nama,
+            'kelas' => $kelas,
             'people' => $people,
             'service' => $this->service
         ]);
     }
 
-    public function showLessons(Classroom $classroom)
+    public function showLessons(Classroom $kelas)
     {
-        $lessons = $classroom->lessons()->get();
+        $lessons = $kelas->lessons()->get();
 
         return view('front.kelas.lessons', [
-            'title' => 'Pelajaran - ' . $classroom->nama,
-            'kelas' => $classroom,
+            'title' => 'Pelajaran - ' . $kelas->nama,
+            'kelas' => $kelas,
             'lessons' => $lessons,
             'service' => $this->service
         ]);
     }
 
-    public function showWorks(Classroom $classroom)
+    public function showWorks(Classroom $kelas)
     {
-        $exams = $classroom->exams()->wherePivot('tampil',1)->get();
+        $exams = $kelas->getActiveExamsByUser(auth()->user()->id);
 
         return view('front.kelas.exams', [
-            'title' => 'Tugas dan Ujian - ' . $classroom->nama,
-            'kelas' => $classroom,
+            'title' => 'Tugas dan Ujian - ' . $kelas->nama,
+            'kelas' => $kelas,
             'exams' => $exams,
             'service' => $this->service
         ]);

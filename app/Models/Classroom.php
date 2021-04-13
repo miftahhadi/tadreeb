@@ -66,4 +66,46 @@ class Classroom extends Model
                     ->get();
     }
 
+    public function getActiveExamsByUser($userId, $take = null)
+    {
+        $now = now('utc');
+        $user = User::find($userId);
+
+        $query = $this->exams()->orderBy('examables.id', 'desc');
+
+        if ($take != null) {
+            $query = $query->take($take);
+        }
+
+        return $query->get()
+                        ->filter(function($exam) use ($now) {
+                            $hidden = ($exam->pivot->tampil == 1) ? 0 : 1;
+
+                            if ($exam->pivot->tampil_otomatis) {
+                                $hidden = ($now->greaterThanOrEqualTo($exam->pivot->tampil_otomatis)) ? 0 : 1;
+                            }
+
+                            return ($hidden == 0);
+                        })
+                        ->map(function($exam) use ($now, $user) {
+                            $toShow = [
+                                'examable_id' => $exam->pivot->id,
+                                'id' => $exam->id,
+                                'judul' => $exam->judul,
+                                'slug' => $exam->slug
+                            ];
+
+                            $bukaAkses = ($exam->pivot->buka == 1) ? 1 : 0;
+
+                            if ($exam->pivot->buka_otomatis) {
+                                $bukaAkses = ($now->greaterThanOrEqualTo($exam->pivot->buka_otomatis)) ? 1 : 0;
+                            }
+
+                            $toShow['buka'] = $bukaAkses;
+                            $toShow['status'] = $user->examStatus($exam->pivot->id);
+
+                            return $toShow;
+                        })
+                        ->toArray();
+    }
 }

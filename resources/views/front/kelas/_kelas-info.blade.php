@@ -1,4 +1,4 @@
-<div class="card card-sm bg-blue text-white rounded-lg">
+<div class="card card-sm bg-blue text-white rounded-lg pt-4">
     {{-- <img src="/images/dBhITZK.jpg" class="card-img-top" alt="Card top image"> --}}
     <div class="card-body">
     
