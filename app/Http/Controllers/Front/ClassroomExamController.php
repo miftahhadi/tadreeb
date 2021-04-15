@@ -11,38 +11,29 @@ use Illuminate\Http\Request;
 
 class ClassroomExamController extends Controller
 {
-    protected $service;
-
-    public function __construct(ClassroomExamService $classroomExamService)
-    {
-        $this->service = $classroomExamService;
-    }
-
     public function showInfo(Classroom $kelas, Exam $exam)
     {
         $exam->loadCount('questions');
 
-        $this->service->info($exam, $kelas);
+        $examable = $exam->pivot;
 
         return view('front.ujian.info', [
             'title' => $exam->judul . ' - ' . $kelas->nama,
             'kelas' => $kelas,
             'exam' => $exam,
-            'service' => $this->service
+            'examable' => $examable
         ]);
     }
 
-    public function showExam(Classroom $classroom, Exam $exam)
+    public function showExam(Classroom $kelas, Exam $exam)
     {
-        $this->service->info($exam, $classroom);
-
         if (!$this->service->canDoExam()) {
             return redirect(route('dashboard'));
         }
 
         return view('front.ujian.kerjakan', [
-            'title' => $exam->judul . ' - ' . $classroom->nama,
-            'kelas' => $classroom,
+            'title' => $exam->judul . ' - ' . $kelas->nama,
+            'kelas' => $kelas,
             'exam' => $exam,
             'classexamuserId' => $this->service->getClassExamUserId(),
             'service' => $this->service

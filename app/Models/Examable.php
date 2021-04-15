@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphPivot;
 
 class Examable extends MorphPivot
@@ -91,5 +92,20 @@ class Examable extends MorphPivot
     {
         return !$this->isOpen();
     }
+
+    public function getDurasiString()
+    {
+        return ($this->durasi) ? $this->durasi . ' menit'
+                                : 'Tidak dibatasi';
+    }
+
+    public function getBatasBukaString()
+    {
+        if ($this->batas_buka instanceof Carbon) {
+            return $this->batas_buka->tz(settings('timezone'))->format('d M Y H:i') . ' ' . settings('tzName');
+        } else {
+            return 'Tidak ada';
+        }
+    }    
 
 }

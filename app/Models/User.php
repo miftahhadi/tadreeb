@@ -122,9 +122,9 @@ class User extends Authenticatable
     //                                     ->pivot->score();
     // }
 
-    public function hasDoneExam($examableId)
+    public function hasDoneExam($examableId) // Masih error
     {
-        return $this->examables()->where('classroom_exam_id', $examableId)->get()->isNotEmpty();
+        return $this->examables()->where('examable.id', $examableId)->get()->isNotEmpty();
     }
 
     public function examStatus($examableId)

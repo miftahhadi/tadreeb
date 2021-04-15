@@ -16,11 +16,13 @@
 
                     <dl class="row">
                         <dt class="col-5">Jumlah soal:</dt>
-                        <dd class="col-7">{{ $service->questionsCount() }}</dd>
+                        <dd class="col-7">{{ $exam->questions_count }}</dd>
                         <dt class="col-5">Durasi:</dt>
-                        <dd class="col-7">{{ $service->durasi() }}</dd>
+                        <dd class="col-7">{{ $examable->getDurasiString() }}</dd>
                         <dt class="col-5">Batas akses:</dt>
-                        <dd class="col-7">{{ $service->batasBuka()  }}</dd>
+                        <dd class="col-7">{{ $examable->getBatasBukaString() }}</dd>
+                        <dt class="col-5">Status:</dt>
+                        <dd class="col-7">Sudah dikerjakan</dd>
                       </dl>
 
                 </div>
@@ -37,7 +39,7 @@
             <div class="text-center">
                 <a href="#" class="btn btn-white">Kembali</a>
 
-                {{-- @if ($service->hasDone())
+                {{-- @if (auth()->user()->hasDoneExam($examable->id))
                     <a href="#" 
                         class="btn btn-primary">
                         Lihat Hasil
@@ -45,8 +47,8 @@
                 @endif --}}
 
                 <a href="{{ route('kelas.exam.kerjakan', [ 
-                                    'kelas' => $service->classroom->kode, 
-                                    'exam' => $service->exam->slug 
+                                    'kelas' => $kelas->kode, 
+                                    'exam' => $exam->slug 
                                 ]) }}" 
                     class="btn btn-success">
                     Mulai Kerjakan
