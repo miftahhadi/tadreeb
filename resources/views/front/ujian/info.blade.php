@@ -22,7 +22,7 @@
                         <dt class="col-5">Batas akses:</dt>
                         <dd class="col-7">{{ $examable->getBatasBukaString() }}</dd>
                         <dt class="col-5">Status:</dt>
-                        <dd class="col-7">Sudah dikerjakan</dd>
+                        <dd class="col-7">{{ auth()->user()->examStatus($examable->id) }}</dd>
                       </dl>
 
                 </div>
