@@ -11,17 +11,19 @@ use Illuminate\Http\Request;
 
 class ClassroomExamController extends Controller
 {
-    public function showInfo(Classroom $kelas, Exam $exam)
+    public function showInfo(Request $request, Classroom $kelas, Exam $exam)
     {
         $exam->loadCount('questions');
-
         $examable = $exam->pivot;
+
+        $userAllowed = $examable->isUserAllowed(auth()->user()->id);
 
         return view('front.ujian.info', [
             'title' => $exam->judul . ' - ' . $kelas->nama,
             'kelas' => $kelas,
             'exam' => $exam,
-            'examable' => $examable
+            'examable' => $examable,
+            'userAllowed' => $userAllowed
         ]);
     }
 

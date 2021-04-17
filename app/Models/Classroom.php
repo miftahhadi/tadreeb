@@ -44,6 +44,10 @@ class Classroom extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function isUserAMember($userId)
+    {
+        return $this->users()->where('user_id', $userId)->count() > 0;
+    }
 
     public function usersDoneExam($examableId)
     {

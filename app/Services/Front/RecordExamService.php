@@ -62,19 +62,19 @@ class RecordExamService
          */
         
          if ($this->examable->isOpen()) {
-            return $this->isUserAllowed();
+            return $this->examable->isUserAllowed();
         } else {
             return false;
         }
 
     }
 
-    public function isUserAMember()
+    /* public function isUserAMember()
     {
         return $this->classroom->users()->find(auth()->user()->id) != null;
-    }
+    } */
 
-    public function isUserAllowed()
+    /* public function isUserAllowed()
     {
         // Dia anggota kelas bukan?
         // Udah pernah ngerjain belum?
@@ -109,12 +109,12 @@ class RecordExamService
 
         return true;
 
-    }
+    } */
 
-    public function hasAttempt()
+    /* public function hasAttempt()
     {
         return ($this->examable->attempt == 0 || $this->lastAttempt() < $this->examable->attempt);
-    }
+    } */
 
     public function userHistory()
     {

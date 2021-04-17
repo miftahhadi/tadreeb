@@ -29,15 +29,21 @@
 
             </div>
 
-            <div class="alert alert-info pb-0 mt-2">
-                <ol>
-                    <li>Awali segala hal baik dengan basmalah dan niat yang benar</li>
-                    <li>Jelilah ketika membaca soal</li>
-                </ol>
-            </div>
+            @if ($userAllowed)
+                <div class="alert alert-info pb-0 mt-2">
+                    <ol>
+                        <li>Awali segala hal baik dengan basmalah dan niat yang benar</li>
+                        <li>Jelilah ketika membaca soal</li>
+                    </ol>
+                </div>
+            @else     
+                <div class="alert alert-danger pb-0 mt-2 text-center">
+                    <p>Anda tidak dapat mengakses ujian ini.</p>
+                </div>           
+            @endif
 
             <div class="text-center">
-                <a href="#" class="btn btn-white">Kembali</a>
+                <a href="{{ route('kelas.works', ['kelas' => $kelas->kode]) }}" class="btn btn-white">Kembali</a>
 
                 {{-- @if (auth()->user()->hasDoneExam($examable->id))
                     <a href="#" 
@@ -46,13 +52,16 @@
                     </a>                    
                 @endif --}}
 
-                <a href="{{ route('kelas.exam.kerjakan', [ 
-                                    'kelas' => $kelas->kode, 
-                                    'exam' => $exam->slug 
-                                ]) }}" 
-                    class="btn btn-success">
-                    Mulai Kerjakan
-                </a>
+                @if ($userAllowed)
+                    <a href="{{ route('kelas.exam.kerjakan', [ 
+                                        'kelas' => $kelas->kode, 
+                                        'exam' => $exam->slug 
+                                    ]) }}" 
+                        class="btn btn-success">
+                        Mulai Kerjakan
+                    </a>                    
+                @endif    
+
             </div>
         </div>
     </div>

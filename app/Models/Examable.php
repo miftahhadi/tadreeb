@@ -24,12 +24,13 @@ class Examable extends MorphPivot
                         'answers',
                         'waktu_mulai', 
                         'waktu_selesai'
-                    ]);
+                    ])
+                    ->withTimestamps();
     }
 
-    public function classroom()
+    public function assignedTo()
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->examable_type::find($this->examable_id);
     }
 
     public function exam()
@@ -78,11 +79,14 @@ class Examable extends MorphPivot
     public function isOpen()
     {
         $now = now();
+        $open = $this->buka;
 
-        if ($this->buka_otomatis) {
+        if ($this->buka_otomatis && $this->batas_buka) {
+            $open = $now->greaterThanOrEqualTo($this->buka_otomatis) && $now->lessThanOrEqualTo($this->batas_buka);
+        } elseif ($this->buka_otomatis) {
             $open = $now->greaterThanOrEqualTo($this->buka_otomatis);
-        } else {
-            $open = $this->buka;
+        } elseif ($this->batas_buka) {
+            $open = $now->lessThanOrEqualTo($this->batas_buka);
         }
 
         return $open;
@@ -106,6 +110,53 @@ class Examable extends MorphPivot
         } else {
             return 'Tidak ada';
         }
-    }    
+    }
+
+    public function isUserAllowed($userId)
+    {
+        // Gimana pun ceritanya, kalau akses ditutup user gak boleh buka
+        if ($this->isClosed()) {
+            return false;
+        }
+
+        // Udah pernah ngerjain?
+        $userRecords = $this->users()
+                            ->where('users.id', $userId)
+                            ->get();
+
+        // -- Belum pernah ngerjain, boleh ngerjain
+        if ($userRecords->isEmpty()) {
+            return true;
+        }
+
+        // -- Udah pernah ngerjain, masih boleh ngerjain?
+        $lastRecord = $userRecords->sortByDesc(function($record) {
+                            return $record->pivot->attempt;
+                        })
+                        ->first()->pivot;
+        
+        // Udah submit jawaban atau belum?
+        if ($lastRecord->waktu_selesai) {
+
+            // --> Ada, masih punya kesempatan?
+            return $this->isUserHasAttempt($lastRecord);
+        
+        } else if ($this->durasi && $this->durasi > 0) {
+            // --> Gak ada, durasi udah habis belum?
+            $now = now();
+            $waktuHabis = $lastRecord->waktu_mulai->addMinutes($this->durasi);
+
+            return $now->lessThan($waktuHabis);
+        
+        } else {
+            return true;
+        }
+
+    }
+
+    public function isUserHasAttempt(ExamableUser $record)
+    {
+        return $this->attempt == 0 || $record->attempt < $this->attempt;
+    }
 
 }
