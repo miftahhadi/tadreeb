@@ -52,9 +52,10 @@ class ClassroomExamController extends Controller
                             ? $examableUser->waktu_mulai->addMinutes($examable->durasi)->valueOf()
                             : 0;
 
-        $questionIds = $exam->questions->pluck('id');
+        $questions['data'] = $exam->questions;
+        $question['ids'] = $exam->questions->pluck('id');
 
-        dd($questionIds);
+        dd($questions);
 
         return view('front.ujian.kerjakan', [
             'title' => $exam->judul . ' - ' . $kelas->nama,
@@ -63,7 +64,7 @@ class ClassroomExamController extends Controller
             'examable' => $examable,
             'examableUser' => $examableUser,
             'examExpires' => $examExpires,
-            'questionIds' => $questionIds
+            'questions' => $questions
         ]);
     }
 

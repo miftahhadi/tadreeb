@@ -24,10 +24,13 @@
     <div id="app">
         <exam-doing-page
             :exam-id="{{ $exam->id }}"
-            :classexamuser-id="{{ $classexamuserId }}"
-            :attempt="{{ $service->classexamuser->attempt }}"
+            :examableuser-id="{{ $examableUser->id }}"
+            :attempt="{{ $examableUser->attempt }}"
             kelas={{ $kelas->kode }}
-            :time-expires="{{ ($service->isTimed()) ? $service->userExamExpires()->valueOf() : 0 }}"
+            :exam-expires="{{ $examExpires }}"
+            :exam="{{ $exam }}"
+            :examableuser="{{ $examableUser }}"
+            :question-ids="{{ $questionIds }}"
         ></exam-doing-page>
     </div>
 

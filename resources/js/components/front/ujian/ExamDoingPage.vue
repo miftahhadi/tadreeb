@@ -13,7 +13,7 @@
                         <li class="nav-item ml-auto">
                             <timer
                                 v-if="isTimed()"
-                                :end="timeExpires"
+                                :end="examExpires"
                                 @finished="timesUp"
                             ></timer>
                         </li>
@@ -22,9 +22,9 @@
 
                 <div v-for="question in questions" :key="question.id">
 
-                    <div class="card-body" v-html="question.konten" v-show="question.id == questionId"></div>
+                    <div class="card-body" v-html="question.konten" v-show="question.id == curentQuestionId"></div>
 
-                    <div class="card-body" v-show="question.id == questionId">
+                    <div class="card-body" v-show="question.id == currentQuestionId">
 
                         <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
 
@@ -65,7 +65,7 @@
 
                         <button class="btn btn-success"
                                 :class="[chosen, savingAnswer]"
-                                @click="updateAnswer(questionId)"
+                                @click="updateAnswer(currentQuestionId)"
                         >
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 11 12 14 20 6" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
@@ -202,17 +202,20 @@ export default {
 
     props: {
         examId: Number,
-        classexamuserId: Number,
+        examableuserId: Number,
         attempt: Number,
         kelas: String,
-        timeExpires: Number,
+        examExpires: Number,
+        examData: Array,
+        examableuser: Object,
+        questionData: Array,
     },
 
     data() {
         return {
             exam: {},
             questionIds: [],
-            questionId: 0,
+            currentQuestionId: 0,
             nextQuestion: 0,
             prevQuestion: 0,
             question: {},
@@ -229,13 +232,11 @@ export default {
 
     methods: {
         getExamInfo() {
-            this.loading = true;
-
-            axios.get('/api/ujian/' + this.examId)
+            /* axios.get('/api/ujian/' + this.examId)
                     .then(response => {
                         this.exam = response.data.exam
                         this.questionIds = response.data.questionIds
-                        this.questionId = response.data.questionIds[0]
+                        this.currentQuestionId = response.data.questionIds[0]
                         this.questions = response.data.questions
                         
                         this.getQuestion()
@@ -244,13 +245,20 @@ export default {
                     })
                     .catch(error => {
                         console.log(error)
-                    });
+                    }); */
+            
+        
+            this.exam = this.examData
+            this.questions = this.questionData.data
+            this.questionIds = this.questionData.ids
+            this.currentQuestionId
 
+            this.getQuestion()
             this.getUserAnswers()
         },
 
-        getQuestion(id = this.questionId) {
-            this.questionId = id 
+        getQuestion(id = this.currentQuestionId) {
+            this.currentQuestionId = id 
 
             this.getNextQuestionId()
             this.getPrevQuestionId()
@@ -258,7 +266,7 @@ export default {
         },
 
         getUserAnswers() {
-            axios.get('/api/jawaban-user/' + this.classexamuserId)
+            axios.get('/api/jawaban-user/' + this.examableUserId)
                     .then(response => {
                         const answers = response.data
 
@@ -274,14 +282,14 @@ export default {
         },
 
         isCurrent(id) {
-            return (this.questionId == id);
+            return (this.currentQuestionId == id);
         },
 
         getNextQuestionId() {
             let lastIndex = this.exam.questions_count - 1
 
-            if (this.questionIds.indexOf(this.questionId) != lastIndex) {
-                let index = this.questionIds.indexOf(this.questionId) + 1
+            if (this.questionIds.indexOf(this.currentQuestionId) != lastIndex) {
+                let index = this.questionIds.indexOf(this.currentQuestionId) + 1
                this.nextQuestion = this.questionIds[index];                
             } else {
                 this.nextQuestion = 0
@@ -290,8 +298,8 @@ export default {
         },
 
         getPrevQuestionId() {
-            if (this.questionIds.indexOf(this.questionId) != 0) {
-                let index = this.questionIds.indexOf(this.questionId) - 1
+            if (this.questionIds.indexOf(this.currentQuestionId) != 0) {
+                let index = this.questionIds.indexOf(this.currentQuestionId) - 1
                 this.prevQuestion = this.questionIds[index]
             } else {
                 this.prevQuestion = 0
@@ -314,9 +322,9 @@ export default {
 
         saveAnswer(questionId, answer) {
             axios.post('/api/update-jawaban', {
-                classexamuserId: this.classexamuserId,
+                examableUserId: this.examableUserId,
                 answerIds: answer,
-                questionId: questionId
+                questionId: currentQuestionId
             }).then(response => {
                 this.answering = false
             }).catch(error => {
@@ -342,7 +350,7 @@ export default {
 
             // Rekam data selesai
             axios.post('/api/submit-ujian', {
-                classexamuserId: this.classexamuserId
+                examableUserId: this.examableUserId
             }).then(response => {
                 this.submitting = false;
                 this.submitted = true;
@@ -352,7 +360,7 @@ export default {
         },
 
         isTimed() {
-            return (this.timeExpires != 0);
+            return (this.examExpires != 0);
         },
 
         timesUp() {
@@ -369,7 +377,7 @@ export default {
 
     computed: {
         questionNumber() {
-            return this.questionIds.indexOf(this.questionId) + 1
+            return this.questionIds.indexOf(this.currentQuestionId) + 1
         },
 
         isPrevDisabled() {
@@ -381,7 +389,7 @@ export default {
         },
 
         chosen() {
-            return (this.userAnswers[this.questionId] == '') ? 'disabled' : '';
+            return (this.userAnswers[this.currentQuestionId] == '') ? 'disabled' : '';
         },
 
         savingAnswer() {

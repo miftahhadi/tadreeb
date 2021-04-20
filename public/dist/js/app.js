@@ -5590,16 +5590,19 @@ __webpack_require__.r(__webpack_exports__);
   name: 'exam-doing-page',
   props: {
     examId: Number,
-    classexamuserId: Number,
+    examableuserId: Number,
     attempt: Number,
     kelas: String,
-    timeExpires: Number
+    examExpires: Number,
+    examData: Array,
+    examableuser: Object,
+    questionData: Array
   },
   data: function data() {
     return {
       exam: {},
       questionIds: [],
-      questionId: 0,
+      currentQuestionId: 0,
       nextQuestion: 0,
       prevQuestion: 0,
       question: {},
@@ -5615,57 +5618,60 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getExamInfo: function getExamInfo() {
-      var _this = this;
-
-      this.loading = true;
-      axios.get('/api/ujian/' + this.examId).then(function (response) {
-        _this.exam = response.data.exam;
-        _this.questionIds = response.data.questionIds;
-        _this.questionId = response.data.questionIds[0];
-        _this.questions = response.data.questions;
-
-        _this.getQuestion();
-
-        _this.loading = false;
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      /* axios.get('/api/ujian/' + this.examId)
+              .then(response => {
+                  this.exam = response.data.exam
+                  this.questionIds = response.data.questionIds
+                  this.currentQuestionId = response.data.questionIds[0]
+                  this.questions = response.data.questions
+                  
+                  this.getQuestion()
+                   this.loading = false;
+              })
+              .catch(error => {
+                  console.log(error)
+              }); */
+      this.exam = this.examData;
+      this.questions = this.questionData.data;
+      this.questionIds = this.questionData.ids;
+      this.currentQuestionId;
+      this.getQuestion();
       this.getUserAnswers();
     },
     getQuestion: function getQuestion() {
-      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.questionId;
-      this.questionId = id;
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.currentQuestionId;
+      this.currentQuestionId = id;
       this.getNextQuestionId();
       this.getPrevQuestionId();
     },
     getUserAnswers: function getUserAnswers() {
-      var _this2 = this;
+      var _this = this;
 
-      axios.get('/api/jawaban-user/' + this.classexamuserId).then(function (response) {
+      axios.get('/api/jawaban-user/' + this.examableUserId).then(function (response) {
         var answers = response.data;
         var questions = Object.keys(answers);
         questions.forEach(function (question) {
-          _this2.$set(_this2.userAnswers, question, answers[question].answers); // this.userAnswers[question] = userAnswers[question].answers
+          _this.$set(_this.userAnswers, question, answers[question].answers); // this.userAnswers[question] = userAnswers[question].answers
 
         });
       });
     },
     isCurrent: function isCurrent(id) {
-      return this.questionId == id;
+      return this.currentQuestionId == id;
     },
     getNextQuestionId: function getNextQuestionId() {
       var lastIndex = this.exam.questions_count - 1;
 
-      if (this.questionIds.indexOf(this.questionId) != lastIndex) {
-        var index = this.questionIds.indexOf(this.questionId) + 1;
+      if (this.questionIds.indexOf(this.currentQuestionId) != lastIndex) {
+        var index = this.questionIds.indexOf(this.currentQuestionId) + 1;
         this.nextQuestion = this.questionIds[index];
       } else {
         this.nextQuestion = 0;
       }
     },
     getPrevQuestionId: function getPrevQuestionId() {
-      if (this.questionIds.indexOf(this.questionId) != 0) {
-        var index = this.questionIds.indexOf(this.questionId) - 1;
+      if (this.questionIds.indexOf(this.currentQuestionId) != 0) {
+        var index = this.questionIds.indexOf(this.currentQuestionId) - 1;
         this.prevQuestion = this.questionIds[index];
       } else {
         this.prevQuestion = 0;
@@ -5682,14 +5688,14 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     saveAnswer: function saveAnswer(questionId, answer) {
-      var _this3 = this;
+      var _this2 = this;
 
       axios.post('/api/update-jawaban', {
-        classexamuserId: this.classexamuserId,
+        examableUserId: this.examableUserId,
         answerIds: answer,
-        questionId: questionId
+        questionId: currentQuestionId
       }).then(function (response) {
-        _this3.answering = false;
+        _this2.answering = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -5698,29 +5704,29 @@ __webpack_require__.r(__webpack_exports__);
       return this.userAnswers[id].length != 0;
     },
     submit: function submit() {
-      var _this4 = this;
+      var _this3 = this;
 
       this.submitting = true; // Simpan semua jawaban
 
       this.questionIds.forEach(function (id) {
-        var answer = _this4.userAnswers[id];
+        var answer = _this3.userAnswers[id];
 
         if (answer != '') {
-          _this4.saveAnswer(id, answer);
+          _this3.saveAnswer(id, answer);
         }
       }); // Rekam data selesai
 
       axios.post('/api/submit-ujian', {
-        classexamuserId: this.classexamuserId
+        examableUserId: this.examableUserId
       }).then(function (response) {
-        _this4.submitting = false;
-        _this4.submitted = true;
+        _this3.submitting = false;
+        _this3.submitted = true;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     isTimed: function isTimed() {
-      return this.timeExpires != 0;
+      return this.examExpires != 0;
     },
     timesUp: function timesUp() {
       this.expired = true;
@@ -5732,7 +5738,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     questionNumber: function questionNumber() {
-      return this.questionIds.indexOf(this.questionId) + 1;
+      return this.questionIds.indexOf(this.currentQuestionId) + 1;
     },
     isPrevDisabled: function isPrevDisabled() {
       return this.prevQuestion == 0 ? 'disabled' : '';
@@ -5741,7 +5747,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.nextQuestion == 0 ? 'disabled' : '';
     },
     chosen: function chosen() {
-      return this.userAnswers[this.questionId] == '' ? 'disabled' : '';
+      return this.userAnswers[this.currentQuestionId] == '' ? 'disabled' : '';
     },
     savingAnswer: function savingAnswer() {
       return this.answering ? 'btn-loading' : '';
@@ -48955,7 +48961,7 @@ var render = function() {
                 [
                   _vm.isTimed()
                     ? _c("timer", {
-                        attrs: { end: _vm.timeExpires },
+                        attrs: { end: _vm.examExpires },
                         on: { finished: _vm.timesUp }
                       })
                     : _vm._e()
@@ -48972,8 +48978,8 @@ var render = function() {
                   {
                     name: "show",
                     rawName: "v-show",
-                    value: question.id == _vm.questionId,
-                    expression: "question.id == questionId"
+                    value: question.id == _vm.curentQuestionId,
+                    expression: "question.id == curentQuestionId"
                   }
                 ],
                 staticClass: "card-body",
@@ -48987,8 +48993,8 @@ var render = function() {
                     {
                       name: "show",
                       rawName: "v-show",
-                      value: question.id == _vm.questionId,
-                      expression: "question.id == questionId"
+                      value: question.id == _vm.currentQuestionId,
+                      expression: "question.id == currentQuestionId"
                     }
                   ],
                   staticClass: "card-body"
@@ -49212,7 +49218,7 @@ var render = function() {
                   class: [_vm.chosen, _vm.savingAnswer],
                   on: {
                     click: function($event) {
-                      return _vm.updateAnswer(_vm.questionId)
+                      return _vm.updateAnswer(_vm.currentQuestionId)
                     }
                   }
                 },
