@@ -20,6 +20,7 @@ class Examable extends MorphPivot
         return $this->belongsToMany(User::class, 'examable_user', 'examable_id', 'user_id')
                     ->using(ExamableUser::class)
                     ->withPivot([
+                        'id',
                         'attempt', 
                         'answers',
                         'waktu_mulai', 
@@ -28,14 +29,19 @@ class Examable extends MorphPivot
                     ->withTimestamps();
     }
 
-    public function assignedTo()
-    {
-        return $this->examable_type::find($this->examable_id);
-    }
-
     public function exam()
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function examableuser()
+    {
+        return $this->hasMany(ExamableUser::class);
+    }
+
+    public function assignedTo()
+    {
+        return $this->examable_type::find($this->examable_id);
     }
 
     public function dataToShow($done = null)
@@ -76,6 +82,11 @@ class Examable extends MorphPivot
         ];
     }
 
+    public function isTimed()
+    {
+        return $this->durasi != 0;
+    }
+
     public function isOpen()
     {
         $now = now();
@@ -112,7 +123,7 @@ class Examable extends MorphPivot
         }
     }
 
-    public function isUserAllowed($userId)
+    public function isUserAllowed(User $user)
     {
         // Gimana pun ceritanya, kalau akses ditutup user gak boleh buka
         if ($this->isClosed()) {
@@ -120,21 +131,14 @@ class Examable extends MorphPivot
         }
 
         // Udah pernah ngerjain?
-        $userRecords = $this->users()
-                            ->where('users.id', $userId)
-                            ->get();
+        $lastRecord = $this->getUserLastRecord($user->id);
 
         // -- Belum pernah ngerjain, boleh ngerjain
-        if ($userRecords->isEmpty()) {
+        if (!$lastRecord) {
             return true;
         }
 
-        // -- Udah pernah ngerjain, masih boleh ngerjain?
-        $lastRecord = $userRecords->sortByDesc(function($record) {
-                            return $record->pivot->attempt;
-                        })
-                        ->first()->pivot;
-        
+        // -- Udah pernah ngerjain, masih boleh ngerjain?        
         // Udah submit jawaban atau belum?
         if ($lastRecord->waktu_selesai) {
 
@@ -157,6 +161,50 @@ class Examable extends MorphPivot
     public function isUserHasAttempt(ExamableUser $record)
     {
         return $this->attempt == 0 || $record->attempt < $this->attempt;
+    }
+
+    public function userLastAttempt($userId)
+    {
+        if ($records = $this->getUserRecords($userId)) {
+            return $records->max('attempt');
+        } else {
+            return null;
+        }
+    }
+
+    public function attemptRemaining($userId)
+    {
+        if (!$this->attempt || $this->attempt == 0) {
+            return 'infinite';
+        }
+
+        else if ($last = $this->userLastAttempt($userId)) {
+            return $this->attempt - $last;
+        }
+    }
+
+    public function getUserRecords($userId)
+    {
+        $data = $this->users()->where('users.id', $userId)
+                             ->get();
+        
+        if ($data->isNotEmpty()) {
+            $records = $data->map(function ($item) {
+                        return $item->pivot;
+                    });
+            
+            return $records;
+        } else {
+            return null;
+        }
+    }
+
+    public function getUserLastRecord($userId)
+    {
+        if ($records = $this->getUserRecords($userId)) {
+            return $records->sortByDesc('attempt')
+                            ->first();
+        }
     }
 
 }

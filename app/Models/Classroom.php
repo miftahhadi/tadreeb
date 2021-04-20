@@ -99,13 +99,7 @@ class Classroom extends Model
                                 'slug' => $exam->slug
                             ];
 
-                            $bukaAkses = ($exam->pivot->buka == 1) ? 1 : 0;
-
-                            if ($exam->pivot->buka_otomatis) {
-                                $bukaAkses = ($now->greaterThanOrEqualTo($exam->pivot->buka_otomatis)) ? 1 : 0;
-                            }
-
-                            $toShow['buka'] = $bukaAkses;
+                            $toShow['buka'] = $exam->pivot->isOpen();
                             $toShow['status'] = $user->examStatus($exam->pivot->id);
 
                             return $toShow;

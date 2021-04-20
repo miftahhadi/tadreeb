@@ -122,25 +122,21 @@ class User extends Authenticatable
     //                                     ->pivot->score();
     // }
 
-    public function hasDoneExam($examableId) // Masih error
-    {
-        return $this->examables()->where('examable.id', $examableId)->get()->isNotEmpty();
-    }
 
     public function examStatus($examableId)
     {
-        $examable = $this->examables()->find($examableId);
+        $examable = Examable::find($examableId);
 
-        if (!$examable) {
+        $lastRecord = $examable->getUserLastRecord($this->id);
+
+        if (!$lastRecord) {
             return 'Belum mengerjakan';
         }
 
-        $examableUser = $examable->pivot;
-
-        if ($examableUser->waktu_mulai && $examable->isClosed()) {
+        if (!$lastRecord->waktu_selesai && $examable->isClosed()) {
             return 'Tidak selesai';
         }
 
-        return ($examableUser->waktu_selesai) ? 'Sudah mengerjakan' : 'Sedang mengerjakan';
+        return ($lastRecord->waktu_selesai) ? 'Sudah mengerjakan' : 'Sedang mengerjakan';
     }
 }
