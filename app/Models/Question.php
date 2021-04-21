@@ -20,13 +20,10 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
-    public function inputType()
+    public function getInputTypeAttribute()
     {
-        if ($this->tipe == 'Jawaban Ganda') {
-            return 'checkbox';
-        } else {
-            return 'radio';
-        }
+        return ($this->tipe == 'Jawaban Ganda') ? 'checkbox' : 'radio';
     }
+
 
 }
