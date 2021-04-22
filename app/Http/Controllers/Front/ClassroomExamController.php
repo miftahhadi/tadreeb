@@ -5,10 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Models\Classroom;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
-use App\Models\Examable;
-use App\Services\Front\ClassroomExamService;
 use App\Services\Front\RecordExamService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ClassroomExamController extends Controller
@@ -48,23 +45,24 @@ class ClassroomExamController extends Controller
             $examableUser = (new RecordExamService($examable))->makeUserData();
         }
 
-        $examExpires = $examable->isTimed() 
+        $exam->loadCount('questions');
+        $exam->expires = $examable->isTimed() 
                             ? $examableUser->waktu_mulai->addMinutes($examable->durasi)->valueOf()
                             : 0;
+        
+        $questions = $exam->questions()->orderByPivot('urutan', 'asc')->get();
 
-        $questions['data'] = $exam->questions;
-        $question['ids'] = $exam->questions->pluck('id');
-
-        dd($questions);
-
+        $examableUser->answers = (collect(json_decode($examableUser->answers, true)))->map(function ($answer) {
+            return $answer['answers'];
+        });
+        
         return view('front.ujian.kerjakan', [
             'title' => $exam->judul . ' - ' . $kelas->nama,
             'kelas' => $kelas,
             'exam' => $exam,
+            'questions' => $questions,
             'examable' => $examable,
             'examableUser' => $examableUser,
-            'examExpires' => $examExpires,
-            'questions' => $questions
         ]);
     }
 

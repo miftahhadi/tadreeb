@@ -38,8 +38,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
         Route::get('kelas', 'ExamController@getClassrooms');
 
         Route::get('soal/{soal}', 'ExamController@getQuestion');
-        Route::get('jawaban-user/{classexamuser}', 'ExamController@getUserAnswers');
-        Route::post('update-jawaban', 'ExamController@updateUserAnswers');
+        Route::put('update-jawaban', 'ExamController@updateUserAnswers');
         Route::post('submit-ujian', 'ExamController@submitExam');
     });
 

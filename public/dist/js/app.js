@@ -5582,96 +5582,68 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-doing-page',
   props: {
-    examId: Number,
-    examableuserId: Number,
-    attempt: Number,
     kelas: String,
-    examExpires: Number,
-    examData: Array,
-    examableuser: Object,
-    questionData: Array
+    examData: Object,
+    questions: Array,
+    examableuser: Object
   },
   data: function data() {
     return {
-      exam: {},
+      question: {},
       questionIds: [],
       currentQuestionId: 0,
       nextQuestion: 0,
       prevQuestion: 0,
-      question: {},
       loading: false,
       answering: false,
-      questions: {},
       userAnswers: {},
       submitting: false,
       submitted: false,
       kelasUrl: '/k/' + this.kelas + '/depan',
+      examExpires: null,
       expired: false
     };
   },
   methods: {
-    getExamInfo: function getExamInfo() {
-      /* axios.get('/api/ujian/' + this.examId)
-              .then(response => {
-                  this.exam = response.data.exam
-                  this.questionIds = response.data.questionIds
-                  this.currentQuestionId = response.data.questionIds[0]
-                  this.questions = response.data.questions
-                  
-                  this.getQuestion()
-                   this.loading = false;
-              })
-              .catch(error => {
-                  console.log(error)
-              }); */
-      this.exam = this.examData;
-      this.questions = this.questionData.data;
-      this.questionIds = this.questionData.ids;
-      this.currentQuestionId;
-      this.getQuestion();
-      this.getUserAnswers();
-    },
-    getQuestion: function getQuestion() {
-      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.currentQuestionId;
+    getQuestion: function getQuestion(id) {
       this.currentQuestionId = id;
+      this.question = this.questions[this.questionIds.indexOf(this.currentQuestionId)];
       this.getNextQuestionId();
       this.getPrevQuestionId();
+
+      if (this.question.input_type == 'checkbox' && !Array.isArray(this.userAnswers[id])) {
+        this.userAnswers[id] = this.userAnswers[id] == '' ? [] : [this.userAnswers[id]];
+      }
     },
-    getUserAnswers: function getUserAnswers() {
-      var _this = this;
-
-      axios.get('/api/jawaban-user/' + this.examableUserId).then(function (response) {
-        var answers = response.data;
-        var questions = Object.keys(answers);
-        questions.forEach(function (question) {
-          _this.$set(_this.userAnswers, question, answers[question].answers); // this.userAnswers[question] = userAnswers[question].answers
-
-        });
+    getExamInfo: function getExamInfo() {
+      this.questionIds = this.questions.map(function (question) {
+        return question.id;
       });
+      this.examExpires = this.examData.expires;
+      this.getQuestion(this.questionIds[0]);
     },
     isCurrent: function isCurrent(id) {
       return this.currentQuestionId == id;
     },
     getNextQuestionId: function getNextQuestionId() {
-      var lastIndex = this.exam.questions_count - 1;
+      var lastIndex = this.examData.questions_count - 1;
+      var currentIndex = this.questionIds.indexOf(this.currentQuestionId);
 
-      if (this.questionIds.indexOf(this.currentQuestionId) != lastIndex) {
-        var index = this.questionIds.indexOf(this.currentQuestionId) + 1;
+      if (currentIndex != lastIndex) {
+        var index = currentIndex + 1;
         this.nextQuestion = this.questionIds[index];
       } else {
         this.nextQuestion = 0;
       }
     },
     getPrevQuestionId: function getPrevQuestionId() {
-      if (this.questionIds.indexOf(this.currentQuestionId) != 0) {
-        var index = this.questionIds.indexOf(this.currentQuestionId) - 1;
+      var currentIndex = this.questionIds.indexOf(this.currentQuestionId);
+
+      if (currentIndex != 0) {
+        var index = currentIndex - 1;
         this.prevQuestion = this.questionIds[index];
       } else {
         this.prevQuestion = 0;
@@ -5681,21 +5653,23 @@ __webpack_require__.r(__webpack_exports__);
       this.answering = true;
       var answer = this.userAnswers[id]; // Update ke database
 
-      this.saveAnswer(id, answer);
-
-      if (this.nextQuestion != 0) {
-        this.getQuestion(this.nextQuestion);
-      }
+      this.saveAnswer(answer);
     },
-    saveAnswer: function saveAnswer(questionId, answer) {
-      var _this2 = this;
+    saveAnswer: function saveAnswer(answer) {
+      var _this = this;
 
-      axios.post('/api/update-jawaban', {
-        examableUserId: this.examableUserId,
+      axios.put('/api/ujian/' + this.examData.id + '/update-jawaban', {
+        examableUserId: this.examableuser.id,
         answerIds: answer,
-        questionId: currentQuestionId
+        questionId: this.currentQuestionId
       }).then(function (response) {
-        _this2.answering = false;
+        console.log(response.data);
+
+        if (_this.nextQuestion != 0) {
+          _this.getQuestion(_this.nextQuestion);
+        }
+
+        _this.answering = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -5704,23 +5678,16 @@ __webpack_require__.r(__webpack_exports__);
       return this.userAnswers[id].length != 0;
     },
     submit: function submit() {
-      var _this3 = this;
+      var _this2 = this;
 
-      this.submitting = true; // Simpan semua jawaban
+      this.submitting = true; // Rekam data selesai dan kirim jawaban
 
-      this.questionIds.forEach(function (id) {
-        var answer = _this3.userAnswers[id];
-
-        if (answer != '') {
-          _this3.saveAnswer(id, answer);
-        }
-      }); // Rekam data selesai
-
-      axios.post('/api/submit-ujian', {
-        examableUserId: this.examableUserId
+      axios.post('/api/ujian/' + this.examData.id + '/submit-ujian', {
+        examableUserId: this.examableuser.id,
+        userAnswers: this.userAnswers
       }).then(function (response) {
-        _this3.submitting = false;
-        _this3.submitted = true;
+        _this2.submitting = false;
+        _this2.submitted = true;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -5734,6 +5701,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
+    this.userAnswers = this.examableuser.answers;
     this.getExamInfo();
   },
   computed: {
@@ -5756,7 +5724,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.submitting ? 'active' : '';
     },
     hasilUrl: function hasilUrl() {
-      return '/k/' + this.kelas + '/u/' + this.exam.slug + '/hasil?attempt=' + this.attempt;
+      return '/k/' + this.kelas + '/u/' + this.examData.slug + '/hasil?attempt=' + this.examableuser.attempt;
     }
   }
 });
@@ -48938,384 +48906,343 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
     _c("div", { staticClass: "col-md-8" }, [
-      _c(
-        "div",
-        { staticClass: "card" },
-        [
-          _c("div", { staticClass: "card-header" }, [
-            _c("ul", { staticClass: "nav nav-pills card-header-pills px-2" }, [
-              _c("li", { staticClass: "nav-item" }, [
-                _c("h3", { staticClass: "card-title" }, [
-                  _vm._v(
-                    "Soal ke-" +
-                      _vm._s(_vm.questionNumber) +
-                      " dari " +
-                      _vm._s(_vm.exam.questions_count)
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "li",
-                { staticClass: "nav-item ml-auto" },
-                [
-                  _vm.isTimed()
-                    ? _c("timer", {
-                        attrs: { end: _vm.examExpires },
-                        on: { finished: _vm.timesUp }
-                      })
-                    : _vm._e()
-                ],
-                1
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.questions, function(question) {
-            return _c("div", { key: question.id }, [
-              _c("div", {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: question.id == _vm.curentQuestionId,
-                    expression: "question.id == curentQuestionId"
-                  }
-                ],
-                staticClass: "card-body",
-                domProps: { innerHTML: _vm._s(question.konten) }
-              }),
-              _vm._v(" "),
-              _c(
-                "div",
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("ul", { staticClass: "nav nav-pills card-header-pills px-2" }, [
+            _c("li", { staticClass: "nav-item" }, [
+              _c("h3", { staticClass: "card-title" }, [
+                _vm._v(
+                  "Soal ke-" +
+                    _vm._s(_vm.questionNumber) +
+                    " dari " +
+                    _vm._s(_vm.examData.questions_count)
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "nav-item ml-auto" },
+              [
+                _vm.isTimed()
+                  ? _c("timer", {
+                      attrs: { end: _vm.examExpires },
+                      on: { finished: _vm.timesUp }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", {
+          staticClass: "card-body",
+          domProps: { innerHTML: _vm._s(_vm.question.konten) }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "div",
+            {
+              staticClass:
+                "form-selectgroup form-selectgroup-boxes d-flex flex-column"
+            },
+            _vm._l(_vm.question.answers, function(answer) {
+              return _c(
+                "label",
                 {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: question.id == _vm.currentQuestionId,
-                      expression: "question.id == currentQuestionId"
-                    }
-                  ],
-                  staticClass: "card-body"
+                  key: answer.id,
+                  staticClass: "form-selectgroup-item flex-fill"
                 },
                 [
+                  _vm.question.input_type === "checkbox"
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.userAnswers[_vm.question.id],
+                            expression: "userAnswers[question.id]"
+                          }
+                        ],
+                        staticClass: "form-selectgroup-input",
+                        attrs: {
+                          name: "answer[" + _vm.question.id + "]",
+                          type: "checkbox"
+                        },
+                        domProps: {
+                          value: answer.id,
+                          checked: Array.isArray(
+                            _vm.userAnswers[_vm.question.id]
+                          )
+                            ? _vm._i(
+                                _vm.userAnswers[_vm.question.id],
+                                answer.id
+                              ) > -1
+                            : _vm.userAnswers[_vm.question.id]
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.userAnswers[_vm.question.id],
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = answer.id,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    _vm.userAnswers,
+                                    _vm.question.id,
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.userAnswers,
+                                    _vm.question.id,
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.userAnswers, _vm.question.id, $$c)
+                            }
+                          }
+                        }
+                      })
+                    : _vm.question.input_type === "radio"
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.userAnswers[_vm.question.id],
+                            expression: "userAnswers[question.id]"
+                          }
+                        ],
+                        staticClass: "form-selectgroup-input",
+                        attrs: {
+                          name: "answer[" + _vm.question.id + "]",
+                          type: "radio"
+                        },
+                        domProps: {
+                          value: answer.id,
+                          checked: _vm._q(
+                            _vm.userAnswers[_vm.question.id],
+                            answer.id
+                          )
+                        },
+                        on: {
+                          change: function($event) {
+                            return _vm.$set(
+                              _vm.userAnswers,
+                              _vm.question.id,
+                              answer.id
+                            )
+                          }
+                        }
+                      })
+                    : _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.userAnswers[_vm.question.id],
+                            expression: "userAnswers[question.id]"
+                          }
+                        ],
+                        staticClass: "form-selectgroup-input",
+                        attrs: {
+                          name: "answer[" + _vm.question.id + "]",
+                          type: _vm.question.input_type
+                        },
+                        domProps: {
+                          value: answer.id,
+                          value: _vm.userAnswers[_vm.question.id]
+                        },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.userAnswers,
+                              _vm.question.id,
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                  _vm._v(" "),
                   _c(
                     "div",
                     {
                       staticClass:
-                        "form-selectgroup form-selectgroup-boxes d-flex flex-column"
+                        "form-selectgroup-label d-flex align-items-center p-3"
                     },
-                    _vm._l(question.answers, function(answer) {
-                      return _c(
-                        "label",
-                        {
-                          key: answer.id,
-                          staticClass: "form-selectgroup-item flex-fill"
-                        },
-                        [
-                          question.input === "checkbox"
-                            ? _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.userAnswers[question.id],
-                                    expression: "userAnswers[question.id]"
-                                  }
-                                ],
-                                staticClass: "form-selectgroup-input",
-                                attrs: {
-                                  name: "answer[" + question.id + "]",
-                                  type: "checkbox"
-                                },
-                                domProps: {
-                                  value: answer.id,
-                                  checked: Array.isArray(
-                                    _vm.userAnswers[question.id]
-                                  )
-                                    ? _vm._i(
-                                        _vm.userAnswers[question.id],
-                                        answer.id
-                                      ) > -1
-                                    : _vm.userAnswers[question.id]
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a = _vm.userAnswers[question.id],
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? true : false
-                                    if (Array.isArray($$a)) {
-                                      var $$v = answer.id,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.userAnswers,
-                                            question.id,
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.userAnswers,
-                                            question.id,
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.userAnswers,
-                                        question.id,
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              })
-                            : question.input === "radio"
-                            ? _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.userAnswers[question.id],
-                                    expression: "userAnswers[question.id]"
-                                  }
-                                ],
-                                staticClass: "form-selectgroup-input",
-                                attrs: {
-                                  name: "answer[" + question.id + "]",
-                                  type: "radio"
-                                },
-                                domProps: {
-                                  value: answer.id,
-                                  checked: _vm._q(
-                                    _vm.userAnswers[question.id],
-                                    answer.id
-                                  )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    return _vm.$set(
-                                      _vm.userAnswers,
-                                      question.id,
-                                      answer.id
-                                    )
-                                  }
-                                }
-                              })
-                            : _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.userAnswers[question.id],
-                                    expression: "userAnswers[question.id]"
-                                  }
-                                ],
-                                staticClass: "form-selectgroup-input",
-                                attrs: {
-                                  name: "answer[" + question.id + "]",
-                                  type: question.input
-                                },
-                                domProps: {
-                                  value: answer.id,
-                                  value: _vm.userAnswers[question.id]
-                                },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.userAnswers,
-                                      question.id,
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              }),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "form-selectgroup-label d-flex align-items-center p-3"
-                            },
-                            [
-                              _vm._m(0, true),
-                              _vm._v(" "),
-                              _c("div", {
-                                domProps: { innerHTML: _vm._s(answer.redaksi) }
-                              })
-                            ]
-                          )
-                        ]
-                      )
-                    }),
-                    0
+                    [
+                      _vm._m(0, true),
+                      _vm._v(" "),
+                      _c("div", {
+                        domProps: { innerHTML: _vm._s(answer.redaksi) }
+                      })
+                    ]
                   )
                 ]
               )
-            ])
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-footer" }, [
-            _c("div", { staticClass: "btn-list" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-white",
-                  class: _vm.isPrevDisabled,
-                  on: {
-                    click: function($event) {
-                      return _vm.getQuestion(_vm.prevQuestion)
-                    }
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-footer" }, [
+          _c("div", { staticClass: "btn-list" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-white",
+                class: _vm.isPrevDisabled,
+                on: {
+                  click: function($event) {
+                    return _vm.getQuestion(_vm.prevQuestion)
                   }
-                },
-                [
-                  _c("span", [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "icon",
+                }
+              },
+              [
+                _c("span", [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "icon",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "2",
+                        stroke: "currentColor",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      }
+                    },
+                    [
+                      _c("path", {
                         attrs: {
-                          xmlns: "http://www.w3.org/2000/svg",
-                          width: "24",
-                          height: "24",
-                          viewBox: "0 0 24 24",
-                          "stroke-width": "2",
-                          stroke: "currentColor",
-                          fill: "none",
-                          "stroke-linecap": "round",
-                          "stroke-linejoin": "round"
+                          stroke: "none",
+                          d: "M0 0h24v24H0z",
+                          fill: "none"
                         }
-                      },
-                      [
-                        _c("path", {
-                          attrs: {
-                            stroke: "none",
-                            d: "M0 0h24v24H0z",
-                            fill: "none"
-                          }
-                        }),
-                        _c("polyline", { attrs: { points: "15 6 9 12 15 18" } })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-success",
-                  class: [_vm.chosen, _vm.savingAnswer],
-                  on: {
-                    click: function($event) {
-                      return _vm.updateAnswer(_vm.currentQuestionId)
-                    }
-                  }
-                },
-                [
-                  _c("span", [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "icon",
-                        attrs: {
-                          xmlns: "http://www.w3.org/2000/svg",
-                          width: "24",
-                          height: "24",
-                          viewBox: "0 0 24 24",
-                          "stroke-width": "2",
-                          stroke: "currentColor",
-                          fill: "none",
-                          "stroke-linecap": "round",
-                          "stroke-linejoin": "round"
-                        }
-                      },
-                      [
-                        _c("path", {
-                          attrs: {
-                            stroke: "none",
-                            d: "M0 0h24v24H0z",
-                            fill: "none"
-                          }
-                        }),
-                        _c("polyline", {
-                          attrs: { points: "9 11 12 14 20 6" }
-                        }),
-                        _c("path", {
-                          attrs: {
-                            d:
-                              "M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"
-                          }
-                        })
-                      ]
-                    )
-                  ]),
-                  _vm._v(
-                    "\n                        Jawab\n                    "
+                      }),
+                      _c("polyline", { attrs: { points: "15 6 9 12 15 18" } })
+                    ]
                   )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-white",
-                  class: _vm.isNextDisabled,
-                  on: {
-                    click: function($event) {
-                      return _vm.getQuestion(_vm.nextQuestion)
-                    }
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "ml-1" }, [_vm._v("Sebelumnya")])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success",
+                class: [_vm.chosen, _vm.savingAnswer],
+                on: {
+                  click: function($event) {
+                    return _vm.updateAnswer(_vm.currentQuestionId)
                   }
-                },
-                [
-                  _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
-                  _vm._v(" "),
-                  _c("span", [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "icon",
+                }
+              },
+              [
+                _c("span", [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "icon",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "2",
+                        stroke: "currentColor",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      }
+                    },
+                    [
+                      _c("path", {
                         attrs: {
-                          xmlns: "http://www.w3.org/2000/svg",
-                          width: "24",
-                          height: "24",
-                          viewBox: "0 0 24 24",
-                          "stroke-width": "2",
-                          stroke: "currentColor",
-                          fill: "none",
-                          "stroke-linecap": "round",
-                          "stroke-linejoin": "round"
+                          stroke: "none",
+                          d: "M0 0h24v24H0z",
+                          fill: "none"
                         }
-                      },
-                      [
-                        _c("path", {
-                          attrs: {
-                            stroke: "none",
-                            d: "M0 0h24v24H0z",
-                            fill: "none"
-                          }
-                        }),
-                        _c("polyline", { attrs: { points: "9 6 15 12 9 18" } })
-                      ]
-                    )
-                  ])
-                ]
-              )
-            ])
+                      }),
+                      _c("polyline", { attrs: { points: "9 11 12 14 20 6" } }),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"
+                        }
+                      })
+                    ]
+                  )
+                ]),
+                _vm._v("\n                        Jawab\n                    ")
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-white",
+                class: _vm.isNextDisabled,
+                on: {
+                  click: function($event) {
+                    return _vm.getQuestion(_vm.nextQuestion)
+                  }
+                }
+              },
+              [
+                _c("span", { staticClass: "mr-1" }, [_vm._v("Lewati")]),
+                _vm._v(" "),
+                _c("span", [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "icon",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "24",
+                        height: "24",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "2",
+                        stroke: "currentColor",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          stroke: "none",
+                          d: "M0 0h24v24H0z",
+                          fill: "none"
+                        }
+                      }),
+                      _c("polyline", { attrs: { points: "9 6 15 12 9 18" } })
+                    ]
+                  )
+                ])
+              ]
+            )
           ])
-        ],
-        2
-      )
+        ])
+      ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-4" }, [

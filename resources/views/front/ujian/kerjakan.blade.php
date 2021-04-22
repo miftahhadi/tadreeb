@@ -23,14 +23,10 @@
 
     <div id="app">
         <exam-doing-page
-            :exam-id="{{ $exam->id }}"
-            :examableuser-id="{{ $examableUser->id }}"
-            :attempt="{{ $examableUser->attempt }}"
             kelas={{ $kelas->kode }}
-            :exam-expires="{{ $examExpires }}"
-            :exam="{{ $exam }}"
+            :exam-data="{{ $exam }}"
             :examableuser="{{ $examableUser }}"
-            :question-ids="{{ $questionIds }}"
+            :questions="{{ $questions }}"
         ></exam-doing-page>
     </div>
 

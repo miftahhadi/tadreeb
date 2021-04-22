@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\ClassExamUser;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
+use App\Models\ExamableUser;
 use App\Models\Question;
 use App\Services\Admin\QuestionService;
 use Illuminate\Http\Request;
@@ -82,58 +83,45 @@ class ExamController extends Controller
         return json_encode(['soal' => $soal, 'answers' => $answers]);
     }
 
-    public function getUserAnswers($id)
-    {
-        $classExamUser = ClassExamUser::find($id);
-        
-        return json_decode($classExamUser->answers, true);
-    }
-
     public function updateUserAnswers(Request $request)
     {
-        $classExamUser = ClassExamUser::find($request['classexamuserId']);
-        $userAnswers = $request['answerIds'];
-        $questionId = $request['questionId'];
+        $examableUser = ExamableUser::find($request->examableUserId);
+        $userAnswers = $request->answerIds;
+        $questionId = $request->questionId;
 
-         // Ambil daftar jawaban
-        $answers = json_decode($classExamUser->answers, true);
+        // Ambil daftar jawaban
+        $answers = json_decode($examableUser->answers, true);
 
         // Cek nilai jawaban
-        $scores = 0;
-
-        if (is_array($userAnswers)) {
-            
-            foreach ($userAnswers as $id) {
-                $scores += $this->assignScore($id);
-            }
-            
-        } else {
-            $scores += $this->assignScore($userAnswers);
-        }
+        $scores = $examableUser->assignScore($userAnswers);
 
         // Update jawaban untuk questionId
         $answers[$questionId]['answers'] =  $userAnswers;
         $answers[$questionId]['score'] =  $scores;
 
-        $classExamUser->answers = json_encode($answers);
+        $examableUser->answers = json_encode($answers);
 
-        return $classExamUser->save();
+        return $examableUser->save();
     }
 
-    protected function assignScore($id)
-    {
-        $answer = Answer::find($id);
-
-        return $answer->nilai;
-    }
 
     public function submitExam(Request $request)
     {
-        $classExamUser = ClassExamUser::find($request['classexamuserId']);
+        $examableUser = ExamableUser::find($request->examableUserId);
 
-        $classExamUser->waktu_selesai = now('UTC');
+        // Ambil daftar jawaban
+        $answers = json_decode($examableUser->answers, true);
 
-        return $classExamUser->save();
+        // Simpan jawaban
+        foreach ($request->userAnswers as $id => $answer) {
+            $answers[$id]['answers'] = $answer;
+            $answers[$id]['score'] = $examableUser->assignScore($answer);
+        }
+
+        $examableUser->waktu_selesai = now('UTC');
+        $examableUser->answers = $answers;
+
+        return $examableUser->save();
     }
 
     public function getClassrooms(Exam $ujian, Request $request)

@@ -62,7 +62,7 @@
                             
                             @foreach ($soal->answers as $answer)
                                 <label class="form-selectgroup-item flex-fill">
-                                    <input type="{{ $soal->inputType() }}" 
+                                    <input type="{{ $soal->input_type }}" 
                                         value="{{ $answer->id }}" 
                                         class="form-selectgroup-input"
                                         @if (in_array($answer->id, $userAnswers[$soal->id]))

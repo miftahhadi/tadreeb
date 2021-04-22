@@ -12,7 +12,9 @@ class Examable extends MorphPivot
     protected $dates = [
         'tampil_otomatis',
         'buka_otomatis',
-        'batas_buka',        
+        'batas_buka',
+        'created_at',
+        'updated_at'        
     ];
 
     public function users()

@@ -7,7 +7,7 @@
 
                     <ul class="nav nav-pills card-header-pills px-2">
                         <li class="nav-item">
-                          <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ exam.questions_count}}</h3>
+                          <h3 class="card-title">Soal ke-{{ questionNumber }} dari {{ examData.questions_count}}</h3>
                         </li>
 
                         <li class="nav-item ml-auto">
@@ -20,17 +20,15 @@
                     </ul>
                 </div>  
 
-                <div v-for="question in questions" :key="question.id">
+                    <div class="card-body" v-html="question.konten"></div>
 
-                    <div class="card-body" v-html="question.konten" v-show="question.id == curentQuestionId"></div>
-
-                    <div class="card-body" v-show="question.id == currentQuestionId">
+                    <div class="card-body">
 
                         <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
 
                             <label class="form-selectgroup-item flex-fill" v-for="answer in question.answers" :key="answer.id">
                                 
-                                <input :type="question.input" 
+                                <input :type="question.input_type" 
                                     class="form-selectgroup-input"
                                     :name="'answer[' + question.id + ']'"
                                     :value="answer.id"
@@ -48,8 +46,6 @@
                         </div>
 
                     </div>
-
-                </div>
 
                 <div class="card-footer">
                     <div class="btn-list">
@@ -201,84 +197,53 @@ export default {
     name: 'exam-doing-page',
 
     props: {
-        examId: Number,
-        examableuserId: Number,
-        attempt: Number,
         kelas: String,
-        examExpires: Number,
-        examData: Array,
+        examData: Object,
+        questions: Array,
         examableuser: Object,
-        questionData: Array,
     },
 
     data() {
         return {
-            exam: {},
+            question: {},
             questionIds: [],
             currentQuestionId: 0,
+            
             nextQuestion: 0,
             prevQuestion: 0,
-            question: {},
             loading: false,
             answering: false,
-            questions: {},
+
             userAnswers: {},
+
             submitting: false,
             submitted: false,
+            
             kelasUrl: '/k/' + this.kelas + '/depan',
+
+            examExpires: null,
             expired: false,
         }
     },
 
     methods: {
-        getExamInfo() {
-            /* axios.get('/api/ujian/' + this.examId)
-                    .then(response => {
-                        this.exam = response.data.exam
-                        this.questionIds = response.data.questionIds
-                        this.currentQuestionId = response.data.questionIds[0]
-                        this.questions = response.data.questions
-                        
-                        this.getQuestion()
-
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    }); */
-            
-        
-            this.exam = this.examData
-            this.questions = this.questionData.data
-            this.questionIds = this.questionData.ids
-            this.currentQuestionId
-
-            this.getQuestion()
-            this.getUserAnswers()
-        },
-
-        getQuestion(id = this.currentQuestionId) {
+        getQuestion(id) {
             this.currentQuestionId = id 
+            this.question = this.questions[this.questionIds.indexOf(this.currentQuestionId)]
 
             this.getNextQuestionId()
             this.getPrevQuestionId()
 
+            if (this.question.input_type == 'checkbox' && !Array.isArray(this.userAnswers[id])) {
+                this.userAnswers[id] = (this.userAnswers[id] == '') ? [] : [this.userAnswers[id]] 
+            }
         },
 
-        getUserAnswers() {
-            axios.get('/api/jawaban-user/' + this.examableUserId)
-                    .then(response => {
-                        const answers = response.data
+        getExamInfo() {
+            this.questionIds = this.questions.map((question) => { return question.id})
+            this.examExpires = this.examData.expires
 
-                        const questions = Object.keys(answers)
-
-                        questions.forEach(question => {
-                            this.$set(this.userAnswers, question, answers[question].answers)
-                            // this.userAnswers[question] = userAnswers[question].answers
-                        })
-
-                    })
-            
+            this.getQuestion(this.questionIds[0])
         },
 
         isCurrent(id) {
@@ -286,10 +251,11 @@ export default {
         },
 
         getNextQuestionId() {
-            let lastIndex = this.exam.questions_count - 1
+            const lastIndex = this.examData.questions_count - 1
+            const currentIndex = this.questionIds.indexOf(this.currentQuestionId)
 
-            if (this.questionIds.indexOf(this.currentQuestionId) != lastIndex) {
-                let index = this.questionIds.indexOf(this.currentQuestionId) + 1
+            if (currentIndex != lastIndex) {
+                let index = currentIndex + 1
                this.nextQuestion = this.questionIds[index];                
             } else {
                 this.nextQuestion = 0
@@ -298,8 +264,10 @@ export default {
         },
 
         getPrevQuestionId() {
-            if (this.questionIds.indexOf(this.currentQuestionId) != 0) {
-                let index = this.questionIds.indexOf(this.currentQuestionId) - 1
+            const currentIndex = this.questionIds.indexOf(this.currentQuestionId)
+
+            if (currentIndex != 0) {
+                let index = currentIndex - 1
                 this.prevQuestion = this.questionIds[index]
             } else {
                 this.prevQuestion = 0
@@ -312,20 +280,21 @@ export default {
             let answer = this.userAnswers[id];
 
             // Update ke database
-            this.saveAnswer(id, answer);
-
-            if (this.nextQuestion != 0) {
-                this.getQuestion(this.nextQuestion)                    
-            }
+            this.saveAnswer(answer);
 
         },
 
-        saveAnswer(questionId, answer) {
-            axios.post('/api/update-jawaban', {
-                examableUserId: this.examableUserId,
+        saveAnswer(answer) {
+            axios.put('/api/ujian/' + this.examData.id + '/update-jawaban', {
+                examableUserId: this.examableuser.id,
                 answerIds: answer,
-                questionId: currentQuestionId
+                questionId: this.currentQuestionId
             }).then(response => {
+                console.log(response.data)
+
+                if (this.nextQuestion != 0) {
+                    this.getQuestion(this.nextQuestion)                    
+                }
                 this.answering = false
             }).catch(error => {
                 console.log(error)
@@ -339,18 +308,10 @@ export default {
         submit() {
             this.submitting = true;
 
-            // Simpan semua jawaban
-            this.questionIds.forEach(id => {
-                let answer = this.userAnswers[id];
-
-                if (answer != '') {
-                    this.saveAnswer(id, answer);                
-                }
-            })
-
-            // Rekam data selesai
-            axios.post('/api/submit-ujian', {
-                examableUserId: this.examableUserId
+            // Rekam data selesai dan kirim jawaban
+            axios.post('/api/ujian/' + this.examData.id + '/submit-ujian', {
+                examableUserId: this.examableuser.id,
+                userAnswers: this.userAnswers
             }).then(response => {
                 this.submitting = false;
                 this.submitted = true;
@@ -372,6 +333,7 @@ export default {
     },
 
     created() {
+        this.userAnswers = this.examableuser.answers
         this.getExamInfo();
     },
 
@@ -401,7 +363,7 @@ export default {
         },
 
         hasilUrl() {
-            return '/k/' + this.kelas + '/u/' + this.exam.slug + '/hasil?attempt=' + this.attempt;
+            return '/k/' + this.kelas + '/u/' + this.examData.slug + '/hasil?attempt=' + this.examableuser.attempt;
         }
 
     },

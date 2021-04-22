@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     protected $guarded = [];
-
     protected $with = ['answers'];
+    protected $appends = ['input_type'];
 
     public function exam()
     {
