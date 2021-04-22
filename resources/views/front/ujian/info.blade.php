@@ -23,6 +23,8 @@
                         <dd class="col-7">{{ $examable->getBatasBukaString() }}</dd>
                         <dt class="col-5">Status:</dt>
                         <dd class="col-7">{{ auth()->user()->examStatus($examable->id) }}</dd>
+                        <dt class="col-5">Kesempatan mengerjakan:</dt>
+                        <dd class="col-7">{{ ($examable->attempt == 0) ? 'Tidak terbatas' : $examable->attempt . ' kali' }}</dd>
                       </dl>
 
                 </div>
