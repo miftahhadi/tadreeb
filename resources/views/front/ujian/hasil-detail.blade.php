@@ -40,7 +40,7 @@
                         <div class="card-body">
                             <h3 class="mb-0">Nilai Peserta</h3>
                             <h2 class="h1 mb-3">
-                                {{ $record->score }}
+                                {{ ($examable->buka_hasil == 1) ? $record->score : 'Belum dinilai' }}
                             </h2>
                             <h4>Nilai total ujian: {{ $exam->total_score }}</h4>
                         </div>
