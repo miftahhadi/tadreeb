@@ -19,20 +19,20 @@ class ExamResultController extends Controller
         $this->service = $examResultService;
     }
 
-    // public function showHistory(Classroom $classroom, Exam $exam, Request $request)
-    // {
-    //     $classexamId = $classroom->exams()->find($exam->id)->pivot->id;
+    public function showHistory(Classroom $kelas, Exam $exam, Request $request)
+    {
+        // $classexamId = $classroom->exams()->find($exam->id)->pivot->id;
     
-    //     $histories = $this->service->getHistory($request->input('user'), $classexamId);
+        // $histories = $this->service->getHistory($request->input('user'), $classexamId);
 
-    //     return view('front.ujian.riwayat', [
-    //         'title' => 'Riwayat - ' . $exam->judul . ' - ' . $classroom->nama,
-    //         'kelas' => $classroom,
-    //         'exam' => $exam,
-    //         'histories' => $histories,
-    //         'nama' => $this->service->getUserName()
-    //     ]);
-    // }
+        return view('front.ujian.riwayat', [
+            'title' => 'Riwayat - ' . $exam->judul . ' - ' . $kelas->nama,
+            'kelas' => $kelas,
+            'exam' => $exam,
+            // 'histories' => $histories,
+            // 'nama' => $this->service->getUserName()
+        ]);
+    }
 
     public function showResult(Classroom $classroom, Exam $exam, Request $request)
     {

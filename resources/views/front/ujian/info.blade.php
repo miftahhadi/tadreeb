@@ -22,7 +22,11 @@
                         <dt class="col-5">Batas akses:</dt>
                         <dd class="col-7">{{ $examable->getBatasBukaString() }}</dd>
                         <dt class="col-5">Status:</dt>
-                        <dd class="col-7">{{ auth()->user()->examStatus($examable->id) }}</dd>
+                        <dd class="col-7">
+                            <span>
+                                {{ auth()->user()->examStatus($examable->id) }}
+                            </span>
+                        </dd>
                         <dt class="col-5">Kesempatan mengerjakan:</dt>
                         <dd class="col-7">{{ ($examable->attempt == 0) ? 'Tidak terbatas' : $examable->attempt . ' kali' }}</dd>
                       </dl>
@@ -61,8 +65,15 @@
                                     ]) }}" 
                         class="btn btn-success">
                         Mulai Kerjakan
-                    </a>                    
-                @endif    
+                    </a>
+                @endif
+
+                @if (auth()->user()->examStatus($examable->id) == 'Sudah mengerjakan')
+                <a href="{{ route('kelas.exam.riwayat-user', ['kelas' => $kelas->kode, 'exam' => $exam->slug]) }}" 
+                    class="btn btn-azure">
+                    Lihat Hasil
+                </a>
+                @endif
 
             </div>
         </div>

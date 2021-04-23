@@ -7,8 +7,8 @@
 
             <div class="row mt-4">
                 <div class="col-auto">
-                    <h2 class="page-title mb-2">Riwayat Pengerjaan</h2>
-                    <span>Nama: {{ $nama }}</span>
+                    <h2 class="text-center mb-2">Riwayat Pengerjaan</h2>
+                    <span>Nama:  $nama </span>
                 </div>
                 <div class="col-12 mt-2">
                     <div class="card">
@@ -16,31 +16,27 @@
                             <table class="table table-vcenter card-table">
                                 <thead>
                                 <tr>
-                                    <th>Ke-</th>
+                                    <th>No</th>
                                     <th>Mulai Mengerjakan</th>
-                                    <th>Selesai Mengerjakan</th>
                                     <th>Nilai</th>
                                     <th class="w-1"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($histories as $key => $history)
+                                    {{-- @foreach ($histories as $key => $history) --}}
                                 
                                         <tr>
-                                            <td>{{ $history->attempt }}</td>
+                                            <td>$history->attempt</td>
                                             <td>
-                                                {{ $history->printWaktuMulai() }} 
+                                                $history->printWaktuMulai() 
                                             </td>
+                                            <td>$history->score()</td>
                                             <td>
-                                            {{ $history->printWaktuSelesai() }}
-                                            </td>
-                                            <td>{{ $history->score() }}</td>
-                                            <td>
-                                            <a href="{{ '/k/' . $kelas->kode . '/u/' . $exam->slug . '/hasil?attempt=' . $history->attempt }}">Lihat</a>
+                                            <a href="#">Lihat</a>
                                             </td>
                                         </tr>
         
-                                    @endforeach
+                                    {{-- @endforeach --}}
                                 
                                 </tbody>
                             </table>
