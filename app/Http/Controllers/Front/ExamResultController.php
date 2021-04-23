@@ -16,7 +16,7 @@ class ExamResultController extends Controller
 
     public function __construct(ExamResultService $examResultService)
     {   
-        $this->service = $examResultService;
+        $this->examResultservice = $examResultService;
     }
 
     public function showHistory(Classroom $kelas, Exam $exam, Request $request)
@@ -24,20 +24,28 @@ class ExamResultController extends Controller
         // $classexamId = $classroom->exams()->find($exam->id)->pivot->id;
     
         // $histories = $this->service->getHistory($request->input('user'), $classexamId);
+        $user = $this->examResultservice->getUser($request->user);
+
+        $examable = $exam->classrooms()->findOrFail($kelas->id)->pivot;
+        $records = $examable->users()->where('users.id', $user->id)
+                                    ->get()
+                                    ->map(function($user) {
+                                        return $user->pivot;
+                                    });
 
         return view('front.ujian.riwayat', [
             'title' => 'Riwayat - ' . $exam->judul . ' - ' . $kelas->nama,
             'kelas' => $kelas,
             'exam' => $exam,
-            // 'histories' => $histories,
-            // 'nama' => $this->service->getUserName()
+            'records' => $records,
+            'user' => $user
         ]);
     }
 
-    public function showResult(Classroom $classroom, Exam $exam, Request $request)
+    public function showResult(Classroom $kelas, Exam $exam, Request $request)
     {
-        $classExam = ClassroomExam::where([
-            ['classroom_id', $classroom->id],
+        /* $classExam = ClassroomExam::where([
+            ['classroom_id', $kelas->id],
             ['exam_id', $exam->id]
         ])->first();
 
@@ -54,15 +62,33 @@ class ExamResultController extends Controller
             $attempt = ($request->input('attempt')) ?? null;
 
             $result = $this->service->getResult($userId, $classExam->id, $attempt);
-        }
+        } */
+        $exam->loadCount('questions');
+        $questions = $exam->questions()->orderByPivot('urutan', 'asc')->get();
 
-        return view($this->service->template, [
+        $user = $this->examResultservice->getUser($request->user);
+        $examable = $exam->classrooms()->findOrFail($kelas->id)->pivot;
+        $attempt = $request->attempt ?? $examable->userLastAttempt($user->id);
+
+        $record = $examable->users()->where('users.id', $user->id)
+                                    ->get()
+                                    ->filter(function ($data) use ($attempt) {
+                                        return $data->pivot->attempt == $attempt;
+                                    })
+                                    ->first()
+                                    ->pivot;
+        
+        $userAnswers = json_decode($record->answers, true);
+
+        return view('front.ujian.hasil-detail', [
             'title' => 'Hasil ' . $exam->judul,
-            'kelas' => $classroom,
+            'kelas' => $kelas,
             'exam' => $exam,
-            'service' => $this->service,
-            'userAnswers' => $this->service->userAnswers(),
-            'bukaKunci' => $classExam->buka_hasil
+            'examable' => $examable,
+            'questions' => $questions,
+            'user' => $user,
+            'record' => $record,
+            'userAnswers' => $userAnswers,
         ]);
     }
 }

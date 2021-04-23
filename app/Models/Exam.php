@@ -47,7 +47,7 @@ class Exam extends Model
         return $this->morphToMany(Section::class, 'sectionable');
     }
 
-    public function totalScore()
+    public function getTotalScoreAttribute()
     {
         $answers = collect();
 

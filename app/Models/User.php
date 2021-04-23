@@ -83,6 +83,13 @@ class User extends Authenticatable
         return $hasAccess->contains($this->role->name);
     }
 
+    public function canAccessUserExam()
+    {
+        $role = auth()->user()->role->name;
+
+        return $role != 'student';
+    }
+
     public function exams()
     {
         return $this->hasMany(Exam::class);

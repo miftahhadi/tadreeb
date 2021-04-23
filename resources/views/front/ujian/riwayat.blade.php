@@ -8,7 +8,7 @@
             <div class="row mt-4">
                 <div class="col-auto">
                     <h2 class="text-center mb-2">Riwayat Pengerjaan</h2>
-                    <span>Nama:  $nama </span>
+                    <span>Nama:  {{ $user->name }} </span>
                 </div>
                 <div class="col-12 mt-2">
                     <div class="card">
@@ -16,27 +16,27 @@
                             <table class="table table-vcenter card-table">
                                 <thead>
                                 <tr>
-                                    <th>No</th>
+                                    <th class="w-1">No</th>
                                     <th>Mulai Mengerjakan</th>
                                     <th>Nilai</th>
                                     <th class="w-1"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($histories as $key => $history) --}}
+                                    @foreach ($records as $key => $record)
                                 
                                         <tr>
-                                            <td>$history->attempt</td>
+                                            <td>{{ $record->attempt }}</td>
                                             <td>
-                                                $history->printWaktuMulai() 
+                                                {{ $record->getWaktuMulaiString() }} 
                                             </td>
-                                            <td>$history->score()</td>
+                                            <td>{{ $record->score }}</td>
                                             <td>
-                                            <a href="#">Lihat</a>
+                                            <a href="{{ route('kelas.exam.hasil-user', ['kelas' => $kelas->kode, 'exam' => $exam->slug, 'attempt' => $record->attempt]) }}">Lihat</a>
                                             </td>
                                         </tr>
         
-                                    {{-- @endforeach --}}
+                                    @endforeach
                                 
                                 </tbody>
                             </table>

@@ -5989,7 +5989,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\np {\n    margin-bottom: 0rem;\n}\n", ""]);
+exports.push([module.i, "\np {\r\n    margin-bottom: 0rem;\n}\r\n", ""]);
 
 // exports
 
@@ -49533,7 +49533,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "span",
-    { staticClass: "text-white rounded-lg py-2 px-2", class: _vm.isNearEnd },
+    { staticClass: "text-white rounded py-2 px-2", class: _vm.isNearEnd },
     [
       _vm._v(
         "\n    " +
@@ -63787,7 +63787,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

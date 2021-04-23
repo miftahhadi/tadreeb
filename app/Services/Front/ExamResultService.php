@@ -33,17 +33,15 @@ class ExamResultService
         return $this->user->nama;
     }
 
-    public function getUser($input)
+    public function getUser($userId = null)
     {
-        // if (auth()->user()->can('show exam result')) {
-            $userId = ($input) ?? auth()->user()->id;
-        // } else {
-        //     $userId = auth()->user()->id;
-        // }
+        if ($userId && auth()->user()->canAccessUserExam()) {
+            $user = User::findOrFail($userId);
+        } else {
+            $user = auth()->user();
+        }
 
-        $this->user = User::find($userId);
-
-        return $this;
+        return $user;
     }
 
     // public function getHistory($user = 0, int $classexamid)

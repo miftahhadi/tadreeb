@@ -1,5 +1,5 @@
 <template>
-    <span class="text-white rounded-lg py-2 px-2" :class="isNearEnd">
+    <span class="text-white rounded py-2 px-2" :class="isNearEnd">
         {{ hours }} jam : {{ minutes }} menit : {{ seconds }} detik
     </span>
 </template>

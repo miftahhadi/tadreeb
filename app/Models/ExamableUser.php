@@ -9,6 +9,13 @@ class ExamableUser extends Pivot
 {
     use HasFactory;
 
+    public $incrementing = true;
+
+    protected $dates = [
+        'waktu_mulai',
+        'waktu_selesai'      
+    ];
+
     public function examable()
     {
         return $this->belongsTo(Examable::class);
@@ -29,5 +36,26 @@ class ExamableUser extends Pivot
         $this->save();
 
         return $scores;
+    }
+
+    public function getWaktuMulaiString()
+    {
+        return $this->waktu_mulai
+                        ->tz(settings('timezone'))
+                        ->locale('id')
+                        ->isoFormat('D MMM Y, HH:mm') 
+
+                . ' ' . settings('tzName');
+    }
+
+    public function getScoreAttribute()
+    {
+        $answers = collect(json_decode($this->answers, true));
+
+        $score = $answers->map(function ($answer) {
+            return $answer['score'];
+        })->all();
+
+        return array_sum($score);
     }
 }

@@ -17,8 +17,8 @@
                                     </span>
                                 </div>
                                 <div class="col">
-                                  <h3 class="mb-0"><a href="#">{{ $service->user->nama }}</a></h3>
-                                  <div class="text-muted text-h5">{{ $service->user->username }}</div>
+                                  <h3 class="mb-0"><a href="#">{{ $user->nama }}</a></h3>
+                                  <div class="text-muted text-h5">{{ $user->username }}</div>
                                 </div>
                               </div>
 
@@ -26,7 +26,7 @@
                                 <div class="col">
                                     <div>
                                         <div class="d-flex mb-1 align-items-center lh-1">
-                                            <div class="font-weight-bolder m-0">Waktu Mengerjakan: {{ $service->classExamUser->printWaktuMulai() }}</div>
+                                            <div class="font-weight-bolder m-0">Waktu Mengerjakan: {{ $record->getWaktuMulaiString() }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -40,19 +40,19 @@
                         <div class="card-body">
                             <h3 class="mb-0">Nilai Peserta</h3>
                             <h2 class="h1 mb-3">
-                                {{ $service->classExamUser->score() }}
+                                {{ $record->score }}
                             </h2>
-                            <h4>Nilai total ujian: {{ $exam->totalScore() }}</h4>
+                            <h4>Nilai total ujian: {{ $exam->total_score }}</h4>
                         </div>
                     </div>
                     
                 </div>
             </div>
     
-            @foreach ($service->exam->questions as $key => $soal)
+            @foreach ($exam->questions as $key => $soal)
                 <div class="card mt-4">
                     <div class="card-header">
-                        Soal ke-{{ ++$key }} dari {{ $service->exam->questions->count() }} 
+                        Soal ke-{{ ++$key }} dari {{ $exam->questions_count }} 
         
                     </div>
                     <div class="card-body">
@@ -77,7 +77,7 @@
                                         <div>
                                             {!! $answer->redaksi !!}
                                         </div>
-                                        @if ($bukaKunci == 1)
+                                        @if ($examable->buka_hasil == 1)
                                             <div class="ml-auto">
                                                 Nilai: {{ $answer->nilai }}
                                             </div>
