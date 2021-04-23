@@ -17,7 +17,7 @@
                                     </span>
                                 </div>
                                 <div class="col">
-                                  <h3 class="mb-0"><a href="#">{{ $user->nama }}</a></h3>
+                                  <h3 class="mb-0"><a href="#">{{ $user->name }}</a></h3>
                                   <div class="text-muted text-h5">{{ $user->username }}</div>
                                 </div>
                               </div>
