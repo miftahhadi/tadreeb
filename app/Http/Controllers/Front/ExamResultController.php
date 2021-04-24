@@ -44,25 +44,6 @@ class ExamResultController extends Controller
 
     public function showResult(Classroom $kelas, Exam $exam, Request $request)
     {
-        /* $classExam = ClassroomExam::where([
-            ['classroom_id', $kelas->id],
-            ['exam_id', $exam->id]
-        ])->first();
-
-        $this->service->setExam($exam);
-
-        if ($request->input('all')) {
-
-            $result = $this->service->getAllResult($classExam);
-
-        } else {
-
-            $userId = ($request->input('user')) ?? auth()->user()->id;
-
-            $attempt = ($request->input('attempt')) ?? null;
-
-            $result = $this->service->getResult($userId, $classExam->id, $attempt);
-        } */
         $exam->loadCount('questions');
         $questions = $exam->questions()->orderByPivot('urutan', 'asc')->get();
 
@@ -78,7 +59,17 @@ class ExamResultController extends Controller
                                     ->first()
                                     ->pivot;
         
-        $userAnswers = json_decode($record->answers, true);
+        $userAnswers = collect(json_decode($record->answers, true))
+                        ->map(function ($answer) {
+                            if (is_array($answer['answers'])) {
+                                return $answer['answers'];
+                            } else {
+                                return [$answer['answers']];
+                            }
+                        });
+        
+        $waktuSelesai = $record->waktu_selesai ?? $record->updated_at;
+        $durasi = $waktuSelesai->diffInMinutes($record->waktu_mulai) . ' menit';
 
         return view('front.ujian.hasil-detail', [
             'title' => 'Hasil ' . $exam->judul,
@@ -89,6 +80,7 @@ class ExamResultController extends Controller
             'user' => $user,
             'record' => $record,
             'userAnswers' => $userAnswers,
+            'durasi' => $durasi
         ]);
     }
 }

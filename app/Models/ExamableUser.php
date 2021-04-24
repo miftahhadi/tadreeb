@@ -48,6 +48,18 @@ class ExamableUser extends Pivot
                 . ' ' . settings('tzName');
     }
 
+    public function getWaktuSelesaiString()
+    {
+        $waktuSelesai = $this->waktu_selesai ?? $this->updated_at;
+
+        return $waktuSelesai
+                        ->tz(settings('timezone'))
+                        ->locale('id')
+                        ->isoFormat('D MMM Y, HH:mm') 
+
+                . ' ' . settings('tzName');
+    }
+
     public function getScoreAttribute()
     {
         $answers = collect(json_decode($this->answers, true));

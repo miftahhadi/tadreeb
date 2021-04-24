@@ -152,7 +152,7 @@ class ExamController extends Controller
         $itemName = $ujian->judul;
         $itemDescription = $ujian->deskripsi;
 
-        if (is_null($request->input('kelas'))) {
+        /* if (is_null($request->input('kelas'))) {
             
             $data = [
                 'mode' => 'classroomList',
@@ -204,7 +204,7 @@ class ExamController extends Controller
                 'kelas' => $kelas
             ];
 
-        }
+        } */
 
         return view('admin.exam.result', [
             'title' => 'Hasil - ' . $ujian->judul,
@@ -212,16 +212,11 @@ class ExamController extends Controller
             'itemName' => $itemName,
             'itemDescription' => $itemDescription,
             'ujian' => $ujian,
-            'data' => $data,
         ]);   
     }
 
     public function showClassrooms(Exam $ujian, Request $request)
     {
-        if ($request->input('page') && $request->input('page') == 'hasil') {
-            return $this->showResult($ujian, $request);
-        }
-
         $breadcrumbs = [
             [
                 'name' => 'Ujian',

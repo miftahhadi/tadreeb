@@ -17,4 +17,10 @@ class Answer extends Model
     {
         return $this->belongsToMany(User::class)->withPivot('soal_id', 'classroom_exam_id', 'attempt');
     }
+
+    public function userAnswerCorrect(array $userAnswers)
+    {
+        return $this->benar && in_array($this->id, $userAnswers);
+    }
+
 }

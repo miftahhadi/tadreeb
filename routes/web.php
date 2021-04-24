@@ -60,18 +60,14 @@ Route::name('admin.')->group(function () {
         Route::get('/', 'AdminController@index')->name('dashboard');
 
         // Lessons
-        // Sections
-        Route::get('pelajaran/{pelajaran}/section/{section}/ujian/assign', 'SectionController@listUnassignedExam');
-        Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); 
+        // Sections => Ganti jadi unit
+        // Route::get('pelajaran/{pelajaran}/section/{section}/ujian/assign', 'SectionController@listUnassignedExam');
+        // Route::resource('pelajaran/{pelajaran}/section', 'SectionController'); 
 
         Route::resource('pelajaran', 'LessonController');
         
         // Questions
         Route::resource('soal', 'QuestionController');
-
-        // Question-Exam
-        Route::post('ujian/{ujian}/soal/unassign', 'QuestionController@unassignFromExam')->name('ujian.soal.unassign');
-        // Route::resource('ujian.soal', 'QuestionController')->except('index');
 
         // Exam
         Route::get('ujian/{ujian}/hasil', 'ExamController@showResult')->name('ujian.hasil');

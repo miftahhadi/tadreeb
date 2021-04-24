@@ -5989,7 +5989,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\np {\r\n    margin-bottom: 0rem;\n}\r\n", ""]);
+exports.push([module.i, "\np {\n    margin-bottom: 0rem;\n}\n", ""]);
 
 // exports
 
@@ -44311,9 +44311,8 @@ var render = function() {
                         href:
                           "/admin/ujian/" +
                           _vm.examId +
-                          "/kelas?kelas=" +
-                          actionProp.item.id +
-                          "&page=hasil"
+                          "/hasil?kelas=" +
+                          actionProp.item.id
                       }
                     },
                     [_vm._v("Hasil")]
@@ -63787,7 +63786,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Dev\laragon\tadreeb-dev\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/turobi/Dev/project/tadreeb-dev/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })
