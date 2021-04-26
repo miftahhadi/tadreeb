@@ -9,7 +9,15 @@
                 <p>Kelas yang mengujikan ujian {{ $ujian->judul }}:</p>
             @elseif (array_key_exists('kelas', $data))
                 <h2>Kelas: {{ $data['kelas']->nama }}</h2>
-
+                <div class="text-muted mb-4">
+                    <div>
+                        Kode kelas: {{ $data['kelas']->kode }}
+                    </div>
+                    <div>
+                        Grup: {{ $data['kelas']->group->nama }}
+                    </div>
+                </div>
+                
                 @if ($data['mode'] == 'showAll')
                     Daftar anggota kelas 
                 @else 
@@ -20,21 +28,19 @@
         </div>    
     </div>
 
-    @if ($data['mode'] != 'classroomList')
-        <div class="btn-list">
-            <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'page' => 'hasil']) }}"
-                class="btn @if ($data['mode'] == 'showAll') bg-indigo-lt @endif"
-            >Semua anggota kelas</a>
+    <div class="btn-list">
+        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $data['kelas']->id, 'show' => 'all']) }}"
+            class="btn @if ($data['mode'] == 'showAll') bg-indigo-lt @endif"
+        >Semua anggota kelas</a>
 
-            <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'page' => 'hasil', 'done' => 'true']) }}"
-                class="btn @if ($data['mode'] == 'showDone') bg-indigo-lt @endif"
-            >Sudah mengerjakan</a>
+        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $data['kelas']->id, 'show' => 'done']) }}"
+            class="btn @if ($data['mode'] == 'showDone') bg-indigo-lt @endif"
+        >Sudah mengerjakan</a>
 
-            <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelas' => $data['kelas']->id, 'page' => 'hasil', 'done' => 'false']) }}"
-                class="btn @if ($data['mode'] == 'showNotDone') bg-indigo-lt @endif"
-            >Belum mengerjakan</a>
-        </div>
-    @endif
+        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $data['kelas']->id, 'show' => 'unfinished']) }}"
+            class="btn @if ($data['mode'] == 'showNotDone') bg-indigo-lt @endif"
+        >Belum mengerjakan</a>
+    </div>
 
     @include('admin.exam._result-table')
 

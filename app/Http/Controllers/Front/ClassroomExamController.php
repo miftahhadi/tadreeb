@@ -39,7 +39,7 @@ class ClassroomExamController extends Controller
             return redirect(route('dashboard'));
         }
 
-        if ($user->examStatus($examable->id) == 'Sedang mengerjakan') {
+        if ($user->examStatus($examable) == 'Sedang mengerjakan') {
             $examableUser = $examable->getUserLastRecord($user->id);
         } else {
             $examableUser = (new RecordExamService($examable))->makeUserData();

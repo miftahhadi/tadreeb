@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\UpdateExamRequest;
 use App\Services\Admin\ExamService;
 use App\Http\Requests\Admin\StoreExamRequest;
 use App\Models\Exam;
+use App\Services\Admin\ShowExamResultService;
 
 class ExamController extends Controller
 {
@@ -152,7 +153,7 @@ class ExamController extends Controller
         $itemName = $ujian->judul;
         $itemDescription = $ujian->deskripsi;
 
-        /* if (is_null($request->input('kelas'))) {
+        if (!$request->kelasId) {
             
             $data = [
                 'mode' => 'classroomList',
@@ -160,51 +161,12 @@ class ExamController extends Controller
                 'row' => $ujian->classrooms
             ];
 
-        } elseif ($request->input('kelas')) {
+        } elseif ($request->kelas) {
+            $examable = $ujian->classrooms()->findOrFail($request->kelas)->pivot;
+            $show = $request->show;
 
-            // $examable = $ujian->classrooms()->find($request->input('kelas'))->pivot;
-            $kelas = $ujian->classrooms()->find($request->input('kelas'));
-            $examable = $kelas->pivot;
-            
-            $done = $request->input('done');
-
-            if ($done && $done == 'true') {
-
-                $users = $kelas->usersDoneExam($examable->id);
-    
-                $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
-    
-                $mode = 'showDone';
-    
-            } elseif ($done && $done == 'false') {
-                $users = $kelas->usersNotDoneExam($examable->id);
-    
-                $heading = ['Nama', 'Username'];
-    
-                $mode = 'showNotDone';
-           
-            } else {
-                $mode = 'showAll';
-    
-                $heading = ['Nama', 'Username', 'Sudah Mengerjakan?'];
-    
-                $id = $examable->id;
-    
-                $users = $kelas
-                                    ->users
-                                    ->each(function ($user) use ($id) {
-                                        $user->doneExam = $user->hasDoneExam($id);
-                                    });
-            }
-
-            $data = [
-                'mode' => $mode,
-                'heading' => $heading,
-                'row' => $users,
-                'kelas' => $kelas
-            ];
-
-        } */
+            $data = (new ShowExamResultService($examable))->getResultsByClassroom($show);
+        }
 
         return view('admin.exam.result', [
             'title' => 'Hasil - ' . $ujian->judul,
@@ -212,6 +174,7 @@ class ExamController extends Controller
             'itemName' => $itemName,
             'itemDescription' => $itemDescription,
             'ujian' => $ujian,
+            'data' => $data
         ]);   
     }
 
@@ -227,17 +190,29 @@ class ExamController extends Controller
         $itemName = $ujian->judul;
         $itemDescription = $ujian->deskripsi;
 
-        $tableHeading = json_encode(DataTable::heading(3));
-        $itemProperties = json_encode(DataTable::props(3));
+        if (!$request->kelasId) {
+            $data = [
+                'tableHeading' => json_encode(DataTable::heading(3)),
+                'itemProperties' => json_encode(DataTable::props(3))
+            ];
 
-        return view('admin.exam.kelas', [
+            $template = 'admin.exam.kelas';
+        } elseif ($request->kelasId) {
+            $examable = $ujian->classrooms()->findOrFail($request->kelasId)->pivot;
+            $show = $request->show ?? 'all';
+
+            $data = (new ShowExamResultService($examable))->getResultsByClassroom($show);
+
+            $template = 'admin.exam.result';
+        }
+
+        return view($template, [
+            'title' => $ujian->judul,
             'breadcrumbs' => $breadcrumbs,
             'itemName' => $itemName,
             'itemDescription' => $itemDescription,
             'ujian' => $ujian,
-            'title' => $ujian->judul,
-            'tableHeading' => $tableHeading,
-            'itemProperties' => $itemProperties
+            'data' => $data,
         ]);
     }
 

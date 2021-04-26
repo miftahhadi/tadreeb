@@ -18,28 +18,15 @@
 
         <tbody>
             @switch($data['mode'])
-                @case('classroomList')
-                    @foreach ($data['row'] as $key => $kelas)
-                        <tr>
-                            <td>{{ ++$key }}</td>
-                            <td>{{ $kelas->nama }}</td>
-                            <td>{{ $kelas->group->nama }}</td>
-                            <td class="text-right">
-                                <a href="{{ route('admin.ujian.hasil', ['ujian' => $ujian->slug, 'kelas' => $kelas->id]) }}">Buka</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    @break
-
                 @case('showDone')
                     @foreach ($data['row'] as $key => $user)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $user->nama }}</td>
+                            <td>{{ $user->name }}</td>
                             <td>{{ $user->username }}</td>
-                            <td>{{ $user->examData->printWaktuMulai() }}</td>
-                            <td>{{ $user->examData->printWaktuSelesai() }}</td>
-                            <td>{{ $user->examData->score() }}</td>
+                            <td>{{ $user->examData->getWaktuMulaiString() }}</td>
+                            <td>{{ $user->examData->getWaktuSelesaiString() }}</td>
+                            <td>{{ $user->examData->score }}</td>
                             <td class="text-right">
                                 <div class="dropdown">
                                     <a href="#" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
@@ -48,9 +35,9 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li><a class="dropdown-item" 
                                                 href="{{ 
-                                                        route('admin.ujian.hasil', 
+                                                        route('admin.ujian.kelas.hasil', 
                                                                 [
-                                                                    'ujian' => $ujian->slug, 
+                                                                    'ujian' => $ujian->id, 
                                                                     'kelas' => $user->id
                                                                 ]
                                                             ) 
@@ -69,7 +56,7 @@
                     @foreach ($data['row'] as $key => $user)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $user->nama }}</td>
+                            <td>{{ $user->name }}</td>
                             <td>{{ $user->username }}</td>
                             <td class="text-right">
                             </td>
@@ -81,9 +68,9 @@
                     @foreach ($data['row'] as $key => $user)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $user->nama }}</td>
+                            <td>{{ $user->name }}</td>
                             <td>{{ $user->username }}</td>
-                            <td>{{ ($user->doneExam) ? 'Sudah' : 'Belum' }}</td>
+                            <td>{{ ($user->has_done_exam == 1) ? 'Sudah' : 'Belum' }}</td>
                             <td class="w-1">
                             </td>
                         </tr>

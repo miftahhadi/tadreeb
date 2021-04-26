@@ -49,25 +49,22 @@ class Classroom extends Model
         return $this->users()->where('user_id', $userId)->count() > 0;
     }
 
-    public function usersDoneExam($examableId)
+    public function usersDoneExam(Examable $examable)
     {
-        return $this->users()
-                        ->whereHas('examable', function (Builder $query) use ($examableId) {
-                            $query->where('examable_id', $examableId);
-                        })
-                        ->get()
-                        ->each(function ($user) use ($examableId) {
-                            $user->examData = $user->classExamUsers()->where('examable_id', $examableId)->first();
+        return $this->users
+                        ->filter(function ($user) use ($examable) {
+                            return $user->hasDoneExam($examable);
+                        })->each(function ($user) use ($examable) {
+                            return $user->examData = $examable->getUserLastFinishedRecord($user->id);
                         });
     }
 
-    public function usersNotDoneExam($examableId)
+    public function usersNotDoneExam($examable)
     {
-        return $this->users()
-                    ->whereDoesntHave('examable', function (Builder $query) use ($examableId) {
-                        $query->where('examable_id', $examableId);
-                    })
-                    ->get();
+        return $this->users
+                        ->filter(function ($user) use ($examable) {
+                            return !$user->hasDoneExam($examable);
+                        });
     }
 
     public function getActiveExamsByUser($userId, $take = null)
@@ -100,7 +97,7 @@ class Classroom extends Model
                             ];
 
                             $toShow['buka'] = $exam->pivot->isOpen();
-                            $toShow['status'] = $user->examStatus($exam->pivot->id);
+                            $toShow['status'] = $user->examStatus($exam->pivot);
 
                             return $toShow;
                         })

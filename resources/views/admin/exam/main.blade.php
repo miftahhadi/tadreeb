@@ -15,10 +15,6 @@
                 <a href="{{ route('admin.ujian.kelas', $ujian->id) }}" class="nav-link @if (strpos(Route::currentRouteName(), 'kelas')) active @endif">Kelas</a>
             </li>
 
-            <li class="nav-item">
-                <a href="#" class="nav-link @if (strpos(Route::currentRouteName(), 'info')) active @endif">Info</a>
-            </li>
-
         </ul>
 
         <div class="content-tab mt-4">

@@ -117,11 +117,6 @@ class User extends Authenticatable
                     ]);
     }
 
-    // public function classExamUsers()
-    // {
-    //     return $this->hasMany(ClassExamUser::class);
-    // }
-
     // public function getExamScore($classExamId)
     // {
     //     return $this->classroomExams()->where('classroom_exam_id', $classExamId)
@@ -130,10 +125,8 @@ class User extends Authenticatable
     // }
 
 
-    public function examStatus($examableId)
+    public function examStatus(Examable $examable)
     {
-        $examable = Examable::find($examableId);
-
         $lastRecord = $examable->getUserLastRecord($this->id);
 
         if (!$lastRecord) {
@@ -145,5 +138,10 @@ class User extends Authenticatable
         }
 
         return ($lastRecord->waktu_selesai) ? 'Sudah mengerjakan' : 'Sedang mengerjakan';
+    }
+
+    public function hasDoneExam(Examable $examable)
+    {
+        return $examable->getUserLastFinishedRecord($this->id) != null;
     }
 }

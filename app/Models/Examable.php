@@ -206,6 +206,19 @@ class Examable extends MorphPivot
         if ($records = $this->getUserRecords($userId)) {
             return $records->sortByDesc('attempt')
                             ->first();
+        } else {
+            return null;
+        }
+    }
+
+    public function getUserLastFinishedRecord($userId)
+    {
+        if ($records = $this->getUserRecords($userId)) {
+            return $records->whereNotNull('waktu_selesai')
+                            ->sortByDesc('attempt')
+                            ->first();
+        } else {
+            return null;
         }
     }
 

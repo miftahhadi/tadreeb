@@ -2,10 +2,11 @@
 
 @section('examContent')
     <div id="app">
+        <p>Kelas yang mengujikan ujian {{ $ujian->judul }}:</p>
         <exam-kelas
             :exam-id="{{ $ujian->id }}"
-            :table-heading="{{ $tableHeading }}"
-            :item-properties="{{ $itemProperties }}" 
+            :table-heading="{{ $data['tableHeading'] }}"
+            :item-properties="{{ $data['itemProperties'] }}" 
         ></exam-kelas>
     </div>
 @endsection

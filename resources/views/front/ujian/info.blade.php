@@ -24,7 +24,7 @@
                         <dt class="col-5">Status:</dt>
                         <dd class="col-7">
                             <span>
-                                {{ auth()->user()->examStatus($examable->id) }}
+                                {{ auth()->user()->examStatus($examable) }}
                             </span>
                         </dd>
                         <dt class="col-5">Kesempatan mengerjakan:</dt>
@@ -68,7 +68,7 @@
                     </a>
                 @endif
 
-                @if (auth()->user()->examStatus($examable->id) == 'Sudah mengerjakan')
+                @if (auth()->user()->examStatus($examable) == 'Sudah mengerjakan')
                 <a href="{{ route('kelas.exam.riwayat-user', ['kelas' => $kelas->kode, 'exam' => $exam->slug]) }}" 
                     class="btn btn-azure">
                     Lihat Hasil
