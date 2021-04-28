@@ -8,18 +8,17 @@ use App\Http\Controllers\Controller;
 use App\Models\ClassroomExam;
 use App\Models\Exam;
 use App\Models\Lesson;
-use App\Models\Section;
-use App\Services\Admin\ClassroomService;
+use App\Services\Admin\ShowClassroomService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class ClassroomController extends Controller
 {
-    protected $classroomService;
+    protected $showClassroomService;
 
-    public function __construct(ClassroomService $classroomService)
+    public function __construct(ShowClassroomService $showClassroomService)
     {
-        $this->classroomService = $classroomService;
+        $this->showClassroomService = $showClassroomService;
     }
 
 
@@ -36,7 +35,11 @@ class ClassroomController extends Controller
             'deskripsi' => ''
         ]);
 
-        $kelas = $this->classroomService->store($data, $grup);
+        $kelas = $grup->classrooms()->create([
+                    'nama' => $data['judul'],
+                    'kode' => Str::random(10),
+                    'deskripsi' => $data['deskripsi']
+                ]);
 
         return redirect(route('admin.grup.kelas.show', [$grup->id, $kelas->id]));
         
@@ -66,19 +69,14 @@ class ClassroomController extends Controller
         $itemName = $kelas->nama;
         $itemDescription = $kelas->deskripsi;
 
-        $kelasNavs = [
-            'Pelajaran', 'Ujian', 'Anggota', 'Pengaturan'
-        ];
-
-        $page = $request['page'];
         $kelasUrl = route('admin.grup.kelas.show', ['grup' => $grup->id, 'kelas' => $kelas->id]);
 
-        $service = $this->classroomService->show($kelas, $page);
+        $service = $this->showClassroomService->show($kelas, $request);
 
         return view('admin.classroom.show', compact(
             'title', 'grup', 'kelas', 'service', 'page',
             'breadcrumbs', 'itemName', 'itemDescription',
-            'kelasUrl', 'kelasNavs'
+            'kelasUrl'
         ));
     }
 

@@ -15,29 +15,33 @@ class ShowExamResultService {
     public function getResultsByClassroom($show)
     {
         $kelas = $this->examable->assignedTo();
+        $users = $kelas->users()
+                        ->select('users.id', 'users.name', 'users.username')
+                        ->orderBy('classroom_user.id')
+                        ->get()
+                        ->each(function ($user) {
+                            if ($user->examables()->where('examables.id', $this->examable->id)) {
+                                return $user->examData = $this->examable->getUserLastFinishedRecord($user->id);
+                            }
+                        })->map(function ($user) {
+                            $userData = [
+                                'id' => $user->id,
+                                'name' => $user->name,
+                                'username' => $user->username,
+                            ];
 
-        if (!$show || strtolower($show) == 'all') {
-            $mode = 'showAll';
-            $heading = ['Nama', 'Username', 'Sudah Mengerjakan?'];
+                            if ($user->examData) {
+                                $userData['has_done_exam'] = 'Sudah';
+                                $userData['waktu_mulai'] = $user->examData->getWaktuMulaiString();
+                                $userData['score'] = $user->examData->score;
+                            } else {
+                                $userData['has_done_exam'] = 'Belum';
+                            }
 
-            $users = $kelas->users->each(function ($user) {
-                        return $user->has_done_exam = ($user->hasDoneExam($this->examable)) ? 1 : 0;
-                    });
-        } elseif (strtolower($show) == 'done') {
-            $mode = 'showDone';
-            $heading = ['Nama', 'Username', 'Waktu Mulai', 'Waktu Selesai', 'Nilai'];
-            
-            $users = $kelas->usersDoneExam($this->examable);
-        } elseif (strtolower($show) == 'unfinished') {
-            $mode = 'showNotDone';
-            $heading = ['Nama', 'Username'];
-
-            $users = $kelas->usersNotDoneExam($this->examable);
-        }
+                            return $userData;
+                        });
 
         return [
-            'mode' => $mode,
-            'heading' => $heading,
             'row' => $users,
             'kelas' => $kelas
         ];

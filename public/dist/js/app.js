@@ -2075,6 +2075,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'v-table',
   props: {
@@ -2089,7 +2091,8 @@ __webpack_require__.r(__webpack_exports__);
     itemData: {
       type: Array
     },
-    action: Boolean
+    action: Boolean,
+    order: true
   },
   methods: {
     printItem: function printItem(index, prop) {
@@ -2400,6 +2403,128 @@ __webpack_require__.r(__webpack_exports__);
     EventBus.$on('item:assigned', function (response) {
       _this2.assign(response.data);
     });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ExamRecordTable.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ExamRecordTable.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'exam-record-table',
+  props: {
+    recordData: Object
+  },
+  data: function data() {
+    return {
+      headings: {
+        all: [{
+          name: 'Nama',
+          width: null
+        }, {
+          name: 'Username',
+          width: null
+        }, {
+          name: 'Sudah Mengerjakan?',
+          width: null
+        }],
+        done: [{
+          name: 'Nama',
+          width: null
+        }, {
+          name: 'Username',
+          width: null
+        }, {
+          name: 'Waktu Mengerjakan',
+          width: null
+        }, {
+          name: 'Nilai',
+          width: null
+        }],
+        unfinished: [{
+          name: 'Nama',
+          width: null
+        }, {
+          name: 'Username',
+          width: null
+        }]
+      },
+      properties: {
+        all: ['name', 'username', 'has_done_exam'],
+        done: ['name', 'username', 'waktu_mulai', 'score'],
+        unfinished: ['name', 'username']
+      },
+      records: [],
+      actionColumn: false,
+      show: 'all'
+    };
+  },
+  methods: {
+    changeData: function changeData(show) {
+      this.show = show;
+
+      switch (show) {
+        case 'all':
+          this.records = this.recordData.row;
+          this.actionColumn = false;
+          break;
+
+        case 'done':
+          this.records = this.recordData.row.filter(function (user) {
+            return user.has_done_exam == 'Sudah';
+          });
+          this.actionColumn = true;
+          break;
+
+        case 'unfinished':
+          this.records = this.recordData.row.filter(function (user) {
+            return user.has_done_exam == 'Belum';
+          });
+          this.actionColumn = false;
+          break;
+      }
+    }
+  },
+  created: function created() {
+    this.records = this.recordData.row;
   }
 });
 
@@ -44198,10 +44323,14 @@ var render = function() {
         _c(
           "tr",
           [
-            _vm._l(_vm.headings, function(heading) {
+            _vm.order === true
+              ? _c("th", { attrs: { width: "5%" } }, [_vm._v("No")])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.headings, function(heading, index) {
               return _c(
                 "th",
-                { key: heading.id, attrs: { width: heading.width } },
+                { key: "heading" + index, attrs: { width: heading.width } },
                 [_vm._v(_vm._s(heading.name))]
               )
             }),
@@ -44217,8 +44346,12 @@ var render = function() {
         _vm._l(_vm.itemData, function(item, index) {
           return _c(
             "tr",
-            { key: item.id },
+            { key: "item" + index },
             [
+              _vm.order === true
+                ? _c("td", [_vm._v(_vm._s(index + 1))])
+                : _vm._e(),
+              _vm._v(" "),
               _vm._l(_vm.properties, function($prop) {
                 return _c("td", { key: $prop }, [
                   _c("span", {
@@ -44311,7 +44444,7 @@ var render = function() {
                         href:
                           "/admin/ujian/" +
                           _vm.examId +
-                          "/hasil?kelas=" +
+                          "/kelas?kelasId=" +
                           actionProp.item.id
                       }
                     },
@@ -44588,6 +44721,115 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ExamRecordTable.vue?vue&type=template&id=7c8b6d7a&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/ExamRecordTable.vue?vue&type=template&id=7c8b6d7a& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "btn-list" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn",
+          class: { "bg-indigo-lt": _vm.show == "all" },
+          on: {
+            click: function($event) {
+              return _vm.changeData("all")
+            }
+          }
+        },
+        [_vm._v("Semua anggota kelas")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn",
+          class: { "bg-indigo-lt": _vm.show == "done" },
+          on: {
+            click: function($event) {
+              return _vm.changeData("done")
+            }
+          }
+        },
+        [_vm._v("Sudah mengerjakan")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn",
+          class: { "bg-indigo-lt": _vm.show == "unfinished" },
+          on: {
+            click: function($event) {
+              return _vm.changeData("unfinished")
+            }
+          }
+        },
+        [_vm._v("Belum mengerjakan")]
+      )
+    ]),
+    _vm._v(" "),
+    _vm.show == "done"
+      ? _c("div", { staticClass: "mt-3" }, [
+          _c("strong", [_vm._v("Catatan:")]),
+          _vm._v(
+            " Nilai yang ditampilkan adalah nilai saat user terakhir kali mengerjakan ujian."
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card mt-2" },
+      [
+        _c("v-table", {
+          attrs: {
+            order: true,
+            headings: _vm.headings[_vm.show],
+            properties: _vm.properties[_vm.show],
+            itemData: _vm.records,
+            action: _vm.actionColumn
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "action",
+              fn: function() {
+                return [
+                  _c("div", { staticClass: "d-flex small" }, [
+                    _c("span", { staticClass: "mx-1" }, [_vm._v("Riwayat")]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "mx-1" }, [_vm._v("Hapus")])
+                  ])
+                ]
+              },
+              proxy: true
+            }
+          ])
+        })
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -46586,7 +46828,18 @@ var render = function() {
                   _vm.itemData.item == "ujian"
                     ? _c(
                         "a",
-                        { staticClass: "btn btn-sm", attrs: { href: "#" } },
+                        {
+                          staticClass: "btn btn-sm",
+                          attrs: {
+                            href:
+                              "/admin/grup/" +
+                              _vm.kelas.group_id +
+                              "/kelas/" +
+                              _vm.kelas.id +
+                              "?page=hasil_ujian&ujianId=" +
+                              actionProp.item.id
+                          }
+                        },
                         [_vm._v("Hasil")]
                       )
                     : _vm._e(),
@@ -61816,6 +62069,7 @@ var map = {
 	"./components/VTable.vue": "./resources/js/components/VTable.vue",
 	"./components/admin/ExamKelas.vue": "./resources/js/components/admin/ExamKelas.vue",
 	"./components/admin/ExamQuestion.vue": "./resources/js/components/admin/ExamQuestion.vue",
+	"./components/admin/ExamRecordTable.vue": "./resources/js/components/admin/ExamRecordTable.vue",
 	"./components/admin/QuestionForm.vue": "./resources/js/components/admin/QuestionForm.vue",
 	"./components/admin/QuestionViewer.vue": "./resources/js/components/admin/QuestionViewer.vue",
 	"./components/admin/general/ItemEditForm.vue": "./resources/js/components/admin/general/ItemEditForm.vue",
@@ -62256,6 +62510,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_template_id_db21d1e0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_template_id_db21d1e0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ExamRecordTable.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/admin/ExamRecordTable.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ExamRecordTable_vue_vue_type_template_id_7c8b6d7a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExamRecordTable.vue?vue&type=template&id=7c8b6d7a& */ "./resources/js/components/admin/ExamRecordTable.vue?vue&type=template&id=7c8b6d7a&");
+/* harmony import */ var _ExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExamRecordTable.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/ExamRecordTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ExamRecordTable_vue_vue_type_template_id_7c8b6d7a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ExamRecordTable_vue_vue_type_template_id_7c8b6d7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/ExamRecordTable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ExamRecordTable.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/admin/ExamRecordTable.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamRecordTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ExamRecordTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/ExamRecordTable.vue?vue&type=template&id=7c8b6d7a&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/admin/ExamRecordTable.vue?vue&type=template&id=7c8b6d7a& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamRecordTable_vue_vue_type_template_id_7c8b6d7a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamRecordTable.vue?vue&type=template&id=7c8b6d7a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ExamRecordTable.vue?vue&type=template&id=7c8b6d7a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamRecordTable_vue_vue_type_template_id_7c8b6d7a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamRecordTable_vue_vue_type_template_id_7c8b6d7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

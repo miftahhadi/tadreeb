@@ -29,7 +29,10 @@
                 @if (!$page)
                     <span>Ikhtisar</span>                
                 @elseif ($page == 'pengaturan')
-                    pengaturan
+                    Pengaturan
+                @elseif ($page == 'hasil_ujian')
+                    @include('admin.exam._user-filter')
+                    @include('admin.exam._result-table')
                 @else 
                     <kelas-item
                         :kelas="{{ json_encode($kelas) }}"

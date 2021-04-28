@@ -141,43 +141,6 @@ class ExamController extends Controller
         return redirect(route('admin.ujian.index'));
     }
 
-    public function showResult(Exam $ujian, Request $request)
-    {
-        $breadcrumbs = [
-            [
-                'name' => 'Ujian',
-                'href' => route('admin.ujian.index')
-            ]
-        ];
-
-        $itemName = $ujian->judul;
-        $itemDescription = $ujian->deskripsi;
-
-        if (!$request->kelasId) {
-            
-            $data = [
-                'mode' => 'classroomList',
-                'heading' => ['Kelas', 'Grup'],
-                'row' => $ujian->classrooms
-            ];
-
-        } elseif ($request->kelas) {
-            $examable = $ujian->classrooms()->findOrFail($request->kelas)->pivot;
-            $show = $request->show;
-
-            $data = (new ShowExamResultService($examable))->getResultsByClassroom($show);
-        }
-
-        return view('admin.exam.result', [
-            'title' => 'Hasil - ' . $ujian->judul,
-            'breadcrumbs' => $breadcrumbs,
-            'itemName' => $itemName,
-            'itemDescription' => $itemDescription,
-            'ujian' => $ujian,
-            'data' => $data
-        ]);   
-    }
-
     public function showClassrooms(Exam $ujian, Request $request)
     {
         $breadcrumbs = [

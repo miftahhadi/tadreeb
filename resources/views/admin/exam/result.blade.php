@@ -1,47 +1,32 @@
 @extends('admin.exam.main')
 
 @section('examContent')
-    <div class="row mb-2">
-        <div class="col-auto">
+    <div>
+        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id]) }}" class="d-flex align-items-center">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="5" y1="12" x2="19" y2="12" /><line x1="5" y1="12" x2="9" y2="16" /><line x1="5" y1="12" x2="9" y2="8" /></svg>
+            </span>
+            <span>Daftar kelas</span>
+        </a>
+        <h2>Kelas: {{ $data['kelas']->nama }}</h2>
+        <div class="text-muted mb-4">
+            <div>
+                Kode kelas: {{ $data['kelas']->kode }}
+            </div>
+            <div>
+                Grup: {{ $data['kelas']->group->nama }}
+            </div>
+        </div>
 
-            @if ($data['mode'] == 'classroomList')
-                <h2>Pilih Kelas</h2>
-                <p>Kelas yang mengujikan ujian {{ $ujian->judul }}:</p>
-            @elseif (array_key_exists('kelas', $data))
-                <h2>Kelas: {{ $data['kelas']->nama }}</h2>
-                <div class="text-muted mb-4">
-                    <div>
-                        Kode kelas: {{ $data['kelas']->kode }}
-                    </div>
-                    <div>
-                        Grup: {{ $data['kelas']->group->nama }}
-                    </div>
-                </div>
-                
-                @if ($data['mode'] == 'showAll')
-                    Daftar anggota kelas 
-                @else 
-                    <p>Anggota kelas yang @if ($data['mode'] == 'showDone') <b>sudah</b> @else <b>belum</b> @endif mengerjakan.</p>               
-                @endif
-            @endif
-
-        </div>    
     </div>
 
-    <div class="btn-list">
-        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $data['kelas']->id, 'show' => 'all']) }}"
-            class="btn @if ($data['mode'] == 'showAll') bg-indigo-lt @endif"
-        >Semua anggota kelas</a>
-
-        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $data['kelas']->id, 'show' => 'done']) }}"
-            class="btn @if ($data['mode'] == 'showDone') bg-indigo-lt @endif"
-        >Sudah mengerjakan</a>
-
-        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $data['kelas']->id, 'show' => 'unfinished']) }}"
-            class="btn @if ($data['mode'] == 'showNotDone') bg-indigo-lt @endif"
-        >Belum mengerjakan</a>
+    <div id="app">
+        <exam-record-table
+            :record-data="{{ json_encode($data) }}"
+        ></exam-record-table>
     </div>
-
-    @include('admin.exam._result-table')
-
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush

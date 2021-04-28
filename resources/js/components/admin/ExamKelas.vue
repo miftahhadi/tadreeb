@@ -18,7 +18,7 @@
                         @click="callSetting(actionProp.index, actionProp.item)"
                     >Pengaturan</button>
                     
-                    <a :href="'/admin/ujian/' + examId + '/hasil?kelas=' + actionProp.item.id " class="btn btn-sm">Hasil</a>
+                    <a :href="'/admin/ujian/' + examId + '/kelas?kelasId=' + actionProp.item.id " class="btn btn-sm">Hasil</a>
                 </div>
             </template>
         </item-list>
