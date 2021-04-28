@@ -21,17 +21,10 @@ class ExamResultController extends Controller
 
     public function showHistory(Classroom $kelas, Exam $exam, Request $request)
     {
-        // $classexamId = $classroom->exams()->find($exam->id)->pivot->id;
-    
-        // $histories = $this->service->getHistory($request->input('user'), $classexamId);
         $user = $this->examResultservice->getUser($request->user);
 
         $examable = $exam->classrooms()->findOrFail($kelas->id)->pivot;
-        $records = $examable->users()->where('users.id', $user->id)
-                                    ->get()
-                                    ->map(function($user) {
-                                        return $user->pivot;
-                                    });
+        $records = $examable->getUserRecords($user->id);
 
         return view('front.ujian.riwayat', [
             'title' => 'Riwayat - ' . $exam->judul . ' - ' . $kelas->nama,
