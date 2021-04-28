@@ -4,8 +4,9 @@
 
             <thead>
                 <tr>
-                    <th v-for="heading in headings" 
-                        :key="heading.id" 
+                    <th v-if="order === true" width="5%">No</th>
+                    <th v-for="(heading, index) in headings" 
+                        :key="'heading' + index" 
                         :width="heading.width"
                     >{{ heading.name }}</th>
                     
@@ -15,7 +16,8 @@
 
             <tbody>
 
-                <tr v-for="(item, index) in itemData" :key="item.id">
+                <tr v-for="(item, index) in itemData" :key="'item' + index">
+                    <td v-if="order === true">{{ index + 1 }}</td>
                     <td v-for="$prop in properties" :key="$prop">
                         <span v-html="printItem(index,$prop)"></span>
                     </td>
@@ -49,7 +51,8 @@ export default {
         itemData: {
             type: Array,
         },
-        action: Boolean
+        action: Boolean,
+        order: true,
     },
 
     methods: {
