@@ -25,7 +25,7 @@
             <template v-slot:action="actionProp">
                 <div class="btn-list flex-nowrap">
 
-                    <a :href="'/admin/grup/' + kelas.group_id + '/kelas/' + kelas.id + '?page=hasil_ujian&ujianId=' + actionProp.item.id" class="btn btn-sm" v-if="itemData.item == 'ujian'">Hasil</a>
+                    <a :href="'/admin/ujian/' + actionProp.item.id + '/kelas?kelasId=' + kelas.id " class="btn btn-sm" v-if="itemData.item == 'ujian'">Hasil</a>
 
                     <button v-if="settingModal"
                         class="btn btn-sm"

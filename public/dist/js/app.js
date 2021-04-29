@@ -47190,12 +47190,10 @@ var render = function() {
                           staticClass: "btn btn-sm",
                           attrs: {
                             href:
-                              "/admin/grup/" +
-                              _vm.kelas.group_id +
-                              "/kelas/" +
-                              _vm.kelas.id +
-                              "?page=hasil_ujian&ujianId=" +
-                              actionProp.item.id
+                              "/admin/ujian/" +
+                              actionProp.item.id +
+                              "/kelas?kelasId=" +
+                              _vm.kelas.id
                           }
                         },
                         [_vm._v("Hasil")]

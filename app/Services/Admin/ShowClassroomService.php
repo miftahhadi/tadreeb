@@ -16,10 +16,9 @@ class ShowClassroomService
     public function show(Classroom $kelas, Request $request)
     {
         $this->kelas = $kelas;
-
         
         if ($request->page && $request->page != 'pengaturan') {
-            $this->setItemData($$request->page);
+            $this->setItemData($request->page);
         }
         
         return $this;

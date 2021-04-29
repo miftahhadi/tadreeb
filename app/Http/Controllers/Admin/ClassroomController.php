@@ -66,11 +66,10 @@ class ClassroomController extends Controller
             ]
         ];
 
-        $page = $request->page;
-
         $itemName = $kelas->nama;
         $itemDescription = $kelas->deskripsi;
 
+        $page = $request['page'];
         $kelasUrl = route('admin.grup.kelas.show', ['grup' => $grup->id, 'kelas' => $kelas->id]);
 
         $service = $this->showClassroomService->show($kelas, $request);
