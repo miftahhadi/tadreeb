@@ -44,13 +44,7 @@ class ExamResultController extends Controller
         $examable = $exam->classrooms()->findOrFail($kelas->id)->pivot;
         $attempt = $request->attempt ?? $examable->userLastAttempt($user->id);
 
-        $record = $examable->users()->where('users.id', $user->id)
-                                    ->get()
-                                    ->filter(function ($data) use ($attempt) {
-                                        return $data->pivot->attempt == $attempt;
-                                    })
-                                    ->first()
-                                    ->pivot;
+        $record = $examable->getUserRecordByAttempt($user->id, $attempt);
         
         $userAnswers = collect(json_decode($record->answers, true))
                         ->map(function ($answer) {

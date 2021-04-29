@@ -222,4 +222,15 @@ class Examable extends MorphPivot
         }
     }
 
+    public function getUserRecordByAttempt($userId, $attempt)
+    {
+        return $this->users()->where('users.id', $userId)
+                                ->get()
+                                ->filter(function ($data) use ($attempt) {
+                                    return $data->pivot->attempt == $attempt;
+                                })
+                                ->first()
+                                ->pivot;
+    }
+
 }
