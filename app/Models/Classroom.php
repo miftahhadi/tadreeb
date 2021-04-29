@@ -17,10 +17,10 @@ class Classroom extends Model
         return $this->belongsTo(Group::class);
     }
 
-    /* public function lessons()
+    public function lessons()
     {
-        return $this->belongsToMany(Lesson::class);
-    } */
+        return $this->morphToMany(Lesson::class, 'lessonable');
+    }
 
     public function exams()
     {

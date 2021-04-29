@@ -18,8 +18,8 @@ class Lesson extends Model
         return $this->hasMany(Unit::class);
     }
 
-    /* public function classrooms()
+    public function classrooms()
     {
-        return $this->belongsToMany(Classroom::class);
-    } */
+        return $this->morphedByMany(Classroom::class, 'lessonable');
+    }
 }

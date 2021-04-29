@@ -15,6 +15,14 @@ class CreateLessonablesTable extends Migration
     {
         Schema::create('lessonables', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('lesson_id')
+                    ->constrained()
+                    ->onDelete('cascade');
+            $table->morphs('lessonable');
+            $table->tinyInteger('tampil')->default(0);
+            $table->tinyInteger('buka')->default(0);
+            $table->timestamp('tampil_otomatis')->nullable();
+            $table->timestamp('buka_otomatis')->nullable();
             $table->timestamps();
         });
     }
