@@ -2451,6 +2451,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'exam-record-table',
   props: {
+    exam: Object,
     recordData: Object
   },
   data: function data() {
@@ -3095,12 +3096,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'user-exam-record-table',
   props: {
     data: Array,
-    user: Object
+    user: Object,
+    kelasId: Number,
+    ujianId: Number
   },
   data: function data() {
     return {
@@ -44958,16 +44963,45 @@ var render = function() {
           scopedSlots: _vm._u([
             {
               key: "action",
-              fn: function() {
+              fn: function(actionProps) {
                 return [
                   _c("div", { staticClass: "d-flex small" }, [
-                    _c("span", { staticClass: "mx-1" }, [_vm._v("Riwayat")]),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-sm btn-link",
+                        attrs: {
+                          href:
+                            "/admin/ujian/" +
+                            _vm.exam.id +
+                            "/detail?kelasId=" +
+                            _vm.recordData.kelas.id +
+                            "&userId=" +
+                            actionProps.item.id
+                        }
+                      },
+                      [_vm._v("Lihat")]
+                    ),
                     _vm._v(" "),
-                    _c("span", { staticClass: "mx-1" }, [_vm._v("Hapus")])
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-sm btn-link",
+                        attrs: {
+                          href:
+                            "/admin/ujian/" +
+                            _vm.exam.id +
+                            "/kelas?kelasId=" +
+                            _vm.recordData.kelas.id +
+                            "&userId=" +
+                            actionProps.item.id
+                        }
+                      },
+                      [_vm._v("Riwayat")]
+                    )
                   ])
                 ]
-              },
-              proxy: true
+              }
             }
           ])
         })
@@ -45742,7 +45776,17 @@ var render = function() {
                         "a",
                         {
                           staticClass: "btn btn-sm btn-link mx-1",
-                          attrs: { href: "#" }
+                          attrs: {
+                            href:
+                              "/admin/ujian/" +
+                              _vm.ujianId +
+                              "/detail?kelasId=" +
+                              _vm.kelasId +
+                              "&userId=" +
+                              _vm.user.id +
+                              "attempt=" +
+                              actionProps.item.attempt
+                          }
                         },
                         [_vm._v("Lihat")]
                       ),

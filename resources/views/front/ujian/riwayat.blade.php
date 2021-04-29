@@ -16,8 +16,10 @@
                             <table class="table table-vcenter card-table">
                                 <thead>
                                 <tr>
-                                    <th class="w-1">No</th>
+                                    <th class="w-1">Ke-</th>
                                     <th>Mulai Mengerjakan</th>
+                                    <th>Selesai Mengerjakan</th>
+                                    <th>Durasi</th>
                                     <th>Nilai</th>
                                     <th class="w-1"></th>
                                 </tr>
@@ -29,6 +31,12 @@
                                             <td>{{ $record->attempt }}</td>
                                             <td>
                                                 {{ $record->getWaktuMulaiString() }} 
+                                            </td>
+                                            <td>
+                                                {{ $record->getWaktuSelesaiString() }} 
+                                            </td>
+                                            <td>
+                                                {{ $record->durasi }} 
                                             </td>
                                             <td>{{ $record->score }}</td>
                                             <td>

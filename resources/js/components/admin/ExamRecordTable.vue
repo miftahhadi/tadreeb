@@ -16,10 +16,10 @@
                 :item-data="records"
                 :action="actionColumn"
             >
-                <template #action>
+                <template v-slot:action="actionProps">
                     <div class="d-flex small">
-                        <span class="mx-1">Riwayat</span>
-                        <span class="mx-1">Hapus</span>
+                        <a :href="'/admin/ujian/' + exam.id + '/detail?kelasId=' + recordData.kelas.id + '&userId=' + actionProps.item.id" class="btn btn-sm btn-link">Lihat</a>
+                        <a :href="'/admin/ujian/' + exam.id + '/kelas?kelasId=' + recordData.kelas.id + '&userId=' + actionProps.item.id" class="btn btn-sm btn-link">Riwayat</a>
                     </div>
                 </template>
 
@@ -34,6 +34,7 @@ export default {
     name: 'exam-record-table',
 
     props: {
+        exam: Object,
         recordData: Object,
     },
 
@@ -94,7 +95,7 @@ export default {
 
             actionColumn: false,
 
-            show: 'all'
+            show: 'all',
         }
     },
 
@@ -123,7 +124,7 @@ export default {
                     break;
             }
 
-        }
+        },
     },
 
     created() {

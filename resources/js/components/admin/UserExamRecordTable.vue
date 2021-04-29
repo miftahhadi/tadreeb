@@ -15,7 +15,9 @@
             >
                 <template v-slot:action="actionProps">
                     <div class="d-flex small">
-                        <a href="#" class="btn btn-sm btn-link mx-1">Lihat</a>
+                        <a :href="'/admin/ujian/' + ujianId + '/detail?kelasId=' + kelasId + '&userId=' + user.id + 'attempt=' + actionProps.item.attempt" 
+                            class="btn btn-sm btn-link mx-1"
+                        >Lihat</a>
                         <a href="#" 
                             class="btn btn-sm btn-danger" 
                             data-toggle="modal" 
@@ -74,7 +76,9 @@ export default {
 
     props: {
         data: Array,
-        user: Object
+        user: Object,
+        kelasId: Number,
+        ujianId: Number
     },
 
     data() {

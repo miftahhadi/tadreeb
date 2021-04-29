@@ -166,27 +166,46 @@ class ExamController extends Controller
             $examable = $kelas->pivot;
 
             if ($request->userId) {
-                $user = $kelas->users()->where('users.id', $request->userId)
-                                        ->select('users.id', 'users.name', 'users.username')
-                                        ->first();
+                $user = $kelas->users()
+                                ->where('users.id', $request->userId)
+                                ->select('users.id', 'users.name', 'users.username')
+                                ->first();
                 $data = [
                     'mode' => 'records-by-user',
                     'user' => $user,
                     'kelas' => $kelas,
-                    'records' => $examable->getUserRecords($user->id)
-                                            ->map(function($record) {
-                                                return [
-                                                    'examable_user_id' => $record->id,
-                                                    'attempt' => $record->attempt,
-                                                    'waktu_mulai' => $record->getWaktuMulaiString(),
-                                                    'waktu_selesai' => $record->getWaktuSelesaiString(),
-                                                    'durasi' => $record->durasi,
-                                                    'score' => $record->score
-                                                ];
-                                            }),
+                    'records' => $examable
+                                    ->getUserRecords($user->id)
+                                    ->map(function($record) {
+                                        return [
+                                            'examable_user_id' => $record->id,
+                                            'attempt' => $record->attempt,
+                                            'waktu_mulai' => $record->getWaktuMulaiString(),
+                                            'waktu_selesai' => $record->getWaktuSelesaiString(),
+                                            'durasi' => $record->durasi,
+                                            'score' => $record->score
+                                        ];
+                                    }),
+                ];
+
+                $data['navs'] = [
+                    [
+                        'name' => 'Daftar Kelas',
+                        'href' => route('admin.ujian.kelas', ['ujian' => $ujian->id])
+                    ],
+                    [
+                        'name' => $kelas->nama,
+                        'href' => route('admin.ujian.kelas', ['ujian' => $ujian->id, 'kelasId' => $kelas->id])
+                    ]
                 ];
             } else {
                 $data = (new ShowExamResultService($examable))->getResultsByClassroom();
+                $data['navs'] = [
+                    [
+                        'name' => 'Daftar Kelas',
+                        'href' => route('admin.ujian.kelas', ['ujian' => $ujian->id])
+                    ]
+                ];
             }
 
             $template = 'admin.exam.result';
@@ -199,6 +218,43 @@ class ExamController extends Controller
             'itemDescription' => $itemDescription,
             'ujian' => $ujian,
             'data' => $data,
+        ]);
+    }
+
+    public function showUserResult(Exam $ujian, Request $request)
+    {
+        if (!$request->kelasId && !$request->userId) {
+            return redirect(route('admin.ujian.kelas', ['ujian' => $ujian->id]));
+        }
+
+        $ujian->loadCount('questions');
+        $questions = $ujian->questions()->orderByPivot('urutan', 'asc')->get();
+
+        $kelas = $ujian->classrooms()->findOrFail($request->kelasId);
+        $examable = $kelas->pivot;
+        $user = $kelas->users()->findOrFail($request->userId);
+        $record = ($request->attempt) ? $examable->getUserRecordByAttempt($user->id, $request->attempt) : $examable->getUserLastRecord($user->id);
+
+        $title = 'Lembar Jawaban ' . $user->username . ' - ' . $ujian->judul;
+
+        $userAnswers = collect(json_decode($record->answers, true))
+        ->map(function ($answer) {
+            if (is_array($answer['answers'])) {
+                return $answer['answers'];
+            } else {
+                return [$answer['answers']];
+            }
+        });
+
+        return view('admin.exam.detail', [
+            'title' => $title,
+            'user' => $user,
+            'kelas' => $kelas,
+            'record' => $record,
+            'exam' => $ujian,
+            'questions' => $questions,
+            'examable' => $examable,
+            'userAnswers' => $userAnswers
         ]);
     }
 

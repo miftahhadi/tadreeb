@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Front;
 
 use App\Models\Classroom;
-use App\Models\ClassroomExam;
 use App\Models\Exam;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -41,6 +40,13 @@ class ExamResultController extends Controller
         $questions = $exam->questions()->orderByPivot('urutan', 'asc')->get();
 
         $user = $this->examResultservice->getUser($request->user);
+
+        if ($request->user && auth()->user()->canAccessUserExam()) {
+            $user = User::findOrFail($request->user);
+        } else {
+            $user = auth()->user();
+        }
+
         $examable = $exam->classrooms()->findOrFail($kelas->id)->pivot;
         $attempt = $request->attempt ?? $examable->userLastAttempt($user->id);
 
@@ -55,9 +61,6 @@ class ExamResultController extends Controller
                             }
                         });
         
-        $waktuSelesai = $record->waktu_selesai ?? $record->updated_at;
-        $durasi = $waktuSelesai->diffInMinutes($record->waktu_mulai) . ' menit';
-
         return view('front.ujian.hasil-detail', [
             'title' => 'Hasil ' . $exam->judul,
             'kelas' => $kelas,
@@ -67,7 +70,6 @@ class ExamResultController extends Controller
             'user' => $user,
             'record' => $record,
             'userAnswers' => $userAnswers,
-            'durasi' => $durasi
         ]);
     }
 }

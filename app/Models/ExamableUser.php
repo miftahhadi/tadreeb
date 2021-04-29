@@ -73,14 +73,15 @@ class ExamableUser extends Pivot
 
     public function getDurasiAttribute()
     {
-        if ($this->waktu_selesai) {
-            $durasiMs = $this->waktu_mulai->diffInMilliseconds($this->waktu_selesai);
+        $waktuSelesai = $this->waktu_selesai ?? $this->updated_at;
 
-            $minutes = floor(($durasiMs % (1000 * 60 * 60)) / (1000 * 60));
-            $seconds = floor(($durasiMs % (1000 * 60)) / 1000);
+        $durasiMs = $this->waktu_mulai->diffInMilliseconds($waktuSelesai);
 
-            return ($minutes != 0) ? $minutes . ' menit ' . $seconds . ' detik'
-                                    : $seconds . ' detik';
-        }
+        $minutes = floor(($durasiMs % (1000 * 60 * 60)) / (1000 * 60));
+        $seconds = floor(($durasiMs % (1000 * 60)) / 1000);
+
+        return ($minutes != 0) ? $minutes . ' menit ' . $seconds . ' detik'
+                                : $seconds . ' detik';
+        
     }
 }

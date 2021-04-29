@@ -66,6 +66,8 @@ class ClassroomController extends Controller
             ]
         ];
 
+        $page = $request->page;
+
         $itemName = $kelas->nama;
         $itemDescription = $kelas->deskripsi;
 

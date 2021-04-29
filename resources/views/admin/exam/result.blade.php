@@ -2,12 +2,12 @@
 
 @section('examContent')
     <div>
-        <a href="{{ route('admin.ujian.kelas', ['ujian' => $ujian->id]) }}" class="d-flex align-items-center">
-            <span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="5" y1="12" x2="19" y2="12" /><line x1="5" y1="12" x2="9" y2="16" /><line x1="5" y1="12" x2="9" y2="8" /></svg>
-            </span>
-            <span>Daftar kelas</span>
-        </a>
+        <ol class="breadcrumb small" aria-label="breadcrumbs">
+            @foreach ($data['navs'] as $nav)
+                <li class="breadcrumb-item"><a href="{{ $nav['href'] }}">{{ $nav['name'] }}</a></li>                
+            @endforeach
+        </ol>
+  
         <h2>Kelas: {{ $data['kelas']->nama }}</h2>
         <div class="text-muted mb-4">
             <div>
@@ -23,12 +23,15 @@
     <div id="app">
         @if ($data['mode'] == 'users-list')
             <exam-record-table
+                :exam="{{ $ujian }}"
                 :record-data="{{ json_encode($data) }}"
             ></exam-record-table>
         @elseif ($data['mode'] == 'records-by-user')
             <user-exam-record-table
                 :data="{{ json_encode($data['records']) }}"
                 :user="{{ json_encode($data['user']) }}"
+                :kelas-id="{{ $data['kelas']->id }}"
+                :ujian-id="{{ $ujian->id }}"
             ></user-exam-record-table>            
         @endif
 
