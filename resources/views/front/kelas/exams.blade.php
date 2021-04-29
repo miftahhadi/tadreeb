@@ -8,20 +8,6 @@
 <div class="row">
 
     @foreach ($exams as $exam)
-
-        {{-- <div class="col-md-4">
-            <div class="card card-link" href="#">
-
-                <div class="card-body">
-                    <h3 class="card-title">{{ $exam['judul'] }}</h3>
-
-                    <p>{!! $exam->deskripsi !!}</p>
-                </div>
-                <div class="card-text">
-                    <a href="{{ route('kelas.exam.info', ['kelas' => $kelas->kode, 'exam' => $exam->slug]) }}" class="btn btn-primary">Buka</a>
-                </div>
-            </div>
-        </div> --}}
     
         <div class="col-lg-4 col-md-6 my-3">
             <div class="card">
