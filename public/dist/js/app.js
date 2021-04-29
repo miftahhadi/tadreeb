@@ -6366,17 +6366,17 @@ function toComment(sourceMap) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.5.1
+ * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2020-05-04T22:49Z
+ * Date: 2021-03-02T17:08Z
  */
 ( function( global, factory ) {
 
@@ -6443,12 +6443,16 @@ var support = {};
 
 var isFunction = function isFunction( obj ) {
 
-      // Support: Chrome <=57, Firefox <=52
-      // In some browsers, typeof returns "function" for HTML <object> elements
-      // (i.e., `typeof document.createElement( "object" ) === "function"`).
-      // We don't want to classify *any* DOM node as a function.
-      return typeof obj === "function" && typeof obj.nodeType !== "number";
-  };
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		// Support: QtWeb <=3.8.5, WebKit <=534.34, wkhtmltopdf tool <=0.12.5
+		// Plus for old WebKit, typeof returns "function" for HTML collections
+		// (e.g., `typeof document.getElementsByTagName("div") === "function"`). (gh-4756)
+		return typeof obj === "function" && typeof obj.nodeType !== "number" &&
+			typeof obj.item !== "function";
+	};
 
 
 var isWindow = function isWindow( obj ) {
@@ -6514,7 +6518,7 @@ function toType( obj ) {
 
 
 var
-	version = "3.5.1",
+	version = "3.6.0",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -6768,7 +6772,7 @@ jQuery.extend( {
 			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
-					[ arr ] : arr
+						[ arr ] : arr
 				);
 			} else {
 				push.call( ret, arr );
@@ -6863,9 +6867,9 @@ if ( typeof Symbol === "function" ) {
 
 // Populate the class2type map
 jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
-function( _i, name ) {
-	class2type[ "[object " + name + "]" ] = name.toLowerCase();
-} );
+	function( _i, name ) {
+		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+	} );
 
 function isArrayLike( obj ) {
 
@@ -6885,14 +6889,14 @@ function isArrayLike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.3.5
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2020-03-14
+ * Date: 2021-02-16
  */
 ( function( window ) {
 var i,
@@ -7475,8 +7479,8 @@ support = Sizzle.support = {};
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
 isXML = Sizzle.isXML = function( elem ) {
-	var namespace = elem.namespaceURI,
-		docElem = ( elem.ownerDocument || elem ).documentElement;
+	var namespace = elem && elem.namespaceURI,
+		docElem = elem && ( elem.ownerDocument || elem ).documentElement;
 
 	// Support: IE <=8
 	// Assume HTML when documentElement doesn't yet exist, such as inside loading iframes
@@ -9391,9 +9395,9 @@ var rneedsContext = jQuery.expr.match.needsContext;
 
 function nodeName( elem, name ) {
 
-  return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+	return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 
-};
+}
 var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i );
 
 
@@ -10364,8 +10368,8 @@ jQuery.extend( {
 			resolveContexts = Array( i ),
 			resolveValues = slice.call( arguments ),
 
-			// the master Deferred
-			master = jQuery.Deferred(),
+			// the primary Deferred
+			primary = jQuery.Deferred(),
 
 			// subordinate callback factory
 			updateFunc = function( i ) {
@@ -10373,30 +10377,30 @@ jQuery.extend( {
 					resolveContexts[ i ] = this;
 					resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
 					if ( !( --remaining ) ) {
-						master.resolveWith( resolveContexts, resolveValues );
+						primary.resolveWith( resolveContexts, resolveValues );
 					}
 				};
 			};
 
 		// Single- and empty arguments are adopted like Promise.resolve
 		if ( remaining <= 1 ) {
-			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject,
+			adoptValue( singleValue, primary.done( updateFunc( i ) ).resolve, primary.reject,
 				!remaining );
 
 			// Use .then() to unwrap secondary thenables (cf. gh-3000)
-			if ( master.state() === "pending" ||
+			if ( primary.state() === "pending" ||
 				isFunction( resolveValues[ i ] && resolveValues[ i ].then ) ) {
 
-				return master.then();
+				return primary.then();
 			}
 		}
 
 		// Multiple arguments are aggregated like Promise.all array elements
 		while ( i-- ) {
-			adoptValue( resolveValues[ i ], updateFunc( i ), master.reject );
+			adoptValue( resolveValues[ i ], updateFunc( i ), primary.reject );
 		}
 
-		return master.promise();
+		return primary.promise();
 	}
 } );
 
@@ -10547,8 +10551,8 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 			for ( ; i < len; i++ ) {
 				fn(
 					elems[ i ], key, raw ?
-					value :
-					value.call( elems[ i ], i, fn( elems[ i ], key ) )
+						value :
+						value.call( elems[ i ], i, fn( elems[ i ], key ) )
 				);
 			}
 		}
@@ -11456,10 +11460,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 }
 
 
-var
-	rkeyEvent = /^key/,
-	rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
-	rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
+var rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
 
 function returnTrue() {
 	return true;
@@ -11754,8 +11755,8 @@ jQuery.event = {
 			event = jQuery.event.fix( nativeEvent ),
 
 			handlers = (
-					dataPriv.get( this, "events" ) || Object.create( null )
-				)[ event.type ] || [],
+				dataPriv.get( this, "events" ) || Object.create( null )
+			)[ event.type ] || [],
 			special = jQuery.event.special[ event.type ] || {};
 
 		// Use the fix-ed jQuery.Event rather than the (read-only) native event
@@ -11879,12 +11880,12 @@ jQuery.event = {
 			get: isFunction( hook ) ?
 				function() {
 					if ( this.originalEvent ) {
-							return hook( this.originalEvent );
+						return hook( this.originalEvent );
 					}
 				} :
 				function() {
 					if ( this.originalEvent ) {
-							return this.originalEvent[ name ];
+						return this.originalEvent[ name ];
 					}
 				},
 
@@ -12023,7 +12024,13 @@ function leverageNative( el, type, expectSync ) {
 						// Cancel the outer synthetic event
 						event.stopImmediatePropagation();
 						event.preventDefault();
-						return result.value;
+
+						// Support: Chrome 86+
+						// In Chrome, if an element having a focusout handler is blurred by
+						// clicking outside of it, it invokes the handler synchronously. If
+						// that handler calls `.remove()` on the element, the data is cleared,
+						// leaving `result` undefined. We need to guard against this.
+						return result && result.value;
 					}
 
 				// If this is an inner synthetic event for an event with a bubbling surrogate
@@ -12188,34 +12195,7 @@ jQuery.each( {
 	targetTouches: true,
 	toElement: true,
 	touches: true,
-
-	which: function( event ) {
-		var button = event.button;
-
-		// Add which for key events
-		if ( event.which == null && rkeyEvent.test( event.type ) ) {
-			return event.charCode != null ? event.charCode : event.keyCode;
-		}
-
-		// Add which for click: 1 === left; 2 === middle; 3 === right
-		if ( !event.which && button !== undefined && rmouseEvent.test( event.type ) ) {
-			if ( button & 1 ) {
-				return 1;
-			}
-
-			if ( button & 2 ) {
-				return 3;
-			}
-
-			if ( button & 4 ) {
-				return 2;
-			}
-
-			return 0;
-		}
-
-		return event.which;
-	}
+	which: true
 }, jQuery.event.addProp );
 
 jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateType ) {
@@ -12238,6 +12218,12 @@ jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateTyp
 			leverageNative( this, type );
 
 			// Return non-false to allow normal event-path propagation
+			return true;
+		},
+
+		// Suppress native focus or blur as it's already being fired
+		// in leverageNative.
+		_default: function() {
 			return true;
 		},
 
@@ -12908,6 +12894,10 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 		// set in CSS while `offset*` properties report correct values.
 		// Behavior in IE 9 is more subtle than in newer versions & it passes
 		// some versions of this test; make sure not to make it pass there!
+		//
+		// Support: Firefox 70+
+		// Only Firefox includes border widths
+		// in computed dimensions. (gh-4529)
 		reliableTrDimensions: function() {
 			var table, tr, trChild, trStyle;
 			if ( reliableTrDimensionsVal == null ) {
@@ -12915,9 +12905,22 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				tr = document.createElement( "tr" );
 				trChild = document.createElement( "div" );
 
-				table.style.cssText = "position:absolute;left:-11111px";
+				table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
+				tr.style.cssText = "border:1px solid";
+
+				// Support: Chrome 86+
+				// Height set through cssText does not get applied.
+				// Computed height then comes back as 0.
 				tr.style.height = "1px";
 				trChild.style.height = "9px";
+
+				// Support: Android 8 Chrome 86+
+				// In our bodyBackground.html iframe,
+				// display for all div elements is set to "inline",
+				// which causes a problem only in Android 8 Chrome 86.
+				// Ensuring the div is display: block
+				// gets around this issue.
+				trChild.style.display = "block";
 
 				documentElement
 					.appendChild( table )
@@ -12925,7 +12928,9 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 					.appendChild( trChild );
 
 				trStyle = window.getComputedStyle( tr );
-				reliableTrDimensionsVal = parseInt( trStyle.height ) > 3;
+				reliableTrDimensionsVal = ( parseInt( trStyle.height, 10 ) +
+					parseInt( trStyle.borderTopWidth, 10 ) +
+					parseInt( trStyle.borderBottomWidth, 10 ) ) === tr.offsetHeight;
 
 				documentElement.removeChild( table );
 			}
@@ -13389,10 +13394,10 @@ jQuery.each( [ "height", "width" ], function( _i, dimension ) {
 					// Running getBoundingClientRect on a disconnected node
 					// in IE throws an error.
 					( !elem.getClientRects().length || !elem.getBoundingClientRect().width ) ?
-						swap( elem, cssShow, function() {
-							return getWidthOrHeight( elem, dimension, extra );
-						} ) :
-						getWidthOrHeight( elem, dimension, extra );
+					swap( elem, cssShow, function() {
+						return getWidthOrHeight( elem, dimension, extra );
+					} ) :
+					getWidthOrHeight( elem, dimension, extra );
 			}
 		},
 
@@ -13451,7 +13456,7 @@ jQuery.cssHooks.marginLeft = addGetHookIf( support.reliableMarginLeft,
 					swap( elem, { marginLeft: 0 }, function() {
 						return elem.getBoundingClientRect().left;
 					} )
-				) + "px";
+			) + "px";
 		}
 	}
 );
@@ -13590,7 +13595,7 @@ Tween.propHooks = {
 			if ( jQuery.fx.step[ tween.prop ] ) {
 				jQuery.fx.step[ tween.prop ]( tween );
 			} else if ( tween.elem.nodeType === 1 && (
-					jQuery.cssHooks[ tween.prop ] ||
+				jQuery.cssHooks[ tween.prop ] ||
 					tween.elem.style[ finalPropName( tween.prop ) ] != null ) ) {
 				jQuery.style( tween.elem, tween.prop, tween.now + tween.unit );
 			} else {
@@ -13835,7 +13840,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 			anim.done( function() {
 
-			/* eslint-enable no-loop-func */
+				/* eslint-enable no-loop-func */
 
 				// The final step of a "hide" animation is actually hiding the element
 				if ( !hidden ) {
@@ -13955,7 +13960,7 @@ function Animation( elem, properties, options ) {
 			tweens: [],
 			createTween: function( prop, end ) {
 				var tween = jQuery.Tween( elem, animation.opts, prop, end,
-						animation.opts.specialEasing[ prop ] || animation.opts.easing );
+					animation.opts.specialEasing[ prop ] || animation.opts.easing );
 				animation.tweens.push( tween );
 				return tween;
 			},
@@ -14128,7 +14133,8 @@ jQuery.fn.extend( {
 					anim.stop( true );
 				}
 			};
-			doAnimation.finish = doAnimation;
+
+		doAnimation.finish = doAnimation;
 
 		return empty || optall.queue === false ?
 			this.each( doAnimation ) :
@@ -14768,8 +14774,8 @@ jQuery.fn.extend( {
 				if ( this.setAttribute ) {
 					this.setAttribute( "class",
 						className || value === false ?
-						"" :
-						dataPriv.get( this, "__className__" ) || ""
+							"" :
+							dataPriv.get( this, "__className__" ) || ""
 					);
 				}
 			}
@@ -14784,7 +14790,7 @@ jQuery.fn.extend( {
 		while ( ( elem = this[ i++ ] ) ) {
 			if ( elem.nodeType === 1 &&
 				( " " + stripAndCollapse( getClass( elem ) ) + " " ).indexOf( className ) > -1 ) {
-					return true;
+				return true;
 			}
 		}
 
@@ -15074,9 +15080,7 @@ jQuery.extend( jQuery.event, {
 				special.bindType || type;
 
 			// jQuery handler
-			handle = (
-					dataPriv.get( cur, "events" ) || Object.create( null )
-				)[ event.type ] &&
+			handle = ( dataPriv.get( cur, "events" ) || Object.create( null ) )[ event.type ] &&
 				dataPriv.get( cur, "handle" );
 			if ( handle ) {
 				handle.apply( cur, data );
@@ -15223,7 +15227,7 @@ var rquery = ( /\?/ );
 
 // Cross-browser xml parsing
 jQuery.parseXML = function( data ) {
-	var xml;
+	var xml, parserErrorElem;
 	if ( !data || typeof data !== "string" ) {
 		return null;
 	}
@@ -15232,12 +15236,17 @@ jQuery.parseXML = function( data ) {
 	// IE throws on parseFromString with invalid input.
 	try {
 		xml = ( new window.DOMParser() ).parseFromString( data, "text/xml" );
-	} catch ( e ) {
-		xml = undefined;
-	}
+	} catch ( e ) {}
 
-	if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-		jQuery.error( "Invalid XML: " + data );
+	parserErrorElem = xml && xml.getElementsByTagName( "parsererror" )[ 0 ];
+	if ( !xml || parserErrorElem ) {
+		jQuery.error( "Invalid XML: " + (
+			parserErrorElem ?
+				jQuery.map( parserErrorElem.childNodes, function( el ) {
+					return el.textContent;
+				} ).join( "\n" ) :
+				data
+		) );
 	}
 	return xml;
 };
@@ -15338,16 +15347,14 @@ jQuery.fn.extend( {
 			// Can add propHook for "elements" to filter or add form elements
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
-		} )
-		.filter( function() {
+		} ).filter( function() {
 			var type = this.type;
 
 			// Use .is( ":disabled" ) so that fieldset[disabled] works
 			return this.name && !jQuery( this ).is( ":disabled" ) &&
 				rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
 				( this.checked || !rcheckableType.test( type ) );
-		} )
-		.map( function( _i, elem ) {
+		} ).map( function( _i, elem ) {
 			var val = jQuery( this ).val();
 
 			if ( val == null ) {
@@ -15400,7 +15407,8 @@ var
 
 	// Anchor tag for parsing the document origin
 	originAnchor = document.createElement( "a" );
-	originAnchor.href = location.href;
+
+originAnchor.href = location.href;
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
@@ -15781,8 +15789,8 @@ jQuery.extend( {
 			// Context for global events is callbackContext if it is a DOM node or jQuery collection
 			globalEventContext = s.context &&
 				( callbackContext.nodeType || callbackContext.jquery ) ?
-					jQuery( callbackContext ) :
-					jQuery.event,
+				jQuery( callbackContext ) :
+				jQuery.event,
 
 			// Deferreds
 			deferred = jQuery.Deferred(),
@@ -16094,8 +16102,10 @@ jQuery.extend( {
 				response = ajaxHandleResponses( s, jqXHR, responses );
 			}
 
-			// Use a noop converter for missing script
-			if ( !isSuccess && jQuery.inArray( "script", s.dataTypes ) > -1 ) {
+			// Use a noop converter for missing script but not if jsonp
+			if ( !isSuccess &&
+				jQuery.inArray( "script", s.dataTypes ) > -1 &&
+				jQuery.inArray( "json", s.dataTypes ) < 0 ) {
 				s.converters[ "text script" ] = function() {};
 			}
 
@@ -16833,12 +16843,6 @@ jQuery.offset = {
 			options.using.call( elem, props );
 
 		} else {
-			if ( typeof props.top === "number" ) {
-				props.top += "px";
-			}
-			if ( typeof props.left === "number" ) {
-				props.left += "px";
-			}
 			curElem.css( props );
 		}
 	}
@@ -17007,8 +17011,11 @@ jQuery.each( [ "top", "left" ], function( _i, prop ) {
 
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
 jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
-	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name },
-		function( defaultExtra, funcName ) {
+	jQuery.each( {
+		padding: "inner" + name,
+		content: type,
+		"": "outer" + name
+	}, function( defaultExtra, funcName ) {
 
 		// Margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
@@ -17093,7 +17100,8 @@ jQuery.fn.extend( {
 	}
 } );
 
-jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
+jQuery.each(
+	( "blur focus focusin focusout resize scroll click dblclick " +
 	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
 	"change select submit keydown keypress keyup contextmenu" ).split( " " ),
 	function( _i, name ) {
@@ -17104,7 +17112,8 @@ jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
 				this.on( name, null, data, fn ) :
 				this.trigger( name );
 		};
-	} );
+	}
+);
 
 
 
@@ -17856,14 +17865,15 @@ var LaravelVuePagination_component = normalizeComponent(
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.20';
+  var VERSION = '4.17.21';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
   var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
-      FUNC_ERROR_TEXT = 'Expected a function';
+      FUNC_ERROR_TEXT = 'Expected a function',
+      INVALID_TEMPL_VAR_ERROR_TEXT = 'Invalid `variable` option passed into `_.template`';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -17996,10 +18006,11 @@ var LaravelVuePagination_component = normalizeComponent(
   var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
       reHasRegExpChar = RegExp(reRegExpChar.source);
 
-  /** Used to match leading and trailing whitespace. */
-  var reTrim = /^\s+|\s+$/g,
-      reTrimStart = /^\s+/,
-      reTrimEnd = /\s+$/;
+  /** Used to match leading whitespace. */
+  var reTrimStart = /^\s+/;
+
+  /** Used to match a single whitespace character. */
+  var reWhitespace = /\s/;
 
   /** Used to match wrap detail comments. */
   var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/,
@@ -18008,6 +18019,18 @@ var LaravelVuePagination_component = normalizeComponent(
 
   /** Used to match words composed of alphanumeric characters. */
   var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+  /**
+   * Used to validate the `validate` option in `_.template` variable.
+   *
+   * Forbids characters which could potentially change the meaning of the function argument definition:
+   * - "()," (modification of function parameters)
+   * - "=" (default value)
+   * - "[]{}" (destructuring of function parameters)
+   * - "/" (beginning of a comment)
+   * - whitespace
+   */
+  var reForbiddenIdentifierChars = /[()=,{}\[\]\/\s]/;
 
   /** Used to match backslashes in property paths. */
   var reEscapeChar = /\\(\\)?/g;
@@ -18838,6 +18861,19 @@ var LaravelVuePagination_component = normalizeComponent(
   }
 
   /**
+   * The base implementation of `_.trim`.
+   *
+   * @private
+   * @param {string} string The string to trim.
+   * @returns {string} Returns the trimmed string.
+   */
+  function baseTrim(string) {
+    return string
+      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+      : string;
+  }
+
+  /**
    * The base implementation of `_.unary` without support for storing metadata.
    *
    * @private
@@ -19168,6 +19204,21 @@ var LaravelVuePagination_component = normalizeComponent(
     return hasUnicode(string)
       ? unicodeToArray(string)
       : asciiToArray(string);
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+   * character of `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the index of the last non-whitespace character.
+   */
+  function trimmedEndIndex(string) {
+    var index = string.length;
+
+    while (index-- && reWhitespace.test(string.charAt(index))) {}
+    return index;
   }
 
   /**
@@ -30338,7 +30389,7 @@ var LaravelVuePagination_component = normalizeComponent(
       if (typeof value != 'string') {
         return value === 0 ? value : +value;
       }
-      value = value.replace(reTrim, '');
+      value = baseTrim(value);
       var isBinary = reIsBinary.test(value);
       return (isBinary || reIsOctal.test(value))
         ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
@@ -32710,6 +32761,12 @@ var LaravelVuePagination_component = normalizeComponent(
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
       }
+      // Throw an error if a forbidden character was found in `variable`, to prevent
+      // potential command injection attacks.
+      else if (reForbiddenIdentifierChars.test(variable)) {
+        throw new Error(INVALID_TEMPL_VAR_ERROR_TEXT);
+      }
+
       // Cleanup code by stripping empty strings.
       source = (isEvaluating ? source.replace(reEmptyStringLeading, '') : source)
         .replace(reEmptyStringMiddle, '$1')
@@ -32823,7 +32880,7 @@ var LaravelVuePagination_component = normalizeComponent(
     function trim(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrim, '');
+        return baseTrim(string);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -32858,7 +32915,7 @@ var LaravelVuePagination_component = normalizeComponent(
     function trimEnd(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrimEnd, '');
+        return string.slice(0, trimmedEndIndex(string) + 1);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -35537,11 +35594,17 @@ function padStart(input, n) {
     n = 2;
   }
 
-  if (input.toString().length < n) {
-    return ("0".repeat(n) + input).slice(-n);
+  var minus = input < 0 ? "-" : "";
+  var target = minus ? input * -1 : input;
+  var result;
+
+  if (target.toString().length < n) {
+    result = ("0".repeat(n) + target).slice(-n);
   } else {
-    return input.toString();
+    result = target.toString();
   }
+
+  return "" + minus + result;
 }
 function parseInteger(string) {
   if (isUndefined(string) || string === null || string === "") {
@@ -36129,7 +36192,7 @@ var Formatter = /*#__PURE__*/function () {
       }, "era");
     },
         tokenToString = function tokenToString(token) {
-      // Where possible: http://cldr.unicode.org/translation/date-time#TOC-Stand-Alone-vs.-Format-Styles
+      // Where possible: http://cldr.unicode.org/translation/date-time-1/date-time#TOC-Standalone-vs.-Format-Styles
       switch (token) {
         // ms
         case "S":
@@ -36570,7 +36633,7 @@ var Zone = /*#__PURE__*/function () {
 
 var singleton = null;
 /**
- * Represents the local zone for this Javascript environment.
+ * Represents the local zone for this JavaScript environment.
  * @implements {Zone}
  */
 
@@ -37486,21 +37549,30 @@ var PolyDateFormatter = /*#__PURE__*/function () {
     var z;
 
     if (dt.zone.universal && this.hasIntl) {
-      // Chromium doesn't support fixed-offset zones like Etc/GMT+8 in its formatter,
-      // See https://bugs.chromium.org/p/chromium/issues/detail?id=364374.
-      // So we have to make do. Two cases:
-      // 1. The format options tell us to show the zone. We can't do that, so the best
-      // we can do is format the date in UTC.
-      // 2. The format options don't tell us to show the zone. Then we can adjust them
-      // the time and tell the formatter to show it to us in UTC, so that the time is right
-      // and the bad zone doesn't show up.
-      // We can clean all this up when Chrome fixes this.
-      z = "UTC";
+      // UTC-8 or Etc/UTC-8 are not part of tzdata, only Etc/GMT+8 and the like.
+      // That is why fixed-offset TZ is set to that unless it is:
+      // 1. Outside of the supported range Etc/GMT-14 to Etc/GMT+12.
+      // 2. Not a whole hour, e.g. UTC+4:30.
+      var gmtOffset = -1 * (dt.offset / 60);
 
-      if (opts.timeZoneName) {
+      if (gmtOffset >= -14 && gmtOffset <= 12 && gmtOffset % 1 === 0) {
+        z = gmtOffset >= 0 ? "Etc/GMT+" + gmtOffset : "Etc/GMT" + gmtOffset;
         this.dt = dt;
       } else {
-        this.dt = dt.offset === 0 ? dt : DateTime.fromMillis(dt.ts + dt.offset * 60 * 1000);
+        // Not all fixed-offset zones like Etc/+4:30 are present in tzdata.
+        // So we have to make do. Two cases:
+        // 1. The format options tell us to show the zone. We can't do that, so the best
+        // we can do is format the date in UTC.
+        // 2. The format options don't tell us to show the zone. Then we can adjust them
+        // the time and tell the formatter to show it to us in UTC, so that the time is right
+        // and the bad zone doesn't show up.
+        z = "UTC";
+
+        if (opts.timeZoneName) {
+          this.dt = dt;
+        } else {
+          this.dt = dt.offset === 0 ? dt : DateTime.fromMillis(dt.ts + dt.offset * 60 * 1000);
+        }
       }
     } else if (dt.zone.type === "local") {
       this.dt = dt;
@@ -37802,7 +37874,7 @@ var Locale = /*#__PURE__*/function () {
     return listStuff(this, length, defaultOK, eras, function () {
       var intl = {
         era: length
-      }; // This is utter bullshit. Different calendars are going to define eras totally differently. What I need is the minimum set of dates
+      }; // This is problematic. Different calendars are going to define eras totally differently. What I need is the minimum set of dates
       // to definitely enumerate them.
 
       if (!_this4.eraCache[length]) {
@@ -37985,10 +38057,10 @@ function extractISOYmd(match, cursor) {
 
 function extractISOTime(match, cursor) {
   var item = {
-    hour: int(match, cursor, 0),
-    minute: int(match, cursor + 1, 0),
-    second: int(match, cursor + 2, 0),
-    millisecond: parseMillis(match[cursor + 3])
+    hours: int(match, cursor, 0),
+    minutes: int(match, cursor + 1, 0),
+    seconds: int(match, cursor + 2, 0),
+    milliseconds: parseMillis(match[cursor + 3])
   };
   return [item, null, cursor + 4];
 }
@@ -38003,8 +38075,10 @@ function extractISOOffset(match, cursor) {
 function extractIANAZone(match, cursor) {
   var zone = match[cursor] ? IANAZone.create(match[cursor]) : null;
   return [{}, zone, cursor + 1];
-} // ISO duration parsing
+} // ISO time parsing
 
+
+var isoTimeOnly = RegExp("^T?" + isoTimeBaseRegex.source + "$"); // ISO duration parsing
 
 var isoDuration = /^-?P(?:(?:(-?\d{1,9})Y)?(?:(-?\d{1,9})M)?(?:(-?\d{1,9})W)?(?:(-?\d{1,9})D)?(?:T(?:(-?\d{1,9})H)?(?:(-?\d{1,9})M)?(?:(-?\d{1,20})(?:[.,](-?\d{1,9}))?S)?)?)$/;
 
@@ -38154,6 +38228,10 @@ function parseHTTPDate(s) {
 }
 function parseISODuration(s) {
   return parse(s, [isoDuration, extractISODuration]);
+}
+var extractISOTimeOnly = combineExtractors(extractISOTime);
+function parseISOTimeOnly(s) {
+  return parse(s, [isoTimeOnly, extractISOTimeOnly]);
 }
 var sqlYmdWithTimeExtensionRegex = combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex);
 var sqlTimeCombinedRegex = combineRegexes(sqlTimeRegex);
@@ -38368,7 +38446,7 @@ var Duration = /*#__PURE__*/function () {
     }, opts));
   }
   /**
-   * Create a Duration from a Javascript object with keys like 'years' and 'hours.
+   * Create a Duration from a JavaScript object with keys like 'years' and 'hours.
    * If this object is empty then a zero milliseconds duration is returned.
    * @param {Object} obj - the object to create the DateTime from
    * @param {number} obj.years
@@ -38417,6 +38495,34 @@ var Duration = /*#__PURE__*/function () {
   Duration.fromISO = function fromISO(text, opts) {
     var _parseISODuration = parseISODuration(text),
         parsed = _parseISODuration[0];
+
+    if (parsed) {
+      var obj = Object.assign(parsed, opts);
+      return Duration.fromObject(obj);
+    } else {
+      return Duration.invalid("unparsable", "the input \"" + text + "\" can't be parsed as ISO 8601");
+    }
+  }
+  /**
+   * Create a Duration from an ISO 8601 time string.
+   * @param {string} text - text to parse
+   * @param {Object} opts - options for parsing
+   * @param {string} [opts.locale='en-US'] - the locale to use
+   * @param {string} opts.numberingSystem - the numbering system to use
+   * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
+   * @see https://en.wikipedia.org/wiki/ISO_8601#Times
+   * @example Duration.fromISOTime('11:22:33.444').toObject() //=> { hours: 11, minutes: 22, seconds: 33, milliseconds: 444 }
+   * @example Duration.fromISOTime('11:00').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+   * @example Duration.fromISOTime('T11:00').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+   * @example Duration.fromISOTime('1100').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+   * @example Duration.fromISOTime('T1100').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
+   * @return {Duration}
+   */
+  ;
+
+  Duration.fromISOTime = function fromISOTime(text, opts) {
+    var _parseISOTimeOnly = parseISOTimeOnly(text),
+        parsed = _parseISOTimeOnly[0];
 
     if (parsed) {
       var obj = Object.assign(parsed, opts);
@@ -38531,7 +38637,7 @@ var Duration = /*#__PURE__*/function () {
     return this.isValid ? Formatter.create(this.loc, fmtOpts).formatDurationFromString(this, fmt) : INVALID;
   }
   /**
-   * Returns a Javascript object with this Duration's values.
+   * Returns a JavaScript object with this Duration's values.
    * @param opts - options for generating the object
    * @param {boolean} [opts.includeConfig=false] - include configuration attributes in the output
    * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toObject() //=> { years: 1, days: 6, seconds: 2 }
@@ -38585,6 +38691,57 @@ var Duration = /*#__PURE__*/function () {
     return s;
   }
   /**
+   * Returns an ISO 8601-compliant string representation of this Duration, formatted as a time of day.
+   * Note that this will return null if the duration is invalid, negative, or equal to or greater than 24 hours.
+   * @see https://en.wikipedia.org/wiki/ISO_8601#Times
+   * @param {Object} opts - options
+   * @param {boolean} [opts.suppressMilliseconds=false] - exclude milliseconds from the format if they're 0
+   * @param {boolean} [opts.suppressSeconds=false] - exclude seconds from the format if they're 0
+   * @param {boolean} [opts.includePrefix=false] - include the `T` prefix
+   * @param {string} [opts.format='extended'] - choose between the basic and extended format
+   * @example Duration.fromObject({ hours: 11 }).toISOTime() //=> '11:00:00.000'
+   * @example Duration.fromObject({ hours: 11 }).toISOTime({ suppressMilliseconds: true }) //=> '11:00:00'
+   * @example Duration.fromObject({ hours: 11 }).toISOTime({ suppressSeconds: true }) //=> '11:00'
+   * @example Duration.fromObject({ hours: 11 }).toISOTime({ includePrefix: true }) //=> 'T11:00:00.000'
+   * @example Duration.fromObject({ hours: 11 }).toISOTime({ format: 'basic' }) //=> '110000.000'
+   * @return {string}
+   */
+  ;
+
+  _proto.toISOTime = function toISOTime(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    if (!this.isValid) return null;
+    var millis = this.toMillis();
+    if (millis < 0 || millis >= 86400000) return null;
+    opts = Object.assign({
+      suppressMilliseconds: false,
+      suppressSeconds: false,
+      includePrefix: false,
+      format: "extended"
+    }, opts);
+    var value = this.shiftTo("hours", "minutes", "seconds", "milliseconds");
+    var fmt = opts.format === "basic" ? "hhmm" : "hh:mm";
+
+    if (!opts.suppressSeconds || value.seconds !== 0 || value.milliseconds !== 0) {
+      fmt += opts.format === "basic" ? "ss" : ":ss";
+
+      if (!opts.suppressMilliseconds || value.milliseconds !== 0) {
+        fmt += ".SSS";
+      }
+    }
+
+    var str = value.toFormat(fmt);
+
+    if (opts.includePrefix) {
+      str = "T" + str;
+    }
+
+    return str;
+  }
+  /**
    * Returns an ISO 8601 representation of this Duration appropriate for use in JSON.
    * @return {string}
    */
@@ -38608,8 +38765,17 @@ var Duration = /*#__PURE__*/function () {
    */
   ;
 
-  _proto.valueOf = function valueOf() {
+  _proto.toMillis = function toMillis() {
     return this.as("milliseconds");
+  }
+  /**
+   * Returns an milliseconds value of this Duration. Alias of {@link toMillis}
+   * @return {number}
+   */
+  ;
+
+  _proto.valueOf = function valueOf() {
+    return this.toMillis();
   }
   /**
    * Make this Duration longer by the specified amount. Return a newly-constructed Duration.
@@ -38866,10 +39032,16 @@ var Duration = /*#__PURE__*/function () {
       return false;
     }
 
+    function eq(v1, v2) {
+      // Consider 0 and undefined as equal
+      if (v1 === undefined || v1 === 0) return v2 === undefined || v2 === 0;
+      return v1 === v2;
+    }
+
     for (var _iterator3 = _createForOfIteratorHelperLoose(orderedUnits), _step3; !(_step3 = _iterator3()).done;) {
       var u = _step3.value;
 
-      if (this.values[u] !== other.values[u]) {
+      if (!eq(this.values[u], other.values[u])) {
         return false;
       }
     }
@@ -39751,7 +39923,7 @@ var Info = /*#__PURE__*/function () {
       zone = Settings.defaultZone;
     }
 
-    var proto = DateTime.local().setZone(zone).set({
+    var proto = DateTime.now().setZone(zone).set({
       month: 12
     });
     return !zone.universal && proto.offset !== proto.set({
@@ -40001,6 +40173,8 @@ function dayDiff(earlier, later) {
 function highOrderDiffs(cursor, later, units) {
   var differs = [["years", function (a, b) {
     return b.year - a.year;
+  }], ["quarters", function (a, b) {
+    return b.quarter - a.quarter;
   }], ["months", function (a, b) {
     return b.month - a.month + (b.year - a.year) * 12;
   }], ["weeks", function (a, b) {
@@ -41031,6 +41205,8 @@ function toTechTimeFormat(dt, _ref) {
       _ref$suppressMillisec = _ref.suppressMilliseconds,
       suppressMilliseconds = _ref$suppressMillisec === void 0 ? false : _ref$suppressMillisec,
       includeOffset = _ref.includeOffset,
+      _ref$includePrefix = _ref.includePrefix,
+      includePrefix = _ref$includePrefix === void 0 ? false : _ref$includePrefix,
       _ref$includeZone = _ref.includeZone,
       includeZone = _ref$includeZone === void 0 ? false : _ref$includeZone,
       _ref$spaceZone = _ref.spaceZone,
@@ -41057,7 +41233,13 @@ function toTechTimeFormat(dt, _ref) {
     fmt += format === "basic" ? "ZZZ" : "ZZ";
   }
 
-  return toTechFormat(dt, fmt);
+  var str = toTechFormat(dt, fmt);
+
+  if (includePrefix) {
+    str = "T" + str;
+  }
+
+  return str;
 } // defaults for unspecified units in the supported calendars
 
 
@@ -41275,10 +41457,22 @@ var DateTime = /*#__PURE__*/function () {
   } // CONSTRUCT
 
   /**
+   * Create a DateTime for the current instant, in the system's time zone.
+   *
+   * Use Settings to override these default values if needed.
+   * @example DateTime.now().toISO() //~> now in the ISO format
+   * @return {DateTime}
+   */
+
+
+  DateTime.now = function now() {
+    return new DateTime({});
+  }
+  /**
    * Create a local DateTime
    * @param {number} [year] - The calendar year. If omitted (as in, call `local()` with no arguments), the current time will be used
    * @param {number} [month=1] - The month, 1-indexed
-   * @param {number} [day=1] - The day of the month
+   * @param {number} [day=1] - The day of the month, 1-indexed
    * @param {number} [hour=0] - The hour of the day, in 24-hour time
    * @param {number} [minute=0] - The minute of the hour, meaning a number between 0 and 59
    * @param {number} [second=0] - The second of the minute, meaning a number between 0 and 59
@@ -41293,13 +41487,11 @@ var DateTime = /*#__PURE__*/function () {
    * @example DateTime.local(2017, 3, 12, 5, 45, 10, 765) //~> 2017-03-12T05:45:10.765
    * @return {DateTime}
    */
-
+  ;
 
   DateTime.local = function local(year, month, day, hour, minute, second, millisecond) {
     if (isUndefined(year)) {
-      return new DateTime({
-        ts: Settings.now()
-      });
+      return new DateTime({});
     } else {
       return quickDT({
         year: year,
@@ -41352,8 +41544,8 @@ var DateTime = /*#__PURE__*/function () {
     }
   }
   /**
-   * Create a DateTime from a Javascript Date object. Uses the default zone.
-   * @param {Date} date - a Javascript Date object
+   * Create a DateTime from a JavaScript Date object. Uses the default zone.
+   * @param {Date} date - a JavaScript Date object
    * @param {Object} options - configuration options for the DateTime
    * @param {string|Zone} [options.zone='local'] - the zone to place the DateTime into
    * @return {DateTime}
@@ -41441,7 +41633,7 @@ var DateTime = /*#__PURE__*/function () {
     }
   }
   /**
-   * Create a DateTime from a Javascript object with keys like 'year' and 'hour' with reasonable defaults.
+   * Create a DateTime from a JavaScript object with keys like 'year' and 'hour' with reasonable defaults.
    * @param {Object} obj - the object to create the DateTime from
    * @param {number} obj.year - a year, such as 1987
    * @param {number} obj.month - a month, 1-12
@@ -41973,12 +42165,12 @@ var DateTime = /*#__PURE__*/function () {
    *
    * Adding hours, minutes, seconds, or milliseconds increases the timestamp by the right number of milliseconds. Adding days, months, or years shifts the calendar, accounting for DSTs and leap years along the way. Thus, `dt.plus({ hours: 24 })` may result in a different time than `dt.plus({ days: 1 })` if there's a DST shift in between.
    * @param {Duration|Object|number} duration - The amount to add. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
-   * @example DateTime.local().plus(123) //~> in 123 milliseconds
-   * @example DateTime.local().plus({ minutes: 15 }) //~> in 15 minutes
-   * @example DateTime.local().plus({ days: 1 }) //~> this time tomorrow
-   * @example DateTime.local().plus({ days: -1 }) //~> this time yesterday
-   * @example DateTime.local().plus({ hours: 3, minutes: 13 }) //~> in 3 hr, 13 min
-   * @example DateTime.local().plus(Duration.fromObject({ hours: 3, minutes: 13 })) //~> in 3 hr, 13 min
+   * @example DateTime.now().plus(123) //~> in 123 milliseconds
+   * @example DateTime.now().plus({ minutes: 15 }) //~> in 15 minutes
+   * @example DateTime.now().plus({ days: 1 }) //~> this time tomorrow
+   * @example DateTime.now().plus({ days: -1 }) //~> this time yesterday
+   * @example DateTime.now().plus({ hours: 3, minutes: 13 }) //~> in 3 hr, 13 min
+   * @example DateTime.now().plus(Duration.fromObject({ hours: 3, minutes: 13 })) //~> in 3 hr, 13 min
    * @return {DateTime}
    */
   ;
@@ -42006,6 +42198,7 @@ var DateTime = /*#__PURE__*/function () {
    * @param {string} unit - The unit to go to the beginning of. Can be 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', or 'millisecond'.
    * @example DateTime.local(2014, 3, 3).startOf('month').toISODate(); //=> '2014-03-01'
    * @example DateTime.local(2014, 3, 3).startOf('year').toISODate(); //=> '2014-01-01'
+   * @example DateTime.local(2014, 3, 3).startOf('week').toISODate(); //=> '2014-03-03', weeks always start on Mondays
    * @example DateTime.local(2014, 3, 3, 5, 30).startOf('day').toISOTime(); //=> '00:00.000-05:00'
    * @example DateTime.local(2014, 3, 3, 5, 30).startOf('hour').toISOTime(); //=> '05:00:00.000-05:00'
    * @return {DateTime}
@@ -42059,9 +42252,10 @@ var DateTime = /*#__PURE__*/function () {
   }
   /**
    * "Set" this DateTime to the end (meaning the last millisecond) of a unit of time
-   * @param {string} unit - The unit to go to the end of. Can be 'year', 'month', 'day', 'hour', 'minute', 'second', or 'millisecond'.
+   * @param {string} unit - The unit to go to the end of. Can be 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', or 'millisecond'.
    * @example DateTime.local(2014, 3, 3).endOf('month').toISO(); //=> '2014-03-31T23:59:59.999-05:00'
    * @example DateTime.local(2014, 3, 3).endOf('year').toISO(); //=> '2014-12-31T23:59:59.999-05:00'
+   * @example DateTime.local(2014, 3, 3).endOf('week').toISO(); // => '2014-03-09T23:59:59.999-05:00', weeks start on Mondays
    * @example DateTime.local(2014, 3, 3, 5, 30).endOf('day').toISO(); //=> '2014-03-03T23:59:59.999-05:00'
    * @example DateTime.local(2014, 3, 3, 5, 30).endOf('hour').toISO(); //=> '2014-03-03T05:59:59.999-05:00'
    * @return {DateTime}
@@ -42081,10 +42275,10 @@ var DateTime = /*#__PURE__*/function () {
    * @see https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens
    * @param {string} fmt - the format string
    * @param {Object} opts - opts to override the configuration options
-   * @example DateTime.local().toFormat('yyyy LLL dd') //=> '2017 Apr 22'
-   * @example DateTime.local().setLocale('fr').toFormat('yyyy LLL dd') //=> '2017 avr. 22'
-   * @example DateTime.local().toFormat('yyyy LLL dd', { locale: "fr" }) //=> '2017 avr. 22'
-   * @example DateTime.local().toFormat("HH 'hours and' mm 'minutes'") //=> '20 hours and 55 minutes'
+   * @example DateTime.now().toFormat('yyyy LLL dd') //=> '2017 Apr 22'
+   * @example DateTime.now().setLocale('fr').toFormat('yyyy LLL dd') //=> '2017 avr. 22'
+   * @example DateTime.now().toFormat('yyyy LLL dd', { locale: "fr" }) //=> '2017 avr. 22'
+   * @example DateTime.now().toFormat("HH 'hours and' mm 'minutes'") //=> '20 hours and 55 minutes'
    * @return {string}
    */
   ;
@@ -42103,15 +42297,15 @@ var DateTime = /*#__PURE__*/function () {
    * Defaults to the system's locale if no locale has been specified
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
    * @param opts {Object} - Intl.DateTimeFormat constructor options and configuration options
-   * @example DateTime.local().toLocaleString(); //=> 4/20/2017
-   * @example DateTime.local().setLocale('en-gb').toLocaleString(); //=> '20/04/2017'
-   * @example DateTime.local().toLocaleString({ locale: 'en-gb' }); //=> '20/04/2017'
-   * @example DateTime.local().toLocaleString(DateTime.DATE_FULL); //=> 'April 20, 2017'
-   * @example DateTime.local().toLocaleString(DateTime.TIME_SIMPLE); //=> '11:32 AM'
-   * @example DateTime.local().toLocaleString(DateTime.DATETIME_SHORT); //=> '4/20/2017, 11:32 AM'
-   * @example DateTime.local().toLocaleString({ weekday: 'long', month: 'long', day: '2-digit' }); //=> 'Thursday, April 20'
-   * @example DateTime.local().toLocaleString({ weekday: 'short', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }); //=> 'Thu, Apr 20, 11:27 AM'
-   * @example DateTime.local().toLocaleString({ hour: '2-digit', minute: '2-digit', hour12: false }); //=> '11:32'
+   * @example DateTime.now().toLocaleString(); //=> 4/20/2017
+   * @example DateTime.now().setLocale('en-gb').toLocaleString(); //=> '20/04/2017'
+   * @example DateTime.now().toLocaleString({ locale: 'en-gb' }); //=> '20/04/2017'
+   * @example DateTime.now().toLocaleString(DateTime.DATE_FULL); //=> 'April 20, 2017'
+   * @example DateTime.now().toLocaleString(DateTime.TIME_SIMPLE); //=> '11:32 AM'
+   * @example DateTime.now().toLocaleString(DateTime.DATETIME_SHORT); //=> '4/20/2017, 11:32 AM'
+   * @example DateTime.now().toLocaleString({ weekday: 'long', month: 'long', day: '2-digit' }); //=> 'Thursday, April 20'
+   * @example DateTime.now().toLocaleString({ weekday: 'short', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }); //=> 'Thu, Apr 20, 11:27 AM'
+   * @example DateTime.now().toLocaleString({ hour: '2-digit', minute: '2-digit', hour12: false }); //=> '11:32'
    * @return {string}
    */
   ;
@@ -42128,7 +42322,7 @@ var DateTime = /*#__PURE__*/function () {
    * Defaults to the system's locale if no locale has been specified
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/formatToParts
    * @param opts {Object} - Intl.DateTimeFormat constructor options, same as `toLocaleString`.
-   * @example DateTime.local().toLocaleParts(); //=> [
+   * @example DateTime.now().toLocaleParts(); //=> [
    *                                   //=>   { type: 'day', value: '25' },
    *                                   //=>   { type: 'literal', value: '/' },
    *                                   //=>   { type: 'month', value: '05' },
@@ -42153,9 +42347,9 @@ var DateTime = /*#__PURE__*/function () {
    * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
    * @param {string} [opts.format='extended'] - choose between the basic and extended format
    * @example DateTime.utc(1982, 5, 25).toISO() //=> '1982-05-25T00:00:00.000Z'
-   * @example DateTime.local().toISO() //=> '2017-04-22T20:47:05.335-04:00'
-   * @example DateTime.local().toISO({ includeOffset: false }) //=> '2017-04-22T20:47:05.335'
-   * @example DateTime.local().toISO({ format: 'basic' }) //=> '20170422T204705.335-0400'
+   * @example DateTime.now().toISO() //=> '2017-04-22T20:47:05.335-04:00'
+   * @example DateTime.now().toISO({ includeOffset: false }) //=> '2017-04-22T20:47:05.335'
+   * @example DateTime.now().toISO({ format: 'basic' }) //=> '20170422T204705.335-0400'
    * @return {string}
    */
   ;
@@ -42210,10 +42404,12 @@ var DateTime = /*#__PURE__*/function () {
    * @param {boolean} [opts.suppressMilliseconds=false] - exclude milliseconds from the format if they're 0
    * @param {boolean} [opts.suppressSeconds=false] - exclude seconds from the format if they're 0
    * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
+   * @param {boolean} [opts.includePrefix=false] - include the `T` prefix
    * @param {string} [opts.format='extended'] - choose between the basic and extended format
    * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime() //=> '07:34:19.361Z'
    * @example DateTime.utc().set({ hour: 7, minute: 34, seconds: 0, milliseconds: 0 }).toISOTime({ suppressSeconds: true }) //=> '07:34Z'
    * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime({ format: 'basic' }) //=> '073419.361Z'
+   * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime({ includePrefix: true }) //=> 'T07:34:19.361Z'
    * @return {string}
    */
   ;
@@ -42226,6 +42422,8 @@ var DateTime = /*#__PURE__*/function () {
         suppressSeconds = _ref6$suppressSeconds === void 0 ? false : _ref6$suppressSeconds,
         _ref6$includeOffset = _ref6.includeOffset,
         includeOffset = _ref6$includeOffset === void 0 ? true : _ref6$includeOffset,
+        _ref6$includePrefix = _ref6.includePrefix,
+        includePrefix = _ref6$includePrefix === void 0 ? false : _ref6$includePrefix,
         _ref6$format = _ref6.format,
         format = _ref6$format === void 0 ? "extended" : _ref6$format;
 
@@ -42233,6 +42431,7 @@ var DateTime = /*#__PURE__*/function () {
       suppressSeconds: suppressSeconds,
       suppressMilliseconds: suppressMilliseconds,
       includeOffset: includeOffset,
+      includePrefix: includePrefix,
       format: format
     });
   }
@@ -42276,9 +42475,9 @@ var DateTime = /*#__PURE__*/function () {
    * @param {boolean} [opts.includeZone=false] - include the zone, such as 'America/New_York'. Overrides includeOffset.
    * @param {boolean} [opts.includeOffset=true] - include the offset, such as 'Z' or '-04:00'
    * @example DateTime.utc().toSQL() //=> '05:15:16.345'
-   * @example DateTime.local().toSQL() //=> '05:15:16.345 -04:00'
-   * @example DateTime.local().toSQL({ includeOffset: false }) //=> '05:15:16.345'
-   * @example DateTime.local().toSQL({ includeZone: false }) //=> '05:15:16.345 America/New_York'
+   * @example DateTime.now().toSQL() //=> '05:15:16.345 -04:00'
+   * @example DateTime.now().toSQL({ includeOffset: false }) //=> '05:15:16.345'
+   * @example DateTime.now().toSQL({ includeZone: false }) //=> '05:15:16.345 America/New_York'
    * @return {string}
    */
   ;
@@ -42375,10 +42574,10 @@ var DateTime = /*#__PURE__*/function () {
     return this.toJSDate();
   }
   /**
-   * Returns a Javascript object with this DateTime's year, month, day, and so on.
+   * Returns a JavaScript object with this DateTime's year, month, day, and so on.
    * @param opts - options for generating the object
    * @param {boolean} [opts.includeConfig=false] - include configuration attributes in the output
-   * @example DateTime.local().toObject() //=> { year: 2017, month: 4, day: 22, hour: 20, minute: 49, second: 42, millisecond: 268 }
+   * @example DateTime.now().toObject() //=> { year: 2017, month: 4, day: 22, hour: 20, minute: 49, second: 42, millisecond: 268 }
    * @return {Object}
    */
   ;
@@ -42400,7 +42599,7 @@ var DateTime = /*#__PURE__*/function () {
     return base;
   }
   /**
-   * Returns a Javascript Date equivalent to this DateTime.
+   * Returns a JavaScript Date equivalent to this DateTime.
    * @return {Date}
    */
   ;
@@ -42471,7 +42670,7 @@ var DateTime = /*#__PURE__*/function () {
       opts = {};
     }
 
-    return this.diff(DateTime.local(), unit, opts);
+    return this.diff(DateTime.now(), unit, opts);
   }
   /**
    * Return an Interval spanning between this DateTime and another DateTime
@@ -42484,23 +42683,23 @@ var DateTime = /*#__PURE__*/function () {
     return this.isValid ? Interval.fromDateTimes(this, otherDateTime) : this;
   }
   /**
-   * Return whether this DateTime is in the same unit of time as another DateTime
+   * Return whether this DateTime is in the same unit of time as another DateTime.
+   * Higher-order units must also be identical for this function to return `true`.
+   * Note that time zones are **ignored** in this comparison, which compares the **local** calendar time. Use {@link setZone} to convert one of the dates if needed.
    * @param {DateTime} otherDateTime - the other DateTime
    * @param {string} unit - the unit of time to check sameness on
-   * @example DateTime.local().hasSame(otherDT, 'day'); //~> true if both the same calendar day
+   * @example DateTime.now().hasSame(otherDT, 'day'); //~> true if otherDT is in the same current calendar day
    * @return {boolean}
    */
   ;
 
   _proto.hasSame = function hasSame(otherDateTime, unit) {
     if (!this.isValid) return false;
-
-    if (unit === "millisecond") {
-      return this.valueOf() === otherDateTime.valueOf();
-    } else {
-      var inputMs = otherDateTime.valueOf();
-      return this.startOf(unit) <= inputMs && inputMs <= this.endOf(unit);
-    }
+    var inputMs = otherDateTime.valueOf();
+    var otherZoneDateTime = this.setZone(otherDateTime.zone, {
+      keepLocalTime: true
+    });
+    return otherZoneDateTime.startOf(unit) <= inputMs && inputMs <= otherZoneDateTime.endOf(unit);
   }
   /**
    * Equality check
@@ -42518,19 +42717,19 @@ var DateTime = /*#__PURE__*/function () {
    * Returns a string representation of a this time relative to now, such as "in two days". Can only internationalize if your
    * platform supports Intl.RelativeTimeFormat. Rounds down by default.
    * @param {Object} options - options that affect the output
-   * @param {DateTime} [options.base=DateTime.local()] - the DateTime to use as the basis to which this time is compared. Defaults to now.
+   * @param {DateTime} [options.base=DateTime.now()] - the DateTime to use as the basis to which this time is compared. Defaults to now.
    * @param {string} [options.style="long"] - the style of units, must be "long", "short", or "narrow"
    * @param {string} options.unit - use a specific unit; if omitted, the method will pick the unit. Use one of "years", "quarters", "months", "weeks", "days", "hours", "minutes", or "seconds"
    * @param {boolean} [options.round=true] - whether to round the numbers in the output.
-   * @param {boolean} [options.padding=0] - padding in milliseconds. This allows you to round up the result if it fits inside the threshold. Don't use in combination with {round: false} because the decimal output will include the padding.
+   * @param {number} [options.padding=0] - padding in milliseconds. This allows you to round up the result if it fits inside the threshold. Don't use in combination with {round: false} because the decimal output will include the padding.
    * @param {string} options.locale - override the locale of this DateTime
    * @param {string} options.numberingSystem - override the numberingSystem of this DateTime. The Intl system may choose not to honor this
-   * @example DateTime.local().plus({ days: 1 }).toRelative() //=> "in 1 day"
-   * @example DateTime.local().setLocale("es").toRelative({ days: 1 }) //=> "dentro de 1 día"
-   * @example DateTime.local().plus({ days: 1 }).toRelative({ locale: "fr" }) //=> "dans 23 heures"
-   * @example DateTime.local().minus({ days: 2 }).toRelative() //=> "2 days ago"
-   * @example DateTime.local().minus({ days: 2 }).toRelative({ unit: "hours" }) //=> "48 hours ago"
-   * @example DateTime.local().minus({ hours: 36 }).toRelative({ round: false }) //=> "1.5 days ago"
+   * @example DateTime.now().plus({ days: 1 }).toRelative() //=> "in 1 day"
+   * @example DateTime.now().setLocale("es").toRelative({ days: 1 }) //=> "dentro de 1 día"
+   * @example DateTime.now().plus({ days: 1 }).toRelative({ locale: "fr" }) //=> "dans 23 heures"
+   * @example DateTime.now().minus({ days: 2 }).toRelative() //=> "2 days ago"
+   * @example DateTime.now().minus({ days: 2 }).toRelative({ unit: "hours" }) //=> "48 hours ago"
+   * @example DateTime.now().minus({ hours: 36 }).toRelative({ round: false }) //=> "1.5 days ago"
    */
   ;
 
@@ -42553,14 +42752,14 @@ var DateTime = /*#__PURE__*/function () {
    * Returns a string representation of this date relative to today, such as "yesterday" or "next month".
    * Only internationalizes on platforms that supports Intl.RelativeTimeFormat.
    * @param {Object} options - options that affect the output
-   * @param {DateTime} [options.base=DateTime.local()] - the DateTime to use as the basis to which this time is compared. Defaults to now.
+   * @param {DateTime} [options.base=DateTime.now()] - the DateTime to use as the basis to which this time is compared. Defaults to now.
    * @param {string} options.locale - override the locale of this DateTime
    * @param {string} options.unit - use a specific unit; if omitted, the method will pick the unit. Use one of "years", "quarters", "months", "weeks", or "days"
    * @param {string} options.numberingSystem - override the numberingSystem of this DateTime. The Intl system may choose not to honor this
-   * @example DateTime.local().plus({ days: 1 }).toRelativeCalendar() //=> "tomorrow"
-   * @example DateTime.local().setLocale("es").plus({ days: 1 }).toRelative() //=> ""mañana"
-   * @example DateTime.local().plus({ days: 1 }).toRelativeCalendar({ locale: "fr" }) //=> "demain"
-   * @example DateTime.local().minus({ days: 2 }).toRelativeCalendar() //=> "2 days ago"
+   * @example DateTime.now().plus({ days: 1 }).toRelativeCalendar() //=> "tomorrow"
+   * @example DateTime.now().setLocale("es").plus({ days: 1 }).toRelative() //=> ""mañana"
+   * @example DateTime.now().plus({ days: 1 }).toRelativeCalendar({ locale: "fr" }) //=> "demain"
+   * @example DateTime.now().minus({ days: 2 }).toRelativeCalendar() //=> "2 days ago"
    */
   ;
 
@@ -42936,7 +43135,7 @@ var DateTime = /*#__PURE__*/function () {
     }
     /**
      * Get the UTC offset of this DateTime in minutes
-     * @example DateTime.local().offset //=> -240
+     * @example DateTime.now().offset //=> -240
      * @example DateTime.utc().offset //=> 0
      * @type {number}
      */
@@ -43290,6 +43489,8 @@ function friendlyDateTime(dateTimeish) {
   }
 }
 
+var VERSION = "1.26.0";
+
 exports.DateTime = DateTime;
 exports.Duration = Duration;
 exports.FixedOffsetZone = FixedOffsetZone;
@@ -43299,6 +43500,7 @@ exports.Interval = Interval;
 exports.InvalidZone = InvalidZone;
 exports.LocalZone = LocalZone;
 exports.Settings = Settings;
+exports.VERSION = VERSION;
 exports.Zone = Zone;
 //# sourceMappingURL=luxon.js.map
 
@@ -62625,7 +62827,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_id_53ab54d2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--5-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--5-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Modal.vue?vue&type=style&index=0&id=53ab54d2&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modal.vue?vue&type=style&index=0&id=53ab54d2&scoped=true&lang=css&");
 /* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_id_53ab54d2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_id_53ab54d2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_id_53ab54d2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_id_53ab54d2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_id_53ab54d2_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
 
 /***/ }),
 
@@ -62850,7 +63052,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./ExamQuestion.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/ExamQuestion.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExamQuestion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
 
 /***/ }),
 
