@@ -32,7 +32,9 @@ class SettingService
         $this->setAppName($data['app_name']);   
 
         // Save image logo
-        $this->setAppLogo($data);
+        if ($data->file('logo')) {
+            $this->setAppLogo($data);
+        }
 
         return $this;
 
