@@ -77,5 +77,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
     Route::resource('kelas', 'ClassroomController');
 
+    Route::delete('/user-exam-record/{examableUser}', 'ExamableUserController@destroy');
+
 });
 

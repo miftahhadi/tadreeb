@@ -9,8 +9,8 @@ class ExamableUser extends Pivot
 {
     use HasFactory;
 
+    protected $appends = ['durasi'];
     public $incrementing = true;
-
     protected $dates = [
         'waktu_mulai',
         'waktu_selesai'      
@@ -69,5 +69,18 @@ class ExamableUser extends Pivot
         })->all();
 
         return array_sum($score);
+    }
+
+    public function getDurasiAttribute()
+    {
+        if ($this->waktu_selesai) {
+            $durasiMs = $this->waktu_mulai->diffInMilliseconds($this->waktu_selesai);
+
+            $minutes = floor(($durasiMs % (1000 * 60 * 60)) / (1000 * 60));
+            $seconds = floor(($durasiMs % (1000 * 60)) / 1000);
+
+            return ($minutes != 0) ? $minutes . ' menit ' . $seconds . ' detik'
+                                    : $seconds . ' detik';
+        }
     }
 }

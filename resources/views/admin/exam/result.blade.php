@@ -21,9 +21,17 @@
     </div>
 
     <div id="app">
-        <exam-record-table
-            :record-data="{{ json_encode($data) }}"
-        ></exam-record-table>
+        @if ($data['mode'] == 'users-list')
+            <exam-record-table
+                :record-data="{{ json_encode($data) }}"
+            ></exam-record-table>
+        @elseif ($data['mode'] == 'records-by-user')
+            <user-exam-record-table
+                :data="{{ json_encode($data['records']) }}"
+                :user="{{ json_encode($data['user']) }}"
+            ></user-exam-record-table>            
+        @endif
+
     </div>
 @endsection
 

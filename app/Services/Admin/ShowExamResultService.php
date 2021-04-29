@@ -12,7 +12,7 @@ class ShowExamResultService {
         $this->examable = $examable;
     }
 
-    public function getResultsByClassroom($show)
+    public function getResultsByClassroom()
     {
         $kelas = $this->examable->assignedTo();
         $users = $kelas->users()
@@ -43,7 +43,8 @@ class ShowExamResultService {
 
         return [
             'row' => $users,
-            'kelas' => $kelas
+            'kelas' => $kelas,
+            'mode' => 'users-list'
         ];
     }
 

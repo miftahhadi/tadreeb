@@ -32,7 +32,7 @@
                                             </td>
                                             <td>{{ $record->score }}</td>
                                             <td>
-                                            <a href="{{ route('kelas.exam.hasil-user', ['kelas' => $kelas->kode, 'exam' => $exam->slug, 'attempt' => $record->attempt]) }}">Lihat</a>
+                                                <a href="{{ route('kelas.exam.hasil-user', ['kelas' => $kelas->kode, 'exam' => $exam->slug, 'attempt' => $record->attempt]) }}" class="mx-1">Lihat</a>
                                             </td>
                                         </tr>
         

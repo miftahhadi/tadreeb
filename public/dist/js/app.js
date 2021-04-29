@@ -3016,6 +3016,151 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserExamRecordTable.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/UserExamRecordTable.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'user-exam-record-table',
+  props: {
+    data: Array,
+    user: Object
+  },
+  data: function data() {
+    return {
+      headings: [{
+        name: 'Ke-',
+        width: null
+      }, {
+        name: 'Mulai mengerjakan',
+        width: null
+      }, {
+        name: 'Selesai mengerjakan',
+        width: null
+      }, {
+        name: 'Durasi',
+        width: null
+      }, {
+        name: 'Nilai',
+        width: null
+      }],
+      properties: ['attempt', 'waktu_mulai', 'waktu_selesai', 'durasi', 'score'],
+      records: [],
+      toDelete: {}
+    };
+  },
+  methods: {
+    callDelete: function callDelete(id) {
+      this.toDelete = this.records[id];
+    },
+    deleteRecord: function deleteRecord() {
+      var _this = this;
+
+      axios["delete"]('/api/user-exam-record/' + this.toDelete.examable_user_id).then(function (response) {
+        if (response.data == 1) {
+          index = _this.records.indexOf(_this.toDelete);
+
+          _this.records.splice(index, 1);
+
+          sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
+            title: "Data berhasil dihapus",
+            icon: "success"
+          });
+        } else {
+          sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
+            title: "Data gagal dihapus",
+            text: "Terjadi kesalahan sistem, hubungi admin sistem Anda",
+            icon: "error"
+          });
+        }
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+    }
+  },
+  created: function created() {
+    this.records = this.data;
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/general/ItemEditForm.vue?vue&type=script&lang=js& ***!
@@ -44248,30 +44393,32 @@ var render = function() {
                 "div",
                 { staticClass: "dimmer-content" },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "modal-header" },
-                    [
-                      _vm._t("header", [
-                        _c(
-                          "h5",
-                          { staticClass: "modal-title capitalize" },
-                          [_vm._t("title")],
-                          2
-                        ),
-                        _vm._v(" "),
-                        _c("button", {
-                          staticClass: "btn-close",
-                          attrs: {
-                            type: "button",
-                            "data-dismiss": "modal",
-                            "aria-label": "Close"
-                          }
-                        })
-                      ])
-                    ],
-                    2
-                  ),
+                  _vm.$slots.header
+                    ? _c(
+                        "div",
+                        { staticClass: "modal-header" },
+                        [
+                          _vm._t("header", [
+                            _c(
+                              "h5",
+                              { staticClass: "modal-title capitalize" },
+                              [_vm._t("title")],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c("button", {
+                              staticClass: "btn-close",
+                              attrs: {
+                                type: "button",
+                                "data-dismiss": "modal",
+                                "aria-label": "Close"
+                              }
+                            })
+                          ])
+                        ],
+                        2
+                      )
+                    : _vm._e(),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [_vm._t("body")], 2),
                   _vm._v(" "),
@@ -44805,7 +44952,7 @@ var render = function() {
             order: true,
             headings: _vm.headings[_vm.show],
             properties: _vm.properties[_vm.show],
-            itemData: _vm.records,
+            "item-data": _vm.records,
             action: _vm.actionColumn
           },
           scopedSlots: _vm._u([
@@ -45534,6 +45681,173 @@ var render = function() {
           null,
           true
         )
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserExamRecordTable.vue?vue&type=template&id=38c0d4f8&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/UserExamRecordTable.vue?vue&type=template&id=38c0d4f8& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "mb-2" }, [
+        _c("h2", { staticClass: "text-center mb-2" }, [
+          _vm._v("Riwayat Pengerjaan")
+        ]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Nama:  " + _vm._s(_vm.user.name) + " ")]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Username: " + _vm._s(_vm.user.username))])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "card" },
+        [
+          _c("v-table", {
+            attrs: {
+              headings: _vm.headings,
+              properties: _vm.properties,
+              "item-data": _vm.records,
+              action: true
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "action",
+                fn: function(actionProps) {
+                  return [
+                    _c("div", { staticClass: "d-flex small" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-sm btn-link mx-1",
+                          attrs: { href: "#" }
+                        },
+                        [_vm._v("Lihat")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-sm btn-danger",
+                          attrs: {
+                            href: "#",
+                            "data-toggle": "modal",
+                            "data-target": "#deleteModal"
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.callDelete(actionProps.index)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Hapus\n                    "
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                }
+              }
+            ])
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("modal", {
+        attrs: {
+          id: "deleteModal",
+          classes: ["modal-dialog-centered", "modal-sm"]
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "body",
+            fn: function() {
+              return [
+                _c("div", { staticClass: "text-center py-2" }, [
+                  _c("h3", [_vm._v("Apakah Anda yakin?")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "text-muted" }, [
+                    _vm._v(
+                      "Apakah Anda benar-benar ingin menghapus data ini? Jika dilakukan, data tidak bisa dikembalikan seperti semula"
+                    )
+                  ])
+                ])
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c("div", { staticClass: "w-100" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-white w-100",
+                          attrs: { href: "#", "data-dismiss": "modal" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Batal\n                        "
+                          )
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger w-100",
+                          attrs: { "data-dismiss": "modal" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteRecord()
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                            Ya, hapus data\n                        "
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ]
+            },
+            proxy: true
+          }
+        ])
       })
     ],
     1
@@ -62072,6 +62386,7 @@ var map = {
 	"./components/admin/ExamRecordTable.vue": "./resources/js/components/admin/ExamRecordTable.vue",
 	"./components/admin/QuestionForm.vue": "./resources/js/components/admin/QuestionForm.vue",
 	"./components/admin/QuestionViewer.vue": "./resources/js/components/admin/QuestionViewer.vue",
+	"./components/admin/UserExamRecordTable.vue": "./resources/js/components/admin/UserExamRecordTable.vue",
 	"./components/admin/general/ItemEditForm.vue": "./resources/js/components/admin/general/ItemEditForm.vue",
 	"./components/admin/item-index/ItemAction.vue": "./resources/js/components/admin/item-index/ItemAction.vue",
 	"./components/admin/item-index/ItemAssign.vue": "./resources/js/components/admin/item-index/ItemAssign.vue",
@@ -62717,6 +63032,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuestionViewer_vue_vue_type_template_id_3b250943___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/UserExamRecordTable.vue":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/admin/UserExamRecordTable.vue ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UserExamRecordTable_vue_vue_type_template_id_38c0d4f8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserExamRecordTable.vue?vue&type=template&id=38c0d4f8& */ "./resources/js/components/admin/UserExamRecordTable.vue?vue&type=template&id=38c0d4f8&");
+/* harmony import */ var _UserExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserExamRecordTable.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/UserExamRecordTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UserExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserExamRecordTable_vue_vue_type_template_id_38c0d4f8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserExamRecordTable_vue_vue_type_template_id_38c0d4f8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/UserExamRecordTable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/UserExamRecordTable.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/admin/UserExamRecordTable.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./UserExamRecordTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserExamRecordTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserExamRecordTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/UserExamRecordTable.vue?vue&type=template&id=38c0d4f8&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/admin/UserExamRecordTable.vue?vue&type=template&id=38c0d4f8& ***!
+  \**********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserExamRecordTable_vue_vue_type_template_id_38c0d4f8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./UserExamRecordTable.vue?vue&type=template&id=38c0d4f8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/UserExamRecordTable.vue?vue&type=template&id=38c0d4f8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserExamRecordTable_vue_vue_type_template_id_38c0d4f8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserExamRecordTable_vue_vue_type_template_id_38c0d4f8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

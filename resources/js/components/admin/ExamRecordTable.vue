@@ -13,7 +13,7 @@
                 :order="true"
                 :headings="headings[show]"
                 :properties="properties[show]"
-                :itemData="records"
+                :item-data="records"
                 :action="actionColumn"
             >
                 <template #action>

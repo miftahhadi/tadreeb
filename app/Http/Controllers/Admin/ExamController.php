@@ -155,16 +155,39 @@ class ExamController extends Controller
 
         if (!$request->kelasId) {
             $data = [
+                'mode' => 'classrooms-list',
                 'tableHeading' => json_encode(DataTable::heading(3)),
                 'itemProperties' => json_encode(DataTable::props(3))
             ];
 
             $template = 'admin.exam.kelas';
         } elseif ($request->kelasId) {
-            $examable = $ujian->classrooms()->findOrFail($request->kelasId)->pivot;
-            $show = $request->show ?? 'all';
+            $kelas = $ujian->classrooms()->findOrFail($request->kelasId);
+            $examable = $kelas->pivot;
 
-            $data = (new ShowExamResultService($examable))->getResultsByClassroom($show);
+            if ($request->userId) {
+                $user = $kelas->users()->where('users.id', $request->userId)
+                                        ->select('users.id', 'users.name', 'users.username')
+                                        ->first();
+                $data = [
+                    'mode' => 'records-by-user',
+                    'user' => $user,
+                    'kelas' => $kelas,
+                    'records' => $examable->getUserRecords($user->id)
+                                            ->map(function($record) {
+                                                return [
+                                                    'examable_user_id' => $record->id,
+                                                    'attempt' => $record->attempt,
+                                                    'waktu_mulai' => $record->getWaktuMulaiString(),
+                                                    'waktu_selesai' => $record->getWaktuSelesaiString(),
+                                                    'durasi' => $record->durasi,
+                                                    'score' => $record->score
+                                                ];
+                                            }),
+                ];
+            } else {
+                $data = (new ShowExamResultService($examable))->getResultsByClassroom();
+            }
 
             $template = 'admin.exam.result';
         }
