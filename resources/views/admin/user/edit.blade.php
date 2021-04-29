@@ -31,7 +31,7 @@
                                     class="form-control @error('nama') is-invalid @enderror" 
                                     placeholder="Masukkan nama user" 
                                     name="data[nama]" 
-                                    value="{{ old('data.nama') ?? $user->nama }}"
+                                    value="{{ old('data.nama') ?? $user->name }}"
                             >
     
                             @error('data.nama')
@@ -91,7 +91,7 @@
                                             type="radio" 
                                             name="role" 
                                             value="Admin"
-                                            @if ($user->hasRole(2)) checked @endif
+                                            @if ($user->role->name == 'admin') checked @endif
                                     >
                                     <span class="form-check-label">Administrator</span>
                                 </label>
@@ -100,7 +100,7 @@
                                             type="radio" 
                                             name="role" 
                                             value="Teacher"
-                                            @if ($user->hasRole(3)) checked @endif
+                                            @if ($user->role->name == 'teacher') checked @endif
                                     >
                                     <span class="form-check-label">Teacher</span>
                                 </label>
@@ -109,7 +109,7 @@
                                             type="radio" 
                                             name="role" 
                                             value="Student" 
-                                            @if ($user->hasRole(4)) checked @endif
+                                            @if ($user->role->name == 'student') checked @endif
                                     >
                                     <span class="form-check-label">Peserta</span>
                                 </label>
@@ -132,7 +132,7 @@
                                         type="radio" 
                                         name="data[gender]" 
                                         value="1"
-                                        @if ($user->gender == 'Laki-laki') checked @endif
+                                        @if ($user->profile->gender == 'Laki-laki') checked @endif
                                 >
                                 <span class="form-check-label">Laki-laki</span>
                             </label>
@@ -141,7 +141,7 @@
                                         type="radio" 
                                         name="data[gender]" 
                                         value="2"
-                                        @if ($user->gender == 'Perempuan') checked @endif
+                                        @if ($user->profile->gender == 'Perempuan') checked @endif
                                 >
                                 <span class="form-check-label">Perempuan</span>
                             </label>
@@ -156,7 +156,7 @@
                                     class="form-control" 
                                     name="data[tanggal_lahir]" 
                                     id="tanggal_lahir" 
-                                    value="{{ old('tanggal_lahir') ?? $user->tanggal_lahir }}"
+                                    value="{{ old('tanggal_lahir') ?? $user->profile->tanggal_lahir }}"
                             >
     
                         </div>
