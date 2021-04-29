@@ -117,14 +117,6 @@ class User extends Authenticatable
                     ]);
     }
 
-    // public function getExamScore($classExamId)
-    // {
-    //     return $this->classroomExams()->where('classroom_exam_id', $classExamId)
-    //                                     ->first()
-    //                                     ->pivot->score();
-    // }
-
-
     public function examStatus(Examable $examable)
     {
         $lastRecord = $examable->getUserLastRecord($this->id);
