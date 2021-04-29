@@ -11,7 +11,7 @@
                     <div class="loader"></div>
                     
                     <div class="dimmer-content">
-                        <div class="modal-header">
+                        <div class="modal-header" v-if="$slots.header">
                             <slot name="header">
                                 <h5 class="modal-title capitalize">
                                     <slot name="title"></slot>
