@@ -204,13 +204,16 @@ export default {
         getUser(id) {
             axios.get('/api/user/' + id)
                     .then(response => {
-                        this.input.nama = response.data.name
-                        this.input.username = response.data.username
-                        this.input.email = response.data.email
-                        this.input.gender = response.data.profile.gender
-                        this.input.tanggal_lahir = response.data.profile.tanggal_lahir
-                        this.input.whatsapp = response.data.whatsapp
-                        this.input.telegram = response.data.telegram
+                        const data = response.data
+                        this.input = {
+                            nama: data.name,
+                            username: data.username,
+                            email: data.email,
+                            gender: data.profile.gender,
+                            tanggal_lahir: data.profile.tanggal_lahir,
+                            whatsapp: data.profile.whatsapp,
+                            telegram: data.profile.telegram
+                        }
                     })
         },
 

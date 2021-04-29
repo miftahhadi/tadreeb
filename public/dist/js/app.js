@@ -5324,13 +5324,16 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get('/api/user/' + id).then(function (response) {
-        _this.input.nama = response.data.name;
-        _this.input.username = response.data.username;
-        _this.input.email = response.data.email;
-        _this.input.gender = response.data.profile.gender;
-        _this.input.tanggal_lahir = response.data.profile.tanggal_lahir;
-        _this.input.whatsapp = response.data.whatsapp;
-        _this.input.telegram = response.data.telegram;
+        var data = response.data;
+        _this.input = {
+          nama: data.name,
+          username: data.username,
+          email: data.email,
+          gender: data.profile.gender,
+          tanggal_lahir: data.profile.tanggal_lahir,
+          whatsapp: data.profile.whatsapp,
+          telegram: data.profile.telegram
+        };
       });
     },
     validate: function validate($type) {

@@ -67,9 +67,9 @@ class UserController extends Controller
                 'telegram' => $data['telegram']
             ]);
 
-            $user->roles()->sync([$data['peran']]);
+            $user->assignRole($data['peran']);
 
-            return 'user created';
+            return $user->load('profile');
         } catch (\Throwable $th) {
             return 'error: ' . $th;
         }
