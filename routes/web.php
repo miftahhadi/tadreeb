@@ -31,7 +31,7 @@ Route::group(['namespace' => 'Front', 'middleware' => 'auth'], function (){
         // Classroom's subpage
         Route::group(['prefix' => '/{kelas:kode}'], function () {
             Route::get('/depan', 'ClassroomController@showHome')->name('kelas.home');
-            Route::get('/pelajaran', 'ClassroomController@showLessons')->name('kelas.lessons');
+            Route::get('/pelajaran', 'ClassroomController@showLessons')->name('kelas.lessons')->middleware('prevent-back-history');
             Route::get('/works', 'ClassroomController@showWorks')->name('kelas.works');
             Route::get('/anggota', 'ClassroomController@showPeople')->name('kelas.people');            
         });
