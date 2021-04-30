@@ -41,7 +41,7 @@ class GroupController extends Controller
 
     public function listClassrooms(Group $grup) 
     {
-        return response()->json($grup->classrooms()->orderBy('id', 'desc')->paginate(25));
+        return response()->json($grup->classrooms()->orderBy('id', 'asc')->paginate(25));
     }
 
     public function searchClassrooms(Group $grup, $search)

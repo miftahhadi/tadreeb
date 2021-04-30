@@ -17,7 +17,7 @@ class ClassroomController extends Controller
         return response()->json(
             Classroom::where('nama', 'like', '%' . $search . '%')
                     ->orWhere('deskripsi', 'like', '%' .  $search . '%')
-                    ->orderBy('id', 'desc')
+                    ->orderBy('id', 'asc')
                     ->paginate(25)
             );
     }
