@@ -11,6 +11,10 @@
         </a>
     </div>
 
+    <div class="text-center">
+        <span class="h2">{{ $exam->judul }}</span>
+    </div>
+
     @include('_lembar-jawaban')
 
 @endsection
