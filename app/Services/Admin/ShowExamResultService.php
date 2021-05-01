@@ -21,7 +21,7 @@ class ShowExamResultService {
                         ->get()
                         ->each(function ($user) {
                             if ($user->examables()->where('examables.id', $this->examable->id)) {
-                                return $user->examData = $this->examable->getUserLastFinishedRecord($user->id);
+                                return $user->examData = $this->examable->getUserLastRecord($user->id);
                             }
                         })->map(function ($user) {
                             $userData = [
