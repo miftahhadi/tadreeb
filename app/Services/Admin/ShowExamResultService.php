@@ -31,7 +31,7 @@ class ShowExamResultService {
                             ];
 
                             if ($user->examData) {
-                                $userData['has_done_exam'] = 'Sudah';
+                                $userData['has_done_exam'] = ($user->examData->waktu_selesai) ? 'Sudah' : 'Sedang';
                                 $userData['waktu_mulai'] = $user->examData->getWaktuMulaiString();
                                 $userData['score'] = $user->examData->score;
                             } else {

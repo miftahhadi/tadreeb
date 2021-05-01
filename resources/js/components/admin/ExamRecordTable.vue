@@ -66,6 +66,10 @@ export default {
                         width: null
                     },
                     {
+                        name: 'Status',
+                        width: null,
+                    },
+                    {
                         name: 'Waktu Mengerjakan',
                         width: null
                     },
@@ -88,7 +92,7 @@ export default {
             },
             properties: {
                 all: ['name', 'username', 'has_done_exam'],
-                done: ['name', 'username', 'waktu_mulai', 'score'],
+                done: ['name', 'username', 'has_done_exam', 'waktu_mulai', 'score'],
                 unfinished: ['name', 'username']
             },
             records: [],
@@ -111,7 +115,7 @@ export default {
 
                 case 'done':
                     this.records = this.recordData.row.filter(user => {
-                        return user.has_done_exam == 'Sudah'
+                        return user.has_done_exam == 'Sudah' || user.has_done_exam == 'Sedang';
                     })
                     this.actionColumn = true
                     break;
