@@ -102,22 +102,44 @@ class UserController extends Controller
         return json_encode($this->service->processCsv($request->id));
     }
 
-    public function store(StoreUserRequest $request)
+    public function show(User $user)
     {
-        $this->service->store($request->validated());
+        $breadcrumbs = [
+            [
+                'name' => 'User',
+                'href' => route('admin.user.index')
+            ]
+        ];
 
-        return redirect(route('admin.user.index'));
-    }
+        $itemName = 'Profil User';
+        $itemDescription = null;
 
-    public function show($id)
-    {
-        //
+        return view('admin.user.show', [
+            'title' => 'Profil ' . $user->name,
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription,
+            'user' => $user
+        ]);
     }
 
     public function edit(User $user)
     {
+        $breadcrumbs = [
+            [
+                'name' => 'User',
+                'href' => route('admin.user.index')
+            ]
+        ];
+
+        $itemName = 'Edit User';
+        $itemDescription = null;
+
         return view('admin.user.edit', [
             'title' => 'Edit User',
+            'breadcrumbs' => $breadcrumbs,
+            'itemName' => $itemName,
+            'itemDescription' => $itemDescription,
             'user' => $user
         ]);
     }
@@ -125,10 +147,13 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        $data = $request->validated();
 
-        $this->service->update($request->validated(), $user);
+        $user->update($data['akun']);
+        $user->profile->update($data['profil']);
+        $user->assignRole($data['role']);
 
-        return redirect(route('admin.user.index'));
+        return redirect(route('admin.user.index'))->with('status', 'Profil User berhasil diperbarui');
     }
 
     public function destroy($id)

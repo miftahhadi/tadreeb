@@ -27,24 +27,26 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'data.nama' => 'required',
-            'data.email' => ['required', Rule::unique('users', 'email')->ignore($this->user)],
-            'data.username' => ['required', Rule::unique('users', 'username')->ignore($this->user)],
+            'akun.nama' => 'required',
+            'akun.email' => ['required', Rule::unique('users', 'email')->ignore($this->user)],
+            'akun.username' => ['required', Rule::unique('users', 'username')->ignore($this->user)],
             'role' => '',
-            'data.gender' => '',
-            'data.tanggal_lahir' => ''
+            'profil.gender' => '',
+            'profil.tanggal_lahir' => '',
+            'profil.whatsapp' => '',
+            'profil.telegram' => ''
         ];
     }
 
     public function messages()
     {
         return [
-            'data.nama.required' => 'Nama tidak boleh kosong',
-            'data.email.required' => 'Email tidak boleh kosong',
-            'data.email.unique' => 'Email ini sudah digunakan, mohon gunakan email lain',
-            'data.username.required' => 'Username tidak boleh kosong',
-            'data.username.unique' => 'Usernama ini sudah digunakan, mohon gunakan username lain',
-            'data.password' => 'Password tidak boleh kosong'
+            'akun.nama.required' => 'Nama tidak boleh kosong',
+            'akun.email.required' => 'Email tidak boleh kosong',
+            'akun.email.unique' => 'Email ini sudah digunakan, mohon gunakan email lain',
+            'akun.username.required' => 'Username tidak boleh kosong',
+            'akun.username.unique' => 'Usernama ini sudah digunakan, mohon gunakan username lain',
+            'akun.password' => 'Password tidak boleh kosong'
         ];
     }
 }

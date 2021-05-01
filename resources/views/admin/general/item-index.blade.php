@@ -33,6 +33,13 @@
                     </div>
                 </div>
 
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <div>{{ session('status') }}</div>
+                        <a class="btn-close" data-dismiss="alert" aria-label="close"></a>
+                    </div>
+                @endif
+
             </template>
         </item-index>
 

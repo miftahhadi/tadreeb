@@ -7,8 +7,8 @@ use App\Models\Profile;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\Admin\UserService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -62,7 +62,7 @@ class UserController extends Controller
     
             $user->profile()->create([
                 'gender' => $data['gender'],
-                'tanggal_lahir' => $data['tanggal_lahir'],
+                'tanggal_lahir' => new Carbon($data['tanggal_lahir'], 'utc'),
                 'whatsapp' => $data['whatsapp'],
                 'telegram' => $data['telegram']
             ]);

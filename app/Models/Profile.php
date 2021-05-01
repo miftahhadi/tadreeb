@@ -17,4 +17,21 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getTanggalLahirStringAttribute()
+    {
+        return ($this->tanggal_lahir) ? $this->tanggal_lahir
+                                                ->tz(settings('timezone'))
+                                                ->locale('id')
+                                                ->isoFormat('D MMM Y')
+                                        : null; 
+    }
+
+    public function getTanggalLahirDateString()
+    {
+        return ($this->tanggal_lahir) ? $this->tanggal_lahir
+                                            ->tz(settings('timezone'))
+                                            ->toDateString()
+                                        : null;
+    }
 }
