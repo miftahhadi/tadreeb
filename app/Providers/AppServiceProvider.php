@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Settings;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Key length problem in MySQL < 5.7.7 or MariaDB < 10.2.2
+        Schema::defaultStringLength(191);
     }
 }
