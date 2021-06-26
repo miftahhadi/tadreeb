@@ -180,7 +180,8 @@ class Examable extends MorphPivot
             return 'infinite';
         }
 
-        else if ($last = $this->userLastAttempt($userId)) {
+        else {
+            $last = $this->userLastAttempt($userId) ?? 0;
             return $this->attempt - $last;
         }
     }
