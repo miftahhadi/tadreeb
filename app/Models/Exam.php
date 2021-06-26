@@ -53,7 +53,7 @@ class Exam extends Model
 
         foreach ($this->questions as $question) {
             $answer = $question->answers->filter(function ($answer) {
-                            return $answer->nilai != 0;
+                            return $answer->nilai > 0;
                         })->pluck('nilai');
 
             $answers->push($answer);
