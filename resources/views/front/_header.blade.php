@@ -4,7 +4,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a href="{{ route('dashboard') }}" class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3">
-        <img src="/static/logo.svg" alt="Tabler" class="navbar-brand-image">
+        <img src="{{ settings('app_logo') }}" alt="Tabler" class="navbar-brand-image">
       </a>
       <div class="navbar-nav flex-row order-md-last">
         

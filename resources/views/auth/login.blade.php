@@ -9,7 +9,7 @@
         <div class="container-tight py-6">
 
             <div class="text-center mb-4">
-                <img src="/static/logo.svg" height="50" alt="">
+                <img src="{{ settings('app_logo') }}" height="50" alt="">
             </div>
 
             @if($errors->any())
