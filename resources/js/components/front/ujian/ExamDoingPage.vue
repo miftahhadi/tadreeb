@@ -290,7 +290,6 @@ export default {
                 answerIds: answer,
                 questionId: this.currentQuestionId
             }).then(response => {
-                console.log(response.data)
 
                 if (this.nextQuestion != 0) {
                     this.getQuestion(this.nextQuestion)                    

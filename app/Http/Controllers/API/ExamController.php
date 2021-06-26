@@ -112,10 +112,11 @@ class ExamController extends Controller
         // Ambil daftar jawaban
         $answers = json_decode($examableUser->answers, true);
 
-        // Simpan jawaban
-        foreach ($request->userAnswers as $id => $answer) {
-            $answers[$id]['answers'] = $answer;
-            $answers[$id]['score'] = $examableUser->assignScore($answer);
+        foreach ($request->userAnswers as $questionId => $answerIds) {
+            $score = $examableUser->assignScore($answerIds);
+
+            $answers[$questionId]['answers'] = $answerIds;
+            $answers[$questionId]['score'] = $score;
         }
 
         $examableUser->waktu_selesai = now('UTC');

@@ -27,13 +27,13 @@ class ExamableUser extends Pivot
 
         if (is_array($userAnswers)) {
             foreach ($userAnswers as $id) {
-                $scores += (Answer::find($id))->nilai;
+                $answer = Answer::find($id);
+                $scores += ($answer) ? $answer->nilai : null;
             }            
         } else {
-            $scores += (Answer::find($userAnswers))->nilai;
+            $answer = Answer::find($userAnswers);
+            $scores += ($answer) ? $answer->nilai : null;
         }
-
-        $this->save();
 
         return $scores;
     }
