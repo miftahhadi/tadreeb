@@ -62,6 +62,16 @@
             </div>
             
             <div class="form-group mb-3 row">
+                <label class="form-label col-3 col-form-label required">Password</label>
+                <div class="col">
+                <button type="button" class="btn" data-toggle="modal" data-target="#changePasswordModal">
+                    Ubah Password
+                </button>  
+
+                </div>
+            </div>
+
+            <div class="form-group mb-3 row">
                 <label class="form-label col-3 col-form-label required">Peran</label>
                 <div class="col">
                     <div>
@@ -182,5 +192,21 @@
     
         </div>
         
-        </form>
+    </form>
+
+    <div id="app">
+        <modal id="changePasswordModal" :classes="['modal-dialog-centered']">
+            <template #header>
+                Ubah Password
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </template>
+            <template #body>
+                <password-change-form user-id="{{ $user->id }}"></password-change-form>
+            </template>
+        </modal>
+    </div>
 @endsection
+
+@push('js')
+    <script type="text/javascript" src="/dist/js/app.js"></script>    
+@endpush

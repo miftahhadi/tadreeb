@@ -19,6 +19,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
     Route::get('user/search/{search}', 'UserController@search');
     Route::get('user/check-data', 'UserController@checkData');
     Route::post('user/process-csv', 'UserController@processCsv');
+    Route::put('user/{user}/password', 'UserController@changePassword');
     Route::resource('user', 'UserController');
 
     // Lessons

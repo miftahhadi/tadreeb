@@ -89,4 +89,11 @@ class UserController extends Controller
     {      
         return json_encode((new UserService)->processCsv($request['id']));
     }
+
+    public function changePassword(User $user, Request $request)
+    {
+        $user->password = Hash::make($request->newPassword);
+
+        return $user->save();
+    }
 }
