@@ -1,6 +1,16 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
+
+import CKEditor from 'ckeditor4-vue';
+
+Vue.use(Buefy)
+Vue.use(CKEditor);
+
+window.EventBus = new Vue();
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -9,10 +19,6 @@ window.Vue = require('vue');
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
-window.EventBus = new Vue();
-import CKEditor from 'ckeditor4-vue';
-
-Vue.use( CKEditor );
 
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))

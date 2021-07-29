@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@entry');
+Route::get('/', [HomeController::class, 'entry']);
+
+Route::get('/tes', function() {
+    return view('layouts.base');
+});
 
 Auth::routes();
 
@@ -57,7 +63,7 @@ Route::name('admin.')->group(function () {
         'middleware' => ['auth', 'admin'],
     ], function () {
         //Dashboard
-        Route::get('/', 'AdminController@index')->name('dashboard');
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
         // Lessons
         // Sections => Ganti jadi unit
