@@ -1,8 +1,8 @@
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from 'vue'
 import Buefy from 'buefy'
-import 'buefy/dist/buefy.css'
+// import 'buefy/dist/buefy.css'
 
 import CKEditor from 'ckeditor4-vue';
 

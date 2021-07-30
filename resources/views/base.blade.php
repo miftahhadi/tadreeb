@@ -13,18 +13,23 @@
         <link rel="stylesheet" href="{{ asset('css/buefy.css') }}">
 
         <!-- Icons -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
     </head>
     <body>
-        <section class="section">
-            <div class="container">
-                @yield('main')
-            </div>
-        </section>
+        <div id="app">
+            <base-layout 
+                :side-menu="{{ json_encode(settings('admin_side_menu')) }}"
+            >
+                <template #logo>
+                    <img src="{{ settings('app_logo') }}" height="80" alt="{{ settings('app_name') }}">
+                </template>
+            </base-layout>
+        </div>
+
 
         <script type="text/javascript" src="/dist/js/app.js"></script>
     </body>

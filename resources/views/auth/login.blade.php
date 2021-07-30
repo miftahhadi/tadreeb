@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('base')
 
 @section('body-class')
     border-top-wide border-primary d-flex flex-column  
