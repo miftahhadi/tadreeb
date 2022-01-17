@@ -29,7 +29,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'API'], function() 
 
     // Exams
     Route::get('ujian/search/{search}', 'ExamController@search');
-
+    Route::get('ujian/slug/{slug}', 'ExamController@getSlug');
     Route::post('ujian/{ujian}/assign-soal', 'ExamController@assignQuestion');
     Route::post('ujian/unassign-soal', 'ExamController@unassignQuestion');
 
